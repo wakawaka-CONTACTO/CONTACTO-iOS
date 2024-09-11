@@ -28,7 +28,7 @@ final class LoginView: BaseView {
         
         descriptionLabel.do {
             $0.text = StringLiterals.Login.title
-            $0.font = .fontContacto(.caption)
+            $0.font = .fontContacto(.caption1)
             $0.textColor = .white
         }
         
@@ -50,7 +50,7 @@ final class LoginView: BaseView {
         
         orLabel.do {
             $0.text = StringLiterals.Login.orLabel
-            $0.font = .fontContacto(.caption)
+            $0.font = .fontContacto(.caption1)
             $0.textColor = .white
         }
         

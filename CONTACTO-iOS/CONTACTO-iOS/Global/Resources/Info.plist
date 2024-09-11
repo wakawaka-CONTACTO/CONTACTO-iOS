@@ -4,8 +4,13 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>FKRasterRomanCompactRounded.otf</string>
+		<string>ABCDiatype-BoldItalic-Trial.otf</string>
+		<string>ABCDiatype-Bold-Trial.otf</string>
 		<string>ABCDiatype-Medium-Trial.otf</string>
+		<string>FKRasterRomanCompactRounded.otf</string>
+		<string>FKRasterRomanCompactTrial-Smooth.otf</string>
+		<string>FKRasterRomanCompactTrial-Sharp.otf</string>
+		<string>FKRasterRomanCompactTrial-Blended.otf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
