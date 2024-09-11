@@ -43,6 +43,7 @@ final class LoginView: BaseView {
         continueButton.do {
             $0.setTitle(StringLiterals.Login.continueButton, for: .normal)
             $0.setTitleColor(.black, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.button)
             $0.backgroundColor = UIColor(hex: "17DB4E")
         }
         
@@ -55,6 +56,7 @@ final class LoginView: BaseView {
         appleLoginButton.do {
             $0.setTitle(StringLiterals.Login.appleButton, for: .normal)
             $0.setTitleColor(.black, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.button)
             $0.backgroundColor = .white
         }
         
