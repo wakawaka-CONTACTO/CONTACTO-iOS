@@ -35,6 +35,7 @@ class BaseViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         setDelegate()
+        setAddTarget()
         hideKeyboardWhenTappedAround()
     }
     
@@ -42,6 +43,7 @@ class BaseViewController: UIViewController {
     func setUI() {
         setStyle()
         setLayout()
+        setNavigationBar()
     }
     
     func setStyle() {
@@ -52,7 +54,15 @@ class BaseViewController: UIViewController {
         
     }
     
+    func setNavigationBar() {
+        
+    }
+    
     func setDelegate() {
+        
+    }
+    
+    func setAddTarget() {
         
     }
 }
