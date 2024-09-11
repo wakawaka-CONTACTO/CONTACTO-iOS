@@ -7,14 +7,38 @@
 
 import UIKit
 
-class NameOnboardingView: UIView {
+import SnapKit
+import Then
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+final class NameOnboardingView: BaseView {
+    let topBackgroundView = UIView()
+    let topImageView = UIImageView()
+    
+    override func setStyle() {
+        self.backgroundColor = UIColor(hex: "FFF629")
+        
+        topBackgroundView.do {
+            $0.backgroundColor = UIColor(hex: "F9AF55")
+        }
+        
+        topImageView.do {
+            $0.image = UIImage(resource: .onboardingTop)
+            $0.contentMode = .scaleAspectFit
+        }
     }
-    */
-
+    
+    override func setLayout() {
+        addSubviews(topBackgroundView,
+                    topImageView)
+        
+        topBackgroundView.snp.makeConstraints {
+            $0.top.width.equalToSuperview()
+            $0.height.equalTo(145.adjustedHeight)
+        }
+        
+        topImageView.snp.makeConstraints {
+            $0.top.equalTo(safeAreaLayoutGuide.snp.top).inset(26.adjustedHeight)
+            $0.leading.trailing.equalToSuperview().inset(18.adjustedWidth)
+        }
+    }
 }
