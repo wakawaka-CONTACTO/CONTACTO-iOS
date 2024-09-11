@@ -21,4 +21,15 @@ final class LoginViewController: BaseViewController {
             $0.edges.equalToSuperview()
         }
     }
+    
+    override func setAddTarget() {
+        loginView.continueButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        loginView.appleLoginButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        loginView.helpButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+    }
+    
+    @objc func buttonTapped() {
+        let onboardingController = NameOnboardingViewController()
+        self.navigationController?.pushViewController(onboardingController, animated: true)
+    }
 }

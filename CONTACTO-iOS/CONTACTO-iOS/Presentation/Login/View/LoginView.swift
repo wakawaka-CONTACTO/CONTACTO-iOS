@@ -14,11 +14,11 @@ final class LoginView: BaseView {
     
     private let logoImageView = UIImageView()
     private let descriptionLabel = UILabel()
-    private let emailTextField = UITextField()
-    private let continueButton = UIButton()
+    lazy var emailTextField = UITextField()
+    lazy var continueButton = UIButton()
     private let orLabel = UILabel()
-    private let appleLoginButton = UIButton()
-    private let helpButton = UIButton()
+    lazy var appleLoginButton = UIButton()
+    lazy var helpButton = UIButton()
     
     override func setStyle() {
         logoImageView.do {
@@ -38,6 +38,7 @@ final class LoginView: BaseView {
             $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.email, forColor: UIColor(hex: "969696"))
             $0.textAlignment = .center
             $0.backgroundColor = .white
+            $0.keyboardType = .emailAddress
         }
         
         continueButton.do {
