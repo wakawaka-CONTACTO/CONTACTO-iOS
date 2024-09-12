@@ -37,6 +37,7 @@ final class NameOnboardingViewController: BaseViewController {
     
     override func setAddTarget() {
         nameOnboardingView.nameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        nameOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
 }
 
@@ -89,6 +90,11 @@ extension NameOnboardingViewController {
                 nameOnboardingView.nextButton.isEnabled = false
             }
         }
+    }
+    
+    @objc private func nextButtonTapped() {
+        let purposeOnboardingViewController = PurposeOnboardingViewController()
+        self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
     }
 }
 
