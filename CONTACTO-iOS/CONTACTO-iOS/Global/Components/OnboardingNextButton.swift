@@ -29,12 +29,12 @@ final class OnboardingNextButton: UIButton {
     // MARK: - UI
     private func setStyle() {
         self.isEnabled = false
-        self.setTitle(StringLiterals.Onboarding.Name.button, for: .normal)
-        self.setTitleColor(.black, for: .normal)
+        self.setTitleColor(.ctblack, for: .normal)
         self.titleLabel?.font = .fontContacto(.button)
-        self.setBackgroundColor(UIColor(hex: "C8C8C8"), for: .disabled)
-        self.setBackgroundColor(UIColor(hex: "17DB4E"), for: .normal)
-        self.setRoundBorder(borderColor: .black, borderWidth: 1.5, cornerRadius: 0)
+        self.setBackgroundColor(.ctgray3, for: .disabled)
+        self.setBackgroundColor(.ctsubgreen2, for: .normal)
+        self.setBackgroundColor(.ctsubgreen2, for: .highlighted)
+        self.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
     }
     
     private func setLayout() {

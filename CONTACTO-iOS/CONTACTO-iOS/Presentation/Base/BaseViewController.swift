@@ -47,7 +47,7 @@ class BaseViewController: UIViewController {
     }
     
     func setStyle() {
-        view.backgroundColor = .black
+        view.backgroundColor = .ctblack
     }
     
     func setLayout() {

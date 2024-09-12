@@ -19,10 +19,10 @@ final class NameOnboardingView: BaseView {
     let nextButton = OnboardingNextButton(count: 1)
     
     override func setStyle() {
-        self.backgroundColor = UIColor(hex: "FFF629")
+        self.backgroundColor = .ctsubyellow1
         
         topBackgroundView.do {
-            $0.backgroundColor = UIColor(hex: "F9AF55")
+            $0.backgroundColor = .ctsuborange
         }
         
         topImageView.do {
@@ -32,7 +32,7 @@ final class NameOnboardingView: BaseView {
         
         titleLabel.do {
             $0.text = StringLiterals.Onboarding.Name.title
-            $0.textColor = .black
+            $0.textColor = .ctblack
             $0.font = .fontContacto(.title1)
             $0.textAlignment = .center
             $0.numberOfLines = 0
@@ -40,19 +40,19 @@ final class NameOnboardingView: BaseView {
         
         descriptionLabel.do {
             $0.text = StringLiterals.Onboarding.Name.description
-            $0.textColor = .black
+            $0.textColor = .ctblack
             $0.font = .fontContacto(.caption2)
             $0.textAlignment = .center
         }
         
         nameTextField.do {
-            $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Onboarding.Name.example, forColor: UIColor(hex: "969696"))
+            $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Onboarding.Name.example, forColor: .ctgray2)
             $0.font = .fontContacto(.button)
             $0.textAlignment = .center
             $0.borderStyle = .line
-            $0.setRoundBorder(borderColor: .black, borderWidth: 1.5, cornerRadius: 0)
-            $0.backgroundColor = .white
-            $0.textColor = .black
+            $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            $0.backgroundColor = .ctwhite
+            $0.textColor = .ctblack
             $0.returnKeyType = .done
         }
     }

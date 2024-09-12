@@ -31,5 +31,4 @@ class BaseView: UIView {
     func setLayout() {
         
     }
-    
 }

@@ -29,15 +29,15 @@ final class LoginView: BaseView {
         descriptionLabel.do {
             $0.text = StringLiterals.Login.title
             $0.font = .fontContacto(.caption1)
-            $0.textColor = .white
+            $0.textColor = .ctwhite
         }
         
         emailTextField.do {
             $0.font = .fontContacto(.button)
-            $0.textColor = .black
-            $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.email, forColor: UIColor(hex: "969696"))
+            $0.textColor = .ctblack
+            $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.email, forColor: .ctgray2)
             $0.textAlignment = .center
-            $0.backgroundColor = .white
+            $0.backgroundColor = .ctwhite
             $0.keyboardType = .emailAddress
             $0.autocapitalizationType = .none
             $0.returnKeyType = .done
@@ -45,22 +45,22 @@ final class LoginView: BaseView {
         
         continueButton.do {
             $0.setTitle(StringLiterals.Login.continueButton, for: .normal)
-            $0.setTitleColor(.black, for: .normal)
+            $0.setTitleColor(.ctblack, for: .normal)
             $0.titleLabel?.font = .fontContacto(.button)
-            $0.backgroundColor = UIColor(hex: "17DB4E")
+            $0.backgroundColor = .ctsubgreen2
         }
         
         orLabel.do {
             $0.text = StringLiterals.Login.orLabel
             $0.font = .fontContacto(.caption1)
-            $0.textColor = .white
+            $0.textColor = .ctwhite
         }
         
         appleLoginButton.do {
             $0.setTitle(StringLiterals.Login.appleButton, for: .normal)
-            $0.setTitleColor(.black, for: .normal)
+            $0.setTitleColor(.ctblack, for: .normal)
             $0.titleLabel?.font = .fontContacto(.button)
-            $0.backgroundColor = .white
+            $0.backgroundColor = .ctwhite
         }
         
         helpButton.do {
