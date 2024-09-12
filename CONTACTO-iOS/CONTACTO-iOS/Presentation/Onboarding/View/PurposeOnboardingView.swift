@@ -12,6 +12,13 @@ import Then
 
 final class PurposeOnboardingView: BaseView {
     
+    var selectedPurpose: [Int] = []
+    var selectedCount = 0 {
+        didSet {
+            nextButton.isEnabled = (selectedCount != 0)
+        }
+    }
+    
     private let topBackgroundView = UIView()
     private let topImageView = UIImageView()
     private let titleLabel = UILabel()
@@ -23,6 +30,12 @@ final class PurposeOnboardingView: BaseView {
     let groupButton = OnboardingPurposeButton(num: 4)
     
     let nextButton = OnboardingNextButton(count: 2)
+    
+    override func setAddTarget() {
+        [getButton, collaboButton, makeButton, artButton, groupButton].forEach {
+            $0.addTarget(self, action: #selector(purposeButtonTapped(_:)), for: .touchUpInside)
+        }
+    }
     
     override func setStyle() {
         self.backgroundColor = .ctmainblue
@@ -113,6 +126,17 @@ final class PurposeOnboardingView: BaseView {
         nextButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).inset(55.adjustedHeight)
+        }
+    }
+    
+    @objc private func purposeButtonTapped(_ sender: OnboardingPurposeButton) {
+        selectedCount = 0
+        sender.buttonTapped()
+        [getButton, collaboButton, makeButton, artButton, groupButton].forEach {
+            if $0.isTapped {
+                selectedCount += 1
+                selectedPurpose.append($0.num)
+            }
         }
     }
 }

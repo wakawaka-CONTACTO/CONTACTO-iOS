@@ -12,6 +12,7 @@ class BaseView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
+        setAddTarget()
     }
     
     @available(*, unavailable)
@@ -29,6 +30,10 @@ class BaseView: UIView {
     }
     
     func setLayout() {
+        
+    }
+    
+    func setAddTarget() {
         
     }
 }

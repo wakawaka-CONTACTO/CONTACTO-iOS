@@ -21,7 +21,6 @@ final class NameOnboardingViewController: BaseViewController {
         self.removeKeyboardNotifications()
     }
     
-    // MARK: Navigation Function
     override func setNavigationBar() {
         self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self

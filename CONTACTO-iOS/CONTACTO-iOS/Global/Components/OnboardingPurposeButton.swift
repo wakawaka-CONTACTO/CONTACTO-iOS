@@ -38,7 +38,6 @@ final class OnboardingPurposeButton: UIButton {
         self.num = num
         setStyle()
         setLayout()
-        self.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
     private func setStyle() {
@@ -57,7 +56,7 @@ final class OnboardingPurposeButton: UIButton {
         }
     }
     
-    @objc private func buttonTapped() {
+    func buttonTapped() {
         isTapped.toggle()
         
         if isTapped {
