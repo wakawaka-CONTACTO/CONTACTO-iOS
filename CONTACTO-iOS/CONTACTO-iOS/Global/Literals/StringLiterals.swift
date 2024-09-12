@@ -46,6 +46,13 @@ enum StringLiterals {
             static let website = "WEBSITE"
             static let example = "contactocreator.com"
         }
+        
+        enum Talent {
+            static let title = "DO YOU HAVE\nSNS & WEBSITE"
+            static let design = "DESIGN & FASHION"
+            static let art = "ART & CRAFT"
+            static let media = "MEDIA & CONTENTS"
+        }
     }
     
     enum Home {

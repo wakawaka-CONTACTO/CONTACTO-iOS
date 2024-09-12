@@ -91,8 +91,8 @@ extension SNSOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
-//        let purposeOnboardingViewController = PurposeOnboardingViewController()
-//        self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+        let talentOnboardingViewController = TalentOnboardingViewController()
+        self.navigationController?.pushViewController(talentOnboardingViewController, animated: true)
     }
 }
 
