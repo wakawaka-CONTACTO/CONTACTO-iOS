@@ -18,6 +18,7 @@ final class SNSOnboardingView: BaseView {
     
     private let instaLabel = UILabel()
     let instaTextField = UITextField()
+    private let instaAtLabel = UILabel()
     
     private let websiteLabel = UILabel()
     let websiteTextField = UITextField()
@@ -52,7 +53,6 @@ final class SNSOnboardingView: BaseView {
         }
         
         instaTextField.do {
-            $0.changePlaceholderColor(forPlaceHolder: "@", forColor: .ctgray2)
             $0.font = .fontContacto(.button1)
             $0.textAlignment = .left
             $0.borderStyle = .line
@@ -62,6 +62,13 @@ final class SNSOnboardingView: BaseView {
             $0.returnKeyType = .done
             $0.autocorrectionType = .no
             $0.spellCheckingType = .no
+            $0.addPadding(left: 27)
+        }
+        
+        instaAtLabel.do {
+            $0.text = "@"
+            $0.font = .fontContacto(.button1)
+            $0.textColor = .ctblack
         }
         
         websiteLabel.do {
@@ -81,6 +88,7 @@ final class SNSOnboardingView: BaseView {
             $0.returnKeyType = .done
             $0.autocorrectionType = .no
             $0.spellCheckingType = .no
+            $0.addPadding(left: 10)
         }
     }
     
@@ -93,6 +101,8 @@ final class SNSOnboardingView: BaseView {
                     websiteLabel,
                     websiteTextField,
                     nextButton)
+        
+        instaTextField.addSubviews(instaAtLabel)
         
         topBackgroundView.snp.makeConstraints {
             $0.top.width.equalToSuperview()
@@ -118,6 +128,11 @@ final class SNSOnboardingView: BaseView {
             $0.leading.trailing.equalToSuperview().inset(16.adjustedWidth)
             $0.top.equalTo(instaLabel.snp.bottom).offset(10.adjustedHeight)
             $0.height.equalTo(34.adjustedHeight)
+        }
+        
+        instaAtLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalToSuperview().inset(10)
         }
         
         websiteLabel.snp.makeConstraints {

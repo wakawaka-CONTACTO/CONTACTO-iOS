@@ -34,7 +34,7 @@ final class SNSOnboardingViewController: BaseViewController {
     }
     
     override func setAddTarget() {
-//        snsOnboardingView.nameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        snsOnboardingView.instaTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         snsOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
 }
@@ -91,8 +91,8 @@ extension SNSOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
-        let purposeOnboardingViewController = PurposeOnboardingViewController()
-        self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+//        let purposeOnboardingViewController = PurposeOnboardingViewController()
+//        self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
     }
 }
 
