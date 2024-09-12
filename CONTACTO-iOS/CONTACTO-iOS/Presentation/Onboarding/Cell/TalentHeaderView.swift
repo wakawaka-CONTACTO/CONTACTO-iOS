@@ -7,6 +7,31 @@
 
 import UIKit
 
-class TalentHeaderView: UICollectionReusableView {
+import SnapKit
+import Then
+
+final class TalentHeaderView: UICollectionReusableView {
+    
+    let talentTitle = UILabel()
+    
+    func setUI() {
+        setStyle()
+        setLayout()
+    }
+    
+    func setStyle() {
+        talentTitle.do {
+            $0.text = StringLiterals.Onboarding.Talent.art
+            $0.font = .fontContacto(.body2)
+            $0.textColor = .ctblack
+        }
+    }
+    
+    func setLayout() {
+        addSubviews(talentTitle)
         
+        talentTitle.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+    }
 }
