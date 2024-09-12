@@ -46,7 +46,7 @@ final class OnboardingPurposeButton: UIButton {
         self.setBackgroundColor(.ctwhite, for: .highlighted)
         self.setTitle(nameArray[num], for: .normal)
         self.setTitleColor(.ctblack, for: .normal)
-        self.titleLabel?.font = .fontContacto(.button)
+        self.titleLabel?.font = .fontContacto(.button1)
     }
     
     private func setLayout() {

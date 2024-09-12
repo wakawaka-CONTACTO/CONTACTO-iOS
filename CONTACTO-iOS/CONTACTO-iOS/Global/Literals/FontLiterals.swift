@@ -23,7 +23,8 @@ enum FontLevel {
     case caption1
     case caption2
     
-    case button
+    case button1
+    case button2
 }
 
 extension FontLevel {
@@ -36,8 +37,10 @@ extension FontLevel {
             return FontName.ABCDiatypeMedium.rawValue
         case .caption2:
             return FontName.ABCDiatypeBold.rawValue
-        case .button:
+        case .button1:
             return FontName.FKRasterRomanBlended.rawValue
+        case .button2:
+            return FontName.ABCDiatypeBold.rawValue
         }
     }
     
@@ -49,7 +52,9 @@ extension FontLevel {
             return 20.adjusted
         case .caption2:
             return 10.adjusted
-        case .button:
+        case .button1:
+            return 16.adjusted
+        case .button2:
             return 16.adjusted
         }
     }
@@ -62,8 +67,10 @@ extension FontLevel {
             return FontLevel.caption1.fontSize * 1.5
         case .caption2:
             return FontLevel.caption1.fontSize * 1.13
-        case .button:
-            return FontLevel.button.fontSize * 1.5
+        case .button1:
+            return FontLevel.button1.fontSize * 1.5
+        case .button2:
+            return FontLevel.button2.fontSize * 1.5
         }
     }
 }

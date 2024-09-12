@@ -30,7 +30,7 @@ final class OnboardingNextButton: UIButton {
     private func setStyle() {
         self.isEnabled = false
         self.setTitleColor(.ctblack, for: .normal)
-        self.titleLabel?.font = .fontContacto(.button)
+        self.titleLabel?.font = .fontContacto(.button2)
         self.setBackgroundColor(.ctgray3, for: .disabled)
         self.setBackgroundColor(.ctsubgreen2, for: .normal)
         self.setBackgroundColor(.ctsubgreen2, for: .highlighted)

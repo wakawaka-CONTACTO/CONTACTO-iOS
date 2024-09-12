@@ -47,7 +47,7 @@ final class NameOnboardingView: BaseView {
         
         nameTextField.do {
             $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Onboarding.Name.example, forColor: .ctgray2)
-            $0.font = .fontContacto(.button)
+            $0.font = .fontContacto(.button1)
             $0.textAlignment = .center
             $0.borderStyle = .line
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)

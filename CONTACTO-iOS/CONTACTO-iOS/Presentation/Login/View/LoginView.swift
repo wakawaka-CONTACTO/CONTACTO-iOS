@@ -33,7 +33,7 @@ final class LoginView: BaseView {
         }
         
         emailTextField.do {
-            $0.font = .fontContacto(.button)
+            $0.font = .fontContacto(.button1)
             $0.textColor = .ctblack
             $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.email, forColor: .ctgray2)
             $0.textAlignment = .center
@@ -46,7 +46,7 @@ final class LoginView: BaseView {
         continueButton.do {
             $0.setTitle(StringLiterals.Login.continueButton, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
-            $0.titleLabel?.font = .fontContacto(.button)
+            $0.titleLabel?.font = .fontContacto(.button1)
             $0.backgroundColor = .ctsubgreen2
         }
         
@@ -59,7 +59,7 @@ final class LoginView: BaseView {
         appleLoginButton.do {
             $0.setTitle(StringLiterals.Login.appleButton, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
-            $0.titleLabel?.font = .fontContacto(.button)
+            $0.titleLabel?.font = .fontContacto(.button1)
             $0.backgroundColor = .ctwhite
         }
         
