@@ -17,10 +17,10 @@ final class TalentOnboardingViewController: BaseViewController {
                        "Animation", "Illustration", "Interior", "Architecture", "Textile",
                        "Fabric Product","Styling", "Bag Design", "Shoes Design"]
     let artArray = ["Painting", "Ridicule", "Kinetic", "Ceramics", "Wood", "Jewel",
-                     "Metal", "Glass", "Printmaking", "Aesthetics", "Tuffting"]
+                    "Metal", "Glass", "Printmaking", "Aesthetics", "Tuffting"]
     let mediaArray = ["Poet", "Writing", "Photo", "Advertising", "Scenario", "Compose",
-                       "Writing", "Director", "Dance", "Sing", "Musical", "Comedy", "Act",
-                       "Production", "Compose"]
+                      "Writing", "Director", "Dance", "Sing", "Musical", "Comedy", "Act",
+                      "Production", "Compose"]
     
     var selectedIndexPaths: Set<IndexPath> = [] {
         didSet {
@@ -61,8 +61,8 @@ final class TalentOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
-        //        let explainOnboardingViewController = ExplainOnboardingViewController()
-        //        self.navigationController?.pushViewController(explainOnboardingViewController, animated: true)
+        let portfolioOnboardingViewController = PortfolioOnboardingViewController()
+        self.navigationController?.pushViewController(portfolioOnboardingViewController, animated: true)
     }
 }
 

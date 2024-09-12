@@ -12,7 +12,7 @@ import SnapKit
 final class SNSOnboardingViewController: BaseViewController {
     
     private let snsOnboardingView = SNSOnboardingView()
-
+    
     override func viewWillAppear(_ animated: Bool) {
         self.addKeyboardNotifications()
     }

@@ -17,9 +17,9 @@ final class TalentOnboardingView: BaseView {
     private let titleLabel = UILabel()
     
     lazy var talentCollectionView = UICollectionView(
-            frame: .zero,
-            collectionViewLayout: talentFlowLayout
-        )
+        frame: .zero,
+        collectionViewLayout: talentFlowLayout
+    )
     private let talentFlowLayout = UICollectionViewFlowLayout()
     
     let nextButton = OnboardingNextButton(count: 5)

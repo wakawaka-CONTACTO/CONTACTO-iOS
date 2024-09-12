@@ -19,7 +19,7 @@ final class TalentCollectionViewCell: UICollectionViewCell {
     var updateButtonAction: (() -> Void) = {}
     
     let talentButton = UIButton()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
