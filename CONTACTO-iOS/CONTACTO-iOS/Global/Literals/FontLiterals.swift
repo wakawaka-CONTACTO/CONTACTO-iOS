@@ -21,6 +21,7 @@ enum FontLevel {
     case title1
     
     case body1
+    case body2
     
     case caption1
     case caption2
@@ -28,26 +29,21 @@ enum FontLevel {
     
     case button1
     case button2
+    case button3
 }
 
 extension FontLevel {
     
     var fontWeight: String {
         switch self {
-        case .title1:
+        case .title1, .body1, .body2, .caption2, .button2:
             return FontName.ABCDiatypeBold.rawValue
-        case .body1:
-            return FontName.ABCDiatypeBold.rawValue
-        case .caption1:
+        case .caption1, .button3:
             return FontName.ABCDiatypeMedium.rawValue
-        case .caption2:
-            return FontName.ABCDiatypeBold.rawValue
         case .caption3:
             return FontName.ABCDiatypeBoldItalic.rawValue
         case .button1:
             return FontName.FKRasterRomanBlended.rawValue
-        case .button2:
-            return FontName.ABCDiatypeBold.rawValue
         }
     }
     
@@ -57,35 +53,31 @@ extension FontLevel {
             return 35.adjusted
         case .body1:
             return 14.adjusted
+        case .body2:
+            return 12.adjusted
         case .caption1:
             return 20.adjusted
         case .caption2:
             return 10.adjusted
         case .caption3:
             return 7.adjusted
-        case .button1:
+        case .button1, .button2:
             return 16.adjusted
-        case .button2:
-            return 16.adjusted
+        case .button3:
+            return 11.adjusted
         }
     }
     
     var lineHeight: CGFloat {
         switch self {
-        case .title1:
+        case .title1, .caption2:
             return FontLevel.title1.fontSize * 1.13
-        case .body1:
-            return FontLevel.body1.fontSize
-        case .caption1:
+        case .body1, .body2:
+            return FontLevel.body2.fontSize
+        case .caption1, .caption3, .button1, .button2:
             return FontLevel.caption1.fontSize * 1.5
-        case .caption2:
-            return FontLevel.caption1.fontSize * 1.13
-        case .caption3:
-            return FontLevel.caption3.fontSize * 1.5
-        case .button1:
-            return FontLevel.button1.fontSize * 1.5
-        case .button2:
-            return FontLevel.button2.fontSize * 1.5
+        case .button3:
+            return FontLevel.button3.fontSize * 1.3
         }
     }
 }

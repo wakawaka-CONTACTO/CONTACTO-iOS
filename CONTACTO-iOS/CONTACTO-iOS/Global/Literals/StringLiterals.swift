@@ -48,7 +48,7 @@ enum StringLiterals {
         }
         
         enum Talent {
-            static let title = "DO YOU HAVE\nSNS & WEBSITE"
+            static let title = "WHAT'S YOUR\nTALENT"
             static let design = "DESIGN & FASHION"
             static let art = "ART & CRAFT"
             static let media = "MEDIA & CONTENTS"
