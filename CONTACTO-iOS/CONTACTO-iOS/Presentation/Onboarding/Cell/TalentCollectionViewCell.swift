@@ -16,6 +16,8 @@ final class TalentCollectionViewCell: UICollectionViewCell {
     var isTapped = false
     private let colorArray: [UIColor] = [.ctsubpink, .ctsubblue1, .ctsubbrown]
     
+    var updateButtonAction: (() -> Void) = {}
+    
     let talentButton = UIButton()
 
     override init(frame: CGRect) {
@@ -31,6 +33,8 @@ final class TalentCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         talentButton.setTitle("", for: .normal)
+        updateButtonAction = {}
+        isTapped = false
     }
     
     private func setUI() {
@@ -69,5 +73,6 @@ final class TalentCollectionViewCell: UICollectionViewCell {
             talentButton.setBackgroundColor(.ctwhite, for: .normal)
             talentButton.setBackgroundColor(.ctwhite, for: .highlighted)
         }
+        updateButtonAction()
     }
 }

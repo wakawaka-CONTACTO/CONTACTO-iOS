@@ -22,6 +22,17 @@ final class TalentOnboardingViewController: BaseViewController {
                        "Writing", "Director", "Dance", "Sing", "Musical", "Comedy", "Act",
                        "Production", "Compose"]
     
+    var selectedIndexPaths: Set<IndexPath> = [] {
+        didSet {
+            selectedCount = selectedIndexPaths.count
+        }
+    }
+    var selectedCount = 0 {
+        didSet {
+            talentOnboardingView.nextButton.isEnabled = (selectedCount != 0)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
@@ -97,6 +108,14 @@ extension TalentOnboardingViewController: UICollectionViewDataSource {
             return cell
         }
         cell.num = indexPath.section
+        cell.updateButtonAction = {
+            if self.selectedIndexPaths.contains(indexPath) {
+                self.selectedIndexPaths.remove(indexPath)
+            } else {
+                self.selectedIndexPaths.insert(indexPath)
+            }
+            print(self.selectedIndexPaths)
+        }
         return cell
     }
     

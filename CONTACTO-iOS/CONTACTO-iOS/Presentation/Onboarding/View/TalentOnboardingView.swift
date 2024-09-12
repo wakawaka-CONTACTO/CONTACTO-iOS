@@ -49,6 +49,7 @@ final class TalentOnboardingView: BaseView {
             $0.contentInset = UIEdgeInsets(top: 21, left: 0, bottom: 0, right: 0)
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
+            $0.allowsMultipleSelection = true
         }
         
         talentFlowLayout.do {
