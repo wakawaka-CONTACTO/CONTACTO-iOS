@@ -16,7 +16,7 @@ final class NameOnboardingView: BaseView {
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
     private let nameTextField = UITextField()
-    private let nextButton = UIButton()
+    let nextButton = UIButton()
     
     override func setStyle() {
         self.backgroundColor = UIColor(hex: "FFF629")
@@ -53,6 +53,7 @@ final class NameOnboardingView: BaseView {
             $0.setRoundBorder(borderColor: .black, borderWidth: 1.5, cornerRadius: 0)
             $0.backgroundColor = .white
             $0.textColor = .black
+            $0.returnKeyType = .done
         }
         
         nextButton.do {
