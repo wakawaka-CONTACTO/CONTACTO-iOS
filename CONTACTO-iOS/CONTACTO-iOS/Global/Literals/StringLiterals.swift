@@ -33,6 +33,11 @@ enum StringLiterals {
             static let art = "# Art Residency"
             static let group = "# Group exhibition"
         }
+        
+        enum Explain {
+            static let title = "EXPLAIN YOUR\nORIGINALITY"
+            static let example = "ex) We are make a ceramic for design."
+        }
     }
     
     enum Home {

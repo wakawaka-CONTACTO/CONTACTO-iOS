@@ -33,8 +33,8 @@ final class PurposeOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
-//        let purposeOnboardingViewController = PurposeOnboardingViewController()
-//        self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+        let explainOnboardingViewController = ExplainOnboardingViewController()
+        self.navigationController?.pushViewController(explainOnboardingViewController, animated: true)
     }
 }
 
