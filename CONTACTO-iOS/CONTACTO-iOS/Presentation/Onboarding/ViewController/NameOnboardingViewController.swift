@@ -35,6 +35,13 @@ final class NameOnboardingViewController: BaseViewController {
         }
     }
     
+    override func setAddTarget() {
+        nameOnboardingView.nameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+    }
+}
+
+extension NameOnboardingViewController {
+    
     /// 노티피케이션 추가
     func addKeyboardNotifications(){
         // 키보드가 나타날 때 앱에게 알리는 메서드 추가
@@ -45,30 +52,43 @@ final class NameOnboardingViewController: BaseViewController {
     
     /// 노티피케이션을 제거하는 메서드
     func removeKeyboardNotifications(){
-        // 키보드가 나타날 때 앱에게 알리는 메서드 제거
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification , object: nil)
-        // 키보드가 사라질 때 앱에게 알리는 메서드 제거
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     @objc func keyboardWillShow(_ noti: NSNotification){
-        UIView.animate(withDuration: 2.0, animations: {
-            self.nameOnboardingView.nextButton.snp.remakeConstraints {
-                $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(325.adjustedHeight)
-                $0.leading.trailing.equalToSuperview().inset(16.adjustedWidth)
-                $0.height.equalTo(34.adjustedHeight)
-            }
-        })
+        
+        self.nameOnboardingView.nextButton.snp.remakeConstraints {
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(325.adjustedHeight)
+            $0.leading.trailing.equalToSuperview().inset(16.adjustedWidth)
+            $0.height.equalTo(34.adjustedHeight)
+        }
+        
+        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
     }
     
     @objc func keyboardWillHide(_ noti: NSNotification){
-        UIView.animate(withDuration: 2.0, animations: {
-            self.nameOnboardingView.nextButton.snp.remakeConstraints {
-                $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(55.adjustedHeight)
-                $0.leading.trailing.equalToSuperview().inset(16.adjustedWidth)
-                $0.height.equalTo(34.adjustedHeight)
+        self.nameOnboardingView.nextButton.snp.remakeConstraints {
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(55.adjustedHeight)
+            $0.leading.trailing.equalToSuperview().inset(16.adjustedWidth)
+            $0.height.equalTo(34.adjustedHeight)
+        }
+        
+        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    @objc func textFieldDidChange(_ sender: Any?) {
+        if let textField = sender as? UITextField {
+            if let currentText = textField.text, !currentText.isEmpty {
+                nameOnboardingView.nextButton.isEnabled = true
+            } else {
+                nameOnboardingView.nextButton.isEnabled = false
             }
-        })
+        }
     }
 }
 

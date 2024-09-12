@@ -15,8 +15,8 @@ final class NameOnboardingView: BaseView {
     private let topImageView = UIImageView()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
-    private let nameTextField = UITextField()
-    let nextButton = UIButton()
+    let nameTextField = UITextField()
+    let nextButton = OnboardingNextButton(count: 1)
     
     override func setStyle() {
         self.backgroundColor = UIColor(hex: "FFF629")
@@ -55,14 +55,6 @@ final class NameOnboardingView: BaseView {
             $0.textColor = .black
             $0.returnKeyType = .done
         }
-        
-        nextButton.do {
-            $0.setTitle(StringLiterals.Onboarding.Name.button, for: .normal)
-            $0.setTitleColor(.black, for: .normal)
-            $0.titleLabel?.font = .fontContacto(.button)
-            $0.setBackgroundColor(UIColor(hex: "C8C8C8"), for: .normal)
-            $0.setRoundBorder(borderColor: .black, borderWidth: 1.5, cornerRadius: 0)
-        }
     }
     
     override func setLayout() {
@@ -100,9 +92,8 @@ final class NameOnboardingView: BaseView {
         }
         
         nextButton.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(16.adjustedWidth)
+            $0.centerX.equalToSuperview()
             $0.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).inset(55.adjustedHeight)
-            $0.height.equalTo(34.adjustedHeight)
         }
     }
 }
