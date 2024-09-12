@@ -14,7 +14,7 @@ final class ExplainOnboardingView: BaseView {
     private let topBackgroundView = UIView()
     private let topImageView = UIImageView()
     private let titleLabel = UILabel()
-    let explainTextView = UITextField()
+    let explainTextView = UITextView()
     let nextButton = OnboardingNextButton(count: 3)
     
     override func setStyle() {
@@ -38,13 +38,14 @@ final class ExplainOnboardingView: BaseView {
         }
         
         explainTextView.do {
-            $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Onboarding.Explain.example, forColor: .ctgray2)
-            $0.font = .fontContacto(.button)
-            $0.textAlignment = .center
-            $0.borderStyle = .line
-            $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            $0.text = StringLiterals.Onboarding.Explain.example
+            $0.textColor = .ctgray2
+            $0.font = .fontContacto(.button1)
+            $0.textAlignment = .left
+            $0.layer.borderColor = UIColor.ctblack.cgColor
+            $0.layer.borderWidth = 1.5
             $0.backgroundColor = .ctwhite
-            $0.textColor = .ctblack
+            $0.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
             $0.returnKeyType = .done
             $0.autocorrectionType = .no
             $0.spellCheckingType = .no

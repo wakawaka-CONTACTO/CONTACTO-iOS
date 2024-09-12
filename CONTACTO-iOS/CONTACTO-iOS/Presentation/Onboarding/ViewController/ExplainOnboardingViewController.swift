@@ -35,8 +35,11 @@ final class ExplainOnboardingViewController: BaseViewController {
     }
     
     override func setAddTarget() {
-        explainOnboardingView.explainTextView.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         explainOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+    }
+    
+    override func setDelegate() {
+        explainOnboardingView.explainTextView.delegate = self
     }
 }
 
@@ -81,19 +84,9 @@ extension ExplainOnboardingViewController {
         }, completion: nil)
     }
     
-    @objc func textFieldDidChange(_ sender: Any?) {
-        if let textField = sender as? UITextField {
-            if let currentText = textField.text, !currentText.isEmpty {
-                explainOnboardingView.nextButton.isEnabled = true
-            } else {
-                explainOnboardingView.nextButton.isEnabled = false
-            }
-        }
-    }
-    
     @objc private func nextButtonTapped() {
-//        let purposeOnboardingViewController = PurposeOnboardingViewController()
-//        self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+        let SNSOnboardingViewController = SNSOnboardingViewController()
+        self.navigationController?.pushViewController(SNSOnboardingViewController, animated: true)
     }
 }
 
@@ -102,3 +95,28 @@ extension ExplainOnboardingViewController: UIGestureRecognizerDelegate {
         return true
     }
 }
+
+extension ExplainOnboardingViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == StringLiterals.Onboarding.Explain.example {
+            textView.text = nil
+            textView.textColor = .ctblack
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            textView.text = StringLiterals.Onboarding.Explain.example
+            textView.textColor = .ctgray2
+        }
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if !textView.text.isEmpty, textView.text != StringLiterals.Onboarding.Explain.example {
+            explainOnboardingView.nextButton.isEnabled = true
+        } else {
+            explainOnboardingView.nextButton.isEnabled = false
+        }
+    }
+}
+
