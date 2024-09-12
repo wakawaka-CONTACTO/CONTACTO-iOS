@@ -13,6 +13,14 @@ import Then
 final class TalentOnboardingViewController: BaseViewController {
     
     private let talentOnboardingView = TalentOnboardingView()
+    let designArray = ["Industrial", "Graphic", "Fashion", "UX/UI", "Branding", "Motion Grapic",
+                       "Animation", "Illustration", "Interior", "Architecture", "Textile",
+                       "Fabric Product","Styling", "Bag Design", "Shoes Design"]
+    let artArray = ["Painting", "Ridicule", "Kinetic", "Ceramics", "Wood", "Jewel",
+                     "Metal", "Glass", "Printmaking", "Aesthetics", "Tuffting"]
+    let mediaArray = ["Poet", "Writing", "Photo", "Advertising", "Scenario", "Compose",
+                       "Writing", "Director", "Dance", "Sing", "Musical", "Comedy", "Act",
+                       "Production", "Compose"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,11 +72,11 @@ extension TalentOnboardingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 15
+            return designArray.count
         case 1:
-            return 11
+            return artArray.count
         case 2:
-            return 15
+            return mediaArray.count
         default:
             return 0
         }
@@ -78,7 +86,17 @@ extension TalentOnboardingViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TalentCollectionViewCell.className,
             for: indexPath) as? TalentCollectionViewCell else { return UICollectionViewCell() }
-        cell.titleLabel.text = "hello"
+        switch indexPath.section {
+        case 0:
+            cell.talentButton.setTitle(designArray[indexPath.item], for: .normal)
+        case 1:
+            cell.talentButton.setTitle(artArray[indexPath.item], for: .normal)
+        case 2:
+            cell.talentButton.setTitle(mediaArray[indexPath.item], for: .normal)
+        default:
+            return cell
+        }
+        cell.num = indexPath.section
         return cell
     }
     
