@@ -39,6 +39,8 @@ final class LoginView: BaseView {
             $0.textAlignment = .center
             $0.backgroundColor = .white
             $0.keyboardType = .emailAddress
+            $0.autocapitalizationType = .none
+            $0.returnKeyType = .done
         }
         
         continueButton.do {
