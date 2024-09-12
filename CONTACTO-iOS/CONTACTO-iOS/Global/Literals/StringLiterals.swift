@@ -38,6 +38,14 @@ enum StringLiterals {
             static let title = "EXPLAIN YOUR\nORIGINALITY"
             static let example = "ex) We are make a ceramic for design."
         }
+        
+        enum SNS {
+            static let title = "DO YOU HAVE\nSNS & WEBSITE"
+            static let instagram = "INSTAGRAM"
+            static let required = "REQUIRED*"
+            static let website = "WEBSITE"
+            static let example = "contactocreator.com"
+        }
     }
     
     enum Home {
