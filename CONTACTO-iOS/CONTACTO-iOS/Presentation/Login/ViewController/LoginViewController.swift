@@ -29,7 +29,7 @@ final class LoginViewController: BaseViewController {
     }
     
     @objc func buttonTapped() {
-        let onboardingController = NameOnboardingViewController()
-        self.navigationController?.pushViewController(onboardingController, animated: true)
+        let onboardingViewController = NameOnboardingViewController()
+        self.navigationController?.pushViewController(onboardingViewController, animated: true)
     }
 }
