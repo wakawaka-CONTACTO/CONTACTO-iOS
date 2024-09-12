@@ -16,6 +16,12 @@ final class TalentOnboardingView: BaseView {
     private let topImageView = UIImageView()
     private let titleLabel = UILabel()
     
+    lazy var talentCollectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: talentFlowLayout
+        )
+    private let talentFlowLayout = UICollectionViewFlowLayout()
+    
     let nextButton = OnboardingNextButton(count: 5)
     
     override func setStyle() {
@@ -31,11 +37,25 @@ final class TalentOnboardingView: BaseView {
         }
         
         titleLabel.do {
-            $0.text = StringLiterals.Onboarding.SNS.title
+            $0.text = StringLiterals.Onboarding.Talent.title
             $0.textColor = .ctblack
             $0.font = .fontContacto(.title1)
             $0.textAlignment = .center
             $0.numberOfLines = 0
+        }
+        
+        talentCollectionView.do {
+            $0.backgroundColor = .clear
+            $0.contentInset = UIEdgeInsets(top: 21, left: 0, bottom: 0, right: 0)
+            $0.showsVerticalScrollIndicator = false
+            $0.showsHorizontalScrollIndicator = false
+        }
+        
+        talentFlowLayout.do {
+            $0.scrollDirection = .vertical
+            $0.minimumLineSpacing = 14.adjustedHeight
+            $0.minimumInteritemSpacing = 5
+            $0.sectionInset = UIEdgeInsets(top: 11, left: 0, bottom: 40, right: 0)
         }
     }
     
@@ -43,6 +63,7 @@ final class TalentOnboardingView: BaseView {
         addSubviews(topBackgroundView,
                     topImageView,
                     titleLabel,
+                    talentCollectionView,
                     nextButton)
         
         topBackgroundView.snp.makeConstraints {
@@ -63,6 +84,12 @@ final class TalentOnboardingView: BaseView {
         nextButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).inset(55.adjustedHeight)
+        }
+        
+        talentCollectionView.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom)
+            $0.leading.trailing.equalToSuperview().inset(30.adjustedWidth)
+            $0.bottom.equalToSuperview().inset(128.adjustedHeight)
         }
     }
 }
