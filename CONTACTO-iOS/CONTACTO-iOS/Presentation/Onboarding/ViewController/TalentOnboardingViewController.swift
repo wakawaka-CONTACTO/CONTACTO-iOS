@@ -24,12 +24,7 @@ final class TalentOnboardingViewController: BaseViewController {
     
     var selectedIndexPaths: Set<IndexPath> = [] {
         didSet {
-            selectedCount = selectedIndexPaths.count
-        }
-    }
-    var selectedCount = 0 {
-        didSet {
-            talentOnboardingView.nextButton.isEnabled = (selectedCount != 0)
+            talentOnboardingView.nextButton.isEnabled = (!selectedIndexPaths.isEmpty)
         }
     }
     
