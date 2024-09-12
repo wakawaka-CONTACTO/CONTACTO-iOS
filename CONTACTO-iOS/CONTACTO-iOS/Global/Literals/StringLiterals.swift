@@ -22,7 +22,16 @@ enum StringLiterals {
             static let title = "LET ME KNOW\nYOUR NAME"
             static let description = "BRAND NAME, PEN NAME, ARTIST NAME ETC..."
             static let example = "ex. CONTACTO"
-            static let button = "1 / 6"
+        }
+        
+        enum Purpose {
+            static let title = "WHAT'S YOUR\nPURPOSE?"
+            static let description = "MULTIPLE SELECTION"
+            static let getalong = "# Get Along With U"
+            static let collaborate = "# Collaborate Project"
+            static let makenew = "# Make New Brand"
+            static let art = "# Art Residency"
+            static let group = "# Group exhibition"
         }
     }
     
