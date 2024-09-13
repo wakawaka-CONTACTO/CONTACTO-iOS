@@ -8,7 +8,7 @@
 import Foundation
 
 extension String {
-    /// emoji 제외
+    /// emoji 제외 메소드
     func hasCharacters() -> Bool {
         do {
             let regex = try NSRegularExpression(pattern: "^[0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ`~!@#$%^&*()\\-_=+\\[{\\]}\\\\|;:'\",<.>/?\\s]$", options: .caseInsensitive)
@@ -19,5 +19,10 @@ extension String {
             return false
         }
         return false
+    }
+    
+    /// 공백만 있으면 true
+    func isOnlyWhitespace() -> Bool {
+        return self.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }

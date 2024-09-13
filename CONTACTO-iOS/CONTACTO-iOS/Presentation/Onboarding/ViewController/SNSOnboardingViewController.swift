@@ -83,7 +83,7 @@ extension SNSOnboardingViewController {
     
     @objc func textFieldDidChange(_ sender: Any?) {
         if let textField = sender as? UITextField {
-            if let currentText = textField.text, !currentText.isEmpty {
+            if let currentText = textField.text, !currentText.isEmpty, !currentText.isOnlyWhitespace() {
                 snsOnboardingView.nextButton.isEnabled = true
             } else {
                 snsOnboardingView.nextButton.isEnabled = false

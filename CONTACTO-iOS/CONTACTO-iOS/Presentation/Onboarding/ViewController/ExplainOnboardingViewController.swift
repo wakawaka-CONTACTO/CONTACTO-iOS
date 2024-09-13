@@ -113,7 +113,7 @@ extension ExplainOnboardingViewController: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        if !textView.text.isEmpty, textView.text != StringLiterals.Onboarding.Explain.example {
+        if !textView.text.isEmpty, textView.text != StringLiterals.Onboarding.Explain.example, !textView.text.isOnlyWhitespace() {
             explainOnboardingView.nextButton.isEnabled = true
         } else {
             explainOnboardingView.nextButton.isEnabled = false

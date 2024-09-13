@@ -85,7 +85,7 @@ extension NameOnboardingViewController {
     
     @objc func textFieldDidChange(_ sender: Any?) {
         if let textField = sender as? UITextField {
-            if let currentText = textField.text, !currentText.isEmpty {
+            if let currentText = textField.text, !currentText.isEmpty, !currentText.isOnlyWhitespace() {
                 nameOnboardingView.nextButton.isEnabled = true
             } else {
                 nameOnboardingView.nextButton.isEnabled = false
