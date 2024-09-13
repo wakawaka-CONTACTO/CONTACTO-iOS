@@ -54,6 +54,7 @@ final class NameOnboardingView: BaseView {
             $0.backgroundColor = .ctwhite
             $0.textColor = .ctblack
             $0.returnKeyType = .done
+            $0.autocapitalizationType = .none
         }
     }
     
