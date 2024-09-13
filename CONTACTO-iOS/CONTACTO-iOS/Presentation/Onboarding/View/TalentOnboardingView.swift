@@ -22,6 +22,7 @@ final class TalentOnboardingView: BaseView {
     )
     private let talentFlowLayout = UICollectionViewFlowLayout()
     
+    let gradientView = UIImageView()
     let nextButton = OnboardingNextButton(count: 5)
     
     override func setStyle() {
@@ -58,6 +59,11 @@ final class TalentOnboardingView: BaseView {
             $0.minimumInteritemSpacing = 5
             $0.sectionInset = UIEdgeInsets(top: 11, left: 0, bottom: 40, right: 0)
         }
+        
+        gradientView.do {
+            $0.image = .imgGradient
+            $0.contentMode = .scaleAspectFill
+        }
     }
     
     override func setLayout() {
@@ -65,6 +71,7 @@ final class TalentOnboardingView: BaseView {
                     topImageView,
                     titleLabel,
                     talentCollectionView,
+                    gradientView,
                     nextButton)
         
         topBackgroundView.snp.makeConstraints {
@@ -85,6 +92,11 @@ final class TalentOnboardingView: BaseView {
         nextButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).inset(55.adjustedHeight)
+        }
+        
+        gradientView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(nextButton).offset(-5)
         }
         
         talentCollectionView.snp.makeConstraints {
