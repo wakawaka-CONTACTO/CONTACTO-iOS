@@ -48,7 +48,7 @@ final class PortfolioOnboardingView: BaseView {
             $0.backgroundColor = .clear
             $0.contentInset = UIEdgeInsets(top: 0, left: 16.5, bottom: 0, right: 16.5)
             $0.showsVerticalScrollIndicator = false
-            $0.showsHorizontalScrollIndicator = true
+            $0.showsHorizontalScrollIndicator = false
         }
         
         portfolioFlowLayout.do {
@@ -86,7 +86,7 @@ final class PortfolioOnboardingView: BaseView {
         }
         
         portfolioCollectionView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(50.adjustedHeight)
+            $0.height.equalTo(306)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(nextButton.snp.top).offset(-50.adjustedHeight)
         }

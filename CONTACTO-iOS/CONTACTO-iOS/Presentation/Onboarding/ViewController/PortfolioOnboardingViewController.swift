@@ -7,12 +7,15 @@
 
 import UIKit
 
+import PhotosUI
 import SnapKit
 import Then
 
 final class PortfolioOnboardingViewController: BaseViewController {
     
     private let portfolioOnboardingView = PortfolioOnboardingView()
+    
+    var selectedImages: [UIImage] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +43,16 @@ final class PortfolioOnboardingViewController: BaseViewController {
             $0.edges.equalToSuperview()
         }
     }
+    
+    func setPortfolio() {
+        var configuration = PHPickerConfiguration()
+        lazy var picker = PHPickerViewController(configuration: configuration)
+        configuration.selectionLimit = 4 - selectedImages.count
+        configuration.filter = .any(of: [.images])
+        configuration.selection = .ordered
+        self.present(picker, animated: true, completion: nil)
+        picker.delegate = self
+    }
 }
 
 extension PortfolioOnboardingViewController: UIGestureRecognizerDelegate {
@@ -48,7 +61,11 @@ extension PortfolioOnboardingViewController: UIGestureRecognizerDelegate {
     }
 }
 
-extension PortfolioOnboardingViewController: UICollectionViewDelegate { }
+extension PortfolioOnboardingViewController: UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // 이따하자..
+    }
+}
 
 extension PortfolioOnboardingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -59,6 +76,42 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: PortfolioCollectionViewCell.className,
             for: indexPath) as? PortfolioCollectionViewCell else { return UICollectionViewCell() }
+        
+        print(selectedImages)
+        if indexPath.row < selectedImages.count {
+            cell.isFilled = true
+            cell.backgroundImageView.image = selectedImages[indexPath.row]
+        } else {
+            cell.isFilled = false
+            cell.backgroundImageView.image = nil
+        }
+        
+        cell.uploadAction = {
+            self.setPortfolio()
+        }
+        
+        cell.cancelAction = {
+            self.selectedImages.remove(at: cell.tag)
+            collectionView.reloadData()
+        }
         return cell
+    }
+}
+
+extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        for result in results {
+            result.itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                DispatchQueue.main.async {
+                    if let image = image as? UIImage {
+                        if !self.selectedImages.contains(where: { $0.isEqualTo(image) }), self.selectedImages.count < 4  {
+                            self.selectedImages.append(image)
+                        }
+                        self.portfolioOnboardingView.portfolioCollectionView.reloadData()
+                    }
+                }
+            }
+        }
     }
 }

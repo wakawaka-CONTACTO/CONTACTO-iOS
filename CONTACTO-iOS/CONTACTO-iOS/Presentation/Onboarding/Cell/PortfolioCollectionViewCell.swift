@@ -25,6 +25,9 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
     private let uploadImageView = UIImageView()
     private let uploadLabel = UILabel()
     
+    var uploadAction: (() -> Void) = {}
+    var cancelAction: (() -> Void) = {}
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
@@ -36,6 +39,14 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        uploadAction = {}
+        cancelAction = {}
+        isFilled = false
+    }
+    
     
     private func setUI() {
         setStyle()
@@ -50,6 +61,7 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
         backgroundImageView.do {
             $0.isHidden = true
             $0.isUserInteractionEnabled = true
+            $0.contentMode = .scaleAspectFill
         }
         
         cancelButton.do {
@@ -109,12 +121,11 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func uploadButtonTapped() {
-        if !isFilled {
-            isFilled = true
-        }
+        uploadAction()
     }
     
     @objc func cancelButtonTapped() {
+        cancelAction()
         isFilled = false
     }
 }
