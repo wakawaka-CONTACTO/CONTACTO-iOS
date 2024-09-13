@@ -38,15 +38,17 @@ final class NameOnboardingViewController: BaseViewController {
         nameOnboardingView.nameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         nameOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
+    
+    override func setDelegate() {
+        nameOnboardingView.nameTextField.delegate = self
+    }
 }
 
 extension NameOnboardingViewController {
     
     /// 노티피케이션 추가
     func addKeyboardNotifications(){
-        // 키보드가 나타날 때 앱에게 알리는 메서드 추가
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification , object: nil)
-        // 키보드가 사라질 때 앱에게 알리는 메서드 추가
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
@@ -57,7 +59,6 @@ extension NameOnboardingViewController {
     }
     
     @objc func keyboardWillShow(_ noti: NSNotification){
-        
         self.nameOnboardingView.nextButton.snp.remakeConstraints {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(325.adjustedHeight)
             $0.leading.trailing.equalToSuperview().inset(16.adjustedWidth)
@@ -94,6 +95,23 @@ extension NameOnboardingViewController {
     @objc private func nextButtonTapped() {
         let purposeOnboardingViewController = PurposeOnboardingViewController()
         self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let utf8Char = string.cString(using: .utf8)
+        let isBackSpace = strcmp(utf8Char, "\\b")
+        
+        if string.hasCharacters() && ( !string.isEmpty || isBackSpace == -92 ) {
+            guard let textFieldText = textField.text,
+                  let rangeOfTextToReplace = Range(range, in: textFieldText) else {
+                return false
+            }
+            
+            let newText = textFieldText.replacingCharacters(in: rangeOfTextToReplace, with: string)
+            let count = newText.count
+            return count <= 20
+        }
+        return false
     }
 }
 
