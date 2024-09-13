@@ -36,6 +36,15 @@ final class PortfolioOnboardingViewController: BaseViewController {
         portfolioOnboardingView.portfolioCollectionView.dataSource = self
     }
     
+    override func setAddTarget() {
+        portfolioOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func nextButtonTapped() {
+        let homeViewController = HomeViewController()
+        navigationController?.pushViewController(homeViewController, animated: true)
+    }
+    
     private func setCollectionView() {
         portfolioOnboardingView.portfolioCollectionView.register(PortfolioCollectionViewCell.self, forCellWithReuseIdentifier: PortfolioCollectionViewCell.className)
     }
