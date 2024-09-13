@@ -16,6 +16,8 @@ final class PortfolioOnboardingView: BaseView {
     private let topImageView = UIImageView()
     private let titleLabel = UILabel()
     
+    let indicatorView = PortfolioIndicatorView()
+    
     lazy var portfolioCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: portfolioFlowLayout
@@ -62,6 +64,7 @@ final class PortfolioOnboardingView: BaseView {
         addSubviews(topBackgroundView,
                     topImageView,
                     titleLabel,
+                    indicatorView,
                     portfolioCollectionView,
                     nextButton)
         
@@ -78,6 +81,12 @@ final class PortfolioOnboardingView: BaseView {
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(topImageView.snp.bottom).offset(46.adjustedHeight)
             $0.centerX.equalToSuperview()
+        }
+        
+        indicatorView.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(30.adjustedHeight)
+            $0.height.equalTo(3)
+            $0.leading.trailing.equalToSuperview().inset(16)
         }
         
         nextButton.snp.makeConstraints {

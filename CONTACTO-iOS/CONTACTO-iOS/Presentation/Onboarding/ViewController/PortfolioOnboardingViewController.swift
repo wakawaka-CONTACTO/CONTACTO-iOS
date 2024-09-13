@@ -76,7 +76,22 @@ extension PortfolioOnboardingViewController: UIGestureRecognizerDelegate {
 
 extension PortfolioOnboardingViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // 이따하자..
+        
+        let contentWidth = scrollView.contentSize.width
+        let visibleWidth = scrollView.bounds.width
+        let contentOffsetX = scrollView.contentOffset.x
+        
+        let maxOffsetX = contentWidth - visibleWidth
+        let indicatorWidth = 45.0
+        let indicatorX = contentOffsetX / maxOffsetX * (portfolioOnboardingView.indicatorView.bounds.width - indicatorWidth)
+        
+        portfolioOnboardingView.indicatorView.trackTintView.snp.remakeConstraints {
+            $0.width.equalTo(45)
+            $0.top.bottom.height.equalTo(portfolioOnboardingView.indicatorView.trackView)
+            $0.leading.equalToSuperview().offset(indicatorX)
+            $0.leading.trailing.lessThanOrEqualToSuperview()
+        }
+        
     }
 }
 
