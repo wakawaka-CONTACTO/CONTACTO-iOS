@@ -15,7 +15,7 @@ final class NameOnboardingView: BaseView {
     private let topImageView = UIImageView()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
-    let nameTextField = UITextField()
+    let nameTextField = BaseTextField()
     let nextButton = OnboardingNextButton(count: 1)
     
     override func setStyle() {

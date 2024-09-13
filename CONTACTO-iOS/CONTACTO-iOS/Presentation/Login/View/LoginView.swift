@@ -14,7 +14,7 @@ final class LoginView: BaseView {
     
     private let logoImageView = UIImageView()
     private let descriptionLabel = UILabel()
-    lazy var emailTextField = UITextField()
+    lazy var emailTextField = BaseTextField()
     lazy var continueButton = UIButton()
     private let orLabel = UILabel()
     lazy var appleLoginButton = UIButton()

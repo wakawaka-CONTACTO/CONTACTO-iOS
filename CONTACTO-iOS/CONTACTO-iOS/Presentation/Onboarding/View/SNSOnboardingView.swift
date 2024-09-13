@@ -17,11 +17,11 @@ final class SNSOnboardingView: BaseView {
     private let titleLabel = UILabel()
     
     private let instaLabel = UILabel()
-    let instaTextField = UITextField()
+    let instaTextField = BaseTextField()
     private let instaAtLabel = UILabel()
     
     private let websiteLabel = UILabel()
-    let websiteTextField = UITextField()
+    let websiteTextField = BaseTextField()
     
     let nextButton = OnboardingNextButton(count: 4)
     

@@ -102,15 +102,19 @@ extension NameOnboardingViewController {
         let utf8Char = string.cString(using: .utf8)
         let isBackSpace = strcmp(utf8Char, "\\b")
         
-        if string.hasCharacters() && ( !string.isEmpty || isBackSpace == -92 ) {
-            guard let textFieldText = textField.text,
-                  let rangeOfTextToReplace = Range(range, in: textFieldText) else {
-                return false
-            }
-            
-            let newText = textFieldText.replacingCharacters(in: rangeOfTextToReplace, with: string)
-            let count = newText.count
-            return count <= 20
+        if !string.isEmpty || isBackSpace == -92  {
+//            if string.hasCharacters() {
+                guard let textFieldText = textField.text,
+                      let rangeOfTextToReplace = Range(range, in: textFieldText) else {
+                    return false
+                }
+                
+                let newText = textFieldText.replacingCharacters(in: rangeOfTextToReplace, with: string)
+                let count = newText.count
+                return count <= 20
+//            } else {
+//                return false
+//            }
         }
         return false
     }
