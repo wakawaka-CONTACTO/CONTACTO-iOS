@@ -55,6 +55,7 @@ final class NameOnboardingView: BaseView {
             $0.textColor = .ctblack
             $0.returnKeyType = .done
             $0.autocapitalizationType = .none
+            $0.keyboardType = .asciiCapable
         }
     }
     

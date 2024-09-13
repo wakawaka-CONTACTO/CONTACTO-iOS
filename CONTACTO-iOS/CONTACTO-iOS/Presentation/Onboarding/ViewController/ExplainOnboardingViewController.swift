@@ -15,6 +15,7 @@ final class ExplainOnboardingViewController: BaseViewController {
     let explainOnboardingView = ExplainOnboardingView()
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.addKeyboardNotifications()
     }
     override func viewWillDisappear(_ animated: Bool) {

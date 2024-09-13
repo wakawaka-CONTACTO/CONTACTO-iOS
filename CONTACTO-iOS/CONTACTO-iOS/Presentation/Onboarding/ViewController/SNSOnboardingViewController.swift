@@ -14,6 +14,7 @@ final class SNSOnboardingViewController: BaseViewController {
     private let snsOnboardingView = SNSOnboardingView()
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.addKeyboardNotifications()
     }
     override func viewWillDisappear(_ animated: Bool) {

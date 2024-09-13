@@ -39,11 +39,15 @@ class BaseViewController: UIViewController {
         hideKeyboardWhenTappedAround()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setNavigationBar()
+    }
+    
     // MARK: UI
     func setUI() {
         setStyle()
         setLayout()
-        setNavigationBar()
     }
     
     func setStyle() {

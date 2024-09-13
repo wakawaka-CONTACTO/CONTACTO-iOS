@@ -15,6 +15,7 @@ final class NameOnboardingViewController: BaseViewController {
     private let nameOnboardingView = NameOnboardingView()
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.addKeyboardNotifications()
     }
     override func viewWillDisappear(_ animated: Bool) {
