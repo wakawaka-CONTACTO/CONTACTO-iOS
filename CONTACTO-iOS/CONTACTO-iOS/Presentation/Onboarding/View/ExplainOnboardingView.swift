@@ -40,7 +40,7 @@ final class ExplainOnboardingView: BaseView {
         explainTextView.do {
             $0.text = StringLiterals.Onboarding.Explain.example
             $0.textColor = .ctgray2
-            $0.font = .fontContacto(.button1)
+            $0.font = .fontContacto(.caption5)
             $0.textAlignment = .left
             $0.layer.borderColor = UIColor.ctblack.cgColor
             $0.layer.borderWidth = 1.5
