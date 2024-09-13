@@ -15,10 +15,12 @@ enum FontName: String {
     case FKRasterRomanBlended = "FKRasterRomanCompactTrial-Blended"
     case FKRasterRomanSharp = "FKRasterRomanCompactTrial-Sharp"
     case FKRasterRomanSmooth = "FKRasterRomanCompactTrial-Smooth"
+    case PretendardRegular = "Pretendard-Regular"
 }
 
 enum FontLevel {
     case title1
+    case title2
     
     case body1
     case body2
@@ -26,6 +28,7 @@ enum FontLevel {
     case caption1
     case caption2
     case caption3
+    case caption4
     
     case button1
     case button2
@@ -36,7 +39,7 @@ extension FontLevel {
     
     var fontWeight: String {
         switch self {
-        case .title1, .body1, .body2, .caption2, .button2:
+        case .title1, .title2, .body1, .body2, .caption2, .button2:
             return FontName.ABCDiatypeBold.rawValue
         case .caption1, .button3:
             return FontName.ABCDiatypeMedium.rawValue
@@ -44,6 +47,8 @@ extension FontLevel {
             return FontName.ABCDiatypeBoldItalic.rawValue
         case .button1:
             return FontName.FKRasterRomanBlended.rawValue
+        case .caption4:
+            return FontName.PretendardRegular.rawValue
         }
     }
     
@@ -51,7 +56,9 @@ extension FontLevel {
         switch self {
         case .title1:
             return 35.adjusted
-        case .body1:
+        case .title2:
+            return 39.adjusted
+        case .body1, .caption4:
             return 14.adjusted
         case .body2:
             return 12.adjusted
@@ -70,11 +77,11 @@ extension FontLevel {
     
     var lineHeight: CGFloat {
         switch self {
-        case .title1, .caption2:
+        case .title1, .title2, .caption2:
             return FontLevel.title1.fontSize * 1.13
         case .body1, .body2:
             return FontLevel.body2.fontSize
-        case .caption1, .caption3, .button1, .button2:
+        case .caption1, .caption3, .caption4, .button1, .button2:
             return FontLevel.caption1.fontSize * 1.5
         case .button3:
             return FontLevel.button3.fontSize * 1.3

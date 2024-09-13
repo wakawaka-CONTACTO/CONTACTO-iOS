@@ -53,6 +53,11 @@ enum StringLiterals {
             static let art = "ART & CRAFT"
             static let media = "MEDIA & CONTENTS"
         }
+        
+        enum Portfolio {
+            static let title = "SHOW YOUR\nBEST PORTFOLIO"
+            static let upload = "Upload"
+        }
     }
     
     enum Home {
