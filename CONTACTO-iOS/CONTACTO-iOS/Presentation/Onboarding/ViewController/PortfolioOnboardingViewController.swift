@@ -15,7 +15,11 @@ final class PortfolioOnboardingViewController: BaseViewController {
     
     private let portfolioOnboardingView = PortfolioOnboardingView()
     
-    var selectedImages: [UIImage] = []
+    var selectedImages: [UIImage] = [] {
+        didSet {
+            portfolioOnboardingView.nextButton.isEnabled = (!selectedImages.isEmpty)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
