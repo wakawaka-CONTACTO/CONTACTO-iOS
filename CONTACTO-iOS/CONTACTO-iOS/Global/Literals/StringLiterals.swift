@@ -61,7 +61,9 @@ enum StringLiterals {
     }
     
     enum Home {
-        
+        enum Main {
+            static let title = "Graphic by"
+        }
     }
     
     enum Chat {

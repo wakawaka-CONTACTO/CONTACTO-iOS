@@ -8,6 +8,7 @@
 import UIKit
 
 enum FontName: String {
+    case ABCDiatypeRegular = "ABCDiatypeUnlicensedTrial-Regular"
     case ABCDiatypeMedium = "ABCDiatypeUnlicensedTrial-Medium"
     case ABCDiatypeBold = "ABCDiatypeUnlicensedTrial-Bold"
     case ABCDiatypeBoldItalic = "ABCDiatypeUnlicensedTrial-BoldItalic"
@@ -30,10 +31,12 @@ enum FontLevel {
     case caption3
     case caption4
     case caption5
+    case caption6
     
     case button1
     case button2
     case button3
+    case button4
 }
 
 extension FontLevel {
@@ -46,7 +49,9 @@ extension FontLevel {
             return FontName.ABCDiatypeMedium.rawValue
         case .caption3:
             return FontName.ABCDiatypeBoldItalic.rawValue
-        case .button1:
+        case .caption6:
+            return FontName.ABCDiatypeRegular.rawValue
+        case .button1, .button4:
             return FontName.FKRasterRomanBlended.rawValue
         case .caption4, .caption5:
             return FontName.PretendardRegular.rawValue
@@ -69,10 +74,12 @@ extension FontLevel {
             return 10.adjusted
         case .caption3:
             return 7.adjusted
-        case .button1, .button2, .caption5:
+        case .button1, .button2, .caption5, .caption6:
             return 16.adjusted
         case .button3:
             return 11.adjusted
+        case .button4:
+            return 17.adjusted
         }
     }
     
@@ -82,7 +89,7 @@ extension FontLevel {
             return FontLevel.title1.fontSize * 1.13
         case .body1, .body2:
             return FontLevel.body2.fontSize
-        case .caption1, .caption3, .caption4, .caption5, .button1, .button2:
+        case .caption1, .caption3, .caption4, .caption5, .button1, .button2, .button4, .caption6:
             return FontLevel.caption1.fontSize * 1.5
         case .button3:
             return FontLevel.button3.fontSize * 1.3
