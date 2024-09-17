@@ -7,23 +7,71 @@
 
 import UIKit
 
-class MainTabBarViewController: UITabBarController {
+import SnapKit
+import Then
+
+final class MainTabBarViewController: UITabBarController {
+    
+    private var tabs: [UIViewController] = []
+    
+    let homeViewController = HomeViewController()
+    let chatViewController = UIViewController()
+    let profileViewController = UIViewController()
+    let listViewController = UIViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        setDelegate()
+        setTabBarAppearance()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let safeAreaHeight = view.safeAreaInsets.bottom
+        let tabBarHeight: CGFloat = 85
+        tabBar.frame.size.height = tabBarHeight + safeAreaHeight
+        tabBar.frame.origin.y = view.frame.height - tabBarHeight - safeAreaHeight
     }
-    */
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+        setTabs()
+        setTabBarItems()
+    }
+    
+    private func setTabBarAppearance() {
+        self.tabBar.itemPositioning = .fill
+    }
+    
+    private func setTabs() {
+        tabs = [
+            UINavigationController(rootViewController: homeViewController),
+            UINavigationController(rootViewController: chatViewController),
+            UINavigationController(rootViewController: profileViewController),
+            UINavigationController(rootViewController: listViewController)
+        ]
+    }
+    
+    private func setDelegate() {
+        self.delegate = self
+    }
+    
+    private func setTabBarItems() {
+        self.setViewControllers(tabs, animated: true)
+        
+        let tabBar: UITabBar = self.tabBar
+        tabBar.backgroundColor = UIColor.black
+        tabBar.barStyle = UIBarStyle.default
+        tabBar.barTintColor = UIColor.black
+        
+        TabBarItems.allCases.forEach {
+            tabs[$0.rawValue].tabBarItem = $0.asTabBarItem()
+            tabs[$0.rawValue].tabBarItem.tag = $0.rawValue
+        }
+    }
+}
 
+extension MainTabBarViewController: UITabBarControllerDelegate {
+    
 }
