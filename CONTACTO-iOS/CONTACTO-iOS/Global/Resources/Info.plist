@@ -2,6 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ABCDiatype-BoldItalic-Trial.otf</string>
+		<string>ABCDiatype-Bold-Trial.otf</string>
+		<string>ABCDiatype-Medium-Trial.otf</string>
+		<string>FKRasterRomanCompactRounded.otf</string>
+		<string>FKRasterRomanCompactTrial-Smooth.otf</string>
+		<string>FKRasterRomanCompactTrial-Sharp.otf</string>
+		<string>FKRasterRomanCompactTrial-Blended.otf</string>
+		<string>Pretendard-Regular.otf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
