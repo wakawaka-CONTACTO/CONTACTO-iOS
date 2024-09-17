@@ -41,8 +41,8 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
-        let homeViewController = HomeViewController()
-        navigationController?.pushViewController(homeViewController, animated: true)
+        let mainTabBarViewController = MainTabBarViewController()
+        navigationController?.pushViewController(mainTabBarViewController, animated: true)
     }
     
     private func setCollectionView() {
