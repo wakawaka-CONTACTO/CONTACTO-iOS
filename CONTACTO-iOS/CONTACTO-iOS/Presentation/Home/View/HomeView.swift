@@ -11,5 +11,7 @@ import SnapKit
 import Then
 
 final class HomeView: BaseView {
-    
+    override func setStyle() {
+        self.backgroundColor = .ctmainpink
+    }
 }
