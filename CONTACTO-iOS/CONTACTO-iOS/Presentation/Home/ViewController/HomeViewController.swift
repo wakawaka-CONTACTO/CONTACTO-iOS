@@ -11,5 +11,13 @@ import SnapKit
 import Then
 
 final class HomeViewController: BaseViewController {
+    let homeView = HomeView()
     
+    override func setLayout() {
+        view.addSubviews(homeView)
+        
+        homeView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+    }
 }
