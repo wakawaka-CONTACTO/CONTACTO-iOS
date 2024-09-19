@@ -11,7 +11,26 @@ import SnapKit
 import Then
 
 final class HomeViewController: BaseViewController {
+    
+    var num = 0 {
+        didSet {
+            homeView.pageCollectionView.reloadData()
+            setPortImage()
+        }
+    }
+    var maxNum = 0
+    
+    var imageDummy: [UIImage] = []
     let homeView = HomeView()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setSwipeAction()
+        setTapGesture()
+        setCollectionView()
+        setData()
+        setPortImage()
+    }
     
     override func setNavigationBar() {
         self.navigationController?.navigationBar.isHidden = true
@@ -38,8 +57,25 @@ final class HomeViewController: BaseViewController {
         leftSwipeGestureRecognizer.direction = .left
         rightSwipeGestureRecognizer.direction = .right
         
-        homeView.portImageView.addGestureRecognizer(leftSwipeGestureRecognizer)
-        homeView.portImageView.addGestureRecognizer(rightSwipeGestureRecognizer)
+        homeView.portView.addGestureRecognizer(leftSwipeGestureRecognizer)
+        homeView.portView.addGestureRecognizer(rightSwipeGestureRecognizer)
+    }
+    
+    private func setTapGesture() {
+        let backTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleBackTap(_:)))
+        let nextTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleNextTap(_:)))
+        
+        homeView.backView.addGestureRecognizer(backTapGestureRecognizer)
+        homeView.nextView.addGestureRecognizer(nextTapGestureRecognizer)
+    }
+    
+    override func setDelegate() {
+        homeView.pageCollectionView.delegate = self
+        homeView.pageCollectionView.dataSource = self
+    }
+    
+    private func setCollectionView() {
+        homeView.pageCollectionView.register(PageCollectionViewCell.self, forCellWithReuseIdentifier: PageCollectionViewCell.className)
     }
 }
 
@@ -54,5 +90,50 @@ extension HomeViewController {
         default:
             print("기타")
         }
+    }
+    
+    @objc private func handleBackTap(_ sender: UITapGestureRecognizer) {
+        if num == 0 {
+            num = maxNum
+        } else {
+            num -= 1
+        }
+    }
+    
+    @objc private func handleNextTap(_ sender: UITapGestureRecognizer) {
+        if num == maxNum {
+            num = 0
+        } else {
+            num += 1
+        }
+    }
+    
+    private func setData() {
+        imageDummy = [.imgex1, .imgex2, .imgex3, .imgex4]
+        maxNum = imageDummy.count - 1
+    }
+    
+    private func setPortImage() {
+        homeView.portImageView.image = imageDummy[self.num]
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegate { }
+
+extension HomeViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 4
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: PageCollectionViewCell.className,
+            for: indexPath) as? PageCollectionViewCell else { return UICollectionViewCell() }
+        if (indexPath.row == self.num) {
+            cell.selectedView()
+        } else {
+            cell.unselectedView()
+        }
+        return cell
     }
 }
