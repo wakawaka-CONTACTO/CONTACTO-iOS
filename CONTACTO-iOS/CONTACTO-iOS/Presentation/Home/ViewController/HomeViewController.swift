@@ -21,12 +21,17 @@ final class HomeViewController: BaseViewController {
     var maxNum = 0
     var isAnimating = false
     
+    let oldAnchorPoint = CGPoint(x: 0.5, y: 0.5)
+    let newAnchorPoint = CGPoint(x: 0.5, y: -0.5)
+    lazy var offsetX = self.homeView.portView.bounds.width * (newAnchorPoint.x - oldAnchorPoint.x)
+    lazy var offsetY = self.homeView.portView.bounds.height * (newAnchorPoint.y - oldAnchorPoint.y)
+    
     var imageDummy: [UIImage] = []
     let homeView = HomeView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setSwipeAction()
+        setPanAction()
         setTapGesture()
         setCollectionView()
         setData()
@@ -35,11 +40,9 @@ final class HomeViewController: BaseViewController {
     
     override func setNavigationBar() {
         self.navigationController?.navigationBar.isHidden = true
-        setSwipeAction()
     }
     
     override func setLayout() {
-        
         let safeAreaHeight = view.safeAreaInsets.bottom
         let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
         
@@ -61,16 +64,9 @@ final class HomeViewController: BaseViewController {
         homeView.pageCollectionView.dataSource = self
     }
     
-    
-    private func setSwipeAction() {
-        let leftSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
-        let rightSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
-        
-        leftSwipeGestureRecognizer.direction = .left
-        rightSwipeGestureRecognizer.direction = .right
-        
-        homeView.portView.addGestureRecognizer(leftSwipeGestureRecognizer)
-        homeView.portView.addGestureRecognizer(rightSwipeGestureRecognizer)
+    private func setPanAction() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        homeView.portView.addGestureRecognizer(panGesture)
     }
     
     private func setTapGesture() {
@@ -87,19 +83,6 @@ final class HomeViewController: BaseViewController {
 }
 
 extension HomeViewController {
-    @objc private func handleSwipes(_ sender: UISwipeGestureRecognizer) {
-        switch sender.direction {
-        case .left:
-            print("left")
-            animateImage(isMatch: false)
-        case .right:
-            print("right")
-            animateImage(isMatch: true)
-        default:
-            print("check the direction")
-        }
-    }
-    
     @objc private func handleBackTap(_ sender: UITapGestureRecognizer) {
         if num == 0 {
             num = maxNum
@@ -113,6 +96,38 @@ extension HomeViewController {
             num = 0
         } else {
             num += 1
+        }
+    }
+    
+    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        guard !isAnimating else { return }
+        
+        let translation = gesture.translation(in: self.homeView.portView)
+        var transform = CGAffineTransform(translationX: offsetX, y: offsetY)
+        let rotationAngle = -translation.x * .pi / (180 * 10)
+        
+        self.homeView.portView.layer.anchorPoint = CGPoint(x: 0.5, y: -0.5)
+        transform = transform.rotated(by: rotationAngle)
+        self.homeView.portView.transform = transform
+        
+        if gesture.state == .ended {
+            let velocity = gesture.velocity(in: self.view)
+            if velocity.x > 500 {
+                animateImage(isMatch: true)
+            } else if velocity.x < -500 {
+                animateImage(isMatch: false)
+            } else {
+                if rotationAngle < -0.1 {
+                    animateImage(isMatch: true)
+                } else if rotationAngle > 0.1 {
+                    animateImage(isMatch: false)
+                } else {
+                    UIView.animate(withDuration: 1) {
+                        self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
+                        self.homeView.portView.transform = .identity
+                    }
+                }
+            }
         }
     }
     
@@ -137,19 +152,14 @@ extension HomeViewController {
         guard !isAnimating else { return }  // 애니메이션 중이면 함수 실행 중단
         isAnimating = true
         
-        let oldAnchorPoint = CGPoint(x: 0.5, y: 0.5)
-        let newAnchorPoint = CGPoint(x: 0.5, y: -0.5)
-        let offsetX = self.homeView.portView.bounds.width * (newAnchorPoint.x - oldAnchorPoint.x)
-        let offsetY = self.homeView.portView.bounds.height * (newAnchorPoint.y - oldAnchorPoint.y)
-        
         var transform = CGAffineTransform(translationX: offsetX, y: offsetY)
         
         UIView.animate(withDuration: 1) {
             transform = transform.rotated(by: isMatch ? -(CGFloat.pi * 0.5) : (CGFloat.pi * 0.5))
-            self.homeView.portView.layer.anchorPoint = newAnchorPoint
+            self.homeView.portView.layer.anchorPoint = self.newAnchorPoint
             self.homeView.portView.transform = transform
         } completion: { _ in
-            self.homeView.portView.layer.anchorPoint = oldAnchorPoint
+            self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
             self.homeView.portView.transform = .identity
             self.num = 0
             self.isAnimating = false
