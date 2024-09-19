@@ -41,7 +41,11 @@ final class MainTabBarViewController: UITabBarController {
     }
     
     private func setTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.backgroundColor = .ctblack
         self.tabBar.itemPositioning = .fill
+        self.tabBar.standardAppearance = appearance
+        self.tabBar.scrollEdgeAppearance = appearance
     }
     
     private func setTabs() {
@@ -61,9 +65,9 @@ final class MainTabBarViewController: UITabBarController {
         self.setViewControllers(tabs, animated: true)
         
         let tabBar: UITabBar = self.tabBar
-        tabBar.backgroundColor = UIColor.black
+        tabBar.backgroundColor = .ctblack
         tabBar.barStyle = UIBarStyle.default
-        tabBar.barTintColor = UIColor.black
+        tabBar.barTintColor = .ctblack
         
         TabBarItems.allCases.forEach {
             tabs[$0.rawValue].tabBarItem = $0.asTabBarItem()
