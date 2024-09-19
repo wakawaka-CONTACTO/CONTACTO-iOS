@@ -85,7 +85,11 @@ final class HomeViewController: BaseViewController {
 
 extension HomeViewController {
     @objc private func profileButtonTapped() {
+        // 추후 수정 예정
         let detailProfileViewController = DetailProfileViewController()
+//        detailProfileViewController.modalPresentationStyle = .fullScreen
+//        detailProfileViewController.modalTransitionStyle = .coverVertical
+//        self.present(detailProfileViewController, animated: true)
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
     
@@ -178,7 +182,7 @@ extension HomeViewController: UICollectionViewDelegate { }
 
 extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return maxNum + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
