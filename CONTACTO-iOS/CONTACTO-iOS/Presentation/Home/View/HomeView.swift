@@ -34,7 +34,7 @@ final class HomeView: BaseView {
     let yesButton = UIButton()
     
     override func setStyle() {
-        self.backgroundColor = .ctblack
+        self.backgroundColor = .ctblack1
         
         icCImageView.do {
             $0.image = .icC

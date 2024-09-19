@@ -38,6 +38,7 @@ enum FontLevel {
     case button2
     case button3
     case button4
+    case button5
 }
 
 extension FontLevel {
@@ -46,7 +47,7 @@ extension FontLevel {
         switch self {
         case .title1, .title2, .body1, .body2, .caption2, .button2:
             return FontName.ABCDiatypeBold.rawValue
-        case .caption1, .button3:
+        case .caption1, .button3, .button5:
             return FontName.ABCDiatypeMedium.rawValue
         case .caption3:
             return FontName.ABCDiatypeBoldItalic.rawValue
@@ -77,7 +78,7 @@ extension FontLevel {
             return 7.adjusted
         case .button1, .button2, .caption5, .caption6:
             return 16.adjusted
-        case .button3:
+        case .button3, .button5:
             return 11.adjusted
         case .button4:
             return 17.adjusted
@@ -94,7 +95,7 @@ extension FontLevel {
             return FontLevel.body2.fontSize
         case .caption1, .caption3, .caption4, .caption5, .button1, .button2, .button4, .caption6:
             return FontLevel.caption1.fontSize * 1.5
-        case .button3:
+        case .button3, .button5:
             return FontLevel.button3.fontSize * 1.3
         case .title3:
             return FontLevel.title3.fontSize
