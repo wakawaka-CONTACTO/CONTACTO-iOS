@@ -61,6 +61,7 @@ final class HomeView: BaseView {
         
         portView.do {
             $0.isUserInteractionEnabled = true
+            $0.clipsToBounds = true
         }
         
         portImageView.do {
@@ -141,6 +142,7 @@ final class HomeView: BaseView {
             $0.height.equalTo(492.adjustedHeight)
             $0.top.equalTo(topView.snp.bottom).offset(10.adjustedHeight)
             $0.leading.trailing.equalToSuperview()
+            $0.width.equalToSuperview()
         }
         
         portImageView.snp.makeConstraints {

@@ -19,6 +19,7 @@ final class HomeViewController: BaseViewController {
         }
     }
     var maxNum = 0
+    var isAnimating = false
     
     var imageDummy: [UIImage] = []
     let homeView = HomeView()
@@ -50,6 +51,17 @@ final class HomeViewController: BaseViewController {
         }
     }
     
+    override func setAddTarget() {
+        homeView.noButton.addTarget(self, action: #selector(noButtonTapped), for: .touchUpInside)
+        homeView.yesButton.addTarget(self, action: #selector(yesButtonTapped), for: .touchUpInside)
+    }
+    
+    override func setDelegate() {
+        homeView.pageCollectionView.delegate = self
+        homeView.pageCollectionView.dataSource = self
+    }
+    
+    
     private func setSwipeAction() {
         let leftSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
         let rightSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
@@ -69,11 +81,6 @@ final class HomeViewController: BaseViewController {
         homeView.nextView.addGestureRecognizer(nextTapGestureRecognizer)
     }
     
-    override func setDelegate() {
-        homeView.pageCollectionView.delegate = self
-        homeView.pageCollectionView.dataSource = self
-    }
-    
     private func setCollectionView() {
         homeView.pageCollectionView.register(PageCollectionViewCell.self, forCellWithReuseIdentifier: PageCollectionViewCell.className)
     }
@@ -81,14 +88,15 @@ final class HomeViewController: BaseViewController {
 
 extension HomeViewController {
     @objc private func handleSwipes(_ sender: UISwipeGestureRecognizer) {
-        
         switch sender.direction {
         case .left:
             print("left")
+            animateImage(isMatch: false)
         case .right:
             print("right")
+            animateImage(isMatch: true)
         default:
-            print("기타")
+            print("check the direction")
         }
     }
     
@@ -115,6 +123,38 @@ extension HomeViewController {
     
     private func setPortImage() {
         homeView.portImageView.image = imageDummy[self.num]
+    }
+    
+    @objc private func yesButtonTapped() {
+        animateImage(isMatch: true)
+    }
+    
+    @objc private func noButtonTapped() {
+        animateImage(isMatch: false)
+    }
+    
+    private func animateImage(isMatch: Bool) {
+        guard !isAnimating else { return }  // 애니메이션 중이면 함수 실행 중단
+        isAnimating = true
+        
+        let oldAnchorPoint = CGPoint(x: 0.5, y: 0.5)
+        let newAnchorPoint = CGPoint(x: 0.5, y: -0.5)
+        let offsetX = self.homeView.portView.bounds.width * (newAnchorPoint.x - oldAnchorPoint.x)
+        let offsetY = self.homeView.portView.bounds.height * (newAnchorPoint.y - oldAnchorPoint.y)
+        
+        var transform = CGAffineTransform(translationX: offsetX, y: offsetY)
+        
+        UIView.animate(withDuration: 1) {
+            transform = transform.rotated(by: isMatch ? -(CGFloat.pi * 0.5) : (CGFloat.pi * 0.5))
+            self.homeView.portView.layer.anchorPoint = newAnchorPoint
+            self.homeView.portView.transform = transform
+        } completion: { _ in
+            self.homeView.portView.layer.anchorPoint = oldAnchorPoint
+            self.homeView.portView.transform = .identity
+            self.num = 0
+            self.isAnimating = false
+            // 다음 유저로 넘기는 작업 수행
+        }
     }
 }
 
