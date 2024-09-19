@@ -63,6 +63,18 @@ enum StringLiterals {
     enum Home {
         enum Main {
             static let title = "Graphic by"
+            static let match = "Oh! You both like each ohter"
+            static let description = "just say hello"
+            static let hello = "hello!"
+            static let nice = "Nice to meet you!"
+            static let hi = "HI"
+            static let oh = "Oh!"
+        }
+        
+        enum Profile {
+            static let purpose = "-\nLooking for"
+            static let insta = "-\ninstagram"
+            static let website = "-\nwebsite"
         }
     }
     

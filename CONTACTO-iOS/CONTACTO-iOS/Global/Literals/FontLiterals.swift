@@ -22,6 +22,7 @@ enum FontName: String {
 enum FontLevel {
     case title1
     case title2
+    case title3
     
     case body1
     case body2
@@ -51,7 +52,7 @@ extension FontLevel {
             return FontName.ABCDiatypeBoldItalic.rawValue
         case .caption6:
             return FontName.ABCDiatypeRegular.rawValue
-        case .button1, .button4:
+        case .button1, .button4, .title3:
             return FontName.FKRasterRomanBlended.rawValue
         case .caption4, .caption5:
             return FontName.PretendardRegular.rawValue
@@ -80,6 +81,8 @@ extension FontLevel {
             return 11.adjusted
         case .button4:
             return 17.adjusted
+        case .title3:
+            return 30.adjusted
         }
     }
     
@@ -93,6 +96,8 @@ extension FontLevel {
             return FontLevel.caption1.fontSize * 1.5
         case .button3:
             return FontLevel.button3.fontSize * 1.3
+        case .title3:
+            return FontLevel.title3.fontSize
         }
     }
 }
