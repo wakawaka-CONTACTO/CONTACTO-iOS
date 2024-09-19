@@ -11,8 +11,19 @@ import SnapKit
 import Then
 
 final class HomeView: BaseView {
-    private let topImageView = UIImageView()
+    private let topView = UIView()
+    private let icCImageView = UIImageView()
+    private let icTImageView = UIImageView()
     
+    lazy var pageCollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: pageFlowLayout
+    )
+    private let pageFlowLayout = UICollectionViewFlowLayout()
+    
+    let portView = UIView()
+    let backView = UIView()
+    let nextView = UIView()
     let portImageView = UIImageView()
     
     let profileButton = UIButton()
@@ -25,14 +36,35 @@ final class HomeView: BaseView {
     override func setStyle() {
         self.backgroundColor = .ctblack
         
-        topImageView.do {
-            $0.image = .imgHomeTop
-            $0.contentMode = .scaleAspectFill
+        icCImageView.do {
+            $0.image = .icC
+            $0.contentMode = .scaleAspectFit
+        }
+        
+        icTImageView.do {
+            $0.image = .icT
+            $0.contentMode = .scaleAspectFit
+        }
+        
+        pageCollectionView.do {
+            $0.backgroundColor = .clear
+            $0.showsVerticalScrollIndicator = false
+            $0.showsHorizontalScrollIndicator = false
+            $0.isScrollEnabled = false
+        }
+        
+        pageFlowLayout.do {
+            $0.scrollDirection = .horizontal
+            $0.minimumLineSpacing = 13.adjustedWidth
+            $0.itemSize = CGSize(width: 52.adjustedWidth, height: 2)
+        }
+        
+        portView.do {
+            $0.isUserInteractionEnabled = true
         }
         
         portImageView.do {
-            $0.image = .imgex
-            $0.contentMode = .scaleAspectFit
+            $0.contentMode = .scaleAspectFill
         }
         
         profileButton.do {
@@ -65,30 +97,70 @@ final class HomeView: BaseView {
     
     override func setLayout() {
         
-        self.addSubviews(topImageView,
-                         portImageView,
+        self.addSubviews(topView,
+                         portView,
                          profileButton,
                          noButton,
                          yesButton)
         
+        topView.addSubviews(icCImageView,
+                            pageCollectionView,
+                            icTImageView)
+        
+        portView.addSubviews(portImageView,
+                             backView,
+                             nextView)
+        
         profileButton.addSubviews(profileTitle,
                                   profileNameLabel)
         
-        topImageView.snp.makeConstraints {
-            $0.top.equalTo(safeAreaLayoutGuide.snp.top)
-            $0.leading.trailing.equalToSuperview().inset(17)
-            $0.height.equalTo(47.adjustedHeight)
+        topView.snp.makeConstraints {
+            $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(21)
+            $0.leading.trailing.equalToSuperview().inset(12.adjustedWidth)
+            $0.height.equalTo(56.adjustedHeight)
+        }
+        
+        icCImageView.snp.makeConstraints {
+            $0.centerY.leading.equalToSuperview()
+            $0.width.equalTo(46.adjustedWidth)
+        }
+        
+        icTImageView.snp.makeConstraints {
+            $0.centerY.trailing.equalToSuperview()
+            $0.width.equalTo(46.adjustedWidth)
+        }
+        
+        pageCollectionView.snp.makeConstraints {
+            $0.leading.equalTo(icCImageView.snp.trailing).offset(6.adjustedWidth)
+            $0.trailing.equalTo(icTImageView.snp.leading).offset(-6.adjustedWidth)
+            $0.center.equalToSuperview()
+            $0.height.equalTo(2)
+        }
+        
+        portView.snp.makeConstraints {
+            $0.height.equalTo(492.adjustedHeight)
+            $0.top.equalTo(topView.snp.bottom).offset(10.adjustedHeight)
+            $0.leading.trailing.equalToSuperview()
         }
         
         portImageView.snp.makeConstraints {
-            $0.height.equalTo(492.adjustedHeight)
-            $0.top.equalTo(topImageView.snp.bottom).offset(4.adjustedHeight)
-            $0.leading.trailing.equalToSuperview()
+            $0.height.equalToSuperview()
+            $0.center.equalToSuperview()
+        }
+        
+        backView.snp.makeConstraints {
+            $0.leading.top.bottom.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(SizeLiterals.Screen.screenWidth / 2)
+        }
+        
+        nextView.snp.makeConstraints {
+            $0.trailing.top.bottom.equalToSuperview()
+            $0.leading.equalToSuperview().inset(SizeLiterals.Screen.screenWidth / 2)
         }
         
         profileButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(topImageView.snp.bottom).offset(248.adjustedHeight)
+            $0.top.equalTo(topView.snp.bottom).offset(248.adjustedHeight)
             $0.height.equalTo(48.adjustedHeight)
             $0.width.equalTo(212.adjustedWidth)
         }
@@ -112,7 +184,5 @@ final class HomeView: BaseView {
             $0.trailing.equalToSuperview().inset(10)
             $0.bottom.equalTo(noButton)
         }
-        
-        
     }
 }
