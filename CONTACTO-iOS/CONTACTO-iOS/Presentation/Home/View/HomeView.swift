@@ -100,7 +100,6 @@ final class HomeView: BaseView {
         
         self.addSubviews(topView,
                          portView,
-                         profileButton,
                          noButton,
                          yesButton)
         
@@ -110,7 +109,8 @@ final class HomeView: BaseView {
         
         portView.addSubviews(portImageView,
                              backView,
-                             nextView)
+                             nextView,
+                             profileButton)
         
         profileButton.addSubviews(profileTitle,
                                   profileNameLabel)
@@ -161,8 +161,7 @@ final class HomeView: BaseView {
         }
         
         profileButton.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.top.equalTo(topView.snp.bottom).offset(248.adjustedHeight)
+            $0.center.equalToSuperview()
             $0.height.equalTo(48.adjustedHeight)
             $0.width.equalTo(212.adjustedWidth)
         }

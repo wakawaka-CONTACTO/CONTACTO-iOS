@@ -7,14 +7,194 @@
 
 import UIKit
 
-class DetailProfileView: UIView {
+import SnapKit
+import Then
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+final class DetailProfileView: BaseView {
+    
+    private let scrollView = UIScrollView()
+    private let contentsView = UIView()
+    
+    private let topGradientView = UIImageView()
+    private let portView = UIView()
+    private let portImageView = UIImageView() // 필요 시 collectionView로 변경
+    private let pagerView = UIView()
+    
+    let nameLabel = UILabel()
+    
+    lazy var talentCollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: talentFlowLayout
+    )
+    private let talentFlowLayout = UICollectionViewFlowLayout()
+    
+    let descriptionLabel = UILabel()
+    let purposeLabel = UILabel()
+    
+    lazy var purposeCollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: purposeFlowLayout
+    )
+    private let purposeFlowLayout = UICollectionViewFlowLayout()
+    
+    let instaButton = UIButton()
+    let webButton = UIButton()
+    
+    let bottomGradientView = UIImageView()
+    
+    override func setStyle() {
+        
+        scrollView.do {
+            $0.contentInsetAdjustmentBehavior = .never
+            $0.showsHorizontalScrollIndicator = false
+        }
+        
+        topGradientView.do {
+            $0.image = .imgTopGradient
+        }
+        
+        portView.do {
+            $0.clipsToBounds = true
+        }
+        
+        portImageView.do {
+            $0.image = .imgex1
+            $0.contentMode = .scaleAspectFill
+        }
+        
+        pagerView.do {
+            $0.backgroundColor = .ctmainpink
+        }
+        
+        nameLabel.do {
+            $0.text = "Pacay Pacay"
+            $0.font = .fontContacto(.title3)
+            $0.textColor = .ctgray6
+        }
+        
+        descriptionLabel.do {
+            $0.text = "We’re graphic design crew. 그래픽 공동체 @pacay.pacay의 첫 번째 전시 [ARCHIVE: *860 FELL STREET]을 위한 플레이리스트를 공유합니다. 안녕하세요 떵개입니다 오늘 먹방은 무뼈국물닭발 맛있게 먹겠습 니.다 안녕하세요 떵개입니다 오늘 먹빵은.."
+            $0.textColor = .ctgray6
+            $0.font = .fontContacto(.caption5)
+            $0.textAlignment = .left
+            $0.lineBreakMode = .byCharWrapping
+            $0.numberOfLines = 0
+        }
+        
+        purposeLabel.do {
+            $0.text = StringLiterals.Home.Profile.purpose
+            $0.textColor = .ctgray6
+            $0.font = .fontContacto(.caption6)
+            $0.numberOfLines = 0
+        }
+        
+        instaButton.do {
+            $0.setTitle(StringLiterals.Home.Profile.insta, for: .normal)
+            $0.setTitleColor(.ctgray7, for: .normal)
+            $0.titleLabel?.numberOfLines = 0
+            $0.titleLabel?.font = .fontContacto(.caption6)
+            $0.setUnderline(forText: "instagram")
+        }
+        
+        webButton.do {
+            $0.setTitle(StringLiterals.Home.Profile.website, for: .normal)
+            $0.setTitleColor(.ctgray7, for: .normal)
+            $0.titleLabel?.numberOfLines = 0
+            $0.titleLabel?.font = .fontContacto(.caption6)
+            $0.setUnderline(forText: "website")
+        }
+        
+        bottomGradientView.do {
+            $0.image = .imgBottomGradient
+            $0.contentMode = .scaleAspectFill
+        }
     }
-    */
-
+    
+    override func setLayout() {
+        self.addSubviews(scrollView,
+                         topGradientView,
+                         bottomGradientView)
+        scrollView.addSubviews(contentsView)
+        contentsView.addSubviews(portView,
+                               pagerView,
+                               nameLabel,
+                               talentCollectionView,
+                               descriptionLabel,
+                               purposeLabel,
+                               purposeCollectionView,
+                               instaButton,
+                               webButton)
+        
+        portView.addSubviews(portImageView)
+        
+        contentsView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalTo(SizeLiterals.Screen.screenWidth)
+        }
+        
+        scrollView.snp.makeConstraints {
+            $0.top.bottom.leading.trailing.equalToSuperview()
+        }
+        
+        bottomGradientView.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+        }
+        
+        topGradientView.snp.makeConstraints {
+            $0.leading.trailing.top.equalToSuperview()
+        }
+        
+        portView.snp.makeConstraints {
+            $0.top.width.centerX.equalToSuperview()
+            $0.height.equalTo(432)
+        }
+        
+        portImageView.snp.makeConstraints {
+            $0.width.equalToSuperview()
+            $0.edges.equalToSuperview()
+        }
+        
+        pagerView.snp.makeConstraints {
+            $0.top.equalTo(portImageView.snp.bottom).offset(12)
+            $0.leading.trailing.equalToSuperview().inset(17)
+            $0.height.equalTo(2)
+        }
+        
+        nameLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(13)
+            $0.top.equalTo(pagerView.snp.bottom).offset(21)
+        }
+        
+        talentCollectionView.snp.makeConstraints {
+            $0.top.equalTo(nameLabel.snp.bottom).offset(17)
+            $0.leading.trailing.equalToSuperview().inset(13)
+        }
+        
+        descriptionLabel.snp.makeConstraints {
+            $0.top.equalTo(talentCollectionView.snp.bottom).offset(15)
+            $0.leading.equalTo(nameLabel)
+            $0.trailing.equalToSuperview().inset(17)
+        }
+        
+        purposeLabel.snp.makeConstraints {
+            $0.top.equalTo(descriptionLabel.snp.bottom).offset(4)
+            $0.leading.equalTo(nameLabel)
+        }
+        
+        purposeCollectionView.snp.makeConstraints {
+            $0.top.equalTo(purposeLabel.snp.bottom).offset(4)
+            $0.leading.trailing.equalTo(pagerView)
+        }
+        
+        instaButton.snp.makeConstraints {
+            $0.top.equalTo(purposeCollectionView.snp.bottom).offset(27)
+            $0.leading.equalTo(nameLabel)
+            $0.bottom.equalToSuperview().inset(20)
+        }
+        
+        webButton.snp.makeConstraints {
+            $0.top.bottom.equalTo(instaButton)
+            $0.leading.equalTo(instaButton.snp.trailing).offset(116.adjustedWidth)
+        }
+    }
 }

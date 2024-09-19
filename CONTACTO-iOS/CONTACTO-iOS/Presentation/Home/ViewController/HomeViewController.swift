@@ -57,6 +57,7 @@ final class HomeViewController: BaseViewController {
     override func setAddTarget() {
         homeView.noButton.addTarget(self, action: #selector(noButtonTapped), for: .touchUpInside)
         homeView.yesButton.addTarget(self, action: #selector(yesButtonTapped), for: .touchUpInside)
+        homeView.profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
     }
     
     override func setDelegate() {
@@ -83,6 +84,11 @@ final class HomeViewController: BaseViewController {
 }
 
 extension HomeViewController {
+    @objc private func profileButtonTapped() {
+        let detailProfileViewController = DetailProfileViewController()
+        self.navigationController?.pushViewController(detailProfileViewController, animated: true)
+    }
+    
     @objc private func handleBackTap(_ sender: UITapGestureRecognizer) {
         if num == 0 {
             num = maxNum

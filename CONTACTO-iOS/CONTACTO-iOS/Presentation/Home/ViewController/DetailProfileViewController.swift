@@ -7,23 +7,27 @@
 
 import UIKit
 
-class DetailProfileViewController: UIViewController {
+import SnapKit
+import Then
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+final class DetailProfileViewController: BaseViewController {
 
-        // Do any additional setup after loading the view.
+    let detailProfileView = DetailProfileView()
+    
+    override func setNavigationBar() {
+        self.navigationController?.navigationBar.isHidden = true
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func setLayout() {
+        
+        let safeAreaHeight = view.safeAreaInsets.bottom
+        let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
+        
+        view.addSubviews(detailProfileView)
+        
+        detailProfileView.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
+        }
     }
-    */
-
 }
