@@ -26,7 +26,7 @@ final class DetailProfileView: BaseView {
         frame: .zero,
         collectionViewLayout: talentFlowLayout
     )
-    private let talentFlowLayout = UICollectionViewFlowLayout()
+    private let talentFlowLayout = LeftAlignedCollectionViewFlowLayout()
     
     let descriptionLabel = UILabel()
     let purposeLabel = UILabel()
@@ -41,6 +41,7 @@ final class DetailProfileView: BaseView {
     let webButton = UIButton()
     
     let bottomGradientView = UIImageView()
+    let popButton = UIButton()
     
     override func setStyle() {
         
@@ -63,7 +64,7 @@ final class DetailProfileView: BaseView {
         }
         
         pagerView.do {
-            $0.backgroundColor = .ctmainpink
+            $0.backgroundColor = .ctgray5
         }
         
         nameLabel.do {
@@ -72,8 +73,19 @@ final class DetailProfileView: BaseView {
             $0.textColor = .ctgray6
         }
         
+        talentCollectionView.do {
+            $0.backgroundColor = .clear
+            $0.isScrollEnabled = false
+        }
+        
+        talentFlowLayout.do {
+            $0.minimumLineSpacing = 5.adjustedWidth
+            $0.minimumInteritemSpacing = 4
+            $0.estimatedItemSize = CGSize(width: .bitWidth, height: 19)
+        }
+        
         descriptionLabel.do {
-            $0.text = "We’re graphic design crew. 그래픽 공동체 @pacay.pacay의 첫 번째 전시 [ARCHIVE: *860 FELL STREET]을 위한 플레이리스트를 공유합니다. 안녕하세요 떵개입니다 오늘 먹방은 무뼈국물닭발 맛있게 먹겠습 니.다 안녕하세요 떵개입니다 오늘 먹빵은.."
+            $0.text = "We’re graphic design crew. 그래픽 공동체 @pacay.pacay의 첫 번째 전시 [ARCHIVE: *860 FELL STREET]을 위한 플레이리스트를 공유합니다."
             $0.textColor = .ctgray6
             $0.font = .fontContacto(.caption5)
             $0.textAlignment = .left
@@ -108,12 +120,17 @@ final class DetailProfileView: BaseView {
             $0.image = .imgBottomGradient
             $0.contentMode = .scaleAspectFill
         }
+        
+        popButton.do {
+            $0.setImage(.icExit, for: .normal)
+        }
     }
     
     override func setLayout() {
         self.addSubviews(scrollView,
                          topGradientView,
-                         bottomGradientView)
+                         bottomGradientView,
+                         popButton)
         scrollView.addSubviews(contentsView)
         contentsView.addSubviews(portView,
                                pagerView,
@@ -167,7 +184,9 @@ final class DetailProfileView: BaseView {
         
         talentCollectionView.snp.makeConstraints {
             $0.top.equalTo(nameLabel.snp.bottom).offset(17)
-            $0.leading.trailing.equalToSuperview().inset(13)
+            $0.leading.equalToSuperview().inset(13)
+            $0.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(talentCollectionView.contentSize.height)
         }
         
         descriptionLabel.snp.makeConstraints {
@@ -195,6 +214,11 @@ final class DetailProfileView: BaseView {
         webButton.snp.makeConstraints {
             $0.top.bottom.equalTo(instaButton)
             $0.leading.equalTo(instaButton.snp.trailing).offset(116.adjustedWidth)
+        }
+        
+        popButton.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(72)
+            $0.leading.equalToSuperview().inset(30)
         }
     }
 }
