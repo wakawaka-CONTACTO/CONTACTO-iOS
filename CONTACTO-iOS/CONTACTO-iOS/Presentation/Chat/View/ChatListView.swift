@@ -25,6 +25,7 @@ final class ChatListView: BaseView {
         chatListCollectionView.do {
             $0.backgroundColor = .clear
             $0.showsHorizontalScrollIndicator = false
+            $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 51.adjustedHeight, right: 0)
         }
         
         chatFlowLayout.do {
