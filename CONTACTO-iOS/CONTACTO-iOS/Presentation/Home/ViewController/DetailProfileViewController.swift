@@ -12,6 +12,8 @@ import Then
 
 final class DetailProfileViewController: BaseViewController {
     
+    var imageArray: [UIImage] = [.imgex1, .imgex2, .imgex3, .imgex4]
+    
     let detailProfileView = DetailProfileView()
     var port: Portfolio = Portfolio(image: [], name: "", talent: [], description: "", purpose: [], insta: "", web: "")
     
@@ -43,6 +45,8 @@ final class DetailProfileViewController: BaseViewController {
     }
     
     override func setDelegate() {
+        detailProfileView.portImageCollectionView.delegate = self
+        detailProfileView.portImageCollectionView.dataSource = self
         detailProfileView.talentCollectionView.delegate = self
         detailProfileView.talentCollectionView.dataSource = self
         detailProfileView.purposeCollectionView.delegate = self
@@ -52,6 +56,7 @@ final class DetailProfileViewController: BaseViewController {
     private func setCollectionView() {
         detailProfileView.talentCollectionView.register(ProfileTalentCollectionViewCell.self, forCellWithReuseIdentifier: ProfileTalentCollectionViewCell.className)
         detailProfileView.purposeCollectionView.register(ProfilePurposeCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePurposeCollectionViewCell.className)
+        detailProfileView.portImageCollectionView.register(ProfileImageCollectionViewCell.self, forCellWithReuseIdentifier: ProfileImageCollectionViewCell.className)
     }
     
     private func setData() {
@@ -86,7 +91,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
         case 0:
-            return 0
+            return port.image.count
         case 1:
             return port.talent.flatMap { $0.talent }.count
         case 2:
@@ -99,7 +104,11 @@ extension DetailProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch collectionView.tag {
         case 0:
-            return UICollectionViewCell()
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: ProfileImageCollectionViewCell.className,
+                for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
+            cell.portImageView.image = imageArray[indexPath.row]
+            return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfileTalentCollectionViewCell.className,

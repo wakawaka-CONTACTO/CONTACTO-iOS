@@ -16,8 +16,12 @@ final class DetailProfileView: BaseView {
     private let contentsView = UIView()
     
     private let topGradientView = UIImageView()
-    private let portView = UIView()
-    private let portImageView = UIImageView() // 필요 시 collectionView로 변경
+    lazy var portImageCollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: portImageFlowLayout
+    )
+    let portImageFlowLayout = UICollectionViewFlowLayout()
+    
     let pagerView = UIView()
     
     let nameLabel = UILabel()
@@ -54,13 +58,18 @@ final class DetailProfileView: BaseView {
             $0.image = .imgTopGradient
         }
         
-        portView.do {
-            $0.clipsToBounds = true
+        portImageCollectionView.do {
+            $0.backgroundColor = .clear
+            $0.showsVerticalScrollIndicator = false
+            $0.showsHorizontalScrollIndicator = false
+            $0.tag = 0
+            $0.isPagingEnabled = true
         }
         
-        portImageView.do {
-            $0.image = .imgex1
-            $0.contentMode = .scaleAspectFill
+        portImageFlowLayout.do {
+            $0.minimumLineSpacing = 0
+            $0.estimatedItemSize = CGSize(width: SizeLiterals.Screen.screenWidth, height: 432)
+            $0.scrollDirection = .horizontal
         }
         
         pagerView.do {
@@ -149,7 +158,7 @@ final class DetailProfileView: BaseView {
                          bottomGradientView,
                          popButton)
         scrollView.addSubviews(contentsView)
-        contentsView.addSubviews(portView,
+        contentsView.addSubviews(portImageCollectionView,
                                pagerView,
                                nameLabel,
                                talentCollectionView,
@@ -158,8 +167,6 @@ final class DetailProfileView: BaseView {
                                purposeCollectionView,
                                instaButton,
                                webButton)
-        
-        portView.addSubviews(portImageView)
         
         contentsView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -178,18 +185,13 @@ final class DetailProfileView: BaseView {
             $0.leading.trailing.top.equalToSuperview()
         }
         
-        portView.snp.makeConstraints {
+        portImageCollectionView.snp.makeConstraints {
             $0.top.width.centerX.equalToSuperview()
             $0.height.equalTo(432)
         }
         
-        portImageView.snp.makeConstraints {
-            $0.width.equalToSuperview()
-            $0.edges.equalToSuperview()
-        }
-        
         pagerView.snp.makeConstraints {
-            $0.top.equalTo(portImageView.snp.bottom).offset(12)
+            $0.top.equalTo(portImageCollectionView.snp.bottom).offset(12)
             $0.leading.trailing.equalToSuperview().inset(17)
             $0.height.equalTo(2)
         }
