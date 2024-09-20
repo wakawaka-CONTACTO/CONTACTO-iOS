@@ -15,7 +15,7 @@ final class DetailProfileViewController: BaseViewController {
     var imageArray: [UIImage] = [.imgex1, .imgex2, .imgex3, .imgex4]
     var currentNum = 0 {
         didSet {
-            print("바뀌다")
+            detailProfileView.pageCollectionView.reloadData()
         }
     }
     
@@ -170,6 +170,17 @@ extension DetailProfileViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: 168.adjustedWidth, height: 28)
         default:
             return .zero
+        }
+    }
+}
+
+extension DetailProfileViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if let collectionView = scrollView as? UICollectionView, collectionView.tag == 0 {
+            let pageWidth = scrollView.frame.width
+            let currentPage = Int(scrollView.contentOffset.x / pageWidth)
+            currentNum = currentPage
         }
     }
 }

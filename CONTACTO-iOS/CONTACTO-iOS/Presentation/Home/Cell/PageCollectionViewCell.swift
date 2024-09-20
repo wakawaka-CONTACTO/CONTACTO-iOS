@@ -41,10 +41,10 @@ final class PageCollectionViewCell: UICollectionViewCell {
     }
     
     func selectedView() {
-        pageView.backgroundColor = .ctmainblue
+        self.pageView.backgroundColor = .ctmainblue
     }
     
     func unselectedView() {
-        pageView.backgroundColor = .ctgray5
+        self.pageView.backgroundColor = .ctgray5
     }
 }
