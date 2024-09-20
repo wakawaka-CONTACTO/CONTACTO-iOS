@@ -15,7 +15,7 @@ final class MainTabBarViewController: UITabBarController {
     private var tabs: [UIViewController] = []
     
     let homeViewController = HomeViewController()
-    let chatViewController = UIViewController()
+    let chatViewController = ChatListViewController()
     let profileViewController = UIViewController()
     let listViewController = UIViewController()
 

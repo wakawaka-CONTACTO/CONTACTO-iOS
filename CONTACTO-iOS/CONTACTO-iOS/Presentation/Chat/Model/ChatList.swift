@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct ChatList: Codable {
+    let profile: String
+    let name: String
+    let message: String
+    let new: Int
+}
