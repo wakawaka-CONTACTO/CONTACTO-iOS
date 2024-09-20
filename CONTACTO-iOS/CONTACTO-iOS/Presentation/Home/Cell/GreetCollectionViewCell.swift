@@ -13,12 +13,11 @@ import Then
 final class GreetCollectionViewCell: UICollectionViewCell {
     
     var num = 0
-    var deleteNum = 0
     var selectButtonAction: (() -> Void) = {}
     var deleteButtonAction: (() -> Void) = {}
     
     let greetLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 3, left: 7, bottom: 3, right: 7))
-    let deleteButton = UIButton()
+    let deleteButton = DeleteButton()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,7 +39,6 @@ final class GreetCollectionViewCell: UICollectionViewCell {
     private func setAddTarget() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapLabel))
         greetLabel.addGestureRecognizer(tapGesture)
-        
         deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     
@@ -49,6 +47,9 @@ final class GreetCollectionViewCell: UICollectionViewCell {
     }
     
     @objc private func deleteButtonTapped() {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.prepare()
+        generator.impactOccurred()
         deleteButtonAction()
     }
     
@@ -70,7 +71,6 @@ final class GreetCollectionViewCell: UICollectionViewCell {
         deleteButton.do {
             $0.setImage(.icDeleteGreet, for: .normal)
             $0.isHidden = true
-            $0.contentMode = .scaleAspectFill
         }
     }
     
@@ -88,5 +88,51 @@ final class GreetCollectionViewCell: UICollectionViewCell {
             $0.centerX.equalTo(greetLabel.snp.trailing)
             $0.centerY.equalTo(greetLabel.snp.top)
         }
+    }
+    
+    func shake() {
+        let layer = self.layer
+
+        let shakeAnimation = CABasicAnimation(keyPath: "transform.rotation")
+        shakeAnimation.duration = 0.1
+        shakeAnimation.repeatCount = 2
+        shakeAnimation.autoreverses = true
+        let width = self.intrinsicContentSize.width
+        print(width)
+
+        let angle: Float = (-0.5) * .pi / 180
+        let startAngle = angle * (1 / Float(width))
+        let stopAngle = -startAngle
+        shakeAnimation.fromValue = NSNumber(value: startAngle as Float)
+        shakeAnimation.toValue = NSNumber(value: 3 * stopAngle as Float)
+        shakeAnimation.autoreverses = true
+        shakeAnimation.duration = 0.15
+        shakeAnimation.repeatCount = 10000
+        shakeAnimation.timeOffset = 290 * drand48()
+        shakeAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+        layer.add(shakeAnimation, forKey:"shaking")
+    }
+
+    func stopShaking() {
+        let layer: CALayer = self.layer
+        layer.removeAnimation(forKey: "shaking")
+    }
+}
+
+class DeleteButton: UIButton {
+
+    // MARK: - Functions
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        let expandedBounds = bounds.insetBy(dx: -17.adjustedWidth, dy: -17.adjustedHeight)
+        return expandedBounds.contains(point)
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
