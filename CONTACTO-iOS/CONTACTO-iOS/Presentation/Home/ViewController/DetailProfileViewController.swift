@@ -13,6 +13,11 @@ import Then
 final class DetailProfileViewController: BaseViewController {
     
     var imageArray: [UIImage] = [.imgex1, .imgex2, .imgex3, .imgex4]
+    var currentNum = 0 {
+        didSet {
+            print("바뀌다")
+        }
+    }
     
     let detailProfileView = DetailProfileView()
     var port: Portfolio = Portfolio(image: [], name: "", talent: [], description: "", purpose: [], insta: "", web: "")
@@ -47,6 +52,8 @@ final class DetailProfileViewController: BaseViewController {
     override func setDelegate() {
         detailProfileView.portImageCollectionView.delegate = self
         detailProfileView.portImageCollectionView.dataSource = self
+        detailProfileView.pageCollectionView.delegate = self
+        detailProfileView.pageCollectionView.dataSource = self
         detailProfileView.talentCollectionView.delegate = self
         detailProfileView.talentCollectionView.dataSource = self
         detailProfileView.purposeCollectionView.delegate = self
@@ -57,6 +64,7 @@ final class DetailProfileViewController: BaseViewController {
         detailProfileView.talentCollectionView.register(ProfileTalentCollectionViewCell.self, forCellWithReuseIdentifier: ProfileTalentCollectionViewCell.className)
         detailProfileView.purposeCollectionView.register(ProfilePurposeCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePurposeCollectionViewCell.className)
         detailProfileView.portImageCollectionView.register(ProfileImageCollectionViewCell.self, forCellWithReuseIdentifier: ProfileImageCollectionViewCell.className)
+        detailProfileView.pageCollectionView.register(PageCollectionViewCell.self, forCellWithReuseIdentifier: PageCollectionViewCell.className)
     }
     
     private func setData() {
@@ -90,11 +98,11 @@ extension DetailProfileViewController: UICollectionViewDelegate { }
 extension DetailProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
-        case 0:
+        case 0, 1:
             return port.image.count
-        case 1:
-            return port.talent.flatMap { $0.talent }.count
         case 2:
+            return port.talent.flatMap { $0.talent }.count
+        case 3:
             return port.purpose.count
         default:
             return 0
@@ -111,6 +119,16 @@ extension DetailProfileViewController: UICollectionViewDataSource {
             return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: PageCollectionViewCell.className,
+                for: indexPath) as? PageCollectionViewCell else { return UICollectionViewCell() }
+            if indexPath.row == currentNum {
+                cell.selectedView()
+            } else {
+                cell.unselectedView()
+            }
+            return cell
+        case 2:
+            guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfileTalentCollectionViewCell.className,
                 for: indexPath) as? ProfileTalentCollectionViewCell else { return UICollectionViewCell() }
             
@@ -120,7 +138,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
             
             cell.configData(category: category, title: title)
             return cell
-        case 2:
+        case 3:
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
@@ -128,6 +146,30 @@ extension DetailProfileViewController: UICollectionViewDataSource {
             return cell
         default:
             return UICollectionViewCell()
+        }
+    }
+}
+extension DetailProfileViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        switch collectionView.tag {
+        case 0:
+            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 432)
+        case 1:
+            let totalItems = port.image.count
+            
+            let collectionViewWidth = collectionView.frame.width
+            let spacing: CGFloat = 20.adjustedWidth
+            
+            let cellWidth = (collectionViewWidth - CGFloat(totalItems - 1) * spacing) / CGFloat(totalItems)
+            return CGSize(width: cellWidth, height: collectionView.frame.height)
+        case 2:
+           return CGSize(width: .bitWidth, height: 19)
+        case 3:
+            return CGSize(width: 168.adjustedWidth, height: 28)
+        default:
+            return .zero
         }
     }
 }

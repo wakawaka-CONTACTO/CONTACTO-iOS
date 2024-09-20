@@ -22,7 +22,11 @@ final class DetailProfileView: BaseView {
     )
     let portImageFlowLayout = UICollectionViewFlowLayout()
     
-    let pagerView = UIView()
+    lazy var pageCollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: pageFlowLayout
+    )
+    let pageFlowLayout = UICollectionViewFlowLayout()
     
     let nameLabel = UILabel()
     
@@ -68,12 +72,19 @@ final class DetailProfileView: BaseView {
         
         portImageFlowLayout.do {
             $0.minimumLineSpacing = 0
-            $0.estimatedItemSize = CGSize(width: SizeLiterals.Screen.screenWidth, height: 432)
             $0.scrollDirection = .horizontal
         }
         
-        pagerView.do {
-            $0.backgroundColor = .ctgray5
+        pageCollectionView.do {
+            $0.backgroundColor = .clear
+            $0.showsVerticalScrollIndicator = false
+            $0.showsHorizontalScrollIndicator = false
+            $0.tag = 1
+            $0.isScrollEnabled = false
+        }
+        
+        pageFlowLayout.do {
+            $0.minimumLineSpacing = 20.adjustedWidth
         }
         
         nameLabel.do {
@@ -87,7 +98,7 @@ final class DetailProfileView: BaseView {
             $0.isScrollEnabled = false
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
-            $0.tag = 1
+            $0.tag = 2
         }
         
         talentFlowLayout.do {
@@ -117,13 +128,12 @@ final class DetailProfileView: BaseView {
             $0.isScrollEnabled = false
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
-            $0.tag = 2
+            $0.tag = 3
         }
         
         purposeFlowLayout.do {
             $0.minimumLineSpacing = 12.adjustedWidth
             $0.minimumInteritemSpacing = 13
-            $0.estimatedItemSize = CGSize(width: 168.adjustedWidth, height: 28)
         }
         
         instaButton.do {
@@ -159,7 +169,7 @@ final class DetailProfileView: BaseView {
                          popButton)
         scrollView.addSubviews(contentsView)
         contentsView.addSubviews(portImageCollectionView,
-                               pagerView,
+                               pageCollectionView,
                                nameLabel,
                                talentCollectionView,
                                descriptionLabel,
@@ -190,15 +200,15 @@ final class DetailProfileView: BaseView {
             $0.height.equalTo(432)
         }
         
-        pagerView.snp.makeConstraints {
+        pageCollectionView.snp.makeConstraints {
             $0.top.equalTo(portImageCollectionView.snp.bottom).offset(12)
-            $0.leading.trailing.equalToSuperview().inset(17)
-            $0.height.equalTo(2)
+            $0.leading.trailing.equalToSuperview().inset(17.adjustedWidth)
+            $0.height.equalTo(3.5)
         }
         
         nameLabel.snp.makeConstraints {
             $0.leading.equalToSuperview().inset(13)
-            $0.top.equalTo(pagerView.snp.bottom).offset(21)
+            $0.top.equalTo(pageCollectionView.snp.bottom).offset(21)
         }
         
         talentCollectionView.snp.makeConstraints {
