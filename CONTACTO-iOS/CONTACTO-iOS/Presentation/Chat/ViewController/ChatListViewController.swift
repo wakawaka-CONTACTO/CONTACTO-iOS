@@ -12,6 +12,15 @@ import Then
 
 final class ChatListViewController: BaseViewController {
     var chatRoomList: [ChatList] = [
+        ChatList(profile: "", name: "Contacto message", message: "Welcome to Contacto! If you have a problem using contacto, please let me know. Also, we relly", new: 3),
+        ChatList(profile: "", name: "chaentopia", message: "Welcome to chaentopia!", new: 99),
+        ChatList(profile: "", name: "chaentopia", message: "Welcome to chaentopia! If you have a problem using co...", new: 0),
+        ChatList(profile: "", name: "Contacto message", message: "Welcome to Contacto! If you have a problem using co...", new: 3),
+        ChatList(profile: "", name: "chaentopia", message: "Welcome to chaentopia! If you have a problem using co...", new: 99),
+        ChatList(profile: "", name: "chaentopia", message: "Welcome to chaentopia! If you have a problem using co...", new: 0),
+        ChatList(profile: "", name: "Contacto message", message: "Welcome to Contacto! If you have a problem using co...", new: 3),
+        ChatList(profile: "", name: "chaentopia", message: "Welcome to chaentopia! If you have a problem using co...", new: 99),
+        ChatList(profile: "", name: "chaentopia", message: "Welcome to chaentopia! If you have a problem using co...", new: 0),
         ChatList(profile: "", name: "Contacto message", message: "Welcome to Contacto! If you have a problem using co...", new: 3),
         ChatList(profile: "", name: "chaentopia", message: "Welcome to chaentopia! If you have a problem using co...", new: 99),
         ChatList(profile: "", name: "chaentopia", message: "Welcome to chaentopia! If you have a problem using co...", new: 0)
