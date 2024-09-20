@@ -12,7 +12,7 @@ import Then
 
 final class MainTabBarViewController: UITabBarController {
     
-    private var tabs: [UIViewController] = []
+    private var tabsList: [UIViewController] = []
     
     let homeViewController = HomeViewController()
     let chatViewController = ChatListViewController()
@@ -60,7 +60,7 @@ final class MainTabBarViewController: UITabBarController {
     }
     
     private func setTabs() {
-        tabs = [
+        tabsList = [
             UINavigationController(rootViewController: homeViewController),
             UINavigationController(rootViewController: chatViewController),
             UINavigationController(rootViewController: profileViewController),
@@ -73,7 +73,7 @@ final class MainTabBarViewController: UITabBarController {
     }
     
     private func setTabBarItems() {
-        self.setViewControllers(tabs, animated: true)
+        self.setViewControllers(tabsList, animated: true)
         
         let tabBar: UITabBar = self.tabBar
         tabBar.backgroundColor = .ctblack
@@ -81,8 +81,8 @@ final class MainTabBarViewController: UITabBarController {
         tabBar.barTintColor = .ctblack
         
         TabBarItems.allCases.forEach {
-            tabs[$0.rawValue].tabBarItem = $0.asTabBarItem()
-            tabs[$0.rawValue].tabBarItem.tag = $0.rawValue
+            tabsList[$0.rawValue].tabBarItem = $0.asTabBarItem()
+            tabsList[$0.rawValue].tabBarItem.tag = $0.rawValue
         }
     }
     
