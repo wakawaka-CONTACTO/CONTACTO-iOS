@@ -97,11 +97,8 @@ final class GreetCollectionViewCell: UICollectionViewCell {
         shakeAnimation.duration = 0.1
         shakeAnimation.repeatCount = 2
         shakeAnimation.autoreverses = true
-        let width = self.intrinsicContentSize.width
-        print(width)
 
-        let angle: Float = (-0.5) * .pi / 180
-        let startAngle = angle * (1 / Float(width))
+        let startAngle: Float = (-0.5) * .pi / 180
         let stopAngle = -startAngle
         shakeAnimation.fromValue = NSNumber(value: startAngle as Float)
         shakeAnimation.toValue = NSNumber(value: 3 * stopAngle as Float)

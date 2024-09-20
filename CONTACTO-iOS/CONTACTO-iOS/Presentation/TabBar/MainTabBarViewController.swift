@@ -23,6 +23,7 @@ final class MainTabBarViewController: UITabBarController {
         super.viewDidLoad()
         setDelegate()
         setTabBarAppearance()
+        setNotification()
     }
     
     override func viewDidLayoutSubviews() {
@@ -38,6 +39,16 @@ final class MainTabBarViewController: UITabBarController {
         self.navigationController?.navigationBar.isHidden = true
         setTabs()
         setTabBarItems()
+    }
+    
+    private func setNotification() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(moveToChat(_:)),
+            name: NSNotification.Name("moveToChat"),
+            object: nil
+        )
+
     }
     
     private func setTabBarAppearance() {
@@ -73,6 +84,10 @@ final class MainTabBarViewController: UITabBarController {
             tabs[$0.rawValue].tabBarItem = $0.asTabBarItem()
             tabs[$0.rawValue].tabBarItem.tag = $0.rawValue
         }
+    }
+    
+    @objc private func moveToChat(_ notification: Notification) {
+        self.selectedIndex = 1
     }
 }
 

@@ -27,6 +27,11 @@ final class MatchViewController: BaseViewController {
         setCollectionView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        matchView.textCollectionView.reloadData()
+    }
+    
     override func setNavigationBar() {
         self.navigationController?.navigationBar.isHidden = true
     }
@@ -46,6 +51,7 @@ final class MatchViewController: BaseViewController {
     override func setAddTarget() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAction))
         matchView.fieldView.addGestureRecognizer(tapGesture)
+        matchView.sendButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
     
     override func setDelegate() {
@@ -66,6 +72,13 @@ extension MatchViewController {
         matchView.descriptionLabel.isHidden = true
         matchView.greetCollectionView.isHidden = false
         matchView.textCollectionView.isHidden = false
+    }
+    
+    @objc private func nextButtonTapped() {
+        if !greet.isEmpty {
+            NotificationCenter.default.post(name: Notification.Name("moveToChat"), object: nil)
+            self.navigationController?.popViewController(animated: false)
+        }
     }
 }
 
