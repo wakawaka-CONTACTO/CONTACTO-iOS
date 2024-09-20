@@ -19,22 +19,22 @@ final class MatchView: BaseView {
     private let yourImageView = UIImageView()
     private let yourLabel = BasePaddingLabel()
     
-    private let descriptionLabel = UILabel()
+    let descriptionLabel = UILabel()
     
     lazy var greetCollectionView = UICollectionView(
         frame: .zero,
-        collectionViewLayout: greetImageFlowLayout
+        collectionViewLayout: greetFlowLayout
     )
-    let greetImageFlowLayout = UICollectionViewFlowLayout()
+    let greetFlowLayout = LeftAlignedCollectionViewFlowLayout()
     
-    private let fieldView = UIView()
+    let fieldView = UIView()
     let sendButton = UIButton()
     
     lazy var textCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: textImageFlowLayout
     )
-    let textImageFlowLayout = UICollectionViewFlowLayout()
+    let textImageFlowLayout = LeftAlignedCollectionViewFlowLayout()
     
     override func setStyle() {
         titleLabel.do {
@@ -82,10 +82,13 @@ final class MatchView: BaseView {
             $0.isScrollEnabled = false
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
+            $0.isHidden = true
+            $0.tag = 0
         }
         
-        greetImageFlowLayout.do {
+        greetFlowLayout.do {
             $0.minimumLineSpacing = 13.adjustedWidth
+            $0.estimatedItemSize = CGSize(width: .bitWidth, height: 28)
         }
         
         fieldView.do {
@@ -100,10 +103,16 @@ final class MatchView: BaseView {
         textCollectionView.do {
             $0.backgroundColor = .clear
             $0.showsVerticalScrollIndicator = false
+            $0.showsHorizontalScrollIndicator = false
+            $0.isHidden = true
+            $0.tag = 1
+            $0.contentInset = UIEdgeInsets(top: 5.adjustedWidth, left: 0, bottom: 0, right: 5.adjustedWidth)
         }
         
         textImageFlowLayout.do {
             $0.minimumLineSpacing = 10.adjustedWidth
+            $0.estimatedItemSize = CGSize(width: .bitWidth, height: 32)
+            $0.scrollDirection = .horizontal
         }
     }
     
@@ -152,7 +161,7 @@ final class MatchView: BaseView {
         
         greetCollectionView.snp.makeConstraints {
             $0.top.equalTo(myImageView.snp.bottom).offset(72.adjustedHeight)
-            $0.leading.equalToSuperview().inset(13)
+            $0.leading.trailing.equalToSuperview().inset(13)
             $0.height.equalTo(28.adjustedHeight)
         }
         
@@ -163,7 +172,8 @@ final class MatchView: BaseView {
         }
         
         textCollectionView.snp.makeConstraints {
-            $0.top.bottom.trailing.leading.equalToSuperview().inset(5.adjusted)
+            $0.trailing.leading.equalToSuperview().inset(5.adjusted)
+            $0.top.bottom.equalToSuperview()
             $0.center.equalToSuperview()
         }
         
