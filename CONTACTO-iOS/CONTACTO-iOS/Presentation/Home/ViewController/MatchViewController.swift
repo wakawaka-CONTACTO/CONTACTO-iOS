@@ -92,6 +92,9 @@ extension MatchViewController: UICollectionViewDataSource {
             cell.greetLabel.text = greetMessage[indexPath.row]
             cell.num = indexPath.row
             cell.selectButtonAction = {
+                let generator = UIImpactFeedbackGenerator(style: .light)
+                generator.prepare()
+                generator.impactOccurred()
                 self.greet.append(cell.num)
             }
             cell.deleteButton.isHidden = true
@@ -105,7 +108,9 @@ extension MatchViewController: UICollectionViewDataSource {
             cell.deleteButton.isHidden = false
             cell.deleteButtonAction = {
                 self.greet.remove(at: indexPath.row)
+                cell.stopShaking()
             }
+            cell.shake()
             return cell
         default:
             return UICollectionViewCell()

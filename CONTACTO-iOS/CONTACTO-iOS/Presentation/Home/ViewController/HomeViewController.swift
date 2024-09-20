@@ -94,6 +94,10 @@ extension HomeViewController {
     }
     
     @objc private func handleBackTap(_ sender: UITapGestureRecognizer) {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.prepare()
+        generator.impactOccurred()
+        
         if num == 0 {
             num = maxNum
         } else {
@@ -102,6 +106,10 @@ extension HomeViewController {
     }
     
     @objc private func handleNextTap(_ sender: UITapGestureRecognizer) {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.prepare()
+        generator.impactOccurred()
+        
         if num == maxNum {
             num = 0
         } else {
@@ -161,6 +169,10 @@ extension HomeViewController {
     private func animateImage(isMatch: Bool) {
         guard !isAnimating else { return }  // 애니메이션 중이면 함수 실행 중단
         isAnimating = true
+        
+        let generator = UIImpactFeedbackGenerator(style: .heavy)
+        generator.prepare()
+        generator.impactOccurred()
         
         var transform = CGAffineTransform(translationX: offsetX, y: offsetY)
         
