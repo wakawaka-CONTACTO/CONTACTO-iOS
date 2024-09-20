@@ -56,6 +56,11 @@ final class ChatListViewController: BaseViewController {
     private func setCollectionView() {
         chatListView.chatListCollectionView.register(ChatListCollectionViewCell.self, forCellWithReuseIdentifier: ChatListCollectionViewCell.className)
     }
+    
+    @objc private func pushToChatRoom() {
+        let chatRoomViewController = ChatRoomViewController()
+        self.navigationController?.pushViewController(chatRoomViewController, animated: true)
+    }
 }
 
 extension ChatListViewController: UICollectionViewDelegate { }
@@ -70,6 +75,8 @@ extension ChatListViewController: UICollectionViewDataSource {
             withReuseIdentifier: ChatListCollectionViewCell.className,
             for: indexPath) as? ChatListCollectionViewCell else { return UICollectionViewCell() }
         cell.configCell(data: chatRoomList[indexPath.row])
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushToChatRoom))
+        cell.addGestureRecognizer(tapGesture)
         return cell
     }
 }
