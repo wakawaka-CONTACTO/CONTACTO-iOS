@@ -7,23 +7,31 @@
 
 import UIKit
 
-class ChatRoomViewController: UIViewController {
+import SnapKit
+import Then
 
+final class ChatRoomViewController: BaseViewController {
+    
+    let chatRoomView = ChatRoomView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        setCollectionView()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func setNavigationBar() {
+        self.navigationController?.navigationBar.isHidden = true
     }
-    */
-
+    
+    override func setLayout() {
+        view.addSubviews(chatRoomView)
+        
+        chatRoomView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+    }
+    
+    private func setCollectionView() {
+        
+    }
 }

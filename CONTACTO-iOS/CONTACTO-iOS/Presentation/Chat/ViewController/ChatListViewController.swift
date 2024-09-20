@@ -59,6 +59,7 @@ final class ChatListViewController: BaseViewController {
     
     @objc private func pushToChatRoom() {
         let chatRoomViewController = ChatRoomViewController()
+        chatRoomViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(chatRoomViewController, animated: true)
     }
 }
