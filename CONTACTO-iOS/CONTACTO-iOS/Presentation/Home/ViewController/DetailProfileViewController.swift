@@ -47,6 +47,8 @@ final class DetailProfileViewController: BaseViewController {
     
     override func setAddTarget() {
         detailProfileView.popButton.addTarget(self, action: #selector(popButtonTapped), for: .touchUpInside)
+        detailProfileView.instaButton.addTarget(self, action: #selector(instaButtonTapped), for: .touchUpInside)
+        detailProfileView.webButton.addTarget(self, action: #selector(webButtonTapped), for: .touchUpInside)
     }
     
     override func setDelegate() {
@@ -70,6 +72,15 @@ final class DetailProfileViewController: BaseViewController {
     private func setData() {
         // data 받는 곳
         port = Portfolio.portDummy()
+        
+        detailProfileView.nameLabel.text = port.name
+        detailProfileView.descriptionLabel.text = port.description
+        if port.web != nil {
+            detailProfileView.webButton.isHidden = false
+        } else {
+            detailProfileView.webButton.isHidden = true
+        }
+        
         detailProfileView.talentCollectionView.reloadData()
         detailProfileView.talentCollectionView.layoutIfNeeded()
         detailProfileView.purposeCollectionView.layoutIfNeeded()
@@ -85,6 +96,29 @@ final class DetailProfileViewController: BaseViewController {
             $0.top.equalTo(detailProfileView.purposeLabel.snp.bottom).offset(4)
             $0.leading.trailing.equalToSuperview().inset(13)
             $0.height.equalTo(detailProfileView.purposeCollectionView.contentSize.height)
+        }
+    }
+    
+    @objc private func instaButtonTapped() {
+        let id = port.insta
+        let url = URL(string: "https://www.instagram.com/\(id)")!
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    @objc private func webButtonTapped() {
+        guard let url = URL(string: port.web ?? "google.com") else {
+            print("url error")
+            return
+        }
+        
+        if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            guard let chatURL = URL(string: "https://" + (port.web ?? "google.com")) else {
+                print("url error")
+                return
+            }
+            UIApplication.shared.open(chatURL, options: [:], completionHandler: nil)
         }
     }
     
