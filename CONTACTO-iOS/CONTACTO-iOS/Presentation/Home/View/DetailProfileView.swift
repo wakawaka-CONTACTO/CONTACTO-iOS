@@ -88,7 +88,6 @@ final class DetailProfileView: BaseView {
         }
         
         nameLabel.do {
-            $0.text = "Pacay Pacay"
             $0.font = .fontContacto(.title3)
             $0.textColor = .ctgray6
         }
@@ -108,7 +107,6 @@ final class DetailProfileView: BaseView {
         }
         
         descriptionLabel.do {
-            $0.text = "We’re graphic design crew. 그래픽 공동체 @pacay.pacay의 첫 번째 전시 [ARCHIVE: *860 FELL STREET]을 위한 플레이리스트를 공유합니다."
             $0.textColor = .ctgray6
             $0.font = .fontContacto(.caption5)
             $0.textAlignment = .left

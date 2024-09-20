@@ -25,10 +25,10 @@ extension Portfolio {
             talent: [Talent(talent: ["Branding", "Grapics", "Motion Grapics", "Illustration"], category: "design"),
                      Talent(talent: ["Printmaking"], category: "art"),
                      Talent(talent: ["Writing"], category: "media")],
-            description: "안녕하세요떵개입니다오늘먹방은정채은입니다",
-            purpose: [0, 3],
-            insta: "chaentopia",
-            web: "www.naver.com")
+            description:"We’re graphic design crew. 그래픽 공동체 @pacay.pacay의 첫 번째 전시 [ARCHIVE: *860 FELL STREET]을 위한 플레이리스트를 공유합니다.",
+            purpose: [0, 2, 3],
+            insta: "contacto.creator",
+            web: "contactocreator.com")
         return port
     }
 }
