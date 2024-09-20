@@ -197,3 +197,15 @@ extension HomeViewController: UICollectionViewDataSource {
         return cell
     }
 }
+
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let totalItems = maxNum + 1
+        
+        let collectionViewWidth = collectionView.frame.width
+        let spacing: CGFloat = 13.adjustedWidth
+        
+        let cellWidth = (collectionViewWidth - CGFloat(totalItems - 1) * spacing) / CGFloat(totalItems)
+        return CGSize(width: cellWidth, height: 2)
+    }
+}

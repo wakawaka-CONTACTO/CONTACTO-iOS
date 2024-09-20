@@ -56,7 +56,6 @@ final class HomeView: BaseView {
         pageFlowLayout.do {
             $0.scrollDirection = .horizontal
             $0.minimumLineSpacing = 13.adjustedWidth
-            $0.itemSize = CGSize(width: 52.adjustedWidth, height: 2)
         }
         
         portView.do {
