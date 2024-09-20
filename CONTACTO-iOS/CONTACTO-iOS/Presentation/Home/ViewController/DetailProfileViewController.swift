@@ -45,12 +45,13 @@ final class DetailProfileViewController: BaseViewController {
     override func setDelegate() {
         detailProfileView.talentCollectionView.delegate = self
         detailProfileView.talentCollectionView.dataSource = self
-        //        detailProfileView.purposeCollectionView.delegate = self
-        //        detailProfileView.purposeCollectionView.dataSource = self
+        detailProfileView.purposeCollectionView.delegate = self
+        detailProfileView.purposeCollectionView.dataSource = self
     }
     
     private func setCollectionView() {
         detailProfileView.talentCollectionView.register(ProfileTalentCollectionViewCell.self, forCellWithReuseIdentifier: ProfileTalentCollectionViewCell.className)
+        detailProfileView.purposeCollectionView.register(ProfilePurposeCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePurposeCollectionViewCell.className)
     }
     
     private func setData() {
@@ -58,12 +59,19 @@ final class DetailProfileViewController: BaseViewController {
         port = Portfolio.portDummy()
         detailProfileView.talentCollectionView.reloadData()
         detailProfileView.talentCollectionView.layoutIfNeeded()
+        detailProfileView.purposeCollectionView.layoutIfNeeded()
         
         detailProfileView.talentCollectionView.snp.remakeConstraints {
             $0.top.equalTo(detailProfileView.nameLabel.snp.bottom).offset(17)
             $0.leading.equalToSuperview().inset(13)
             $0.trailing.equalToSuperview().inset(46)
-            $0.height.equalTo(detailProfileView.talentCollectionView.contentSize.height + 1)
+            $0.height.equalTo(detailProfileView.talentCollectionView.contentSize.height + 10)
+        }
+        
+        detailProfileView.purposeCollectionView.snp.remakeConstraints {
+            $0.top.equalTo(detailProfileView.purposeLabel.snp.bottom).offset(4)
+            $0.leading.trailing.equalToSuperview().inset(13)
+            $0.height.equalTo(detailProfileView.purposeCollectionView.contentSize.height)
         }
     }
     
@@ -76,20 +84,41 @@ extension DetailProfileViewController: UICollectionViewDelegate { }
 
 extension DetailProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return port.talent.flatMap { $0.talent }.count
-        
+        switch collectionView.tag {
+        case 0:
+            return 0
+        case 1:
+            return port.talent.flatMap { $0.talent }.count
+        case 2:
+            return port.purpose.count
+        default:
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: ProfileTalentCollectionViewCell.className,
-            for: indexPath) as? ProfileTalentCollectionViewCell else { return UICollectionViewCell() }
-        
-        let allTalents = port.talent.flatMap { $0.talent }
-        let category = port.talent.first { $0.talent.contains(allTalents[indexPath.row]) }?.category ?? ""
-        let title = allTalents[indexPath.row]
-        
-        cell.configData(category: category, title: title)
-        return cell
+        switch collectionView.tag {
+        case 0:
+            return UICollectionViewCell()
+        case 1:
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: ProfileTalentCollectionViewCell.className,
+                for: indexPath) as? ProfileTalentCollectionViewCell else { return UICollectionViewCell() }
+            
+            let allTalents = port.talent.flatMap { $0.talent }
+            let category = port.talent.first { $0.talent.contains(allTalents[indexPath.row]) }?.category ?? ""
+            let title = allTalents[indexPath.row]
+            
+            cell.configData(category: category, title: title)
+            return cell
+        case 2:
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
+                for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
+            cell.config(num: port.purpose[indexPath.row])
+            return cell
+        default:
+            return UICollectionViewCell()
+        }
     }
 }

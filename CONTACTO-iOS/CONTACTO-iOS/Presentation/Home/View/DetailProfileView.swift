@@ -18,7 +18,7 @@ final class DetailProfileView: BaseView {
     private let topGradientView = UIImageView()
     private let portView = UIView()
     private let portImageView = UIImageView() // 필요 시 collectionView로 변경
-    private let pagerView = UIView()
+    let pagerView = UIView()
     
     let nameLabel = UILabel()
     
@@ -76,6 +76,9 @@ final class DetailProfileView: BaseView {
         talentCollectionView.do {
             $0.backgroundColor = .clear
             $0.isScrollEnabled = false
+            $0.showsVerticalScrollIndicator = false
+            $0.showsHorizontalScrollIndicator = false
+            $0.tag = 1
         }
         
         talentFlowLayout.do {
@@ -98,6 +101,20 @@ final class DetailProfileView: BaseView {
             $0.textColor = .ctgray6
             $0.font = .fontContacto(.caption6)
             $0.numberOfLines = 0
+        }
+        
+        purposeCollectionView.do {
+            $0.backgroundColor = .clear
+            $0.isScrollEnabled = false
+            $0.showsVerticalScrollIndicator = false
+            $0.showsHorizontalScrollIndicator = false
+            $0.tag = 2
+        }
+        
+        purposeFlowLayout.do {
+            $0.minimumLineSpacing = 12.adjustedWidth
+            $0.minimumInteritemSpacing = 13
+            $0.estimatedItemSize = CGSize(width: 168.adjustedWidth, height: 28)
         }
         
         instaButton.do {
@@ -202,7 +219,8 @@ final class DetailProfileView: BaseView {
         
         purposeCollectionView.snp.makeConstraints {
             $0.top.equalTo(purposeLabel.snp.bottom).offset(4)
-            $0.leading.trailing.equalTo(pagerView)
+            $0.leading.trailing.equalToSuperview().inset(13)
+            $0.height.equalTo(purposeCollectionView.contentSize.height)
         }
         
         instaButton.snp.makeConstraints {
