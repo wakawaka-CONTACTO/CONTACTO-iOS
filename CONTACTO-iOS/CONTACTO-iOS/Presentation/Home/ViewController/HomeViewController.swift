@@ -169,6 +169,8 @@ extension HomeViewController {
             self.homeView.portView.layer.anchorPoint = self.newAnchorPoint
             self.homeView.portView.transform = transform
         } completion: { _ in
+            let matchViewController = MatchViewController()
+            self.navigationController?.pushViewController(matchViewController, animated: true)
             self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
             self.homeView.portView.transform = .identity
             self.num = 0
