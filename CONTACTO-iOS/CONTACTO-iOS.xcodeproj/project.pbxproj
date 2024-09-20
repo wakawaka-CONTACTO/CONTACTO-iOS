@@ -49,6 +49,8 @@
 		C3E88C882C92E658005A19BE /* PortfolioOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C872C92E658005A19BE /* PortfolioOnboardingViewController.swift */; };
 		C3E88C8A2C92E661005A19BE /* PortfolioOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C892C92E661005A19BE /* PortfolioOnboardingView.swift */; };
 		C3EAED242C998E6E00C61E0A /* ABCDiatype-Regular-Trial.otf in Resources */ = {isa = PBXBuildFile; fileRef = C3EAED232C998E6E00C61E0A /* ABCDiatype-Regular-Trial.otf */; };
+		C3EF05EE2C9DC964001BF9EC /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05ED2C9DC964001BF9EC /* ChatRoomViewController.swift */; };
+		C3EF05F02C9DC96E001BF9EC /* ChatRoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05EF2C9DC96E001BF9EC /* ChatRoomView.swift */; };
 		C3FD90392C9139D40021D2BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD90382C9139D40021D2BA /* AppDelegate.swift */; };
 		C3FD903B2C9139D40021D2BA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD903A2C9139D40021D2BA /* SceneDelegate.swift */; };
 		C3FD90422C9139D70021D2BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3FD90412C9139D70021D2BA /* Assets.xcassets */; };
@@ -127,6 +129,8 @@
 		C3E88C872C92E658005A19BE /* PortfolioOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioOnboardingViewController.swift; sourceTree = "<group>"; };
 		C3E88C892C92E661005A19BE /* PortfolioOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioOnboardingView.swift; sourceTree = "<group>"; };
 		C3EAED232C998E6E00C61E0A /* ABCDiatype-Regular-Trial.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ABCDiatype-Regular-Trial.otf"; sourceTree = "<group>"; };
+		C3EF05ED2C9DC964001BF9EC /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
+		C3EF05EF2C9DC96E001BF9EC /* ChatRoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomView.swift; sourceTree = "<group>"; };
 		C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CONTACTO-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3FD90382C9139D40021D2BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3FD903A2C9139D40021D2BA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -190,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				C35E26512C9D6F5E00B197CB /* ChatListViewController.swift */,
+				C3EF05ED2C9DC964001BF9EC /* ChatRoomViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -198,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				C35E26532C9D6F6900B197CB /* ChatListView.swift */,
+				C3EF05EF2C9DC96E001BF9EC /* ChatRoomView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -642,7 +648,9 @@
 				C3FD90742C91558E0021D2BA /* SizeLiterals.swift in Sources */,
 				C3FD906C2C9154D50021D2BA /* UIStackView+.swift in Sources */,
 				C35E26472C9D2EC300B197CB /* MatchViewController.swift in Sources */,
+				C3EF05EE2C9DC964001BF9EC /* ChatRoomViewController.swift in Sources */,
 				C393A60D2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift in Sources */,
+				C3EF05F02C9DC96E001BF9EC /* ChatRoomView.swift in Sources */,
 				C3FD90622C91432B0021D2BA /* a.swift in Sources */,
 				C3E88C7B2C92A93F005A19BE /* SNSOnboardingViewController.swift in Sources */,
 				C3AEC29E2C943B7800E2DED9 /* BaseTextField.swift in Sources */,
