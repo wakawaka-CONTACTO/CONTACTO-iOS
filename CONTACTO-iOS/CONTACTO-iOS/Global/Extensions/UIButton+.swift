@@ -33,4 +33,21 @@ extension UIButton {
         self.clipsToBounds = true
         self.setBackgroundImage(colorImage, for: state)
     }
+    
+    func setUnderline(forText text: String) {
+        guard let title = title(for: .normal) else { return }
+        
+        let attributedString = NSMutableAttributedString(string: title)
+        
+        let fullRange = NSRange(location: 0, length: title.count)
+        let textRange = (title as NSString).range(of: text)
+        
+        if textRange.location != NSNotFound {
+            attributedString.addAttribute(.underlineStyle,
+                                          value: NSUnderlineStyle.single.rawValue,
+                                          range: textRange)
+        }
+        
+        setAttributedTitle(attributedString, for: .normal)
+    }
 }
