@@ -23,6 +23,10 @@ final class ChatRoomViewController: BaseViewController {
         self.navigationController?.navigationBar.isHidden = true
     }
     
+    override func setAddTarget() {
+        chatRoomView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+    }
+    
     override func setLayout() {
         view.addSubviews(chatRoomView)
         
@@ -33,5 +37,9 @@ final class ChatRoomViewController: BaseViewController {
     
     private func setCollectionView() {
         
+    }
+    
+    @objc private func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
     }
 }
