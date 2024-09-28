@@ -84,7 +84,7 @@ extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: SizeLiterals.Screen.screenWidth, height: 28)
         } else {
             // height 조절 필요
-            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 40)
+            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 27)
         }
     }
 }

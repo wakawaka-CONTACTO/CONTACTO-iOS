@@ -55,7 +55,7 @@ final class ChatRoomYourCollectionViewCell: UICollectionViewCell {
             $0.leading.equalToSuperview().inset(16)
             $0.top.bottom.equalToSuperview()
             $0.width.lessThanOrEqualTo(230)
-            $0.height.greaterThanOrEqualTo(27)
+            $0.height.equalTo(27).priority(999)
         }
         
         timeLabel.snp.makeConstraints {
