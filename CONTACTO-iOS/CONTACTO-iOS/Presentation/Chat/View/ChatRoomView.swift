@@ -59,7 +59,12 @@ final class ChatRoomView: BaseView {
         chatRoomCollectionView.do {
             $0.backgroundColor = .clear
             $0.showsHorizontalScrollIndicator = false
-            $0.contentInset = UIEdgeInsets(top: topView.frame.height + 27.adjustedHeight, left: 16, bottom: 20.adjustedHeight, right: 16)
+            $0.contentInset = UIEdgeInsets(top: topView.frame.height + 27.adjustedHeight, left: 0, bottom: 20.adjustedHeight, right: 0)
+        }
+        
+        chatRoomFlowLayout.do {
+            $0.scrollDirection = .vertical
+            $0.minimumLineSpacing = 10
         }
         
         chatRoomFlowLayout.do {

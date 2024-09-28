@@ -40,6 +40,7 @@ final class ChatRoomDateCollectionViewCell: UICollectionViewCell {
         self.addSubviews(dateLabel)
         
         dateLabel.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview().inset(10)
             $0.center.equalToSuperview()
         }
     }
