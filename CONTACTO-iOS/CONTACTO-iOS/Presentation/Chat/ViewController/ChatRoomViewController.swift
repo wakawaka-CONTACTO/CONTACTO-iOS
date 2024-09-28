@@ -55,31 +55,36 @@ extension ChatRoomViewController: UICollectionViewDelegate { }
 
 extension ChatRoomViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return 30
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item % 2 == 0 {
+        if indexPath.item % 3 == 0 {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ChatRoomDateCollectionViewCell.className,
                 for: indexPath) as? ChatRoomDateCollectionViewCell else { return UICollectionViewCell() }
             return cell
-        } else {
+        } else if indexPath.item % 3 == 1 {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ChatRoomYourCollectionViewCell.className,
                 for: indexPath) as? ChatRoomYourCollectionViewCell else { return UICollectionViewCell() }
             return cell
-            
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: ChatRoomMyCollectionViewCell.className,
+                for: indexPath) as? ChatRoomMyCollectionViewCell else { return UICollectionViewCell() }
+            return cell
         }
     }
 }
 
 extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.item % 2 == 0 {
-            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 10)
+        if indexPath.item % 3 == 0 {
+            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 28)
         } else {
-            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 20)
+            // height 조절 필요
+            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 40)
         }
     }
 }

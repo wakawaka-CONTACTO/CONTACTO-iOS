@@ -60,7 +60,7 @@ final class ChatRoomYourCollectionViewCell: UICollectionViewCell {
         
         timeLabel.snp.makeConstraints {
             $0.leading.equalTo(myMessageLabel.snp.trailing).offset(3)
-            $0.bottom.equalTo(myMessageLabel).offset(-3)
+            $0.bottom.equalTo(myMessageLabel)
         }
     }
 }
