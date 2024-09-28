@@ -36,6 +36,8 @@ enum FontLevel {
     case caption5
     case caption6
     case caption7
+    case caption8
+    case caption9
     
     case button1
     case button2
@@ -56,11 +58,11 @@ extension FontLevel {
             return FontName.ABCDiatypeMedium.rawValue
         case .caption3:
             return FontName.ABCDiatypeBoldItalic.rawValue
-        case .caption6, .caption7:
+        case .caption6, .caption7, .caption9:
             return FontName.ABCDiatypeRegular.rawValue
         case .button1, .button4, .title3, .button6, .title4, .title5, .button7:
             return FontName.FKRasterRomanBlended.rawValue
-        case .caption4, .caption5:
+        case .caption4, .caption5, .caption8:
             return FontName.PretendardRegular.rawValue
         }
     }
@@ -77,7 +79,7 @@ extension FontLevel {
             return 12.adjusted
         case .caption1:
             return 20.adjusted
-        case .caption2:
+        case .caption2, .caption9:
             return 10.adjusted
         case .caption3:
             return 7.adjusted
@@ -89,7 +91,7 @@ extension FontLevel {
             return 17.adjusted
         case .title3:
             return 30.adjusted
-        case .button6:
+        case .button6, .caption8:
             return 13.adjusted
         case .title4:
             return 25.adjusted
@@ -108,9 +110,9 @@ extension FontLevel {
             return FontLevel.body2.fontSize
         case .caption1, .caption3, .caption4, .caption5, .button1, .button2, .button4, .caption6, .button6, .title4, .title5:
             return FontLevel.caption1.fontSize * 1.5
-        case .button3, .button5, .button7, .caption7:
+        case .button3, .button5, .button7, .caption7, .caption8:
             return FontLevel.button3.fontSize * 1.3
-        case .title3:
+        case .title3, .caption9:
             return FontLevel.title3.fontSize
         }
     }
