@@ -132,7 +132,8 @@ extension ChatRoomViewController {
     }
     
     @objc private func sendButtonTapped() {
-        
+        chatRoomView.messageTextView.text = ""
+        scrollToBottom() // 확인필요
     }
     
     // 채팅방 진입 시 가장 bottom에 있도록, 채팅 숫자 적을 때도 확인 필요
