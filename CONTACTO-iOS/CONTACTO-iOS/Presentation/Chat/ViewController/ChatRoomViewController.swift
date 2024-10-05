@@ -13,6 +13,7 @@ import Then
 
 final class ChatRoomViewController: BaseViewController {
     
+    var isKeyboardShow = false
     let chatRoomView = ChatRoomView()
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,6 +52,7 @@ final class ChatRoomViewController: BaseViewController {
     override func setDelegate() {
         chatRoomView.chatRoomCollectionView.delegate = self
         chatRoomView.chatRoomCollectionView.dataSource = self
+        chatRoomView.messageTextView.delegate = self
     }
     
     private func setCollectionView() {
@@ -86,10 +88,19 @@ extension ChatRoomViewController {
                 $0.leading.trailing.equalToSuperview()
                 $0.height.equalTo(62.adjustedHeight)
             }
-            
-            UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
+            // 가장 아래에 있을 때 bottom scroll 추후
+//            if self.isAtBottom() {
+//                self.scrollToBottom()
+//            }
+            if !isKeyboardShow {
+                UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
+                    self.view.layoutIfNeeded()
+                }, completion: nil)
+            } else {
                 self.view.layoutIfNeeded()
-            }, completion: nil)
+            }
+            
+            isKeyboardShow = true
         }
     }
     
@@ -102,6 +113,8 @@ extension ChatRoomViewController {
         UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
+        
+        isKeyboardShow = false
     }
     
     @objc private func backButtonTapped() {
@@ -120,6 +133,23 @@ extension ChatRoomViewController {
     
     @objc private func sendButtonTapped() {
         
+    }
+    
+    // 채팅방 진입 시 가장 bottom에 있도록, 채팅 숫자 적을 때도 확인 필요
+    private func scrollToBottom() {
+        let itemCount = chatRoomView.chatRoomCollectionView.numberOfItems(inSection: 0)
+        if itemCount > 0 {
+            let indexPath = IndexPath(item: itemCount - 1, section: 0)
+            chatRoomView.chatRoomCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+        }
+    }
+    
+    private func isAtBottom() -> Bool {
+        let offsetY = chatRoomView.chatRoomCollectionView.contentOffset.y
+        let contentHeight = chatRoomView.chatRoomCollectionView.contentSize.height
+        let height = chatRoomView.chatRoomCollectionView.frame.size.height
+        
+        return offsetY >= contentHeight - height
     }
 }
 
@@ -164,5 +194,16 @@ extension ChatRoomViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         // 사진 send 메소드
+    }
+}
+
+extension ChatRoomViewController: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if !textView.text.isEmpty, !textView.text.isOnlyWhitespace() {
+            chatRoomView.sendButton.isHidden = false
+        } else {
+            chatRoomView.sendButton.isHidden = true
+        }
     }
 }

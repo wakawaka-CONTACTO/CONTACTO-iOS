@@ -89,6 +89,7 @@ final class ChatRoomView: BaseView {
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.setBackgroundColor(.ctmainblue, for: .normal)
             $0.setImage(.icPolygon, for: .normal)
+            $0.isHidden = true
         }
     }
     
