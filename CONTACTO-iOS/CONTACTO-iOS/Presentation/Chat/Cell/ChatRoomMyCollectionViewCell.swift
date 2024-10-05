@@ -33,7 +33,7 @@ final class ChatRoomMyCollectionViewCell: UICollectionViewCell {
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.backgroundColor = .ctmainblue
             $0.font = .fontContacto(.caption8)
-            $0.text = "Welcome to Contacto! If you have a problem using  contacto, you can chat anytime this room."
+            $0.text = "Welcome to Contacto! If you have a problem using contacto, you can chat anytime this room."
             $0.textAlignment = .left
             $0.lineBreakMode = .byCharWrapping
             $0.textColor = .ctblack
@@ -55,7 +55,6 @@ final class ChatRoomMyCollectionViewCell: UICollectionViewCell {
             $0.trailing.equalToSuperview().inset(16)
             $0.top.bottom.equalToSuperview()
             $0.width.lessThanOrEqualTo(230)
-            $0.height.greaterThanOrEqualTo(27)
         }
         
         timeLabel.snp.makeConstraints {

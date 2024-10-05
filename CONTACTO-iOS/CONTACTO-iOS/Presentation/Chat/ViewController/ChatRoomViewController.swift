@@ -77,13 +77,12 @@ extension ChatRoomViewController: UICollectionViewDataSource {
         }
     }
 }
-
+//
 extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.item % 3 == 0 {
-            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 28)
+            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 28.adjustedHeight)
         } else {
-            // height 조절 필요
             return CGSize(width: SizeLiterals.Screen.screenWidth, height: 27)
         }
     }
