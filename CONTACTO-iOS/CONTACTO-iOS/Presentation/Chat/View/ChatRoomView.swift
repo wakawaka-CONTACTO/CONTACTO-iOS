@@ -66,7 +66,6 @@ final class ChatRoomView: BaseView {
             $0.scrollDirection = .vertical
             $0.minimumInteritemSpacing = 10
             $0.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-//            $0.itemSize = UICollectionViewFlowLayout.automaticSize
         }
         
         bottomView.do {

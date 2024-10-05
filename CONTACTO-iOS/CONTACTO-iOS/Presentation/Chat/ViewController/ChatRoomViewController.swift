@@ -7,12 +7,23 @@
 
 import UIKit
 
+import PhotosUI
 import SnapKit
 import Then
 
 final class ChatRoomViewController: BaseViewController {
     
     let chatRoomView = ChatRoomView()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.addKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.removeKeyboardNotifications()
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +36,8 @@ final class ChatRoomViewController: BaseViewController {
     
     override func setAddTarget() {
         chatRoomView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        chatRoomView.plusButton.addTarget(self, action: #selector(plusButtonTappped), for: .touchUpInside)
+        chatRoomView.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
     }
     
     override func setLayout() {
@@ -33,10 +46,6 @@ final class ChatRoomViewController: BaseViewController {
         chatRoomView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-    }
-    
-    @objc private func backButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
     }
     
     override func setDelegate() {
@@ -48,6 +57,69 @@ final class ChatRoomViewController: BaseViewController {
         chatRoomView.chatRoomCollectionView.register(ChatRoomDateCollectionViewCell.self, forCellWithReuseIdentifier: ChatRoomDateCollectionViewCell.className)
         chatRoomView.chatRoomCollectionView.register(ChatRoomYourCollectionViewCell.self, forCellWithReuseIdentifier: ChatRoomYourCollectionViewCell.className)
         chatRoomView.chatRoomCollectionView.register(ChatRoomMyCollectionViewCell.self, forCellWithReuseIdentifier: ChatRoomMyCollectionViewCell.className)
+    }
+}
+
+extension ChatRoomViewController {
+    
+    /// 노티피케이션 추가
+    func addKeyboardNotifications(){
+        // 키보드가 나타날 때 앱에게 알리는 메서드 추가
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification , object: nil)
+        // 키보드가 사라질 때 앱에게 알리는 메서드 추가
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    /// 노티피케이션을 제거하는 메서드
+    func removeKeyboardNotifications(){
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification , object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(_ noti: NSNotification){
+        if let userInfo = noti.userInfo,
+           let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            
+            self.chatRoomView.bottomView.snp.remakeConstraints {
+                $0.top.equalTo(view.snp.bottom).offset(-(keyboardHeight+62.adjustedHeight))
+                $0.leading.trailing.equalToSuperview()
+                $0.height.equalTo(62.adjustedHeight)
+            }
+            
+            UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+        }
+    }
+    
+    @objc func keyboardWillHide(_ noti: NSNotification){
+        self.chatRoomView.bottomView.snp.remakeConstraints {
+            $0.bottom.leading.trailing.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-66.adjustedHeight)
+        }
+        
+        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    @objc private func backButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func plusButtonTappped() {
+        var configuration = PHPickerConfiguration()
+        lazy var picker = PHPickerViewController(configuration: configuration)
+        configuration.selectionLimit = 1
+        configuration.filter = .any(of: [.images])
+        configuration.selection = .default
+        self.present(picker, animated: true, completion: nil)
+        picker.delegate = self
+    }
+    
+    @objc private func sendButtonTapped() {
+        
     }
 }
 
@@ -77,7 +149,7 @@ extension ChatRoomViewController: UICollectionViewDataSource {
         }
     }
 }
-//
+
 extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.item % 3 == 0 {
@@ -85,5 +157,12 @@ extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
         } else {
             return CGSize(width: SizeLiterals.Screen.screenWidth, height: 27)
         }
+    }
+}
+
+extension ChatRoomViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        // 사진 send 메소드
     }
 }
