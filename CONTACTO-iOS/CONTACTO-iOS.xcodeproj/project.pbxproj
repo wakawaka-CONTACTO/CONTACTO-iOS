@@ -18,6 +18,8 @@
 		C35E26542C9D6F6900B197CB /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26532C9D6F6900B197CB /* ChatListView.swift */; };
 		C35E26572C9D72B100B197CB /* ChatList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26562C9D72B100B197CB /* ChatList.swift */; };
 		C35E265A2C9D733500B197CB /* ChatListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26592C9D733500B197CB /* ChatListCollectionViewCell.swift */; };
+		C37A28DE2CB417BE004BC6AE /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37A28DD2CB417BE004BC6AE /* EditViewController.swift */; };
+		C37A28E12CB417CF004BC6AE /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37A28E02CB417CF004BC6AE /* EditView.swift */; };
 		C393A6082C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C393A6072C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift */; };
 		C393A60A2C93CD5C00ECF1B5 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C393A6092C93CD5C00ECF1B5 /* Pretendard-Regular.otf */; };
 		C393A60D2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C393A60C2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift */; };
@@ -101,6 +103,8 @@
 		C35E26532C9D6F6900B197CB /* ChatListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
 		C35E26562C9D72B100B197CB /* ChatList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatList.swift; sourceTree = "<group>"; };
 		C35E26592C9D733500B197CB /* ChatListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCollectionViewCell.swift; sourceTree = "<group>"; };
+		C37A28DD2CB417BE004BC6AE /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		C37A28E02CB417CF004BC6AE /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		C393A6072C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioCollectionViewCell.swift; sourceTree = "<group>"; };
 		C393A6092C93CD5C00ECF1B5 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
 		C393A60C2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioIndicatorView.swift; sourceTree = "<group>"; };
@@ -231,6 +235,31 @@
 				C3EF05F52C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		C37A28DB2CB417A0004BC6AE /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				C37A28DF2CB417C2004BC6AE /* View */,
+				C37A28DC2CB417AE004BC6AE /* ViewController */,
+			);
+			path = Edit;
+			sourceTree = "<group>";
+		};
+		C37A28DC2CB417AE004BC6AE /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C37A28DD2CB417BE004BC6AE /* EditViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		C37A28DF2CB417C2004BC6AE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C37A28E02CB417CF004BC6AE /* EditView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		C393A60B2C93E59700ECF1B5 /* Components */ = {
@@ -435,6 +464,7 @@
 				C393A61A2C94200C00ECF1B5 /* TabBar */,
 				C393A6132C941FD300ECF1B5 /* Home */,
 				C35E264E2C9D6F3E00B197CB /* Chat */,
+				C37A28DB2CB417A0004BC6AE /* Edit */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -646,6 +676,7 @@
 				C3E88C812C92B25D005A19BE /* TalentOnboardingViewController.swift in Sources */,
 				C3EF05F22C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift in Sources */,
 				C3E88C6F2C927830005A19BE /* OnboardingNextButton.swift in Sources */,
+				C37A28DE2CB417BE004BC6AE /* EditViewController.swift in Sources */,
 				C35E26492C9D2F4400B197CB /* MatchView.swift in Sources */,
 				C35E26432C9D10B800B197CB /* ProfileImageCollectionViewCell.swift in Sources */,
 				C3B95CEE2C9BE020002A4681 /* DetailProfileView.swift in Sources */,
@@ -683,6 +714,7 @@
 				C3FD903B2C9139D40021D2BA /* SceneDelegate.swift in Sources */,
 				C35E264D2C9D458500B197CB /* GreetCollectionViewCell.swift in Sources */,
 				C3FD90812C915E880021D2BA /* LoginView.swift in Sources */,
+				C37A28E12CB417CF004BC6AE /* EditView.swift in Sources */,
 				C393A6122C94116B00ECF1B5 /* UIImage+.swift in Sources */,
 				C3B95CEA2C9BBA2D002A4681 /* PageCollectionViewCell.swift in Sources */,
 				C35E26572C9D72B100B197CB /* ChatList.swift in Sources */,
