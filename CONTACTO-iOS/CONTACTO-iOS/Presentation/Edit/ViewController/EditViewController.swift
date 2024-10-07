@@ -16,6 +16,7 @@ final class EditViewController: BaseViewController {
     
     override func setNavigationBar() {
         self.navigationController?.navigationBar.isHidden = true
+        
     }
     
     override func setLayout() {
