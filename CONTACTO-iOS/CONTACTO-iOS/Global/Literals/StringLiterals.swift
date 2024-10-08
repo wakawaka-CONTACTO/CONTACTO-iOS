@@ -85,8 +85,20 @@ enum StringLiterals {
         
     }
     
-    enum LikeList {
-        
+    enum Edit {
+        static let profileEdit = "Profile Edit"
+        static let preview = "Preview"
+        static let upload = "upload"
+        static let talent = "talent"
+        static let originality = "My Originality"
+        static let purpose = "Purpose"
+        static let sns = "SNS & Web Site"
+        static let instagram = "INSTAGRAM"
+        static let required = "REQUIRED*"
+        static let website = "WEBSITE"
+        static let example = "contactocreator.com"
+        static let editButton = "EDIT START"
+        static let saveButton = "SAVE"
     }
     
     enum Profile {
