@@ -89,7 +89,7 @@ enum StringLiterals {
         static let profileEdit = "Profile Edit"
         static let preview = "Preview"
         static let upload = "upload"
-        static let talent = "talent"
+        static let talent = "Talent"
         static let originality = "My Originality"
         static let purpose = "Purpose"
         static let sns = "SNS & Web Site"
