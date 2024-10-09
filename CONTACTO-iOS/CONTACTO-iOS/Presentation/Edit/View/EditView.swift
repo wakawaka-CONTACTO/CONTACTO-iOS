@@ -30,6 +30,7 @@ final class EditView: BaseView {
     private let portfolioFlowLayout = UICollectionViewFlowLayout()
     
     private let talentLabel = UILabel()
+    let talentEditButton = UIButton()
     lazy var talentCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: talentFlowLayout
@@ -122,6 +123,10 @@ final class EditView: BaseView {
             $0.minimumLineSpacing = 5.adjustedWidth
             $0.minimumInteritemSpacing = 4
             $0.estimatedItemSize = CGSize(width: .bitWidth, height: 19)
+        }
+        
+        talentEditButton.do {
+            $0.setImage(.icEdit, for: .normal)
         }
         
         descriptionLabel.do {
@@ -237,6 +242,7 @@ final class EditView: BaseView {
                                  nameTextField,
                                  portfolioCollectionView,
                                  talentLabel,
+                                 talentEditButton,
                                  talentCollectionView,
                                  descriptionLabel,
                                  descriptionTextView,
@@ -300,6 +306,11 @@ final class EditView: BaseView {
         talentLabel.snp.makeConstraints {
             $0.top.equalTo(portfolioCollectionView.snp.bottom).offset(34)
             $0.leading.equalToSuperview().inset(16)
+        }
+        
+        talentEditButton.snp.makeConstraints {
+            $0.centerY.equalTo(talentLabel)
+            $0.leading.equalTo(talentLabel.snp.trailing).offset(-1.5)
         }
         
         talentCollectionView.snp.makeConstraints {
