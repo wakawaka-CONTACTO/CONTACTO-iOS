@@ -99,6 +99,7 @@ final class EditView: BaseView {
             $0.showsHorizontalScrollIndicator = false
             $0.showsVerticalScrollIndicator = false
             $0.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+            $0.tag = 0
         }
         
         portfolioFlowLayout.do {
@@ -117,6 +118,7 @@ final class EditView: BaseView {
             $0.isScrollEnabled = false
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
+            $0.tag = 1
         }
         
         talentFlowLayout.do {
@@ -159,6 +161,7 @@ final class EditView: BaseView {
             $0.isScrollEnabled = false
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
+            $0.tag = 2
         }
         
         purposeFlowLayout.do {
