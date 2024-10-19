@@ -12,7 +12,7 @@ import Then
 
 final class TalentOnboardingViewController: BaseViewController {
     
-    private let talentOnboardingView = TalentOnboardingView()
+    let talentOnboardingView = TalentOnboardingView()
     
     private var talentDummy = Talent.talents()
     var selectedIndexPaths: Set<IndexPath> = [] {

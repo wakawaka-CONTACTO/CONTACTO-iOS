@@ -99,6 +99,7 @@ enum StringLiterals {
         static let example = "contactocreator.com"
         static let editButton = "EDIT START"
         static let saveButton = "SAVE"
+        static let doneButton = "Done"
     }
     
     enum Profile {

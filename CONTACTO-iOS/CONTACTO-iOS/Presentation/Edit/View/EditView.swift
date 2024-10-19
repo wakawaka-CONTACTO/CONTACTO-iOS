@@ -12,6 +12,8 @@ import Then
 
 final class EditView: BaseView {
     
+    var isEditEnable = false
+    
     private let topView = UIView()
     private let topImageView = UIImageView()
     
@@ -56,6 +58,10 @@ final class EditView: BaseView {
     
     let editButton = UIButton()
     
+    override func setAddTarget() {
+        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+    }
+    
     override func setStyle() {
         self.backgroundColor = .ctgray4
         
@@ -95,7 +101,7 @@ final class EditView: BaseView {
         }
         
         portfolioCollectionView.do {
-            $0.backgroundColor = .systemPink
+            $0.backgroundColor = .clear
             $0.showsHorizontalScrollIndicator = false
             $0.showsVerticalScrollIndicator = false
             $0.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
@@ -105,6 +111,7 @@ final class EditView: BaseView {
         portfolioFlowLayout.do {
             $0.scrollDirection = .horizontal
             $0.minimumInteritemSpacing = 10
+            $0.itemSize = CGSize(width: 198, height: 260)
         }
         
         talentLabel.do {
@@ -129,6 +136,7 @@ final class EditView: BaseView {
         
         talentEditButton.do {
             $0.setImage(.icEdit, for: .normal)
+            $0.isHidden = true
         }
         
         descriptionLabel.do {
@@ -384,5 +392,12 @@ final class EditView: BaseView {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview().inset(41.adjustedHeight)
         }
+    }
+    
+    
+    @objc private func editButtonTapped() {
+        isEditEnable.toggle()
+        talentEditButton.isHidden = !isEditEnable
+        
     }
 }

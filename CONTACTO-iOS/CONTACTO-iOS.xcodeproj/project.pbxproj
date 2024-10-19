@@ -56,6 +56,7 @@
 		C3EF05F22C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F12C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift */; };
 		C3EF05F42C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F32C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift */; };
 		C3EF05F62C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F52C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift */; };
+		C3F574F92CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F574F82CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift */; };
 		C3FD90392C9139D40021D2BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD90382C9139D40021D2BA /* AppDelegate.swift */; };
 		C3FD903B2C9139D40021D2BA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD903A2C9139D40021D2BA /* SceneDelegate.swift */; };
 		C3FD90422C9139D70021D2BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3FD90412C9139D70021D2BA /* Assets.xcassets */; };
@@ -141,6 +142,7 @@
 		C3EF05F12C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomDateCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3EF05F32C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomMyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3EF05F52C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomYourCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3F574F82CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPortfolioCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CONTACTO-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3FD90382C9139D40021D2BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3FD903A2C9139D40021D2BA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 		C37A28DB2CB417A0004BC6AE /* Edit */ = {
 			isa = PBXGroup;
 			children = (
+				C3F574F72CC3952500440D98 /* Cell */,
 				C37A28DF2CB417C2004BC6AE /* View */,
 				C37A28DC2CB417AE004BC6AE /* ViewController */,
 			);
@@ -356,6 +359,14 @@
 				C3E88C832C92BA2D005A19BE /* TalentCollectionViewCell.swift */,
 				C3E88C852C92C8B3005A19BE /* TalentHeaderView.swift */,
 				C393A6072C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		C3F574F72CC3952500440D98 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				C3F574F82CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -705,6 +716,7 @@
 				C3FD906E2C9154EC0021D2BA /* UIView+.swift in Sources */,
 				C3E88C7D2C92A95A005A19BE /* SNSOnboardingView.swift in Sources */,
 				C3FD90782C9157FD0021D2BA /* UIViewController+.swift in Sources */,
+				C3F574F92CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift in Sources */,
 				C3E88C862C92C8B3005A19BE /* TalentHeaderView.swift in Sources */,
 				C393A61E2C9427F500ECF1B5 /* String+.swift in Sources */,
 				C3B95CF62C9C0AB7002A4681 /* Portfolio.swift in Sources */,
