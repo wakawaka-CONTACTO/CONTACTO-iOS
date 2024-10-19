@@ -86,11 +86,11 @@ extension FontLevel {
             return 10.adjusted
         case .caption3, .caption10:
             return 7.adjusted
-        case .button1, .button2, .caption5, .caption6, .button7, .button8:
+        case .button1, .button2, .caption5, .caption6, .button7:
             return 16.adjusted
         case .button3, .button5:
             return 11.adjusted
-        case .button4, .caption7, .body3:
+        case .button4, .caption7, .body3, .button8:
             return 17.adjusted
         case .title3:
             return 30.adjusted

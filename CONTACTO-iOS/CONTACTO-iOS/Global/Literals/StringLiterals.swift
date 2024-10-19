@@ -102,7 +102,17 @@ enum StringLiterals {
         static let doneButton = "Done"
     }
     
-    enum Profile {
-        
+    enum Info {
+        static let account = "Account Setting"
+        static let email = "E-mail"
+        static let password = "Password"
+        static let contact = "Contact Us"
+        static let help = "Help & Support"
+        static let community = "Community"
+        static let guidelines = "Community Guidelines"
+        static let privacy = "Privacy"
+        static let cookie = "Cookie Policy"
+        static let logout = "Log out"
+        static let delete = "Delete Account"
     }
 }

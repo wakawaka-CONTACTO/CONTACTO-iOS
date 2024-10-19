@@ -239,7 +239,7 @@ final class EditView: BaseView {
         editButton.do {
             $0.setTitle(StringLiterals.Edit.editButton, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
-            $0.titleLabel?.font = .fontContacto(.button8)
+            $0.titleLabel?.font = .fontContacto(.button2)
             $0.backgroundColor = .ctsubyellow1
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
         }

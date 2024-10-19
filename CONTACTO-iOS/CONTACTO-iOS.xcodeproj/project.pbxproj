@@ -57,6 +57,8 @@
 		C3EF05F42C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F32C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift */; };
 		C3EF05F62C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F52C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift */; };
 		C3F574F92CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F574F82CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift */; };
+		C3F574FE2CC4096700440D98 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F574FD2CC4096700440D98 /* InfoViewController.swift */; };
+		C3F575002CC4097100440D98 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F574FF2CC4097100440D98 /* InfoView.swift */; };
 		C3FD90392C9139D40021D2BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD90382C9139D40021D2BA /* AppDelegate.swift */; };
 		C3FD903B2C9139D40021D2BA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD903A2C9139D40021D2BA /* SceneDelegate.swift */; };
 		C3FD90422C9139D70021D2BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3FD90412C9139D70021D2BA /* Assets.xcassets */; };
@@ -143,6 +145,8 @@
 		C3EF05F32C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomMyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3EF05F52C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomYourCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3F574F82CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPortfolioCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3F574FD2CC4096700440D98 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		C3F574FF2CC4097100440D98 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CONTACTO-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3FD90382C9139D40021D2BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3FD903A2C9139D40021D2BA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -371,6 +375,31 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		C3F574FA2CC4094D00440D98 /* Info */ = {
+			isa = PBXGroup;
+			children = (
+				C3F574FB2CC4095400440D98 /* View */,
+				C3F574FC2CC4095600440D98 /* ViewController */,
+			);
+			path = Info;
+			sourceTree = "<group>";
+		};
+		C3F574FB2CC4095400440D98 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C3F574FF2CC4097100440D98 /* InfoView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		C3F574FC2CC4095600440D98 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C3F574FD2CC4096700440D98 /* InfoViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
 		C3FD902C2C9139D40021D2BA = {
 			isa = PBXGroup;
 			children = (
@@ -476,6 +505,7 @@
 				C393A6132C941FD300ECF1B5 /* Home */,
 				C35E264E2C9D6F3E00B197CB /* Chat */,
 				C37A28DB2CB417A0004BC6AE /* Edit */,
+				C3F574FA2CC4094D00440D98 /* Info */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -679,6 +709,7 @@
 				C3FD90722C91550C0021D2BA /* FontLiterals.swift in Sources */,
 				C3B95CF82C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */,
 				C3FD90862C915EC90021D2BA /* BaseView.swift in Sources */,
+				C3F575002CC4097100440D98 /* InfoView.swift in Sources */,
 				C35E26522C9D6F5E00B197CB /* ChatListViewController.swift in Sources */,
 				C35E265A2C9D733500B197CB /* ChatListCollectionViewCell.swift in Sources */,
 				C35E26542C9D6F6900B197CB /* ChatListView.swift in Sources */,
@@ -704,6 +735,7 @@
 				C3EF05EE2C9DC964001BF9EC /* ChatRoomViewController.swift in Sources */,
 				C393A60D2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift in Sources */,
 				C3EF05F02C9DC96E001BF9EC /* ChatRoomView.swift in Sources */,
+				C3F574FE2CC4096700440D98 /* InfoViewController.swift in Sources */,
 				C3FD90622C91432B0021D2BA /* a.swift in Sources */,
 				C3E88C7B2C92A93F005A19BE /* SNSOnboardingViewController.swift in Sources */,
 				C3AEC29E2C943B7800E2DED9 /* BaseTextField.swift in Sources */,
