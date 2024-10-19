@@ -14,6 +14,8 @@ import Then
 final class EditViewController: BaseViewController {
     
     private var talentDummy = Talent.talents()
+    var isEditEnable = false
+    var tappedStates: [Bool] = Array(repeating: false, count: 5)
     
     var selectedImages: [UIImage] = []
     let editView = EditView()
@@ -22,6 +24,7 @@ final class EditViewController: BaseViewController {
         super.viewDidLoad()
         setCollectionView()
         setData()
+        setClosure()
     }
     
     override func setNavigationBar() {
@@ -43,6 +46,13 @@ final class EditViewController: BaseViewController {
     override func setAddTarget() {
         editView.previewButton.addTarget(self, action: #selector(previewButtonTapped), for: .touchUpInside)
         editView.talentEditButton.addTarget(self, action: #selector(talentEditButtonTapped), for: .touchUpInside)
+    }
+    
+    private func setClosure() {
+        editView.editAction = {
+            self.isEditEnable.toggle()
+            self.editView.purposeCollectionView.reloadData()
+        }
     }
     
     override func setDelegate() {
@@ -152,7 +162,13 @@ extension EditViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
-            cell.config(num: indexPath.row)
+            cell.config(num: indexPath.item)
+            cell.isTapped = tappedStates[indexPath.row]
+            cell.isEditing = isEditEnable
+            cell.setAddTarget()
+            cell.tapAction = {
+                self.tappedStates[indexPath.row] = cell.isTapped
+            }
             return cell
         default:
             return UICollectionViewCell()

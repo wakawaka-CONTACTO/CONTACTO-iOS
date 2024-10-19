@@ -11,6 +11,19 @@ import SnapKit
 import Then
 
 final class ProfilePurposeCollectionViewCell: UICollectionViewCell {
+    var tapAction: (() -> Void) = {}
+    
+    var num = 0
+    var isTapped = false {
+        didSet {
+            self.backgroundColor = isTapped ? colorArray[num] : (isEditing ? .ctwhite : .clear)
+        }
+    }
+    var isEditing = false {
+        didSet {
+            self.backgroundColor = isTapped ? colorArray[num] : (isEditing ? .ctwhite : .clear)
+        }
+    }
     
     private let purposeList = [
         StringLiterals.Onboarding.Purpose.getalong,
@@ -35,6 +48,11 @@ final class ProfilePurposeCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        tapAction = {}
     }
     
     private func setUI() {
@@ -63,7 +81,22 @@ final class ProfilePurposeCollectionViewCell: UICollectionViewCell {
     }
     
     func config(num: Int) {
-        self.backgroundColor = colorArray[num]
+        self.num = num
+        self.backgroundColor = isTapped ? colorArray[num] : (isEditing ? .ctwhite : .clear)
         purposeLabel.text = purposeList[num]
+    }
+    
+    /// Edit 화면에서 필요한 Target
+    func setAddTarget() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(purposeLabelTapped))
+        self.purposeLabel.isUserInteractionEnabled = true
+        self.purposeLabel.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func purposeLabelTapped() {
+        if isEditing {
+            isTapped.toggle()
+            tapAction()
+        }
     }
 }

@@ -13,6 +13,7 @@ import Then
 final class EditView: BaseView {
     
     var isEditEnable = false
+    var editAction: (() -> Void) = {}
     
     private let topView = UIView()
     private let topImageView = UIImageView()
@@ -156,6 +157,7 @@ final class EditView: BaseView {
             $0.returnKeyType = .done
             $0.autocorrectionType = .no
             $0.spellCheckingType = .no
+            $0.isEditable = false
         }
         
         purposeLabel.do {
@@ -176,7 +178,7 @@ final class EditView: BaseView {
             $0.scrollDirection = .vertical
             $0.minimumLineSpacing = 12.adjustedWidth
             $0.minimumInteritemSpacing = 13.adjustedHeight
-            $0.itemSize = CGSize(width: (SizeLiterals.Screen.screenWidth - 38.adjustedWidth) / 2, height: 28.adjustedHeight)
+            $0.itemSize = CGSize(width: (SizeLiterals.Screen.screenWidth - 44.adjustedWidth) / 2, height: 28.adjustedHeight)
         }
         
         snsWebLabel.do {
@@ -197,7 +199,7 @@ final class EditView: BaseView {
             $0.textAlignment = .left
             $0.borderStyle = .line
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
-            $0.backgroundColor = .ctwhite
+            $0.backgroundColor = .clear
             $0.textColor = .ctblack
             $0.returnKeyType = .done
             $0.autocorrectionType = .no
@@ -225,7 +227,7 @@ final class EditView: BaseView {
             $0.textAlignment = .left
             $0.borderStyle = .line
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
-            $0.backgroundColor = .ctwhite
+            $0.backgroundColor = .clear
             $0.textColor = .ctblack
             $0.returnKeyType = .done
             $0.autocorrectionType = .no
@@ -339,7 +341,7 @@ final class EditView: BaseView {
         
         descriptionTextView.snp.makeConstraints {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(5)
-            $0.leading.trailing.equalToSuperview().inset(13)
+            $0.leading.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(89)
         }
         
@@ -350,7 +352,7 @@ final class EditView: BaseView {
         
         purposeCollectionView.snp.makeConstraints {
             $0.top.equalTo(purposeLabel.snp.bottom).offset(8)
-            $0.leading.trailing.equalToSuperview().inset(13)
+            $0.leading.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(110.adjustedHeight)
         }
         
@@ -397,7 +399,18 @@ final class EditView: BaseView {
     
     @objc private func editButtonTapped() {
         isEditEnable.toggle()
+        nameTextField.isEnabled = isEditEnable
+        nameTextField.backgroundColor = isEditEnable ? .ctwhite : .ctmainblue
+        portfolioCollectionView.isUserInteractionEnabled = isEditEnable
         talentEditButton.isHidden = !isEditEnable
+        descriptionTextView.isEditable = isEditEnable
+        descriptionTextView.backgroundColor = isEditEnable ? .ctwhite : .clear
+        instaTextField.backgroundColor = isEditEnable ? .ctwhite : .clear
+        websiteTextField.backgroundColor = isEditEnable ? .ctwhite : .clear
         
+        editButton.setTitle(isEditEnable ? StringLiterals.Edit.saveButton : StringLiterals.Edit.editButton, for: .normal)
+        editButton.setBackgroundColor(isEditEnable ? .ctsubgreen3 : .ctsubyellow1, for: .normal)
+        
+        editAction()
     }
 }

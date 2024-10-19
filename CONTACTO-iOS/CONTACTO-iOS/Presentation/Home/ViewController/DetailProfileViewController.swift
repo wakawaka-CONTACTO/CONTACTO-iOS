@@ -176,6 +176,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
+            cell.isTapped = true
             cell.config(num: port.purpose[indexPath.row])
             return cell
         default:
