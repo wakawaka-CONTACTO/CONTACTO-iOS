@@ -193,6 +193,11 @@ final class InfoView: BaseView {
             $0.height.equalTo(34)
         }
         
+        emailButton.titleLabel?.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(10)
+            $0.centerY.equalToSuperview()
+        }
+        
         emailLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(8)
@@ -201,6 +206,11 @@ final class InfoView: BaseView {
         passwordButton.snp.makeConstraints {
             $0.top.equalTo(emailButton.snp.bottom).offset(5)
             $0.leading.trailing.height.equalTo(emailButton)
+        }
+        
+        passwordButton.titleLabel?.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(10)
+            $0.centerY.equalToSuperview()
         }
         
         passwordLabel.snp.makeConstraints {
@@ -218,6 +228,11 @@ final class InfoView: BaseView {
             $0.leading.trailing.height.equalTo(emailButton)
         }
         
+        helpButton.titleLabel?.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(10)
+            $0.centerY.equalToSuperview()
+        }
+        
         communityLabel.snp.makeConstraints {
             $0.top.equalTo(helpButton.snp.bottom).offset(15)
             $0.leading.equalTo(accountLabel)
@@ -228,6 +243,11 @@ final class InfoView: BaseView {
             $0.leading.trailing.height.equalTo(emailButton)
         }
         
+        guidelinesButton.titleLabel?.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(10)
+            $0.centerY.equalToSuperview()
+        }
+        
         privacyLabel.snp.makeConstraints {
             $0.top.equalTo(guidelinesButton.snp.bottom).offset(15)
             $0.leading.equalTo(accountLabel)
@@ -236,6 +256,11 @@ final class InfoView: BaseView {
         cookieButton.snp.makeConstraints {
             $0.top.equalTo(privacyLabel.snp.bottom).offset(3)
             $0.leading.trailing.height.equalTo(emailButton)
+        }
+        
+        cookieButton.titleLabel?.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(10)
+            $0.centerY.equalToSuperview()
         }
         
         logoImageView.snp.makeConstraints {
