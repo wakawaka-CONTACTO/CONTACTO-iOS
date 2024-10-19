@@ -21,16 +21,16 @@ final class InfoView: BaseView {
     let passwordButton = UIButton()
     let passwordLabel = UILabel()
     
-    let contactLabel = UILabel()
+    private let contactLabel = UILabel()
     let helpButton = UIButton()
     
-    let communityLabel = UILabel()
+    private let communityLabel = UILabel()
     let guidelinesButton = UIButton()
     
-    let privacyLabel = UILabel()
+    private let privacyLabel = UILabel()
     let cookieButton = UIButton()
     
-    let logoImageView = UIImageView()
+    private let logoImageView = UIImageView()
     let versionLabel = UILabel()
     
     let logoutButton = UIButton()

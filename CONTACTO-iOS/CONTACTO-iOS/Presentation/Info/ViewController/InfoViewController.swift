@@ -28,4 +28,27 @@ final class InfoViewController: BaseViewController {
             $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
         }
     }
+    
+    override func setAddTarget() {
+        infoView.helpButton.addTarget(self, action: #selector(helpButtonTapped), for: .touchUpInside)
+        infoView.guidelinesButton.addTarget(self, action: #selector(guidelinesTapped), for: .touchUpInside)
+        infoView.cookieButton.addTarget(self, action: #selector(cookieButtonTapped), for: .touchUpInside)
+    }
+}
+
+extension InfoViewController {
+    @objc private func helpButtonTapped() {
+        guard let url = URL(string: "https://naver.com") else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    @objc private func guidelinesTapped() {
+        guard let url = URL(string: "https://naver.com") else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    @objc private func cookieButtonTapped() {
+        guard let url = URL(string: "https://naver.com") else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
 }
