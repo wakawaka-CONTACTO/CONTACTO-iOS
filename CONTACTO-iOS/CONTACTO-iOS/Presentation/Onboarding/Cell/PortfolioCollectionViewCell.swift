@@ -97,12 +97,14 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
         
         backgroundButton.snp.makeConstraints {
             $0.edges.equalToSuperview()
-            $0.size.equalTo(306)
+            $0.height.equalTo(402)
+            $0.width.equalTo(306)
         }
         
         backgroundImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-            $0.size.equalTo(306)
+            $0.height.equalTo(402)
+            $0.width.equalTo(306)
         }
         
         cancelButton.snp.makeConstraints {

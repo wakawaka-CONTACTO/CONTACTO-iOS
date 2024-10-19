@@ -75,7 +75,7 @@ extension ExplainOnboardingViewController {
     
     @objc func keyboardWillHide(_ noti: NSNotification){
         self.explainOnboardingView.nextButton.snp.remakeConstraints {
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(55.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(55.adjustedHeight)
             $0.leading.trailing.equalToSuperview().inset(16.adjustedWidth)
             $0.height.equalTo(34.adjustedHeight)
         }

@@ -91,7 +91,7 @@ final class TalentOnboardingView: BaseView {
         
         nextButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).inset(55.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(55.adjustedHeight)
         }
         
         gradientView.snp.makeConstraints {
