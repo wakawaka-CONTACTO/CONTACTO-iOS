@@ -29,13 +29,13 @@ final class EditView: BaseView {
     )
     private let portfolioFlowLayout = UICollectionViewFlowLayout()
     
-    private let talentLabel = UILabel()
+    let talentLabel = UILabel()
     let talentEditButton = UIButton()
     lazy var talentCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: talentFlowLayout
     )
-    private let talentFlowLayout = UICollectionViewFlowLayout()
+    private let talentFlowLayout = LeftAlignedCollectionViewFlowLayout()
     
     private let descriptionLabel = UILabel()
     let descriptionTextView = UITextView()
@@ -114,7 +114,7 @@ final class EditView: BaseView {
         }
         
         talentCollectionView.do {
-            $0.backgroundColor = .ctsuborange
+            $0.backgroundColor = .clear
             $0.isScrollEnabled = false
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
@@ -321,8 +321,7 @@ final class EditView: BaseView {
         talentCollectionView.snp.makeConstraints {
             $0.top.equalTo(talentLabel.snp.bottom).offset(7)
             $0.leading.trailing.equalToSuperview().inset(16)
-            // TODO: - height 변경 필요
-            $0.height.equalTo(50)
+            $0.height.equalTo(talentCollectionView.contentSize.height)
         }
         
         descriptionLabel.snp.makeConstraints {

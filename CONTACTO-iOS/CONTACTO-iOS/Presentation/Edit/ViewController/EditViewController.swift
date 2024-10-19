@@ -12,11 +12,14 @@ import Then
 
 final class EditViewController: BaseViewController {
     
+    private var talentDummy = Talent.talents()
+    
     let editView = EditView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        setData()
     }
     
     override func setNavigationBar() {
@@ -49,6 +52,18 @@ final class EditViewController: BaseViewController {
         editView.talentCollectionView.register(ProfileTalentCollectionViewCell.self, forCellWithReuseIdentifier: ProfileTalentCollectionViewCell.className)
         editView.purposeCollectionView.register(ProfilePurposeCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePurposeCollectionViewCell.className)
     }
+    
+    private func setData() {
+        //data 받는 곳
+        
+        editView.talentCollectionView.layoutIfNeeded()
+        
+        editView.talentCollectionView.snp.remakeConstraints {
+            $0.top.equalTo(editView.talentLabel.snp.bottom).offset(7)
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(editView.talentCollectionView.contentSize.height + 10)
+        }
+    }
 }
 
 extension EditViewController: UICollectionViewDelegate { }
@@ -59,7 +74,7 @@ extension EditViewController: UICollectionViewDataSource {
         case 0:
             return 4
         case 1:
-            return 10 // count로 변경
+            return talentDummy.flatMap { $0.talent }.count
         case 2:
             return 5
         default:
@@ -76,11 +91,11 @@ extension EditViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfileTalentCollectionViewCell.className,
                 for: indexPath) as? ProfileTalentCollectionViewCell else { return UICollectionViewCell() }
             
-//            let allTalents = port.talent.flatMap { $0.talent }
-//            let category = port.talent.first { $0.talent.contains(allTalents[indexPath.row]) }?.category ?? ""
-//            let title = allTalents[indexPath.row]
+            let allTalents = talentDummy.flatMap { $0.talent }
+            let category = talentDummy.first { $0.talent.contains(allTalents[indexPath.row]) }?.category ?? ""
+            let title = allTalents[indexPath.row]
             
-//            cell.configData(category: category, title: title)
+            cell.configData(category: category, title: title)
             return cell
         case 2:
             guard let cell = collectionView.dequeueReusableCell(
