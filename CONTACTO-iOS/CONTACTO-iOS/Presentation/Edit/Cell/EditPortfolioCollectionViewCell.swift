@@ -72,17 +72,17 @@ final class EditPortfolioCollectionViewCell: UICollectionViewCell {
         uploadStackView.do {
             $0.axis = .vertical
             $0.alignment = .center
-            $0.spacing = 5.5
+            $0.spacing = 0
             $0.isUserInteractionEnabled = false
         }
         
         uploadImageView.do {
-            $0.image = .icUpload
+            $0.image = .icUploadSmall
         }
         
         uploadLabel.do {
             $0.text = StringLiterals.Onboarding.Portfolio.upload
-            $0.font = .fontContacto(.caption4)
+            $0.font = .fontContacto(.caption10)
             $0.textColor = .ctblack
         }
     }
