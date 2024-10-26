@@ -15,6 +15,7 @@ enum StringLiterals {
         static let orLabel = "or"
         static let appleButton = "Continue with Apple"
         static let help = "Need help signing in?"
+        static let privacy = "Privacy"
     }
     
     enum Onboarding {

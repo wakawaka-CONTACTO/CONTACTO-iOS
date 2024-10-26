@@ -108,6 +108,7 @@
 		C35E26592C9D733500B197CB /* ChatListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCollectionViewCell.swift; sourceTree = "<group>"; };
 		C37A28DD2CB417BE004BC6AE /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		C37A28E02CB417CF004BC6AE /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		C37FC4BC2CCCC6EB005B7BDF /* CONTACTO-iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CONTACTO-iOS.entitlements"; sourceTree = "<group>"; };
 		C393A6072C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioCollectionViewCell.swift; sourceTree = "<group>"; };
 		C393A6092C93CD5C00ECF1B5 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
 		C393A60C2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioIndicatorView.swift; sourceTree = "<group>"; };
@@ -419,6 +420,7 @@
 		C3FD90372C9139D40021D2BA /* CONTACTO-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				C37FC4BC2CCCC6EB005B7BDF /* CONTACTO-iOS.entitlements */,
 				C3FD90602C9142FE0021D2BA /* Storyboard */,
 				C3FD90522C913F7E0021D2BA /* Application */,
 				C3FD90532C913F890021D2BA /* Global */,
@@ -906,6 +908,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "CONTACTO-iOS/CONTACTO-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = C2Y465A47S;
@@ -933,6 +936,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "CONTACTO-iOS/CONTACTO-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = C2Y465A47S;

@@ -19,6 +19,7 @@ final class LoginView: BaseView {
     private let orLabel = UILabel()
     lazy var appleLoginButton = UIButton()
     lazy var helpButton = UIButton()
+    lazy var privacyButton = UIButton()
     
     override func setStyle() {
         logoImageView.do {
@@ -67,6 +68,11 @@ final class LoginView: BaseView {
             $0.setTitle(StringLiterals.Login.help, for: .normal)
             $0.setTitleColor(.systemBlue, for: .normal)            
         }
+        
+        privacyButton.do {
+            $0.setTitle(StringLiterals.Login.privacy, for: .normal)
+            $0.setTitleColor(.systemBlue, for: .normal)
+        }
     }
     
     override func setLayout() {
@@ -76,7 +82,8 @@ final class LoginView: BaseView {
                     continueButton,
                     orLabel,
                     appleLoginButton,
-                    helpButton)
+                    helpButton,
+                    privacyButton)
         
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(153.adjustedHeight)
@@ -113,6 +120,11 @@ final class LoginView: BaseView {
         
         helpButton.snp.makeConstraints {
             $0.top.equalTo(appleLoginButton.snp.bottom).offset(85.adjustedHeight)
+            $0.centerX.equalToSuperview()
+        }
+        
+        privacyButton.snp.makeConstraints {
+            $0.top.equalTo(helpButton.snp.bottom).offset(15.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
     }
