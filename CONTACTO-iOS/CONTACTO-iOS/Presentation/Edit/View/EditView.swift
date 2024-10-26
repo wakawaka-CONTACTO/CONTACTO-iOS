@@ -207,6 +207,7 @@ final class EditView: BaseView {
             $0.addPadding(left: 27)
             $0.autocapitalizationType = .none
             $0.keyboardType = .asciiCapable
+            $0.text = "pecaypecay"
         }
         
         instaAtLabel.do {

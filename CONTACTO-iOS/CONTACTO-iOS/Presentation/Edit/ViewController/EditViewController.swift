@@ -11,27 +11,65 @@ import PhotosUI
 import SnapKit
 import Then
 
-final class EditViewController: BaseViewController {
+final class EditViewController: UIViewController {
     
     private var talentDummy = Talent.talents()
     var isEditEnable = false
     var tappedStates: [Bool] = Array(repeating: false, count: 5)
+    
+    var isTextFieldFilled = true {
+        didSet {
+            changeSaveButtonStatus()
+        }
+    }
+    var isTextViewFilled = true { // 확인 필요. data 들어갔을 때도
+        didSet {
+            changeSaveButtonStatus()
+        }
+    }
+    var isPortfolioFilled = true {
+        didSet {
+            changeSaveButtonStatus()
+        }
+    }
+    var isPurposeFilled = true {
+        didSet {
+            changeSaveButtonStatus()
+        }
+    }
     
     var selectedImages: [UIImage] = []
     let editView = EditView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
+        setDelegate()
+        setAddTarget()
+        hideKeyboardWhenTappedAround()
         setCollectionView()
         setData()
         setClosure()
     }
     
-    override func setNavigationBar() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setNavigationBar()
+    }
+    
+    // MARK: UI
+    private func setUI() {
+        setStyle()
+        setLayout()
+    }
+    
+    private func setNavigationBar() {
         self.navigationController?.navigationBar.isHidden = true
     }
     
-    override func setLayout() {
+    private func setStyle() { }
+    
+    private func setLayout() {
         let safeAreaHeight = view.safeAreaInsets.bottom
         let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
         
@@ -43,7 +81,7 @@ final class EditViewController: BaseViewController {
         }
     }
     
-    override func setAddTarget() {
+    private func setAddTarget() {
         editView.previewButton.addTarget(self, action: #selector(previewButtonTapped), for: .touchUpInside)
         editView.talentEditButton.addTarget(self, action: #selector(talentEditButtonTapped), for: .touchUpInside)
     }
@@ -56,13 +94,18 @@ final class EditViewController: BaseViewController {
         }
     }
     
-    override func setDelegate() {
+    private func setDelegate() {
         editView.portfolioCollectionView.delegate = self
         editView.portfolioCollectionView.dataSource = self
         editView.talentCollectionView.delegate = self
         editView.talentCollectionView.dataSource = self
         editView.purposeCollectionView.delegate = self
         editView.purposeCollectionView.dataSource = self
+        
+        editView.descriptionTextView.delegate = self
+        
+        editView.nameTextField.delegate = self
+        editView.instaTextField.delegate = self
     }
     
     private func setCollectionView() {
@@ -91,6 +134,18 @@ final class EditViewController: BaseViewController {
         configuration.selection = .ordered
         self.present(picker, animated: true, completion: nil)
         picker.delegate = self
+    }
+    
+    private func changeSaveButtonStatus() {
+        if isTextFieldFilled,
+           isTextViewFilled,
+           isPortfolioFilled,
+           isPurposeFilled,
+           isEditEnable {
+            editView.editButton.isEnabled = true
+        } else {
+            editView.editButton.isEnabled = false
+        }
     }
 }
 
@@ -145,6 +200,7 @@ extension EditViewController: UICollectionViewDataSource {
             
             cell.cancelAction = {
                 self.selectedImages.remove(at: indexPath.row)
+                self.isPortfolioFilled = !self.selectedImages.isEmpty
                 collectionView.reloadData()
             }
             
@@ -172,6 +228,7 @@ extension EditViewController: UICollectionViewDataSource {
             cell.setAddTarget()
             cell.tapAction = {
                 self.tappedStates[indexPath.row] = cell.isTapped
+                self.isPurposeFilled = self.tappedStates.contains(true)
             }
             return cell
         default:
@@ -204,6 +261,31 @@ extension EditViewController: PHPickerViewControllerDelegate {
             let newImages = addedImages.compactMap { $0 }
             self.selectedImages.append(contentsOf: newImages)
             self.editView.portfolioCollectionView.reloadData()
+        }
+    }
+}
+
+extension EditViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        if !textView.text.isEmpty, !textView.text.isOnlyWhitespace() {
+            self.isTextViewFilled = true
+        } else {
+            self.isTextViewFilled = false
+        }
+    }
+}
+
+extension EditViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if !textField.text!.isEmpty,  !textField.text!.isOnlyWhitespace() {
+            self.isTextFieldFilled = true
+        } else {
+            self.isTextFieldFilled = false
         }
     }
 }
