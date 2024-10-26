@@ -922,6 +922,7 @@
 				DEVELOPMENT_TEAM = C2Y465A47S;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "CONTACTO-iOS/Global/Resources/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = CONTACTO;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
@@ -950,6 +951,7 @@
 				DEVELOPMENT_TEAM = C2Y465A47S;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "CONTACTO-iOS/Global/Resources/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = CONTACTO;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
