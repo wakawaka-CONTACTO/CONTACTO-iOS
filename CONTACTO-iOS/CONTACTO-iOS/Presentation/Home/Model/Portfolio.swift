@@ -20,7 +20,7 @@ struct Portfolio: Codable {
 extension Portfolio {
     static func portDummy() -> Portfolio {
         let port = Portfolio(
-            image: ["a", "b", "c", "d"],
+            image: ["a", "b", "c", "d", "a", "b", "c"],
             name: "Pacay Pacay",
             talent: [Talent(talent: ["Branding", "Grapics", "Motion Grapics", "Illustration"], category: "design"),
                      Talent(talent: ["Printmaking"], category: "art"),
