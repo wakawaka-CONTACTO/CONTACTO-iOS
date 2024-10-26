@@ -1,5 +1,5 @@
 //
-//  HomeEmptyView.swift
+//  ChatEmptyView.swift
 //  CONTACTO-iOS
 //
 //  Created by 정채은 on 10/26/24.
@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class HomeEmptyView: BaseView {
+final class ChatEmptyView: BaseView {
     
     // 추후 연결 시 폰트 및 레이아웃 확인 필요
 
@@ -18,19 +18,19 @@ final class HomeEmptyView: BaseView {
     let descriptionLabel = UILabel()
     
     override func setStyle() {
-        self.backgroundColor = .ctblack1
+        self.backgroundColor = .ctmainpink
         
         titleLabel.do {
-            $0.text = StringLiterals.Home.Main.emptyTitle
+            $0.text = StringLiterals.Chat.Empty.title
             $0.font = .fontContacto(.title1)
-            $0.textColor = .ctmainpink
+            $0.textColor = .ctblack
             $0.numberOfLines = 0
         }
         
         descriptionLabel.do {
-            $0.text = StringLiterals.Home.Main.emptyDescription
+            $0.text = StringLiterals.Chat.Empty.description
             $0.font = .fontContacto(.body2)
-            $0.textColor = .ctmainpink
+            $0.textColor = .ctblack
             $0.numberOfLines = 0
         }
     }

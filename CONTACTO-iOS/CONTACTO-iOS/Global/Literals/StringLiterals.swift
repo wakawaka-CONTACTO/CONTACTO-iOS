@@ -85,7 +85,10 @@ enum StringLiterals {
     }
     
     enum Chat {
-        
+        enum Empty {
+            static let title = "Not\nYet"
+            static let description = "If we find first match,\nWe’ll notice you on push."
+        }
     }
     
     enum Edit {

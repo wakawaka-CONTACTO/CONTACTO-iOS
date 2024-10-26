@@ -21,6 +21,7 @@
 		C37A28DE2CB417BE004BC6AE /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37A28DD2CB417BE004BC6AE /* EditViewController.swift */; };
 		C37A28E12CB417CF004BC6AE /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37A28E02CB417CF004BC6AE /* EditView.swift */; };
 		C37FC4BE2CCCDE0C005B7BDF /* HomeEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37FC4BD2CCCDE0C005B7BDF /* HomeEmptyView.swift */; };
+		C37FC4C02CCCE5AF005B7BDF /* ChatEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37FC4BF2CCCE5AF005B7BDF /* ChatEmptyView.swift */; };
 		C393A6082C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C393A6072C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift */; };
 		C393A60A2C93CD5C00ECF1B5 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C393A6092C93CD5C00ECF1B5 /* Pretendard-Regular.otf */; };
 		C393A60D2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C393A60C2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift */; };
@@ -111,6 +112,7 @@
 		C37A28E02CB417CF004BC6AE /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		C37FC4BC2CCCC6EB005B7BDF /* CONTACTO-iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CONTACTO-iOS.entitlements"; sourceTree = "<group>"; };
 		C37FC4BD2CCCDE0C005B7BDF /* HomeEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEmptyView.swift; sourceTree = "<group>"; };
+		C37FC4BF2CCCE5AF005B7BDF /* ChatEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatEmptyView.swift; sourceTree = "<group>"; };
 		C393A6072C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioCollectionViewCell.swift; sourceTree = "<group>"; };
 		C393A6092C93CD5C00ECF1B5 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
 		C393A60C2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioIndicatorView.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 			children = (
 				C35E26532C9D6F6900B197CB /* ChatListView.swift */,
 				C3EF05EF2C9DC96E001BF9EC /* ChatRoomView.swift */,
+				C37FC4BF2CCCE5AF005B7BDF /* ChatEmptyView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -700,6 +703,7 @@
 			files = (
 				C3FD90762C9157060021D2BA /* UIFont+.swift in Sources */,
 				C3B95CEC2C9BE004002A4681 /* DetailProfileViewController.swift in Sources */,
+				C37FC4C02CCCE5AF005B7BDF /* ChatEmptyView.swift in Sources */,
 				C3FD905B2C91429C0021D2BA /* StringLiterals.swift in Sources */,
 				C3FD90682C9154BA0021D2BA /* UILabel+.swift in Sources */,
 				C3E88C752C928C80005A19BE /* OnboardingPurposeButton.swift in Sources */,

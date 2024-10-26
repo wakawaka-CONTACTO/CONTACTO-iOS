@@ -197,7 +197,7 @@ extension HomeViewController {
     }
     
     private func setAlertController() {
-        let alert = UIAlertController(title: "Match!", message: "Do you want to chat with (name)", preferredStyle: .alert)
+        let alert = UIAlertController(title: StringLiterals.Home.Match.title, message: StringLiterals.Home.Match.description, preferredStyle: .alert)
         
         let sucess = UIAlertAction(title: "Yes", style: .default){ action in
             print("확인 버튼이 눌렸습니다.")
