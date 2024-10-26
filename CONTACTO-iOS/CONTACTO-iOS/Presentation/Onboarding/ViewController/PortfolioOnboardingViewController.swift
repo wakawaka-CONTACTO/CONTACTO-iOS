@@ -60,7 +60,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     func setPortfolio() {
         var configuration = PHPickerConfiguration()
         lazy var picker = PHPickerViewController(configuration: configuration)
-        configuration.selectionLimit = 4 - selectedImages.count
+        configuration.selectionLimit = 10 - selectedImages.count
         configuration.filter = .any(of: [.images])
         configuration.selection = .ordered
         self.present(picker, animated: true, completion: nil)
@@ -97,7 +97,7 @@ extension PortfolioOnboardingViewController: UICollectionViewDelegate {
 
 extension PortfolioOnboardingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return 10
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -133,7 +133,7 @@ extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
             result.itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
                     if let image = image as? UIImage {
-                        if !self.selectedImages.contains(where: { $0.isEqualTo(image) }), self.selectedImages.count < 4  {
+                        if !self.selectedImages.contains(where: { $0.isEqualTo(image) }), self.selectedImages.count < 10  {
                             self.selectedImages.append(image)
                         }
                         self.portfolioOnboardingView.portfolioCollectionView.reloadData()

@@ -62,6 +62,7 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
             $0.isHidden = true
             $0.isUserInteractionEnabled = true
             $0.contentMode = .scaleAspectFill
+            $0.clipsToBounds = true
         }
         
         cancelButton.do {
