@@ -137,7 +137,9 @@ extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
             result.itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
                     if let image = image as? UIImage {
-                        addedImages[index] = image
+                        if !self.selectedImages.contains(where: { $0.isEqualTo(image) }), self.selectedImages.count < 10  {
+                            addedImages[index] = image
+                        }
                     }
                     group.leave()
                 }

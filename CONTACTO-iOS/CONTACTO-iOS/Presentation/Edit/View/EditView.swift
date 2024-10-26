@@ -401,7 +401,6 @@ final class EditView: BaseView {
         isEditEnable.toggle()
         nameTextField.isEnabled = isEditEnable
         nameTextField.backgroundColor = isEditEnable ? .ctwhite : .ctmainblue
-//        portfolioCollectionView.isUserInteractionEnabled = isEditEnable
         talentEditButton.isHidden = !isEditEnable
         descriptionTextView.isEditable = isEditEnable
         descriptionTextView.backgroundColor = isEditEnable ? .ctwhite : .clear
