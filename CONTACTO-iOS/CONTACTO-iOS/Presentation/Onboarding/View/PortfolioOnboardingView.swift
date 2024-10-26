@@ -56,7 +56,7 @@ final class PortfolioOnboardingView: BaseView {
         portfolioFlowLayout.do {
             $0.scrollDirection = .horizontal
             $0.minimumLineSpacing = 15
-            $0.estimatedItemSize = CGSize(width: 306, height: 306)
+            $0.estimatedItemSize = CGSize(width: 306, height: 402)
         }
     }
     
@@ -84,20 +84,20 @@ final class PortfolioOnboardingView: BaseView {
         }
         
         indicatorView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(30.adjustedHeight)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(10.adjustedHeight)
             $0.height.equalTo(3)
             $0.leading.trailing.equalToSuperview().inset(16)
         }
         
         nextButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).inset(55.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(55.adjustedHeight)
         }
         
         portfolioCollectionView.snp.makeConstraints {
-            $0.height.equalTo(306)
+            $0.height.equalTo(402)
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(nextButton.snp.top).offset(-50.adjustedHeight)
+            $0.bottom.equalTo(nextButton.snp.top).offset(-35.adjustedHeight)
         }
     }
 }

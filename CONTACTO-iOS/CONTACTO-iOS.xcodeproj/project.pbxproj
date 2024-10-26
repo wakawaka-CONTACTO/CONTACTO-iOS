@@ -18,6 +18,10 @@
 		C35E26542C9D6F6900B197CB /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26532C9D6F6900B197CB /* ChatListView.swift */; };
 		C35E26572C9D72B100B197CB /* ChatList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26562C9D72B100B197CB /* ChatList.swift */; };
 		C35E265A2C9D733500B197CB /* ChatListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26592C9D733500B197CB /* ChatListCollectionViewCell.swift */; };
+		C37A28DE2CB417BE004BC6AE /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37A28DD2CB417BE004BC6AE /* EditViewController.swift */; };
+		C37A28E12CB417CF004BC6AE /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37A28E02CB417CF004BC6AE /* EditView.swift */; };
+		C37FC4BE2CCCDE0C005B7BDF /* HomeEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37FC4BD2CCCDE0C005B7BDF /* HomeEmptyView.swift */; };
+		C37FC4C02CCCE5AF005B7BDF /* ChatEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37FC4BF2CCCE5AF005B7BDF /* ChatEmptyView.swift */; };
 		C393A6082C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C393A6072C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift */; };
 		C393A60A2C93CD5C00ECF1B5 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C393A6092C93CD5C00ECF1B5 /* Pretendard-Regular.otf */; };
 		C393A60D2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C393A60C2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift */; };
@@ -54,6 +58,9 @@
 		C3EF05F22C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F12C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift */; };
 		C3EF05F42C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F32C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift */; };
 		C3EF05F62C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F52C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift */; };
+		C3F574F92CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F574F82CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift */; };
+		C3F574FE2CC4096700440D98 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F574FD2CC4096700440D98 /* InfoViewController.swift */; };
+		C3F575002CC4097100440D98 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F574FF2CC4097100440D98 /* InfoView.swift */; };
 		C3FD90392C9139D40021D2BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD90382C9139D40021D2BA /* AppDelegate.swift */; };
 		C3FD903B2C9139D40021D2BA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD903A2C9139D40021D2BA /* SceneDelegate.swift */; };
 		C3FD90422C9139D70021D2BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3FD90412C9139D70021D2BA /* Assets.xcassets */; };
@@ -101,6 +108,11 @@
 		C35E26532C9D6F6900B197CB /* ChatListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
 		C35E26562C9D72B100B197CB /* ChatList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatList.swift; sourceTree = "<group>"; };
 		C35E26592C9D733500B197CB /* ChatListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCollectionViewCell.swift; sourceTree = "<group>"; };
+		C37A28DD2CB417BE004BC6AE /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
+		C37A28E02CB417CF004BC6AE /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		C37FC4BC2CCCC6EB005B7BDF /* CONTACTO-iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CONTACTO-iOS.entitlements"; sourceTree = "<group>"; };
+		C37FC4BD2CCCDE0C005B7BDF /* HomeEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEmptyView.swift; sourceTree = "<group>"; };
+		C37FC4BF2CCCE5AF005B7BDF /* ChatEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatEmptyView.swift; sourceTree = "<group>"; };
 		C393A6072C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioCollectionViewCell.swift; sourceTree = "<group>"; };
 		C393A6092C93CD5C00ECF1B5 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
 		C393A60C2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioIndicatorView.swift; sourceTree = "<group>"; };
@@ -137,6 +149,9 @@
 		C3EF05F12C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomDateCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3EF05F32C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomMyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3EF05F52C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomYourCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3F574F82CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPortfolioCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3F574FD2CC4096700440D98 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		C3F574FF2CC4097100440D98 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CONTACTO-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3FD90382C9139D40021D2BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3FD903A2C9139D40021D2BA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -210,6 +225,7 @@
 			children = (
 				C35E26532C9D6F6900B197CB /* ChatListView.swift */,
 				C3EF05EF2C9DC96E001BF9EC /* ChatRoomView.swift */,
+				C37FC4BF2CCCE5AF005B7BDF /* ChatEmptyView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -231,6 +247,32 @@
 				C3EF05F52C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		C37A28DB2CB417A0004BC6AE /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				C3F574F72CC3952500440D98 /* Cell */,
+				C37A28DF2CB417C2004BC6AE /* View */,
+				C37A28DC2CB417AE004BC6AE /* ViewController */,
+			);
+			path = Edit;
+			sourceTree = "<group>";
+		};
+		C37A28DC2CB417AE004BC6AE /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C37A28DD2CB417BE004BC6AE /* EditViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		C37A28DF2CB417C2004BC6AE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C37A28E02CB417CF004BC6AE /* EditView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		C393A60B2C93E59700ECF1B5 /* Components */ = {
@@ -258,6 +300,7 @@
 				C393A6182C94200800ECF1B5 /* HomeView.swift */,
 				C3B95CED2C9BE020002A4681 /* DetailProfileView.swift */,
 				C35E26482C9D2F4400B197CB /* MatchView.swift */,
+				C37FC4BD2CCCDE0C005B7BDF /* HomeEmptyView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -331,6 +374,39 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		C3F574F72CC3952500440D98 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				C3F574F82CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		C3F574FA2CC4094D00440D98 /* Info */ = {
+			isa = PBXGroup;
+			children = (
+				C3F574FB2CC4095400440D98 /* View */,
+				C3F574FC2CC4095600440D98 /* ViewController */,
+			);
+			path = Info;
+			sourceTree = "<group>";
+		};
+		C3F574FB2CC4095400440D98 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C3F574FF2CC4097100440D98 /* InfoView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		C3F574FC2CC4095600440D98 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C3F574FD2CC4096700440D98 /* InfoViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
 		C3FD902C2C9139D40021D2BA = {
 			isa = PBXGroup;
 			children = (
@@ -350,6 +426,7 @@
 		C3FD90372C9139D40021D2BA /* CONTACTO-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				C37FC4BC2CCCC6EB005B7BDF /* CONTACTO-iOS.entitlements */,
 				C3FD90602C9142FE0021D2BA /* Storyboard */,
 				C3FD90522C913F7E0021D2BA /* Application */,
 				C3FD90532C913F890021D2BA /* Global */,
@@ -435,6 +512,8 @@
 				C393A61A2C94200C00ECF1B5 /* TabBar */,
 				C393A6132C941FD300ECF1B5 /* Home */,
 				C35E264E2C9D6F3E00B197CB /* Chat */,
+				C37A28DB2CB417A0004BC6AE /* Edit */,
+				C3F574FA2CC4094D00440D98 /* Info */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -624,6 +703,7 @@
 			files = (
 				C3FD90762C9157060021D2BA /* UIFont+.swift in Sources */,
 				C3B95CEC2C9BE004002A4681 /* DetailProfileViewController.swift in Sources */,
+				C37FC4C02CCCE5AF005B7BDF /* ChatEmptyView.swift in Sources */,
 				C3FD905B2C91429C0021D2BA /* StringLiterals.swift in Sources */,
 				C3FD90682C9154BA0021D2BA /* UILabel+.swift in Sources */,
 				C3E88C752C928C80005A19BE /* OnboardingPurposeButton.swift in Sources */,
@@ -638,6 +718,7 @@
 				C3FD90722C91550C0021D2BA /* FontLiterals.swift in Sources */,
 				C3B95CF82C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */,
 				C3FD90862C915EC90021D2BA /* BaseView.swift in Sources */,
+				C3F575002CC4097100440D98 /* InfoView.swift in Sources */,
 				C35E26522C9D6F5E00B197CB /* ChatListViewController.swift in Sources */,
 				C35E265A2C9D733500B197CB /* ChatListCollectionViewCell.swift in Sources */,
 				C35E26542C9D6F6900B197CB /* ChatListView.swift in Sources */,
@@ -646,12 +727,14 @@
 				C3E88C812C92B25D005A19BE /* TalentOnboardingViewController.swift in Sources */,
 				C3EF05F22C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift in Sources */,
 				C3E88C6F2C927830005A19BE /* OnboardingNextButton.swift in Sources */,
+				C37A28DE2CB417BE004BC6AE /* EditViewController.swift in Sources */,
 				C35E26492C9D2F4400B197CB /* MatchView.swift in Sources */,
 				C35E26432C9D10B800B197CB /* ProfileImageCollectionViewCell.swift in Sources */,
 				C3B95CEE2C9BE020002A4681 /* DetailProfileView.swift in Sources */,
 				C3B95CF02C9C03D8002A4681 /* Talent.swift in Sources */,
 				C393A6082C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift in Sources */,
 				C314354B2C9930ED001E4BC1 /* TabBarItems.swift in Sources */,
+				C37FC4BE2CCCDE0C005B7BDF /* HomeEmptyView.swift in Sources */,
 				C3E88C792C929A00005A19BE /* ExplainOnboardingView.swift in Sources */,
 				C3E88C732C927D25005A19BE /* PurposeOnboardingView.swift in Sources */,
 				C3E88C882C92E658005A19BE /* PortfolioOnboardingViewController.swift in Sources */,
@@ -662,6 +745,7 @@
 				C3EF05EE2C9DC964001BF9EC /* ChatRoomViewController.swift in Sources */,
 				C393A60D2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift in Sources */,
 				C3EF05F02C9DC96E001BF9EC /* ChatRoomView.swift in Sources */,
+				C3F574FE2CC4096700440D98 /* InfoViewController.swift in Sources */,
 				C3FD90622C91432B0021D2BA /* a.swift in Sources */,
 				C3E88C7B2C92A93F005A19BE /* SNSOnboardingViewController.swift in Sources */,
 				C3AEC29E2C943B7800E2DED9 /* BaseTextField.swift in Sources */,
@@ -674,6 +758,7 @@
 				C3FD906E2C9154EC0021D2BA /* UIView+.swift in Sources */,
 				C3E88C7D2C92A95A005A19BE /* SNSOnboardingView.swift in Sources */,
 				C3FD90782C9157FD0021D2BA /* UIViewController+.swift in Sources */,
+				C3F574F92CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift in Sources */,
 				C3E88C862C92C8B3005A19BE /* TalentHeaderView.swift in Sources */,
 				C393A61E2C9427F500ECF1B5 /* String+.swift in Sources */,
 				C3B95CF62C9C0AB7002A4681 /* Portfolio.swift in Sources */,
@@ -683,6 +768,7 @@
 				C3FD903B2C9139D40021D2BA /* SceneDelegate.swift in Sources */,
 				C35E264D2C9D458500B197CB /* GreetCollectionViewCell.swift in Sources */,
 				C3FD90812C915E880021D2BA /* LoginView.swift in Sources */,
+				C37A28E12CB417CF004BC6AE /* EditView.swift in Sources */,
 				C393A6122C94116B00ECF1B5 /* UIImage+.swift in Sources */,
 				C3B95CEA2C9BBA2D002A4681 /* PageCollectionViewCell.swift in Sources */,
 				C35E26572C9D72B100B197CB /* ChatList.swift in Sources */,
@@ -830,11 +916,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "CONTACTO-iOS/CONTACTO-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 32CGJPPY5G;
+				DEVELOPMENT_TEAM = C2Y465A47S;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "CONTACTO-iOS/Global/Resources/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = CONTACTO;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
@@ -844,7 +932,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "chaen.CONTACTO-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "contacto.CONTACTO-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -857,11 +945,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "CONTACTO-iOS/CONTACTO-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 32CGJPPY5G;
+				DEVELOPMENT_TEAM = C2Y465A47S;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "CONTACTO-iOS/Global/Resources/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = CONTACTO;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
@@ -871,7 +961,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "chaen.CONTACTO-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "contacto.CONTACTO-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

@@ -60,7 +60,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     func setPortfolio() {
         var configuration = PHPickerConfiguration()
         lazy var picker = PHPickerViewController(configuration: configuration)
-        configuration.selectionLimit = 4 - selectedImages.count
+        configuration.selectionLimit = 10 - selectedImages.count
         configuration.filter = .any(of: [.images])
         configuration.selection = .ordered
         self.present(picker, animated: true, completion: nil)
@@ -97,7 +97,7 @@ extension PortfolioOnboardingViewController: UICollectionViewDelegate {
 
 extension PortfolioOnboardingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return 10
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -119,7 +119,7 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
         }
         
         cell.cancelAction = {
-            self.selectedImages.remove(at: cell.tag)
+            self.selectedImages.remove(at: indexPath.row)
             collectionView.reloadData()
         }
         return cell
@@ -129,17 +129,27 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
 extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
-        for result in results {
+        var addedImages: [UIImage?] = Array(repeating: nil, count: results.count)
+        let group = DispatchGroup()
+        
+        for (index, result) in results.enumerated() {
+            group.enter()
             result.itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
                     if let image = image as? UIImage {
-                        if !self.selectedImages.contains(where: { $0.isEqualTo(image) }), self.selectedImages.count < 4  {
-                            self.selectedImages.append(image)
+                        if !self.selectedImages.contains(where: { $0.isEqualTo(image) }), self.selectedImages.count < 10  {
+                            addedImages[index] = image
                         }
-                        self.portfolioOnboardingView.portfolioCollectionView.reloadData()
                     }
+                    group.leave()
                 }
             }
+        }
+        
+        group.notify(queue: .main) {
+            let newImages = addedImages.compactMap { $0 }
+            self.selectedImages.append(contentsOf: newImages)
+            self.portfolioOnboardingView.portfolioCollectionView.reloadData()
         }
     }
 }

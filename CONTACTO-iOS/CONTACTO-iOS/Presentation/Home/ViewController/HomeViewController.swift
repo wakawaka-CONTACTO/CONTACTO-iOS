@@ -12,6 +12,8 @@ import Then
 
 final class HomeViewController: BaseViewController {
     
+    var isPreview = false
+    
     var num = 0 {
         didSet {
             homeView.pageCollectionView.reloadData()
@@ -150,7 +152,7 @@ extension HomeViewController {
     }
     
     private func setData() {
-        imageDummy = [.imgex1, .imgex2, .imgex3, .imgex4]
+        imageDummy = [.imgex1, .imgex2, .imgex3, .imgex4, .imgex1, .imgex2, .imgex3, .imgex4, .imgex3, .imgex4]
         maxNum = imageDummy.count - 1
     }
     
@@ -182,9 +184,11 @@ extension HomeViewController {
             self.homeView.portView.transform = transform
         } completion: { _ in
             // 추후 쌍방 매칭 됐을 때로 변경
-            if isMatch {
-                let matchViewController = MatchViewController()
-                self.navigationController?.pushViewController(matchViewController, animated: false)
+            if isMatch, !self.isPreview {
+                // 추후 뷰컨으로 연결, 우선 알럿으로
+//                let matchViewController = MatchViewController()
+//                self.navigationController?.pushViewController(matchViewController, animated: false)
+                self.setAlertController()
             }
             self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
             self.homeView.portView.transform = .identity
@@ -192,6 +196,21 @@ extension HomeViewController {
             self.isAnimating = false
             // 다음 유저로 넘기는 작업 수행
         }
+    }
+    
+    private func setAlertController() {
+        let alert = UIAlertController(title: StringLiterals.Home.Match.title, message: StringLiterals.Home.Match.description, preferredStyle: .alert)
+        
+        let sucess = UIAlertAction(title: "Yes", style: .default){ action in
+            print("확인 버튼이 눌렸습니다.")
+        }
+        
+        let cancel = UIAlertAction(title: "Not now", style: .cancel){ cancel in
+            print("취소 버튼이 눌렸습니다.")
+        }
+        alert.addAction(sucess)
+        alert.addAction(cancel)
+        present(alert, animated: true)
     }
 }
 
@@ -220,7 +239,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
         let totalItems = maxNum + 1
         
         let collectionViewWidth = collectionView.frame.width
-        let spacing: CGFloat = 13.adjustedWidth
+        let spacing: CGFloat = 5.adjustedWidth
         
         let cellWidth = (collectionViewWidth - CGFloat(totalItems - 1) * spacing) / CGFloat(totalItems)
         return CGSize(width: cellWidth, height: 2)

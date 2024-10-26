@@ -12,7 +12,7 @@ import Then
 
 final class DetailProfileViewController: BaseViewController {
     
-    var imageArray: [UIImage] = [.imgex1, .imgex2, .imgex3, .imgex4]
+    var imageArray: [UIImage] = [.imgex1, .imgex2, .imgex3, .imgex4, .imgex1, .imgex2, .imgex3]
     var currentNum = 0 {
         didSet {
             detailProfileView.pageCollectionView.reloadData()
@@ -176,6 +176,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
+            cell.isTapped = true
             cell.config(num: port.purpose[indexPath.row])
             return cell
         default:
@@ -194,9 +195,9 @@ extension DetailProfileViewController: UICollectionViewDelegateFlowLayout {
             let totalItems = port.image.count
             
             let collectionViewWidth = collectionView.frame.width
-            let spacing: CGFloat = 20.adjustedWidth
+            let spacing: CGFloat = 5.adjustedWidth
             
-            let cellWidth = (collectionViewWidth - CGFloat(totalItems - 1) * spacing) / CGFloat(totalItems)
+            let cellWidth = (collectionViewWidth - CGFloat(totalItems) * spacing) / CGFloat(totalItems + 1)
             return CGSize(width: cellWidth, height: collectionView.frame.height)
         case 2:
            return CGSize(width: .bitWidth, height: 19)

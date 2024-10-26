@@ -84,7 +84,7 @@ final class DetailProfileView: BaseView {
         }
         
         pageFlowLayout.do {
-            $0.minimumLineSpacing = 20.adjustedWidth
+            $0.minimumLineSpacing = 5.adjustedWidth
         }
         
         nameLabel.do {

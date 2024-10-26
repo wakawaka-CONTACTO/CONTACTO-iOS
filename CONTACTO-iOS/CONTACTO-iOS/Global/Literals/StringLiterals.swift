@@ -15,6 +15,7 @@ enum StringLiterals {
         static let orLabel = "or"
         static let appleButton = "Continue with Apple"
         static let help = "Need help signing in?"
+        static let privacy = "Privacy"
     }
     
     enum Onboarding {
@@ -62,7 +63,9 @@ enum StringLiterals {
     
     enum Home {
         enum Main {
-            static let title = "Graphic by"
+            static let title = "Profile by"
+            static let emptyTitle = "End\nAnd"
+            static let emptyDescription = "You swipe all!\nNew Artist will come soon!"
         }
         
         enum Profile {
@@ -82,14 +85,40 @@ enum StringLiterals {
     }
     
     enum Chat {
-        
+        enum Empty {
+            static let title = "Not\nYet"
+            static let description = "If we find first match,\nWe’ll notice you on push."
+        }
     }
     
-    enum LikeList {
-        
+    enum Edit {
+        static let profileEdit = "Profile Edit"
+        static let preview = "Preview"
+        static let upload = "upload"
+        static let talent = "Talent"
+        static let originality = "My Originality"
+        static let purpose = "Purpose"
+        static let sns = "SNS & Web Site"
+        static let instagram = "INSTAGRAM"
+        static let required = "REQUIRED*"
+        static let website = "WEBSITE"
+        static let example = "contactocreator.com"
+        static let editButton = "EDIT START"
+        static let saveButton = "SAVE"
+        static let doneButton = "Done"
     }
     
-    enum Profile {
-        
+    enum Info {
+        static let account = "Account Setting"
+        static let email = "E-mail"
+        static let password = "Password"
+        static let contact = "Contact Us"
+        static let help = "Help & Support"
+        static let community = "Community"
+        static let guidelines = "Community Guidelines"
+        static let privacy = "Privacy"
+        static let cookie = "Cookie Policy"
+        static let logout = "Log out"
+        static let delete = "Delete Account"
     }
 }

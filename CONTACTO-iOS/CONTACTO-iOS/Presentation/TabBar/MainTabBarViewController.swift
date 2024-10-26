@@ -16,8 +16,8 @@ final class MainTabBarViewController: UITabBarController {
     
     let homeViewController = HomeViewController()
     let chatViewController = ChatListViewController()
-    let profileViewController = UIViewController()
-    let listViewController = UIViewController()
+    let editViewController = EditViewController()
+    let infoViewController = InfoViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,8 +63,8 @@ final class MainTabBarViewController: UITabBarController {
         tabsList = [
             UINavigationController(rootViewController: homeViewController),
             UINavigationController(rootViewController: chatViewController),
-            UINavigationController(rootViewController: profileViewController),
-            UINavigationController(rootViewController: listViewController)
+            UINavigationController(rootViewController: editViewController),
+            UINavigationController(rootViewController: infoViewController)
         ]
     }
     
