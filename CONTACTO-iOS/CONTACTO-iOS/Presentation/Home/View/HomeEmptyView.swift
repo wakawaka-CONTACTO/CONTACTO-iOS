@@ -25,6 +25,7 @@ final class HomeEmptyView: BaseView {
             $0.font = .fontContacto(.title1)
             $0.textColor = .ctmainpink
             $0.numberOfLines = 0
+            $0.textAlignment = .center
         }
         
         descriptionLabel.do {
@@ -32,6 +33,7 @@ final class HomeEmptyView: BaseView {
             $0.font = .fontContacto(.body2)
             $0.textColor = .ctmainpink
             $0.numberOfLines = 0
+            $0.textAlignment = .center
         }
     }
     

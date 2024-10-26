@@ -37,6 +37,7 @@ final class ChatListView: BaseView {
         gradientView.do {
             $0.image = .imgPinkGradient
             $0.contentMode = .scaleAspectFill
+            $0.alpha = 0.8
         }
     }
     

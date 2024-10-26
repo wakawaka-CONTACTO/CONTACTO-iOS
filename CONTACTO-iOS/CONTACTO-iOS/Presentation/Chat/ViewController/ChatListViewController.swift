@@ -26,10 +26,16 @@ final class ChatListViewController: BaseViewController {
         ChatList(profile: "", name: "chaentopia", message: "Welcome to chaentopia! If you have a problem using co...", new: 0)
     ]
     let chatListView = ChatListView()
+    let chatEmptyView = ChatEmptyView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setData()
     }
     
     override func setNavigationBar() {
@@ -40,9 +46,15 @@ final class ChatListViewController: BaseViewController {
         let safeAreaHeight = view.safeAreaInsets.bottom
         let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
         
-        view.addSubviews(chatListView)
+        view.addSubviews(chatListView,
+                         chatEmptyView)
         
         chatListView.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
+        }
+        
+        chatEmptyView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
         }
@@ -55,6 +67,12 @@ final class ChatListViewController: BaseViewController {
     
     private func setCollectionView() {
         chatListView.chatListCollectionView.register(ChatListCollectionViewCell.self, forCellWithReuseIdentifier: ChatListCollectionViewCell.className)
+    }
+    
+    private func setData() {
+        // data 받는 곳
+        chatListView.isHidden = chatRoomList.isEmpty
+        chatEmptyView.isHidden = !chatRoomList.isEmpty
     }
     
     @objc private func pushToChatRoom() {
