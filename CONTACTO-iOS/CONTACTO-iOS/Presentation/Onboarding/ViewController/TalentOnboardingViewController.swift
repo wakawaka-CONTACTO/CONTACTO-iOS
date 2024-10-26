@@ -39,7 +39,7 @@ final class TalentOnboardingViewController: BaseViewController {
         }
     }
     
-    override func setAddTarget() {
+    func setAddTargetForOnboarding() {
         talentOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
     
@@ -53,7 +53,7 @@ final class TalentOnboardingViewController: BaseViewController {
         talentOnboardingView.talentCollectionView.register(TalentHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TalentHeaderView.className)
     }
     
-    @objc private func nextButtonTapped() {
+    @objc func nextButtonTapped() {
         let portfolioOnboardingViewController = PortfolioOnboardingViewController()
         self.navigationController?.pushViewController(portfolioOnboardingViewController, animated: true)
     }

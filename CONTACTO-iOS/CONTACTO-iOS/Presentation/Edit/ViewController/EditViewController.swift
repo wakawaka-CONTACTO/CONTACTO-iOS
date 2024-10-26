@@ -151,16 +151,22 @@ final class EditViewController: UIViewController {
 
 extension EditViewController {
     @objc private func previewButtonTapped() {
-        // layout, style, navigation 등 수정 필요 - feature
         let previewViewController = HomeViewController()
-        present(previewViewController, animated: true)
+        previewViewController.isPreview = true
+        let navigationController = UINavigationController(rootViewController: previewViewController)
+        present(navigationController, animated: true)
     }
     
     @objc private func talentEditButtonTapped() {
         let talentViewController = TalentOnboardingViewController()
         talentViewController.hidesBottomBarWhenPushed = true
         talentViewController.talentOnboardingView.nextButton.setTitle(StringLiterals.Edit.doneButton, for: .normal)
+        talentViewController.talentOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
         navigationController?.pushViewController(talentViewController, animated: true)
+    }
+    
+    @objc private func nextButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }
 

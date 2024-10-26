@@ -12,6 +12,8 @@ import Then
 
 final class HomeViewController: BaseViewController {
     
+    var isPreview = false
+    
     var num = 0 {
         didSet {
             homeView.pageCollectionView.reloadData()
@@ -182,7 +184,7 @@ extension HomeViewController {
             self.homeView.portView.transform = transform
         } completion: { _ in
             // 추후 쌍방 매칭 됐을 때로 변경
-            if isMatch {
+            if isMatch, !self.isPreview {
                 // 추후 뷰컨으로 연결, 우선 알럿으로
 //                let matchViewController = MatchViewController()
 //                self.navigationController?.pushViewController(matchViewController, animated: false)
