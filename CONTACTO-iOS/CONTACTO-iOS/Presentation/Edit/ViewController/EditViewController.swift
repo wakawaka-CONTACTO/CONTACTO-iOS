@@ -85,7 +85,7 @@ final class EditViewController: BaseViewController {
     func setPortfolio() {
         var configuration = PHPickerConfiguration()
         lazy var picker = PHPickerViewController(configuration: configuration)
-        configuration.selectionLimit = 4 - selectedImages.count
+        configuration.selectionLimit = 10 - selectedImages.count
         configuration.filter = .any(of: [.images])
         configuration.selection = .ordered
         self.present(picker, animated: true, completion: nil)
@@ -114,7 +114,7 @@ extension EditViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
         case 0:
-            return 4
+            return 10
         case 1:
             return talentDummy.flatMap { $0.talent }.count
         case 2:
@@ -143,7 +143,7 @@ extension EditViewController: UICollectionViewDataSource {
             }
             
             cell.cancelAction = {
-                self.selectedImages.remove(at: cell.tag)
+                self.selectedImages.remove(at: indexPath.row)
                 collectionView.reloadData()
             }
             return cell
@@ -179,18 +179,25 @@ extension EditViewController: UICollectionViewDataSource {
 extension EditViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
-        for result in results {
+        var addedImages: [UIImage?] = Array(repeating: nil, count: results.count)
+        let group = DispatchGroup()
+        
+        for (index, result) in results.enumerated() {
+            group.enter()
             result.itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
                     if let image = image as? UIImage {
-                        if !self.selectedImages.contains(where: { $0.isEqualTo(image) }), self.selectedImages.count < 4  {
-                            self.selectedImages.append(image)
-                        }
-                        self.editView.portfolioCollectionView.reloadData()
+                        addedImages[index] = image
                     }
+                    group.leave()
                 }
             }
         }
+        
+        group.notify(queue: .main) {
+            let newImages = addedImages.compactMap { $0 }
+            self.selectedImages.append(contentsOf: newImages)
+            self.editView.portfolioCollectionView.reloadData()
+        }
     }
 }
-
