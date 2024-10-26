@@ -119,7 +119,7 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
         }
         
         cell.cancelAction = {
-            self.selectedImages.remove(at: cell.tag)
+            self.selectedImages.remove(at: indexPath.row)
             collectionView.reloadData()
         }
         return cell
