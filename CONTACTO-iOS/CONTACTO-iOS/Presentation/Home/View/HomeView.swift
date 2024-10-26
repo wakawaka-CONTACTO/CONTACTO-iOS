@@ -11,10 +11,6 @@ import SnapKit
 import Then
 
 final class HomeView: BaseView {
-//    private let topView = UIView()
-//    private let icCImageView = UIImageView()
-//    private let icTImageView = UIImageView()
-    
     lazy var pageCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: pageFlowLayout
@@ -46,7 +42,7 @@ final class HomeView: BaseView {
         
         pageFlowLayout.do {
             $0.scrollDirection = .horizontal
-            $0.minimumLineSpacing = 13.adjustedWidth
+            $0.minimumLineSpacing = 5.adjustedWidth
         }
         
         portView.do {
