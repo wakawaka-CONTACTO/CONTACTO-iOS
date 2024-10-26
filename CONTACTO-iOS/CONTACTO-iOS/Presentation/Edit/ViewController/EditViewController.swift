@@ -51,6 +51,7 @@ final class EditViewController: BaseViewController {
     private func setClosure() {
         editView.editAction = {
             self.isEditEnable.toggle()
+            self.editView.portfolioCollectionView.reloadData()
             self.editView.purposeCollectionView.reloadData()
         }
     }
@@ -146,6 +147,9 @@ extension EditViewController: UICollectionViewDataSource {
                 self.selectedImages.remove(at: indexPath.row)
                 collectionView.reloadData()
             }
+            
+            cell.backgroundButton.isEnabled = isEditEnable
+            cell.cancelButton.isEnabled = isEditEnable
             return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(
