@@ -150,7 +150,7 @@ extension HomeViewController {
     }
     
     private func setData() {
-        imageDummy = [.imgex1, .imgex2, .imgex3, .imgex4]
+        imageDummy = [.imgex1, .imgex2, .imgex3, .imgex4, .imgex1, .imgex2, .imgex3, .imgex4, .imgex3, .imgex4]
         maxNum = imageDummy.count - 1
     }
     
@@ -220,7 +220,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
         let totalItems = maxNum + 1
         
         let collectionViewWidth = collectionView.frame.width
-        let spacing: CGFloat = 13.adjustedWidth
+        let spacing: CGFloat = 5.adjustedWidth
         
         let cellWidth = (collectionViewWidth - CGFloat(totalItems - 1) * spacing) / CGFloat(totalItems)
         return CGSize(width: cellWidth, height: 2)

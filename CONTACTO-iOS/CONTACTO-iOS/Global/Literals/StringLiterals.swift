@@ -63,7 +63,9 @@ enum StringLiterals {
     
     enum Home {
         enum Main {
-            static let title = "Graphic by"
+            static let title = "Profile by"
+            static let emptyTitle = "End\nAnd"
+            static let emptyDescription = "You swipe all!\nNew Artist will come soon!"
         }
         
         enum Profile {
