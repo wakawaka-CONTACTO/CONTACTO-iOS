@@ -129,17 +129,25 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
 extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
-        for result in results {
+        var addedImages: [UIImage?] = Array(repeating: nil, count: results.count)
+        let group = DispatchGroup()
+        
+        for (index, result) in results.enumerated() {
+            group.enter()
             result.itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
                     if let image = image as? UIImage {
-                        if !self.selectedImages.contains(where: { $0.isEqualTo(image) }), self.selectedImages.count < 10  {
-                            self.selectedImages.append(image)
-                        }
-                        self.portfolioOnboardingView.portfolioCollectionView.reloadData()
+                        addedImages[index] = image
                     }
+                    group.leave()
                 }
             }
+        }
+        
+        group.notify(queue: .main) {
+            let newImages = addedImages.compactMap { $0 }
+            self.selectedImages.append(contentsOf: newImages)
+            self.portfolioOnboardingView.portfolioCollectionView.reloadData()
         }
     }
 }
