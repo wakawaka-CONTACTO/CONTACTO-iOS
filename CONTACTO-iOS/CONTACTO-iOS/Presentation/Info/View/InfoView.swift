@@ -53,9 +53,10 @@ final class InfoView: BaseView {
             $0.setTitle(StringLiterals.Info.email, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
             $0.setBackgroundColor(.ctgray3, for: .normal)
+            $0.setBackgroundColor(.ctgray3, for: .disabled)
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.titleLabel?.font = .fontContacto(.button1)
-            $0.isEnabled = true
+            $0.isEnabled = false
             $0.titleLabel?.textAlignment = .left
         }
         
@@ -69,6 +70,7 @@ final class InfoView: BaseView {
             $0.setTitle(StringLiterals.Info.password, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
             $0.setBackgroundColor(.ctgray3, for: .normal)
+            $0.setBackgroundColor(.ctgray3, for: .disabled)
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.titleLabel?.font = .fontContacto(.button1)
             $0.isEnabled = false
