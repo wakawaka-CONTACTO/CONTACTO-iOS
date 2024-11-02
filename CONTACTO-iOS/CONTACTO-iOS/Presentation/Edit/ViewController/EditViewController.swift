@@ -16,6 +16,7 @@ final class EditViewController: UIViewController {
     private var talentDummy = Talent.talents()
     var isEditEnable = false
     var tappedStates: [Bool] = Array(repeating: false, count: 5)
+    private var activeTextField: UIView?
     
     var isTextFieldFilled = true {
         didSet {
@@ -55,6 +56,11 @@ final class EditViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationBar()
+        self.addKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.removeKeyboardNotifications()
     }
     
     // MARK: UI
@@ -91,6 +97,7 @@ final class EditViewController: UIViewController {
             self.isEditEnable.toggle()
             self.editView.portfolioCollectionView.reloadData()
             self.editView.purposeCollectionView.reloadData()
+            self.view.endEditing(true)
         }
     }
     
@@ -106,6 +113,7 @@ final class EditViewController: UIViewController {
         
         editView.nameTextField.delegate = self
         editView.instaTextField.delegate = self
+        editView.websiteTextField.delegate = self
     }
     
     private func setCollectionView() {
@@ -146,6 +154,69 @@ final class EditViewController: UIViewController {
         } else {
             editView.editButton.isEnabled = false
         }
+    }
+    
+    private func tapAroundKeyboard() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = true
+        view.addGestureRecognizer(tap)
+    }
+    
+    private func addKeyboardNotifications(){
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func removeKeyboardNotifications(){
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(_ noti: NSNotification) {
+        guard let keyboardFrame = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        
+        let keyboardHeight = keyboardFrame.height
+        let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
+        
+        self.editView.editButton.snp.remakeConstraints {
+            $0.bottom.equalToSuperview().inset(keyboardHeight - tabBarHeight + 13.adjustedHeight)
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(34.adjustedHeight)
+        }
+        
+        // 현재 활성화된 텍스트 필드가 있는지 확인
+        if let activeField = activeTextField {
+            print(activeField)
+            if activeField.frame.minY > (view.frame.height - keyboardHeight) {
+                let yOffset = activeField.frame.maxY - (view.frame.height + tabBarHeight - keyboardHeight) + 45.adjustedHeight
+                editView.scrollView.setContentOffset(CGPoint(x: 0, y: keyboardHeight + yOffset), animated: false)
+            }
+        }
+        
+        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+        
+    }
+    
+    @objc func keyboardWillHide(_ noti: NSNotification){
+        self.editView.editButton.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(34.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(41.adjustedHeight)
+        }
+        
+        if let activeField = activeTextField {
+            if activeField == editView.instaTextField || activeField == editView.websiteTextField {
+                editView.scrollView.setContentOffset(CGPoint(x: 0,
+                                                             y: editView.scrollView.contentSize.height - editView.scrollView.bounds.height),
+                                                     animated: true)
+            }
+        }
+        
+        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
     }
 }
 
@@ -272,6 +343,14 @@ extension EditViewController: PHPickerViewControllerDelegate {
 }
 
 extension EditViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        activeTextField = textView
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        activeTextField = nil
+    }
+    
     func textViewDidChange(_ textView: UITextView) {
         if !textView.text.isEmpty, !textView.text.isOnlyWhitespace() {
             self.isTextViewFilled = true
@@ -288,10 +367,20 @@ extension EditViewController: UITextFieldDelegate {
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        if !textField.text!.isEmpty,  !textField.text!.isOnlyWhitespace() {
-            self.isTextFieldFilled = true
-        } else {
-            self.isTextFieldFilled = false
+        if textField == editView.instaTextField {
+            if !textField.text!.isEmpty,  !textField.text!.isOnlyWhitespace() {
+                self.isTextFieldFilled = true
+            } else {
+                self.isTextFieldFilled = false
+            }
         }
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeTextField = textField
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        activeTextField = nil
     }
 }
