@@ -34,6 +34,8 @@ final class InfoViewController: BaseViewController {
         infoView.helpButton.addTarget(self, action: #selector(helpButtonTapped), for: .touchUpInside)
         infoView.guidelinesButton.addTarget(self, action: #selector(guidelinesTapped), for: .touchUpInside)
         infoView.cookieButton.addTarget(self, action: #selector(cookieButtonTapped), for: .touchUpInside)
+        infoView.logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
+        infoView.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
 }
 
@@ -53,5 +55,31 @@ extension InfoViewController {
         guard let url = URL(string: "https://naver.com") else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
+    }
+    
+    @objc private func logoutButtonTapped() {
+        self.setAlertController(isLogout: true)
+    }
+    
+    @objc private func deleteButtonTapped() {
+        self.setAlertController(isLogout: false)
+    }
+    
+    private func setAlertController(isLogout: Bool) {
+        let title = isLogout ? StringLiterals.Info.Alert.logoutTitle : StringLiterals.Info.Alert.deleteTitle
+        let description = isLogout ? StringLiterals.Info.Alert.logoutDescription : StringLiterals.Info.Alert.deleteDescription
+        
+        let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
+        
+        let sucess = UIAlertAction(title: StringLiterals.Info.Alert.yes, style: .destructive){ action in
+            print("확인 버튼이 눌렸습니다.")
+        }
+        
+        let cancel = UIAlertAction(title: StringLiterals.Info.Alert.no, style: .cancel){ cancel in
+            print("취소 버튼이 눌렸습니다.")
+        }
+        alert.addAction(sucess)
+        alert.addAction(cancel)
+        present(alert, animated: true)
     }
 }

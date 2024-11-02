@@ -117,5 +117,14 @@ enum StringLiterals {
         static let privacy = "Privacy"
         static let logout = "Log out"
         static let delete = "Delete Account"
+        
+        enum Alert {
+            static let logoutTitle = "Log out"
+            static let logoutDescription = "This is Log out Description"
+            static let deleteTitle = "This is Log out Description"
+            static let deleteDescription = "This is Delete Description"
+            static let yes = "Yes"
+            static let no = "No"
+        }
     }
 }
