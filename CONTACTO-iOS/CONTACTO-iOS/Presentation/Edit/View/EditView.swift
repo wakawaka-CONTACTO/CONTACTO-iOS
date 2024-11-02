@@ -18,7 +18,7 @@ final class EditView: BaseView {
     private let topView = UIView()
     private let topImageView = UIImageView()
     
-    private let scrollView = UIScrollView()
+    let scrollView = UIScrollView()
     private let contentsView = UIView()
     private let editLabel = UILabel()
     private let editLineView = UIView()
@@ -208,6 +208,7 @@ final class EditView: BaseView {
             $0.autocapitalizationType = .none
             $0.keyboardType = .asciiCapable
             $0.text = "pecaypecay"
+            $0.isEnabled = false
         }
         
         instaAtLabel.do {
@@ -235,6 +236,7 @@ final class EditView: BaseView {
             $0.spellCheckingType = .no
             $0.autocapitalizationType = .none
             $0.addPadding(left: 10)
+            $0.isEnabled = false
         }
         
         editButton.do {
@@ -407,6 +409,8 @@ final class EditView: BaseView {
         talentEditButton.isHidden = !isEditEnable
         descriptionTextView.isEditable = isEditEnable
         descriptionTextView.backgroundColor = isEditEnable ? .ctwhite : .clear
+        instaTextField.isEnabled = isEditEnable
+        websiteTextField.isEnabled = isEditEnable
         instaTextField.backgroundColor = isEditEnable ? .ctwhite : .clear
         websiteTextField.backgroundColor = isEditEnable ? .ctwhite : .clear
         
