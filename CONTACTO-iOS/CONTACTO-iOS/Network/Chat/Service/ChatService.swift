@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+protocol ChatServiceProtocol {
+    
+}
+
+final class ChatService: APIRequestLoader<ChatTarget>, ChatServiceProtocol {
+    
+}

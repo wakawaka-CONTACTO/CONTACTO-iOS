@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+protocol HomeServiceProtocol {
+    
+}
+
+final class HomeService: APIRequestLoader<HomeTarget>, HomeServiceProtocol {
+    
+}

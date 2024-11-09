@@ -44,22 +44,6 @@ extension TargetType {
                 HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
                 HTTPHeaderFieldKey.providerToken.rawValue: KeychainHandler.shared.providerToken
             ]
-        case .teamId:
-            if let userGroupId = KeychainHandler.shared.userGroupId {
-                return [
-                    HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
-                    HTTPHeaderFieldKey.teamId.rawValue: "\(userGroupId)"
-                ]
-            } else {
-                return [
-                    HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
-                ]
-            }
-        case .deleteAppleId:
-            return [
-                HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
-                HTTPHeaderFieldKey.deleteAppleId.rawValue: KeychainHandler.shared.authorizationCode
-            ]
         }
     }
 }
@@ -95,16 +79,6 @@ extension TargetType {
         case .providerToken:
             urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
             urlRequest.setValue(KeychainHandler.shared.providerToken, forHTTPHeaderField: HTTPHeaderFieldKey.providerToken.rawValue)
-        case .teamId:
-            if let userGroupId = KeychainHandler.shared.userGroupId {
-                urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
-                urlRequest.setValue("\(userGroupId)", forHTTPHeaderField: HTTPHeaderFieldKey.teamId.rawValue)
-            } else {
-                urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
-            }
-        case .deleteAppleId:
-            urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
-            urlRequest.setValue(KeychainHandler.shared.authorizationCode, forHTTPHeaderField: HTTPHeaderFieldKey.deleteAppleId.rawValue)
         }
         
         switch parameters {

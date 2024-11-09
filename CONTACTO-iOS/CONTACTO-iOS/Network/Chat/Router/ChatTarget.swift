@@ -6,3 +6,41 @@
 //
 
 import Foundation
+
+import Alamofire
+
+enum ChatTarget {
+    
+}
+
+extension ChatTarget: TargetType {
+    var authorization: Authorization {
+        switch self {
+            
+        }
+    }
+    
+    var headerType: HTTPHeaderType {
+        switch self {
+            
+        }
+    }
+    
+    var method: HTTPMethod {
+        switch self {
+            
+        }
+    }
+    
+    var path: String {
+        switch self {
+            
+        }
+    }
+    
+    var parameters: RequestParams {
+        switch self {
+            
+        }
+    }
+}

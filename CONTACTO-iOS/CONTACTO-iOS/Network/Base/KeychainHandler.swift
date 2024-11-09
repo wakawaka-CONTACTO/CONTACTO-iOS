@@ -24,8 +24,6 @@ struct KeychainHandler {
     private let authorizationCodeKey = "authorizationCode"
     private let userIDKey = "userID"
     private let userNameKey = "userName"
-    private let userGroupIdKey = "userGroupIdKey"
-    private let userGroupNameKey = "userGroupNameKey"
     
     var accessToken: String {
         get {
@@ -81,32 +79,12 @@ struct KeychainHandler {
         }
     }
     
-    var userGroupId: Int? {
-        get {
-            return UserDefaults.standard.integer(forKey: userGroupIdKey)
-        }
-        set {
-            UserDefaults.standard.setValue(newValue, forKey: userGroupIdKey)
-        }
-    }
-    
-    var userGroupName: String? {
-        get {
-            return UserDefaults.standard.string(forKey: userGroupNameKey)
-        }
-        set {
-            UserDefaults.standard.setValue(newValue, forKey: userGroupNameKey)
-        }
-    }
-    
     mutating func logout() {
         accessToken = ""
         refreshToken = ""
         KeychainWrapper.standard.removeObject(forKey: userIDKey)
         KeychainWrapper.standard.removeObject(forKey: accessTokenKey)
         KeychainWrapper.standard.removeObject(forKey: refreshTokenKey)
-        UserDefaults.standard.removeObject(forKey: userGroupIdKey)
-        UserDefaults.standard.removeObject(forKey: userGroupNameKey)
     }
     
     mutating func deleteID() {
@@ -120,7 +98,5 @@ struct KeychainHandler {
         KeychainWrapper.standard.removeObject(forKey: refreshTokenKey)
         KeychainWrapper.standard.removeObject(forKey: providerTokenKey)
         KeychainWrapper.standard.removeObject(forKey: authorizationCodeKey)
-        UserDefaults.standard.removeObject(forKey: userGroupIdKey)
-        UserDefaults.standard.removeObject(forKey: userGroupNameKey)
     }
 }

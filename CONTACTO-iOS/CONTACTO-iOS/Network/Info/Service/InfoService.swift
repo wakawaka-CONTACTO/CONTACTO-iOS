@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+protocol InfoServiceProtocol {
+    
+}
+
+final class InfoService: APIRequestLoader<InfoTarget>, InfoServiceProtocol {
+    
+}

@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+protocol EditServiceProtocol {
+    
+}
+
+final class EditService: APIRequestLoader<EditTarget>, EditServiceProtocol {
+    
+}

@@ -14,8 +14,7 @@ final class NetworkService {
 
     let onboardingService: OnboardingServiceProtocol = OnboardingService(apiLogger: APIEventLogger())
     let homeService: HomeServiceProtocol = HomeService(apiLogger: APIEventLogger())
-    let rankingService: RankingServiceProtocol = RankingService(apiLogger: APIEventLogger())
-    let meetingService: MeetingServiceProtocol = MeetingService(apiLogger: APIEventLogger())
-    let myPingleService: MyPINGLEServiceProtocol = MyPINGLEService(apiLogger: APIEventLogger())
-    let profileService: ProfileServiceProtocol = ProfileService(apiLogger: APIEventLogger())
+    let chatService: ChatServiceProtocol = ChatService(apiLogger: APIEventLogger())
+    let editService: EditServiceProtocol = EditService(apiLogger: APIEventLogger())
+    let infoService: InfoServiceProtocol = InfoService(apiLogger: APIEventLogger())
 }
