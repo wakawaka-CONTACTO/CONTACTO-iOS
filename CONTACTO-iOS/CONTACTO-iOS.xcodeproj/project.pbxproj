@@ -11,8 +11,6 @@
 		C33D73BF2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */; };
 		C33D73C12CDEEE0B00889B1B /* NetworkResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */; };
 		C33D73C32CDEEE1C00889B1B /* TargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C22CDEEE1C00889B1B /* TargetType.swift */; };
-		C33D73C62CDEEE5700889B1B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = C33D73C52CDEEE5700889B1B /* Alamofire */; };
-		C33D73C82CDEEE5700889B1B /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = C33D73C72CDEEE5700889B1B /* AlamofireDynamic */; };
 		C33D73CA2CDEEE6800889B1B /* KeychainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C92CDEEE6800889B1B /* KeychainHandler.swift */; };
 		C33D73CD2CDEEE7E00889B1B /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = C33D73CC2CDEEE7E00889B1B /* SwiftKeychainWrapper */; };
 		C33D73CF2CDEEE8700889B1B /* BaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73CE2CDEEE8700889B1B /* BaseResponse.swift */; };
@@ -41,6 +39,7 @@
 		C33D74172CDEF25600889B1B /* InfoRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74162CDEF25600889B1B /* InfoRequestBodyDTO.swift */; };
 		C33D74192CDEF25E00889B1B /* InfoResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74182CDEF25E00889B1B /* InfoResponseDTO.swift */; };
 		C33D741B2CDEF26200889B1B /* InfoTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D741A2CDEF26200889B1B /* InfoTarget.swift */; };
+		C34C1F562CE38E2800F94BCD /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = C34C1F552CE38E2800F94BCD /* Alamofire */; };
 		C35E26412C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26402C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift */; };
 		C35E26432C9D10B800B197CB /* ProfileImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26422C9D10B800B197CB /* ProfileImageCollectionViewCell.swift */; };
 		C35E26472C9D2EC300B197CB /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26462C9D2EC300B197CB /* MatchViewController.swift */; };
@@ -254,9 +253,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C33D73C62CDEEE5700889B1B /* Alamofire in Frameworks */,
-				C33D73C82CDEEE5700889B1B /* AlamofireDynamic in Frameworks */,
 				C33D73CD2CDEEE7E00889B1B /* SwiftKeychainWrapper in Frameworks */,
+				C34C1F562CE38E2800F94BCD /* Alamofire in Frameworks */,
 				C3FD904E2C913EC40021D2BA /* SnapKit in Frameworks */,
 				C3FD90512C913ECD0021D2BA /* Then in Frameworks */,
 			);
@@ -977,9 +975,8 @@
 			packageProductDependencies = (
 				C3FD904D2C913EC40021D2BA /* SnapKit */,
 				C3FD90502C913ECD0021D2BA /* Then */,
-				C33D73C52CDEEE5700889B1B /* Alamofire */,
-				C33D73C72CDEEE5700889B1B /* AlamofireDynamic */,
 				C33D73CC2CDEEE7E00889B1B /* SwiftKeychainWrapper */,
+				C34C1F552CE38E2800F94BCD /* Alamofire */,
 			);
 			productName = "CONTACTO-iOS";
 			productReference = C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */;
@@ -1012,8 +1009,8 @@
 			packageReferences = (
 				C3FD904C2C913EC40021D2BA /* XCRemoteSwiftPackageReference "SnapKit" */,
 				C3FD904F2C913ECD0021D2BA /* XCRemoteSwiftPackageReference "Then" */,
-				C33D73C42CDEEE5700889B1B /* XCRemoteSwiftPackageReference "Alamofire" */,
 				C33D73CB2CDEEE7E00889B1B /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
+				C34C1F542CE38E2800F94BCD /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = C3FD90362C9139D40021D2BA /* Products */;
 			projectDirPath = "";
@@ -1379,20 +1376,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C33D73C42CDEEE5700889B1B /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.10.1;
-			};
-		};
 		C33D73CB2CDEEE7E00889B1B /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.0.1;
+			};
+		};
+		C34C1F542CE38E2800F94BCD /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.1;
 			};
 		};
 		C3FD904C2C913EC40021D2BA /* XCRemoteSwiftPackageReference "SnapKit" */ = {
@@ -1414,20 +1411,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C33D73C52CDEEE5700889B1B /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C33D73C42CDEEE5700889B1B /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-		C33D73C72CDEEE5700889B1B /* AlamofireDynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C33D73C42CDEEE5700889B1B /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = AlamofireDynamic;
-		};
 		C33D73CC2CDEEE7E00889B1B /* SwiftKeychainWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C33D73CB2CDEEE7E00889B1B /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
 			productName = SwiftKeychainWrapper;
+		};
+		C34C1F552CE38E2800F94BCD /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C34C1F542CE38E2800F94BCD /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 		C3FD904D2C913EC40021D2BA /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;

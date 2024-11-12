@@ -14,7 +14,7 @@ class APIRequestLoader<T: TargetType> {
     private let apiLogger: APIEventLogger
     private let session: Session
     private let interceptorSession: Session
-    let interceptor = PINGLERequestInterceptor()
+    let interceptor = ContactoRequestInterceptor()
     
     init(
         configuration: URLSessionConfiguration = .default,
