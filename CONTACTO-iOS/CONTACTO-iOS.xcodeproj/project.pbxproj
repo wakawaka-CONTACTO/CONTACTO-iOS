@@ -27,19 +27,23 @@
 		C33D73EC2CDEF15300889B1B /* EditService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73EB2CDEF15300889B1B /* EditService.swift */; };
 		C33D73EE2CDEF15800889B1B /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73ED2CDEF15800889B1B /* ChatService.swift */; };
 		C33D73F02CDEF16100889B1B /* InfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73EF2CDEF16100889B1B /* InfoService.swift */; };
-		C33D73F72CDEF19000889B1B /* HomeResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73F62CDEF19000889B1B /* HomeResponseDTO.swift */; };
-		C33D73F92CDEF1A200889B1B /* HomeRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73F82CDEF1A200889B1B /* HomeRequestBodyDTO.swift */; };
+		C33D73F72CDEF19000889B1B /* PortfoliosResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73F62CDEF19000889B1B /* PortfoliosResponseDTO.swift */; };
 		C33D73FC2CDEF1B100889B1B /* HomeTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73FB2CDEF1B100889B1B /* HomeTarget.swift */; };
-		C33D74002CDEF1C900889B1B /* EditResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73FF2CDEF1C900889B1B /* EditResponseDTO.swift */; };
+		C33D74002CDEF1C900889B1B /* UserDetailResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73FF2CDEF1C900889B1B /* UserDetailResponseDTO.swift */; };
 		C33D74022CDEF1D500889B1B /* EditRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74012CDEF1D500889B1B /* EditRequestBodyDTO.swift */; };
 		C33D74082CDEF1F100889B1B /* EditTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74072CDEF1F100889B1B /* EditTarget.swift */; };
 		C33D740D2CDEF20D00889B1B /* ChatRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D740C2CDEF20D00889B1B /* ChatRequestBodyDTO.swift */; };
 		C33D74102CDEF21900889B1B /* ChatResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D740F2CDEF21900889B1B /* ChatResponseDTO.swift */; };
 		C33D74132CDEF23900889B1B /* ChatTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74122CDEF23900889B1B /* ChatTarget.swift */; };
-		C33D74172CDEF25600889B1B /* InfoRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74162CDEF25600889B1B /* InfoRequestBodyDTO.swift */; };
-		C33D74192CDEF25E00889B1B /* InfoResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74182CDEF25E00889B1B /* InfoResponseDTO.swift */; };
+		C33D74172CDEF25600889B1B /* DeleteRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74162CDEF25600889B1B /* DeleteRequestBodyDTO.swift */; };
+		C33D74192CDEF25E00889B1B /* DeleteResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74182CDEF25E00889B1B /* DeleteResponseDTO.swift */; };
 		C33D741B2CDEF26200889B1B /* InfoTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D741A2CDEF26200889B1B /* InfoTarget.swift */; };
 		C34C1F562CE38E2800F94BCD /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = C34C1F552CE38E2800F94BCD /* Alamofire */; };
+		C34C1F582CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F572CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift */; };
+		C34C1F5A2CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */; };
+		C34C1F5C2CE39CAD00F94BCD /* SignUpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F5B2CE39CAD00F94BCD /* SignUpRequestBodyDTO.swift */; };
+		C34C1F612CE39F9100F94BCD /* LikeRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F602CE39F9100F94BCD /* LikeRequestBodyDTO.swift */; };
+		C34C1F632CE3A02300F94BCD /* LikeResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F622CE3A02300F94BCD /* LikeResponseDTO.swift */; };
 		C35E26412C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26402C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift */; };
 		C35E26432C9D10B800B197CB /* ProfileImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26422C9D10B800B197CB /* ProfileImageCollectionViewCell.swift */; };
 		C35E26472C9D2EC300B197CB /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26462C9D2EC300B197CB /* MatchViewController.swift */; };
@@ -147,19 +151,23 @@
 		C33D73EB2CDEF15300889B1B /* EditService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditService.swift; sourceTree = "<group>"; };
 		C33D73ED2CDEF15800889B1B /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
 		C33D73EF2CDEF16100889B1B /* InfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoService.swift; sourceTree = "<group>"; };
-		C33D73F62CDEF19000889B1B /* HomeResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeResponseDTO.swift; sourceTree = "<group>"; };
-		C33D73F82CDEF1A200889B1B /* HomeRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRequestBodyDTO.swift; sourceTree = "<group>"; };
+		C33D73F62CDEF19000889B1B /* PortfoliosResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfoliosResponseDTO.swift; sourceTree = "<group>"; };
 		C33D73FB2CDEF1B100889B1B /* HomeTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTarget.swift; sourceTree = "<group>"; };
-		C33D73FF2CDEF1C900889B1B /* EditResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditResponseDTO.swift; sourceTree = "<group>"; };
+		C33D73FF2CDEF1C900889B1B /* UserDetailResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailResponseDTO.swift; sourceTree = "<group>"; };
 		C33D74012CDEF1D500889B1B /* EditRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C33D74072CDEF1F100889B1B /* EditTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTarget.swift; sourceTree = "<group>"; };
 		C33D740C2CDEF20D00889B1B /* ChatRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C33D740F2CDEF21900889B1B /* ChatResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatResponseDTO.swift; sourceTree = "<group>"; };
 		C33D74122CDEF23900889B1B /* ChatTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTarget.swift; sourceTree = "<group>"; };
-		C33D74162CDEF25600889B1B /* InfoRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoRequestBodyDTO.swift; sourceTree = "<group>"; };
-		C33D74182CDEF25E00889B1B /* InfoResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoResponseDTO.swift; sourceTree = "<group>"; };
+		C33D74162CDEF25600889B1B /* DeleteRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteRequestBodyDTO.swift; sourceTree = "<group>"; };
+		C33D74182CDEF25E00889B1B /* DeleteResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteResponseDTO.swift; sourceTree = "<group>"; };
 		C33D741A2CDEF26200889B1B /* InfoTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTarget.swift; sourceTree = "<group>"; };
 		C34C1F532CE38C3A00F94BCD /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		C34C1F572CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSendRequestBodyDTO.swift; sourceTree = "<group>"; };
+		C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailCheckRequestBodyDTO.swift; sourceTree = "<group>"; };
+		C34C1F5B2CE39CAD00F94BCD /* SignUpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRequestBodyDTO.swift; sourceTree = "<group>"; };
+		C34C1F602CE39F9100F94BCD /* LikeRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeRequestBodyDTO.swift; sourceTree = "<group>"; };
+		C34C1F622CE3A02300F94BCD /* LikeResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeResponseDTO.swift; sourceTree = "<group>"; };
 		C35E26402C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePurposeCollectionViewCell.swift; sourceTree = "<group>"; };
 		C35E26422C9D10B800B197CB /* ProfileImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		C35E26462C9D2EC300B197CB /* MatchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
@@ -317,6 +325,9 @@
 		C33D73E32CDEF08F00889B1B /* Request */ = {
 			isa = PBXGroup;
 			children = (
+				C34C1F572CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift */,
+				C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */,
+				C34C1F5B2CE39CAD00F94BCD /* SignUpRequestBodyDTO.swift */,
 				C33D73E52CDEF0A900889B1B /* LoginRequestBodyDTO.swift */,
 			);
 			path = Request;
@@ -351,24 +362,17 @@
 		C33D73F32CDEF17400889B1B /* DTO */ = {
 			isa = PBXGroup;
 			children = (
-				C33D73F42CDEF17800889B1B /* Request */,
+				C34C1F5F2CE39F8400F94BCD /* Request */,
 				C33D73F52CDEF18000889B1B /* Response */,
 			);
 			path = DTO;
 			sourceTree = "<group>";
 		};
-		C33D73F42CDEF17800889B1B /* Request */ = {
-			isa = PBXGroup;
-			children = (
-				C33D73F82CDEF1A200889B1B /* HomeRequestBodyDTO.swift */,
-			);
-			name = Request;
-			sourceTree = "<group>";
-		};
 		C33D73F52CDEF18000889B1B /* Response */ = {
 			isa = PBXGroup;
 			children = (
-				C33D73F62CDEF19000889B1B /* HomeResponseDTO.swift */,
+				C33D73F62CDEF19000889B1B /* PortfoliosResponseDTO.swift */,
+				C34C1F622CE3A02300F94BCD /* LikeResponseDTO.swift */,
 			);
 			name = Response;
 			sourceTree = "<group>";
@@ -411,7 +415,7 @@
 		C33D74042CDEF1DF00889B1B /* Response */ = {
 			isa = PBXGroup;
 			children = (
-				C33D73FF2CDEF1C900889B1B /* EditResponseDTO.swift */,
+				C33D73FF2CDEF1C900889B1B /* UserDetailResponseDTO.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -496,7 +500,7 @@
 		C33D741C2CDEF26600889B1B /* Response */ = {
 			isa = PBXGroup;
 			children = (
-				C33D74182CDEF25E00889B1B /* InfoResponseDTO.swift */,
+				C33D74182CDEF25E00889B1B /* DeleteResponseDTO.swift */,
 			);
 			name = Response;
 			sourceTree = "<group>";
@@ -504,7 +508,7 @@
 		C33D741D2CDEF26B00889B1B /* Request */ = {
 			isa = PBXGroup;
 			children = (
-				C33D74162CDEF25600889B1B /* InfoRequestBodyDTO.swift */,
+				C33D74162CDEF25600889B1B /* DeleteRequestBodyDTO.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -533,6 +537,14 @@
 			);
 			name = DTO;
 			path = Response;
+			sourceTree = "<group>";
+		};
+		C34C1F5F2CE39F8400F94BCD /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				C34C1F602CE39F9100F94BCD /* LikeRequestBodyDTO.swift */,
+			);
+			name = Request;
 			sourceTree = "<group>";
 		};
 		C35E264E2C9D6F3E00B197CB /* Chat */ = {
@@ -1048,6 +1060,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3FD90762C9157060021D2BA /* UIFont+.swift in Sources */,
+				C34C1F5C2CE39CAD00F94BCD /* SignUpRequestBodyDTO.swift in Sources */,
 				C3B95CEC2C9BE004002A4681 /* DetailProfileViewController.swift in Sources */,
 				C33D73BF2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift in Sources */,
 				C37FC4C02CCCE5AF005B7BDF /* ChatEmptyView.swift in Sources */,
@@ -1068,13 +1081,14 @@
 				C3B95CF82C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */,
 				C33D73EC2CDEF15300889B1B /* EditService.swift in Sources */,
 				C3FD90862C915EC90021D2BA /* BaseView.swift in Sources */,
+				C34C1F612CE39F9100F94BCD /* LikeRequestBodyDTO.swift in Sources */,
 				C3F575002CC4097100440D98 /* InfoView.swift in Sources */,
 				C35E26522C9D6F5E00B197CB /* ChatListViewController.swift in Sources */,
 				C33D73C32CDEEE1C00889B1B /* TargetType.swift in Sources */,
 				C33D73EE2CDEF15800889B1B /* ChatService.swift in Sources */,
-				C33D74002CDEF1C900889B1B /* EditResponseDTO.swift in Sources */,
+				C33D74002CDEF1C900889B1B /* UserDetailResponseDTO.swift in Sources */,
 				C35E265A2C9D733500B197CB /* ChatListCollectionViewCell.swift in Sources */,
-				C33D73F72CDEF19000889B1B /* HomeResponseDTO.swift in Sources */,
+				C33D73F72CDEF19000889B1B /* PortfoliosResponseDTO.swift in Sources */,
 				C35E26542C9D6F6900B197CB /* ChatListView.swift in Sources */,
 				C3FD90392C9139D40021D2BA /* AppDelegate.swift in Sources */,
 				C393A6192C94200800ECF1B5 /* HomeView.swift in Sources */,
@@ -1111,6 +1125,7 @@
 				C3E88C7B2C92A93F005A19BE /* SNSOnboardingViewController.swift in Sources */,
 				C3AEC29E2C943B7800E2DED9 /* BaseTextField.swift in Sources */,
 				C3FD90932C917F2F0021D2BA /* NameOnboardingView.swift in Sources */,
+				C34C1F582CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift in Sources */,
 				C393A6172C941FFA00ECF1B5 /* MainTabBarViewController.swift in Sources */,
 				C3FD90592C9142880021D2BA /* adjust+.swift in Sources */,
 				C33D73D32CDEEEA300889B1B /* APIRequestLoader.swift in Sources */,
@@ -1124,7 +1139,7 @@
 				C33D73D12CDEEE9500889B1B /* APIEventLogger.swift in Sources */,
 				C3FD90782C9157FD0021D2BA /* UIViewController+.swift in Sources */,
 				C3F574F92CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift in Sources */,
-				C33D74172CDEF25600889B1B /* InfoRequestBodyDTO.swift in Sources */,
+				C33D74172CDEF25600889B1B /* DeleteRequestBodyDTO.swift in Sources */,
 				C3E88C862C92C8B3005A19BE /* TalentHeaderView.swift in Sources */,
 				C393A61E2C9427F500ECF1B5 /* String+.swift in Sources */,
 				C33D74132CDEF23900889B1B /* ChatTarget.swift in Sources */,
@@ -1132,7 +1147,6 @@
 				C33D73D52CDEEEB300889B1B /* NetworkService.swift in Sources */,
 				C3B95CF62C9C0AB7002A4681 /* Portfolio.swift in Sources */,
 				C35E26412C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift in Sources */,
-				C33D73F92CDEF1A200889B1B /* HomeRequestBodyDTO.swift in Sources */,
 				C3E88C7F2C92B256005A19BE /* TalentOnboardingView.swift in Sources */,
 				C3FD90702C9154FC0021D2BA /* NSObject+.swift in Sources */,
 				C33D73E62CDEF0A900889B1B /* LoginRequestBodyDTO.swift in Sources */,
@@ -1144,9 +1158,11 @@
 				C393A6122C94116B00ECF1B5 /* UIImage+.swift in Sources */,
 				C3B95CEA2C9BBA2D002A4681 /* PageCollectionViewCell.swift in Sources */,
 				C33D73DD2CDEEFFD00889B1B /* OnboardingService.swift in Sources */,
-				C33D74192CDEF25E00889B1B /* InfoResponseDTO.swift in Sources */,
+				C33D74192CDEF25E00889B1B /* DeleteResponseDTO.swift in Sources */,
 				C35E26572C9D72B100B197CB /* ChatList.swift in Sources */,
 				C3E88C842C92BA2D005A19BE /* TalentCollectionViewCell.swift in Sources */,
+				C34C1F5A2CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift in Sources */,
+				C34C1F632CE3A02300F94BCD /* LikeResponseDTO.swift in Sources */,
 				C3FD90642C91548D0021D2BA /* UITextField+.swift in Sources */,
 				C3EF05F42C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift in Sources */,
 				C33D73C12CDEEE0B00889B1B /* NetworkResult.swift in Sources */,

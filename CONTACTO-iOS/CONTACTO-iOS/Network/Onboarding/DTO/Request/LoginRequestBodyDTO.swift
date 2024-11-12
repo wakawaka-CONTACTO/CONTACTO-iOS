@@ -8,5 +8,6 @@
 import Foundation
 
 struct LoginRequestBodyDTO: Codable {
-    
+    let email: String
+    let papassword: String
 }
