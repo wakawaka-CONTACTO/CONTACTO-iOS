@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		C314354B2C9930ED001E4BC1 /* TabBarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = C314354A2C9930ED001E4BC1 /* TabBarItems.swift */; };
+		C32D06F52CE633260016F497 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C32D06F42CE633260016F497 /* Kingfisher */; };
+		C32D06F72CE633340016F497 /* UIImageView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F62CE633340016F497 /* UIImageView+.swift */; };
 		C33D73BF2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */; };
 		C33D73C12CDEEE0B00889B1B /* NetworkResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */; };
 		C33D73C32CDEEE1C00889B1B /* TargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C22CDEEE1C00889B1B /* TargetType.swift */; };
@@ -133,6 +135,7 @@
 
 /* Begin PBXFileReference section */
 		C314354A2C9930ED001E4BC1 /* TabBarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItems.swift; sourceTree = "<group>"; };
+		C32D06F62CE633340016F497 /* UIImageView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
 		C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeaderFieldKey.swift; sourceTree = "<group>"; };
 		C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkResult.swift; sourceTree = "<group>"; };
 		C33D73C22CDEEE1C00889B1B /* TargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetType.swift; sourceTree = "<group>"; };
@@ -265,6 +268,7 @@
 				C34C1F562CE38E2800F94BCD /* Alamofire in Frameworks */,
 				C3FD904E2C913EC40021D2BA /* SnapKit in Frameworks */,
 				C3FD90512C913ECD0021D2BA /* Then in Frameworks */,
+				C32D06F52CE633260016F497 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -819,6 +823,7 @@
 				C3FD90772C9157FD0021D2BA /* UIViewController+.swift */,
 				C393A6112C94116B00ECF1B5 /* UIImage+.swift */,
 				C393A61D2C9427F500ECF1B5 /* String+.swift */,
+				C32D06F62CE633340016F497 /* UIImageView+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -989,6 +994,7 @@
 				C3FD90502C913ECD0021D2BA /* Then */,
 				C33D73CC2CDEEE7E00889B1B /* SwiftKeychainWrapper */,
 				C34C1F552CE38E2800F94BCD /* Alamofire */,
+				C32D06F42CE633260016F497 /* Kingfisher */,
 			);
 			productName = "CONTACTO-iOS";
 			productReference = C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */;
@@ -1023,6 +1029,7 @@
 				C3FD904F2C913ECD0021D2BA /* XCRemoteSwiftPackageReference "Then" */,
 				C33D73CB2CDEEE7E00889B1B /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 				C34C1F542CE38E2800F94BCD /* XCRemoteSwiftPackageReference "Alamofire" */,
+				C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = C3FD90362C9139D40021D2BA /* Products */;
 			projectDirPath = "";
@@ -1095,6 +1102,7 @@
 				C3E88C812C92B25D005A19BE /* TalentOnboardingViewController.swift in Sources */,
 				C3EF05F22C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift in Sources */,
 				C3E88C6F2C927830005A19BE /* OnboardingNextButton.swift in Sources */,
+				C32D06F72CE633340016F497 /* UIImageView+.swift in Sources */,
 				C33D741B2CDEF26200889B1B /* InfoTarget.swift in Sources */,
 				C37A28DE2CB417BE004BC6AE /* EditViewController.swift in Sources */,
 				C33D73EA2CDEF14600889B1B /* HomeService.swift in Sources */,
@@ -1392,6 +1400,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.0;
+			};
+		};
 		C33D73CB2CDEEE7E00889B1B /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
@@ -1427,6 +1443,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C32D06F42CE633260016F497 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		C33D73CC2CDEEE7E00889B1B /* SwiftKeychainWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C33D73CB2CDEEE7E00889B1B /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
