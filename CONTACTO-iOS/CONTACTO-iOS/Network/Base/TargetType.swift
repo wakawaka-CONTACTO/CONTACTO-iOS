@@ -31,12 +31,12 @@ extension TargetType {
         case .hasToken:
             return [
                 HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
-                HTTPHeaderFieldKey.authentication.rawValue: "Bearer \(KeychainHandler.shared.accessToken)"
+                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.accessToken
             ]
         case .refreshToken:
             return [
                 HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
-                HTTPHeaderFieldKey.authentication.rawValue: "Bearer \(KeychainHandler.shared.refreshToken)"
+                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.refreshToken
             ]
             
         case .providerToken:
@@ -58,7 +58,7 @@ extension TargetType {
         
         switch authorization {
         case .authorization:
-            urlRequest.setValue("Bearer \(KeychainHandler.shared.accessToken)", forHTTPHeaderField: HTTPHeaderFieldKey.authentication.rawValue)
+            urlRequest.setValue(KeychainHandler.shared.accessToken, forHTTPHeaderField: HTTPHeaderFieldKey.authentication.rawValue)
         case .unauthorization:
             break
         case .socialAuthorization:
@@ -72,10 +72,10 @@ extension TargetType {
             urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
         case .hasToken:
             urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
-            urlRequest.setValue("Bearer \(KeychainHandler.shared.accessToken)", forHTTPHeaderField: HTTPHeaderFieldKey.authentication.rawValue)
+            urlRequest.setValue(KeychainHandler.shared.accessToken, forHTTPHeaderField: HTTPHeaderFieldKey.authentication.rawValue)
         case.refreshToken:
             urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
-            urlRequest.setValue("Bearer \(KeychainHandler.shared.refreshToken)", forHTTPHeaderField: HTTPHeaderFieldKey.authentication.rawValue)
+            urlRequest.setValue(KeychainHandler.shared.refreshToken, forHTTPHeaderField: HTTPHeaderFieldKey.authentication.rawValue)
         case .providerToken:
             urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
             urlRequest.setValue(KeychainHandler.shared.providerToken, forHTTPHeaderField: HTTPHeaderFieldKey.providerToken.rawValue)

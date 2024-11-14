@@ -122,9 +122,38 @@ final class EditViewController: UIViewController {
         editView.purposeCollectionView.register(ProfilePurposeCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePurposeCollectionViewCell.className)
     }
     
+    // MARK: - Server Function
+    private func myList(bodyDTO: EditRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { [weak self] response in
+            switch response {
+            case .success(let data):
+                guard let data = data.data else { return }
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
+    
+    private func checkMyPort(completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.editService.checkMyPort { [weak self] response in
+            switch response {
+            case .success(let data):
+                guard let data = data.data else { return }
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
+    
     private func setData() {
         //data 받는 곳
-        
+        self.checkMyPort{ _ in }
         editView.talentCollectionView.layoutIfNeeded()
         
         editView.talentCollectionView.snp.remakeConstraints {
