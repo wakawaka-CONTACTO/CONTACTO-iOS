@@ -29,7 +29,7 @@
 		C33D73F02CDEF16100889B1B /* InfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73EF2CDEF16100889B1B /* InfoService.swift */; };
 		C33D73F72CDEF19000889B1B /* PortfoliosResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73F62CDEF19000889B1B /* PortfoliosResponseDTO.swift */; };
 		C33D73FC2CDEF1B100889B1B /* HomeTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73FB2CDEF1B100889B1B /* HomeTarget.swift */; };
-		C33D74002CDEF1C900889B1B /* UserDetailResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73FF2CDEF1C900889B1B /* UserDetailResponseDTO.swift */; };
+		C33D74002CDEF1C900889B1B /* MyDetailResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73FF2CDEF1C900889B1B /* MyDetailResponseDTO.swift */; };
 		C33D74022CDEF1D500889B1B /* EditRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74012CDEF1D500889B1B /* EditRequestBodyDTO.swift */; };
 		C33D74082CDEF1F100889B1B /* EditTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74072CDEF1F100889B1B /* EditTarget.swift */; };
 		C33D740D2CDEF20D00889B1B /* ChatRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D740C2CDEF20D00889B1B /* ChatRequestBodyDTO.swift */; };
@@ -153,7 +153,7 @@
 		C33D73EF2CDEF16100889B1B /* InfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoService.swift; sourceTree = "<group>"; };
 		C33D73F62CDEF19000889B1B /* PortfoliosResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfoliosResponseDTO.swift; sourceTree = "<group>"; };
 		C33D73FB2CDEF1B100889B1B /* HomeTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTarget.swift; sourceTree = "<group>"; };
-		C33D73FF2CDEF1C900889B1B /* UserDetailResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailResponseDTO.swift; sourceTree = "<group>"; };
+		C33D73FF2CDEF1C900889B1B /* MyDetailResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDetailResponseDTO.swift; sourceTree = "<group>"; };
 		C33D74012CDEF1D500889B1B /* EditRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C33D74072CDEF1F100889B1B /* EditTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTarget.swift; sourceTree = "<group>"; };
 		C33D740C2CDEF20D00889B1B /* ChatRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestBodyDTO.swift; sourceTree = "<group>"; };
@@ -415,7 +415,7 @@
 		C33D74042CDEF1DF00889B1B /* Response */ = {
 			isa = PBXGroup;
 			children = (
-				C33D73FF2CDEF1C900889B1B /* UserDetailResponseDTO.swift */,
+				C33D73FF2CDEF1C900889B1B /* MyDetailResponseDTO.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -1086,7 +1086,7 @@
 				C35E26522C9D6F5E00B197CB /* ChatListViewController.swift in Sources */,
 				C33D73C32CDEEE1C00889B1B /* TargetType.swift in Sources */,
 				C33D73EE2CDEF15800889B1B /* ChatService.swift in Sources */,
-				C33D74002CDEF1C900889B1B /* UserDetailResponseDTO.swift in Sources */,
+				C33D74002CDEF1C900889B1B /* MyDetailResponseDTO.swift in Sources */,
 				C35E265A2C9D733500B197CB /* ChatListCollectionViewCell.swift in Sources */,
 				C33D73F72CDEF19000889B1B /* PortfoliosResponseDTO.swift in Sources */,
 				C35E26542C9D6F6900B197CB /* ChatListView.swift in Sources */,
