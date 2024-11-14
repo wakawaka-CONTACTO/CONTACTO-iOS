@@ -10,6 +10,7 @@
 		C314354B2C9930ED001E4BC1 /* TabBarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = C314354A2C9930ED001E4BC1 /* TabBarItems.swift */; };
 		C32D06F52CE633260016F497 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C32D06F42CE633260016F497 /* Kingfisher */; };
 		C32D06F72CE633340016F497 /* UIImageView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F62CE633340016F497 /* UIImageView+.swift */; };
+		C32D06F92CE63CC30016F497 /* DetailRequestQueryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */; };
 		C33D73BF2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */; };
 		C33D73C12CDEEE0B00889B1B /* NetworkResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */; };
 		C33D73C32CDEEE1C00889B1B /* TargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C22CDEEE1C00889B1B /* TargetType.swift */; };
@@ -136,6 +137,7 @@
 /* Begin PBXFileReference section */
 		C314354A2C9930ED001E4BC1 /* TabBarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItems.swift; sourceTree = "<group>"; };
 		C32D06F62CE633340016F497 /* UIImageView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
+		C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRequestQueryDTO.swift; sourceTree = "<group>"; };
 		C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeaderFieldKey.swift; sourceTree = "<group>"; };
 		C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkResult.swift; sourceTree = "<group>"; };
 		C33D73C22CDEEE1C00889B1B /* TargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetType.swift; sourceTree = "<group>"; };
@@ -547,6 +549,7 @@
 			isa = PBXGroup;
 			children = (
 				C34C1F602CE39F9100F94BCD /* LikeRequestBodyDTO.swift */,
+				C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */,
 			);
 			name = Request;
 			sourceTree = "<group>";
@@ -1083,6 +1086,7 @@
 				C3FD906A2C9154C60021D2BA /* UIColor+.swift in Sources */,
 				C35E264B2C9D39E900B197CB /* BasePaddingLabel.swift in Sources */,
 				C33D73FC2CDEF1B100889B1B /* HomeTarget.swift in Sources */,
+				C32D06F92CE63CC30016F497 /* DetailRequestQueryDTO.swift in Sources */,
 				C3EF05F62C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift in Sources */,
 				C3FD90722C91550C0021D2BA /* FontLiterals.swift in Sources */,
 				C3B95CF82C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */,
