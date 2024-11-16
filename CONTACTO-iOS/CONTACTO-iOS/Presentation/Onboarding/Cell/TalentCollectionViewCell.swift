@@ -69,7 +69,17 @@ final class TalentCollectionViewCell: UICollectionViewCell {
     
     @objc func buttonTapped() {
         isTapped.toggle()
-        
+        updateButtonAppearance()
+        updateButtonAction()
+    }
+    
+    func setTalent(_ talent: Talent, isSelectedFromEditTalent: Bool) {
+        self.talent = talent
+        self.isTapped = isSelectedFromEditTalent
+        updateButtonAppearance()
+    }
+    
+    private func updateButtonAppearance() {
         if isTapped {
             talentButton.setBackgroundColor(talent?.info.category.color ?? .ctsubpink, for: .normal)
             talentButton.setBackgroundColor(talent?.info.category.color ?? .ctsubpink, for: .highlighted)
@@ -77,6 +87,5 @@ final class TalentCollectionViewCell: UICollectionViewCell {
             talentButton.setBackgroundColor(.ctwhite, for: .normal)
             talentButton.setBackgroundColor(.ctwhite, for: .highlighted)
         }
-        updateButtonAction()
     }
 }

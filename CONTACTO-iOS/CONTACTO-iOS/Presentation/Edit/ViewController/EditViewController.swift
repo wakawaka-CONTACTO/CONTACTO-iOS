@@ -15,7 +15,7 @@ import Then
 final class EditViewController: UIViewController {
     
     private var portfolioData = MyDetailResponseDTO(id: 0, username: "", socialId: nil, loginType: "", email: "", description: "", instagramId: "", webUrl: nil, password: nil, userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
-    private var talentDummy = Talent.talents()
+    private var talentData: [TalentInfo] = []
     var isEditEnable = false
     var tappedStates: [Bool] = Array(repeating: false, count: 5)
     private var activeTextField: UIView?
@@ -162,6 +162,10 @@ final class EditViewController: UIViewController {
             editView.websiteTextField.text = web
         }
         
+        talentData = portfolioData.userTalents.compactMap { userTalent in
+            Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
+        }
+        
         let dispatchGroup = DispatchGroup()
         
         portfolioData.userPortfolio.portfolioImages.forEach { url in
@@ -187,9 +191,6 @@ final class EditViewController: UIViewController {
             self.editView.portfolioCollectionView.reloadData()
         }
         
-        print(selectedImages)
-        print("😍")
-        
         portfolioData.userPurposes.forEach { index in
             if index < tappedStates.count {
                 tappedStates[index - 1] = true
@@ -208,7 +209,7 @@ final class EditViewController: UIViewController {
             self.editView.talentCollectionView.snp.remakeConstraints {
                 $0.top.equalTo(self.editView.talentLabel.snp.bottom).offset(7)
                 $0.leading.trailing.equalToSuperview().inset(16)
-                $0.height.equalTo(self.editView.talentCollectionView.contentSize.height)
+                $0.height.equalTo(self.editView.talentCollectionView.contentSize.height + 4)
             }
         }
     }
@@ -312,6 +313,8 @@ extension EditViewController {
         talentViewController.hidesBottomBarWhenPushed = true
         talentViewController.talentOnboardingView.nextButton.setTitle(StringLiterals.Edit.doneButton, for: .normal)
         talentViewController.talentOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        talentViewController.isEdit = true
+        talentViewController.editTalent = talentData
         navigationController?.pushViewController(talentViewController, animated: true)
     }
     
@@ -368,11 +371,8 @@ extension EditViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfileTalentCollectionViewCell.className,
                 for: indexPath) as? ProfileTalentCollectionViewCell else { return UICollectionViewCell() }
             
-            let allTalents = talentDummy.flatMap { $0.talent }
-            let category = talentDummy.first { $0.talent.contains(allTalents[indexPath.row]) }?.category ?? ""
-            let title = allTalents[indexPath.row]
-            
-            cell.configData(category: category, title: title)
+            cell.talentLabel.text = talentData[indexPath.row].displayName
+            cell.backgroundColor = talentData[indexPath.row].category.color
             return cell
         case 2:
             guard let cell = collectionView.dequeueReusableCell(

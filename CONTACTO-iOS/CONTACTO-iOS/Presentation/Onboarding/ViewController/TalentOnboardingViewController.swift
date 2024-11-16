@@ -20,6 +20,8 @@ final class TalentOnboardingViewController: BaseViewController {
         Talent.allCases.filter { $0.info.category == .MEDIA_CONTENT }
     ]
     
+    var isEdit = false
+    var editTalent: [TalentInfo] = []
     var selectedIndexPaths: Set<IndexPath> = [] {
         didSet {
             talentOnboardingView.nextButton.isEnabled = (!selectedIndexPaths.isEmpty)
@@ -90,7 +92,14 @@ extension TalentOnboardingViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TalentCollectionViewCell.className,
             for: indexPath) as? TalentCollectionViewCell else { return UICollectionViewCell() }
-        cell.talent = talentDummy[indexPath.section][indexPath.row]
+        let talent = talentDummy[indexPath.section][indexPath.row]
+        
+        let isSelected = editTalent.contains { $0.koreanName == talent.info.koreanName }
+        cell.setTalent(talent, isSelectedFromEditTalent: isSelected)
+        if isSelected {
+            self.selectedIndexPaths.insert(indexPath)
+        }
+        
         cell.updateButtonAction = {
             if self.selectedIndexPaths.contains(indexPath) {
                 self.selectedIndexPaths.remove(indexPath)
