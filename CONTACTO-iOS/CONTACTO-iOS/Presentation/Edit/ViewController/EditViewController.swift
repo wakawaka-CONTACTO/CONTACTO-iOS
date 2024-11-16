@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Kingfisher
 import PhotosUI
 import SnapKit
 import Then
@@ -160,22 +161,41 @@ final class EditViewController: UIViewController {
         if let web = portfolioData.webUrl {
             editView.websiteTextField.text = web
         }
-        portfolioData.userPortfolio.portfolioImages.forEach {
-            let imageView = UIImageView()
-            imageView.kfSetImage(url: $0)
+        
+        let dispatchGroup = DispatchGroup()
+        
+        portfolioData.userPortfolio.portfolioImages.forEach { url in
+            guard let imageUrl = URL(string: url) else { return }
             
-            if let image = imageView.image {
-                self.selectedImages.append(image)
+            dispatchGroup.enter() // 작업 시작
+            KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { [weak self] result in
+                switch result {
+                case .success(let value):
+                    DispatchQueue.main.async {
+                        self?.selectedImages.append(value.image)
+                    }
+                case .failure(let error):
+                    print("Failed to load image: \(error.localizedDescription)")
+                }
+                dispatchGroup.leave() // 작업 완료
             }
         }
         
-        portfolioData.userPurposes.forEach { index in
-           if index < tappedStates.count {
-               tappedStates[index - 1] = true
-           }
-       }
+        // 모든 작업이 완료된 후 실행
+        dispatchGroup.notify(queue: .main) {
+            print(self.selectedImages)
+            self.editView.portfolioCollectionView.reloadData()
+        }
         
-        editView.portfolioCollectionView.reloadData()
+        print(selectedImages)
+        print("😍")
+        
+        portfolioData.userPurposes.forEach { index in
+            if index < tappedStates.count {
+                tappedStates[index - 1] = true
+            }
+        }
+        
         editView.talentCollectionView.reloadData()
         editView.purposeCollectionView.reloadData()
     }
