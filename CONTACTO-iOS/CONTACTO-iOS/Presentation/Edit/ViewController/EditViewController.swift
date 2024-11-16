@@ -13,6 +13,7 @@ import Then
 
 final class EditViewController: UIViewController {
     
+    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", socialId: nil, loginType: "", email: "", description: "", instagramId: "", webUrl: nil, password: nil, userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
     private var talentDummy = Talent.talents()
     var isEditEnable = false
     var tappedStates: [Bool] = Array(repeating: false, count: 5)
@@ -45,11 +46,11 @@ final class EditViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
+        setData()
         setDelegate()
         setAddTarget()
         hideKeyboardWhenTappedAround()
         setCollectionView()
-        setData()
         setClosure()
     }
     
@@ -141,7 +142,8 @@ final class EditViewController: UIViewController {
         NetworkService.shared.editService.checkMyPort { [weak self] response in
             switch response {
             case .success(let data):
-                guard let data = data.data else { return }
+                self?.portfolioData = data
+                self?.updatePortfolio()
                 print(data)
                 completion(true)
             default:
@@ -151,15 +153,34 @@ final class EditViewController: UIViewController {
         }
     }
     
+    private func updatePortfolio() {
+        editView.nameTextField.text = portfolioData.username
+        editView.descriptionTextView.text = portfolioData.description
+        editView.instaTextField.text = portfolioData.instagramId
+        if let web = portfolioData.webUrl {
+            editView.websiteTextField.text = web
+        }
+        portfolioData.userPortfolio.portfolioImages.forEach {
+            let imageView = UIImageView()
+            imageView.kfSetImage(url: $0)
+            
+            if let image = imageView.image {
+                self.selectedImages.append(image)
+            }
+        }
+        
+    }
+    
     private func setData() {
         //data 받는 곳
-        self.checkMyPort{ _ in }
-        editView.talentCollectionView.layoutIfNeeded()
-        
-        editView.talentCollectionView.snp.remakeConstraints {
-            $0.top.equalTo(editView.talentLabel.snp.bottom).offset(7)
-            $0.leading.trailing.equalToSuperview().inset(16)
-            $0.height.equalTo(editView.talentCollectionView.contentSize.height)
+        self.checkMyPort{ _ in
+            self.editView.talentCollectionView.layoutIfNeeded()
+            
+            self.editView.talentCollectionView.snp.remakeConstraints {
+                $0.top.equalTo(self.editView.talentLabel.snp.bottom).offset(7)
+                $0.leading.trailing.equalToSuperview().inset(16)
+                $0.height.equalTo(self.editView.talentCollectionView.contentSize.height)
+            }
         }
     }
     
@@ -278,7 +299,7 @@ extension EditViewController: UICollectionViewDataSource {
         case 0:
             return 10
         case 1:
-            return talentDummy.flatMap { $0.talent }.count
+            return portfolioData.userTalents.count
         case 2:
             return 5
         default:
@@ -396,7 +417,7 @@ extension EditViewController: UITextFieldDelegate {
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        if textField == editView.instaTextField {
+        if textField != editView.websiteTextField  {
             if !textField.text!.isEmpty,  !textField.text!.isOnlyWhitespace() {
                 self.isTextFieldFilled = true
             } else {

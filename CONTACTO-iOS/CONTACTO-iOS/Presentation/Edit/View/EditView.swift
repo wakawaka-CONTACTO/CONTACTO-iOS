@@ -93,7 +93,7 @@ final class EditView: BaseView {
         
         nameTextField.do {
             $0.backgroundColor = .ctmainblue
-            $0.text = "Pecay Pecay"
+            $0.text = " "
             $0.font = .fontContacto(.button4)
             $0.textColor = .ctblack
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
@@ -149,7 +149,7 @@ final class EditView: BaseView {
         descriptionTextView.do {
             $0.backgroundColor = .clear
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
-            $0.text = "We are make a ceramic for design."
+            $0.text = " "
             $0.textAlignment = .left
             $0.font = .fontContacto(.caption5)
             $0.textColor = .ctblack
@@ -207,7 +207,7 @@ final class EditView: BaseView {
             $0.addPadding(left: 27)
             $0.autocapitalizationType = .none
             $0.keyboardType = .asciiCapable
-            $0.text = "pecaypecay"
+            $0.text = " "
             $0.isEnabled = false
         }
         
