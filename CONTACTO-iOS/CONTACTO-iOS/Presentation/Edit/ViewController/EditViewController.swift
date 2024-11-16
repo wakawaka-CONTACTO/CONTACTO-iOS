@@ -169,11 +169,20 @@ final class EditViewController: UIViewController {
             }
         }
         
+        portfolioData.userPurposes.forEach { index in
+           if index < tappedStates.count {
+               tappedStates[index - 1] = true
+           }
+       }
+        
+        editView.portfolioCollectionView.reloadData()
+        editView.talentCollectionView.reloadData()
+        editView.purposeCollectionView.reloadData()
     }
     
     private func setData() {
         //data 받는 곳
-        self.checkMyPort{ _ in
+        self.checkMyPort { _ in
             self.editView.talentCollectionView.layoutIfNeeded()
             
             self.editView.talentCollectionView.snp.remakeConstraints {
@@ -349,8 +358,8 @@ extension EditViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
-            cell.config(num: indexPath.item)
             cell.isTapped = tappedStates[indexPath.row]
+            cell.config(num: indexPath.item)
             cell.isEditing = isEditEnable
             cell.setAddTarget()
             cell.tapAction = {
