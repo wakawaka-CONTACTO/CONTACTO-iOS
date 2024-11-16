@@ -12,8 +12,12 @@ import Then
 
 final class TalentCollectionViewCell: UICollectionViewCell {
     
-    var num = 0
     var isTapped = false
+    var talent = Talent(rawValue: "") {
+        didSet {
+            self.talentButton.setTitle(talent?.info.displayName, for: .normal)
+        }
+    }
     private let colorArray: [UIColor] = [.ctsubpink, .ctsubblue1, .ctsubbrown]
     
     var updateButtonAction: (() -> Void) = {}
@@ -67,8 +71,8 @@ final class TalentCollectionViewCell: UICollectionViewCell {
         isTapped.toggle()
         
         if isTapped {
-            talentButton.setBackgroundColor(colorArray[num], for: .normal)
-            talentButton.setBackgroundColor(colorArray[num], for: .highlighted)
+            talentButton.setBackgroundColor(talent?.info.category.color ?? .ctsubpink, for: .normal)
+            talentButton.setBackgroundColor(talent?.info.category.color ?? .ctsubpink, for: .highlighted)
         } else {
             talentButton.setBackgroundColor(.ctwhite, for: .normal)
             talentButton.setBackgroundColor(.ctwhite, for: .highlighted)

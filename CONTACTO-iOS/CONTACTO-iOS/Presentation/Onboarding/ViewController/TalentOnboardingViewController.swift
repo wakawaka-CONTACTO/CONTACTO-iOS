@@ -14,7 +14,12 @@ final class TalentOnboardingViewController: BaseViewController {
     
     let talentOnboardingView = TalentOnboardingView()
     
-    private var talentDummy = Talent.talents()
+    private var talentDummy: [[Talent]] = [
+        Talent.allCases.filter { $0.info.category == .DESIGN },
+        Talent.allCases.filter { $0.info.category == .ART_CRAFT },
+        Talent.allCases.filter { $0.info.category == .MEDIA_CONTENT }
+    ]
+    
     var selectedIndexPaths: Set<IndexPath> = [] {
         didSet {
             talentOnboardingView.nextButton.isEnabled = (!selectedIndexPaths.isEmpty)
@@ -71,11 +76,11 @@ extension TalentOnboardingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return talentDummy[0].talent.count
+            return Talent.allCases.filter { $0.info.category == .DESIGN }.count
         case 1:
-            return talentDummy[1].talent.count
+            return Talent.allCases.filter { $0.info.category == .ART_CRAFT }.count
         case 2:
-            return talentDummy[2].talent.count
+            return Talent.allCases.filter { $0.info.category == .MEDIA_CONTENT }.count
         default:
             return 0
         }
@@ -85,17 +90,7 @@ extension TalentOnboardingViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TalentCollectionViewCell.className,
             for: indexPath) as? TalentCollectionViewCell else { return UICollectionViewCell() }
-        switch indexPath.section {
-        case 0:
-            cell.talentButton.setTitle(talentDummy[0].talent[indexPath.item], for: .normal)
-        case 1:
-            cell.talentButton.setTitle(talentDummy[1].talent[indexPath.item], for: .normal)
-        case 2:
-            cell.talentButton.setTitle(talentDummy[2].talent[indexPath.item], for: .normal)
-        default:
-            return cell
-        }
-        cell.num = indexPath.section
+        cell.talent = talentDummy[indexPath.section][indexPath.row]
         cell.updateButtonAction = {
             if self.selectedIndexPaths.contains(indexPath) {
                 self.selectedIndexPaths.remove(indexPath)
