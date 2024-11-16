@@ -11,7 +11,7 @@ import Alamofire
 
 enum HomeTarget {
     case homeList
-    case detailPort(_ queryDTO: DetailRequestQueryDTO)
+    case detailPort(_ userId: Int)
     case likeOrDislike(_ bodyDTO: LikeRequestBodyDTO)
 }
 
@@ -53,8 +53,8 @@ extension HomeTarget: TargetType {
         switch self {
         case .homeList:
             return "/v1/users/portfolios"
-        case .detailPort(_):
-            return "/v1/users/portfolios"
+        case .detailPort(let userId):
+            return "/v1/users/portfolios/\(userId)"
         case .likeOrDislike(_):
             return "/v1/users/likes"
         }
@@ -64,8 +64,8 @@ extension HomeTarget: TargetType {
         switch self {
         case .homeList:
             return .requestPlain
-        case .detailPort(let queryDTO):
-            return .requestQuery(queryDTO)
+        case .detailPort(_):
+            return .requestPlain
         case .likeOrDislike(let bodyDTO):
             return .requestWithBody(bodyDTO)
         }

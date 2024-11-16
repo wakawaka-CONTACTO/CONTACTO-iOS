@@ -7,20 +7,23 @@
 
 import UIKit
 
+import Kingfisher
 import SnapKit
 import Then
 
 final class DetailProfileViewController: BaseViewController {
     
-    var imageArray: [UIImage] = [.imgex1, .imgex2, .imgex3, .imgex4, .imgex1, .imgex2, .imgex3]
+    var imageArray: [UIImage] = []
     var currentNum = 0 {
         didSet {
             detailProfileView.pageCollectionView.reloadData()
         }
     }
+    var userId: Int = 3
     
     let detailProfileView = DetailProfileView()
-    var port: Portfolio = Portfolio(image: [], name: "", talent: [], description: "", purpose: [], insta: "", web: "")
+    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", socialId: nil, loginType: "", email: "", description: "", instagramId: "", webUrl: nil, password: nil, userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
+    private var talentData: [TalentInfo] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,44 +72,93 @@ final class DetailProfileViewController: BaseViewController {
         detailProfileView.pageCollectionView.register(PageCollectionViewCell.self, forCellWithReuseIdentifier: PageCollectionViewCell.className)
     }
     
-    private func setData() {
-        // data 받는 곳
-        port = Portfolio.portDummy()
+    // MARK: - Server Function
+    private func detailPort(userId: Int, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.homeService.detailPort(userId: userId) { [weak self] response in
+            switch response {
+            case .success(let data):
+                self?.portfolioData = data
+                self?.updatePortfolio()
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
+    
+    private func updatePortfolio() {
+        self.talentData = self.portfolioData.userTalents.compactMap { userTalent in
+            Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
+        }
         
-        detailProfileView.nameLabel.text = port.name
-        detailProfileView.descriptionLabel.text = port.description
-        if port.web != nil {
-            detailProfileView.webButton.isHidden = false
+        let dispatchGroup = DispatchGroup()
+        
+        portfolioData.userPortfolio.portfolioImages.forEach { url in
+            guard let imageUrl = URL(string: url) else { return }
+            
+            dispatchGroup.enter() // 작업 시작
+            KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { [weak self] result in
+                switch result {
+                case .success(let value):
+                    DispatchQueue.main.async {
+                        self?.imageArray.append(value.image)
+                    }
+                case .failure(let error):
+                    print("Failed to load image: \(error.localizedDescription)")
+                }
+                dispatchGroup.leave() // 작업 완료
+            }
+        }
+        
+        // 모든 작업이 완료된 후 실행
+        dispatchGroup.notify(queue: .main) {
+            self.detailProfileView.portImageCollectionView.reloadData()
+            self.detailProfileView.pageCollectionView.reloadData()
+        }
+        
+        self.detailProfileView.nameLabel.text = self.portfolioData.username
+        self.detailProfileView.descriptionLabel.text = self.portfolioData.description
+        if self.portfolioData.webUrl != nil {
+            self.detailProfileView.webButton.isHidden = false
         } else {
-            detailProfileView.webButton.isHidden = true
+            self.detailProfileView.webButton.isHidden = true
         }
         
-        detailProfileView.talentCollectionView.reloadData()
-        detailProfileView.talentCollectionView.layoutIfNeeded()
-        detailProfileView.purposeCollectionView.layoutIfNeeded()
-        
-        detailProfileView.talentCollectionView.snp.remakeConstraints {
-            $0.top.equalTo(detailProfileView.nameLabel.snp.bottom).offset(17)
-            $0.leading.equalToSuperview().inset(13)
-            $0.trailing.equalToSuperview().inset(46)
-            $0.height.equalTo(detailProfileView.talentCollectionView.contentSize.height + 10)
-        }
-        
-        detailProfileView.purposeCollectionView.snp.remakeConstraints {
-            $0.top.equalTo(detailProfileView.purposeLabel.snp.bottom).offset(4)
-            $0.leading.trailing.equalToSuperview().inset(13)
-            $0.height.equalTo(detailProfileView.purposeCollectionView.contentSize.height)
+        self.detailProfileView.talentCollectionView.reloadData()
+        self.detailProfileView.purposeCollectionView.reloadData()
+    }
+    
+    private func setData() {
+
+        detailPort(userId: userId) { _ in
+            self.detailProfileView.talentCollectionView.layoutIfNeeded()
+            self.detailProfileView.purposeCollectionView.layoutIfNeeded()
+            
+            self.detailProfileView.talentCollectionView.snp.remakeConstraints {
+                $0.top.equalTo(self.detailProfileView.nameLabel.snp.bottom).offset(17)
+                $0.leading.equalToSuperview().inset(13)
+                $0.trailing.equalToSuperview().inset(46)
+                $0.height.equalTo(self.detailProfileView.talentCollectionView.contentSize.height + 10)
+            }
+            
+            self.detailProfileView.purposeCollectionView.snp.remakeConstraints {
+                $0.top.equalTo(self.detailProfileView.purposeLabel.snp.bottom).offset(4)
+                $0.leading.trailing.equalToSuperview().inset(13)
+                $0.height.equalTo(self.detailProfileView.purposeCollectionView.contentSize.height)
+            }
         }
     }
     
     @objc private func instaButtonTapped() {
-        let id = port.insta
+        let id = portfolioData.instagramId
         let url = URL(string: "https://www.instagram.com/\(id)")!
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @objc private func webButtonTapped() {
-        guard let url = URL(string: port.web ?? "google.com") else {
+        guard let url = URL(string: portfolioData.webUrl ?? "google.com") else {
             print("url error")
             return
         }
@@ -114,7 +166,7 @@ final class DetailProfileViewController: BaseViewController {
         if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
-            guard let chatURL = URL(string: "https://" + (port.web ?? "google.com")) else {
+            guard let chatURL = URL(string: "https://" + (portfolioData.webUrl ?? "google.com")) else {
                 print("url error")
                 return
             }
@@ -133,11 +185,11 @@ extension DetailProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
         case 0, 1:
-            return port.image.count
+            return portfolioData.userPortfolio.portfolioImages.count
         case 2:
-            return port.talent.flatMap { $0.talent }.count
+            return portfolioData.userTalents.count
         case 3:
-            return port.purpose.count
+            return portfolioData.userPurposes.count
         default:
             return 0
         }
@@ -166,18 +218,15 @@ extension DetailProfileViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfileTalentCollectionViewCell.className,
                 for: indexPath) as? ProfileTalentCollectionViewCell else { return UICollectionViewCell() }
             
-            let allTalents = port.talent.flatMap { $0.talent }
-            let category = port.talent.first { $0.talent.contains(allTalents[indexPath.row]) }?.category ?? ""
-            let title = allTalents[indexPath.row]
-            
-            cell.configData(category: category, title: title)
+            cell.talentLabel.text = talentData[indexPath.row].displayName
+            cell.backgroundColor = talentData[indexPath.row].category.color
             return cell
         case 3:
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
             cell.isTapped = true
-            cell.config(num: port.purpose[indexPath.row])
+            cell.config(num: portfolioData.userPurposes[indexPath.row] - 1)
             return cell
         default:
             return UICollectionViewCell()
@@ -192,7 +241,7 @@ extension DetailProfileViewController: UICollectionViewDelegateFlowLayout {
         case 0:
             return CGSize(width: SizeLiterals.Screen.screenWidth, height: 432)
         case 1:
-            let totalItems = port.image.count
+            let totalItems = portfolioData.userPortfolio.portfolioImages.count
             
             let collectionViewWidth = collectionView.frame.width
             let spacing: CGFloat = 5.adjustedWidth
