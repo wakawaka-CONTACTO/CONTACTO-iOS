@@ -8,15 +8,15 @@
 import Foundation
 
 protocol EditServiceProtocol {
-    func checkMyPort(completion: @escaping (NetworkResult<BaseResponse<MyDetailResponseDTO>>) -> Void)
+    func checkMyPort(completion: @escaping (NetworkResult<MyDetailResponseDTO>) -> Void)
     
     func editMyPort(bodyDTO: EditRequestBodyDTO, completion: @escaping (NetworkResult<BaseResponse<MyDetailResponseDTO>>) -> Void)
 
 }
 
 final class EditService: APIRequestLoader<EditTarget>, EditServiceProtocol {
-    func checkMyPort(completion: @escaping (NetworkResult<BaseResponse<MyDetailResponseDTO>>) -> Void) {
-        fetchData(target: .checkMyPort, responseData: BaseResponse<MyDetailResponseDTO>.self, completion: completion)
+    func checkMyPort(completion: @escaping (NetworkResult<MyDetailResponseDTO>) -> Void) {
+        fetchData(target: .checkMyPort, responseData: MyDetailResponseDTO.self, completion: completion)
     }
     
     func editMyPort(bodyDTO: EditRequestBodyDTO, completion: @escaping (NetworkResult<BaseResponse<MyDetailResponseDTO>>) -> Void) {

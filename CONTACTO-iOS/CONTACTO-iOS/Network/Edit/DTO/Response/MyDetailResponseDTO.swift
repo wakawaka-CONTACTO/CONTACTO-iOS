@@ -11,9 +11,9 @@ import Foundation
 struct MyDetailResponseDTO: Codable {
     let id: Int
     let username: String
-    let socialID: Int?
-    let loginType, email, description, instagramID: String
-    let webURL: String?
+    let socialId: Int?
+    let loginType, email, description, instagramId: String
+    let webUrl: String?
     let password: String?
     let userPortfolio: UserPortfolio
     let userPurposes: [Int]
@@ -22,12 +22,12 @@ struct MyDetailResponseDTO: Codable {
 
 // MARK: - UserPortfolio
 struct UserPortfolio: Codable {
-    let portfolioID, userID: Int
+    let portfolioId, userId: Int
     let portfolioImages: [String]
 }
 
 // MARK: - UserTalent
 struct UserTalent: Codable {
-    let id, userID: Int
+    let id, userId: Int
     let talentType: String
 }
