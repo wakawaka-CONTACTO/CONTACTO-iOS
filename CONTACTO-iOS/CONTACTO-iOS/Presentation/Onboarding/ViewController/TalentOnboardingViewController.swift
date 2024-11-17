@@ -14,17 +14,16 @@ final class TalentOnboardingViewController: BaseViewController {
     
     let talentOnboardingView = TalentOnboardingView()
     
-    private var talentDummy: [[Talent]] = [
-        Talent.allCases.filter { $0.info.category == .DESIGN },
-        Talent.allCases.filter { $0.info.category == .ART_CRAFT },
-        Talent.allCases.filter { $0.info.category == .MEDIA_CONTENT }
+    private var talentDummy: [[TalentInfo]] = [
+        Talent.allCases.filter { $0.info.category == .DESIGN }.map { $0.info },
+        Talent.allCases.filter { $0.info.category == .ART_CRAFT }.map { $0.info },
+        Talent.allCases.filter { $0.info.category == .MEDIA_CONTENT }.map { $0.info }
     ]
     
     var isEdit = false
-    var editTalent: [TalentInfo] = []
-    var selectedIndexPaths: Set<IndexPath> = [] {
+    var editTalent: [TalentInfo] = [] {
         didSet {
-            talentOnboardingView.nextButton.isEnabled = (!selectedIndexPaths.isEmpty)
+            talentOnboardingView.nextButton.isEnabled = (!editTalent.isEmpty)
         }
     }
     
@@ -65,6 +64,13 @@ final class TalentOnboardingViewController: BaseViewController {
     @objc func nextButtonTapped() {
         if isEdit {
             self.navigationController?.popViewController(animated: true)
+            self.editTalent.sort { (first, second) -> Bool in
+                guard let firstIndex = Talent.allCases.firstIndex(where: { $0.info.koreanName == first.koreanName }),
+                      let secondIndex = Talent.allCases.firstIndex(where: { $0.info.koreanName == second.koreanName }) else {
+                    return false
+                }
+                return firstIndex < secondIndex
+            }
             updateTalent()
         } else {
             let portfolioOnboardingViewController = PortfolioOnboardingViewController()
@@ -101,34 +107,15 @@ extension TalentOnboardingViewController: UICollectionViewDataSource {
             for: indexPath) as? TalentCollectionViewCell else { return UICollectionViewCell() }
         let talent = talentDummy[indexPath.section][indexPath.row]
         
-        let isSelected = editTalent.contains { $0.koreanName == talent.info.koreanName }
+        let isSelected = editTalent.contains { $0.koreanName == talent.koreanName }
         cell.setTalent(talent, isSelectedFromEditTalent: isSelected)
-        if isSelected {
-            self.selectedIndexPaths.insert(indexPath)
-        }
         
         cell.updateButtonAction = {
-            if self.selectedIndexPaths.contains(indexPath) {
-                self.selectedIndexPaths.remove(indexPath)
+            if let talentIndex = self.editTalent.firstIndex(where: { $0.koreanName == cell.talent.koreanName }) {
+                self.editTalent.remove(at: talentIndex)
             } else {
-                self.selectedIndexPaths.insert(indexPath)
+                self.editTalent.append(cell.talent)
             }
-            
-            var updatedTalent: [TalentInfo] = []
-            
-            let sortedIndexPaths = self.selectedIndexPaths.sorted {
-                $0.section < $1.section || ($0.section == $1.section && $0.row < $1.row)
-            }
-            
-            for indexPath in sortedIndexPaths {
-                if indexPath.section < self.talentDummy.count,
-                    indexPath.row < self.talentDummy[indexPath.section].count {
-                    let talent = self.talentDummy[indexPath.section][indexPath.row]
-                    updatedTalent.append(talent.info)
-                }
-            }
-            self.editTalent = []
-            self.editTalent = updatedTalent
         }
         return cell
     }

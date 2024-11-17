@@ -13,9 +13,9 @@ import Then
 final class TalentCollectionViewCell: UICollectionViewCell {
     
     var isTapped = false
-    var talent = Talent(rawValue: "") {
+    var talent = TalentInfo(koreanName: "", displayName: "", category: .ART_CRAFT) {
         didSet {
-            self.talentButton.setTitle(talent?.info.displayName, for: .normal)
+            self.talentButton.setTitle(talent.displayName, for: .normal)
         }
     }
     private let colorArray: [UIColor] = [.ctsubpink, .ctsubblue1, .ctsubbrown]
@@ -73,7 +73,7 @@ final class TalentCollectionViewCell: UICollectionViewCell {
         updateButtonAction()
     }
     
-    func setTalent(_ talent: Talent, isSelectedFromEditTalent: Bool) {
+    func setTalent(_ talent: TalentInfo, isSelectedFromEditTalent: Bool) {
         self.talent = talent
         self.isTapped = isSelectedFromEditTalent
         updateButtonAppearance()
@@ -81,8 +81,8 @@ final class TalentCollectionViewCell: UICollectionViewCell {
     
     private func updateButtonAppearance() {
         if isTapped {
-            talentButton.setBackgroundColor(talent?.info.category.color ?? .ctsubpink, for: .normal)
-            talentButton.setBackgroundColor(talent?.info.category.color ?? .ctsubpink, for: .highlighted)
+            talentButton.setBackgroundColor(talent.category.color, for: .normal)
+            talentButton.setBackgroundColor(talent.category.color, for: .highlighted)
         } else {
             talentButton.setBackgroundColor(.ctwhite, for: .normal)
             talentButton.setBackgroundColor(.ctwhite, for: .highlighted)
