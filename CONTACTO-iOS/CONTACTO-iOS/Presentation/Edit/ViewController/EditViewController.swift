@@ -20,8 +20,8 @@ final class EditViewController: UIViewController {
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
         didSet {
             portfolioData.userPurposes = tappedStates.enumerated().compactMap { index, state in
-               state ? index + 1 : nil
-           }
+                state ? index + 1 : nil
+            }
         }
     }
     private var activeTextField: UIView?
@@ -214,7 +214,7 @@ final class EditViewController: UIViewController {
     }
     
     private func checkTalentLayout() {
-       editView.talentCollectionView.layoutIfNeeded()
+        editView.talentCollectionView.layoutIfNeeded()
         
         editView.talentCollectionView.snp.remakeConstraints {
             $0.top.equalTo(editView.talentLabel.snp.bottom).offset(7)
@@ -327,8 +327,14 @@ extension EditViewController {
         talentViewController.editTalent = talentData
         talentViewController.updateTalent = {
             self.talentData = talentViewController.editTalent
-            print(self.talentData)
             self.editView.talentCollectionView.reloadData()
+            var talents: [UserTalent] = []
+            self.talentData.forEach {
+                talents.append(
+                    UserTalent(id: 0, userId: self.portfolioData.id, talentType: $0.koreanName)
+                )
+            }
+            self.portfolioData.userTalents = talents
             self.checkTalentLayout()
         }
         navigationController?.pushViewController(talentViewController, animated: true)

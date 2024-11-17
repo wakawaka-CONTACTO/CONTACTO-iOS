@@ -17,7 +17,7 @@ struct MyDetailResponseDTO: Codable {
     let password: String?
     var userPortfolio: UserPortfolio
     var userPurposes: [Int]
-    let userTalents: [UserTalent]
+    var userTalents: [UserTalent]
 }
 
 // MARK: - UserPortfolio
