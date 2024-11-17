@@ -185,7 +185,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
         case 0, 1:
-            return portfolioData.userPortfolio.portfolioImages.count
+            return imageArray.count
         case 2:
             return portfolioData.userTalents.count
         case 3:
@@ -241,12 +241,12 @@ extension DetailProfileViewController: UICollectionViewDelegateFlowLayout {
         case 0:
             return CGSize(width: SizeLiterals.Screen.screenWidth, height: 432)
         case 1:
-            let totalItems = portfolioData.userPortfolio.portfolioImages.count
+            let totalItems = imageArray.count
             
-            let collectionViewWidth = collectionView.frame.width
+            let collectionViewWidth = SizeLiterals.Screen.screenWidth - 34.adjustedWidth
             let spacing: CGFloat = 5.adjustedWidth
             
-            let cellWidth = (collectionViewWidth - CGFloat(totalItems) * spacing) / CGFloat(totalItems + 1)
+            let cellWidth = (collectionViewWidth - CGFloat(totalItems - 1) * spacing) / CGFloat(totalItems)
             return CGSize(width: cellWidth, height: collectionView.frame.height)
         case 2:
            return CGSize(width: .bitWidth, height: 19)
