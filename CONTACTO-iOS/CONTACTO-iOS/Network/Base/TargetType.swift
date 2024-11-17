@@ -107,7 +107,13 @@ extension TargetType {
             let bodyParams = bodyRequest?.toDictionary() ?? [:]
             
             urlRequest.httpBody = try JSONSerialization.data(withJSONObject: bodyParams)
+        case .requestWithMultipart(let multipartFormDataClosure):
             
+            var multipartFormData = MultipartFormData()
+            multipartFormDataClosure(multipartFormData)
+            
+            urlRequest.httpBody = try multipartFormData.encode()
+            urlRequest.setValue(multipartFormData.contentType, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
         case .requestPlain:
             break
         }
@@ -121,6 +127,7 @@ enum RequestParams {
     case requestWithBody(_ paramter: Encodable?)
     case requestQuery(_ parameter: Encodable?)
     case requestQueryWithBody(_ queryParameter: Encodable?, bodyParameter: Encodable?)
+    case requestWithMultipart(_ multipartFormData: (MultipartFormData) -> Void)
 }
 
 extension Encodable {
