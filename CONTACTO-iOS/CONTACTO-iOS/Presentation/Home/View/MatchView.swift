@@ -36,6 +36,8 @@ final class MatchView: BaseView {
     )
     let textImageFlowLayout = LeftAlignedCollectionViewFlowLayout()
     
+    let popButton = UIButton()
+    
     override func setStyle() {
         titleLabel.do {
             $0.text = StringLiterals.Home.Match.title
@@ -114,6 +116,10 @@ final class MatchView: BaseView {
             $0.estimatedItemSize = CGSize(width: .bitWidth, height: 32)
             $0.scrollDirection = .horizontal
         }
+        
+        popButton.do {
+            $0.setImage(.icExit, for: .normal)
+        }
     }
     
     override func setLayout() {
@@ -125,7 +131,8 @@ final class MatchView: BaseView {
                          descriptionLabel,
                          greetCollectionView,
                          fieldView,
-                         sendButton)
+                         sendButton,
+                         popButton)
         
         fieldView.addSubviews(textCollectionView)
         
@@ -182,6 +189,11 @@ final class MatchView: BaseView {
             $0.top.equalTo(fieldView)
             $0.leading.equalTo(fieldView.snp.trailing).offset(2)
             $0.trailing.equalToSuperview().inset(8)
+        }
+        
+        popButton.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(72)
+            $0.leading.equalToSuperview().inset(30)
         }
     }
 }

@@ -37,14 +37,10 @@ final class MatchViewController: BaseViewController {
     }
     
     override func setLayout() {
-        let safeAreaHeight = view.safeAreaInsets.bottom
-        let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
-        
         view.addSubviews(matchView)
         
         matchView.snp.makeConstraints {
-            $0.top.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
+            $0.edges.equalToSuperview()
         }
     }
     
@@ -52,6 +48,7 @@ final class MatchViewController: BaseViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAction))
         matchView.fieldView.addGestureRecognizer(tapGesture)
         matchView.sendButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        matchView.popButton.addTarget(self, action: #selector(popButtonTapped), for: .touchUpInside)
     }
     
     override func setDelegate() {
@@ -77,8 +74,12 @@ extension MatchViewController {
     @objc private func nextButtonTapped() {
         if !greet.isEmpty {
             NotificationCenter.default.post(name: Notification.Name("moveToChat"), object: nil)
-            self.navigationController?.popViewController(animated: false)
+            self.dismiss(animated: true)
         }
+    }
+    
+    @objc private func popButtonTapped() {
+        self.dismiss(animated: true)
     }
 }
 

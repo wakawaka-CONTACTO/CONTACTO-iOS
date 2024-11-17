@@ -185,32 +185,18 @@ extension HomeViewController {
         } completion: { _ in
             // 추후 쌍방 매칭 됐을 때로 변경
             if isMatch, !self.isPreview {
-                // 추후 뷰컨으로 연결, 우선 알럿으로
-//                let matchViewController = MatchViewController()
-//                self.navigationController?.pushViewController(matchViewController, animated: false)
-                self.setAlertController()
+                let matchViewController = MatchViewController()
+                matchViewController.modalPresentationStyle = .fullScreen
+                matchViewController.modalTransitionStyle = .crossDissolve
+                self.present(matchViewController, animated: true)
             }
+            
             self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
             self.homeView.portView.transform = .identity
             self.num = 0
             self.isAnimating = false
             // 다음 유저로 넘기는 작업 수행
         }
-    }
-    
-    private func setAlertController() {
-        let alert = UIAlertController(title: StringLiterals.Home.Match.title, message: StringLiterals.Home.Match.description, preferredStyle: .alert)
-        
-        let sucess = UIAlertAction(title: "Yes", style: .default){ action in
-            print("확인 버튼이 눌렸습니다.")
-        }
-        
-        let cancel = UIAlertAction(title: "Not now", style: .cancel){ cancel in
-            print("취소 버튼이 눌렸습니다.")
-        }
-        alert.addAction(sucess)
-        alert.addAction(cancel)
-        present(alert, animated: true)
     }
 }
 
