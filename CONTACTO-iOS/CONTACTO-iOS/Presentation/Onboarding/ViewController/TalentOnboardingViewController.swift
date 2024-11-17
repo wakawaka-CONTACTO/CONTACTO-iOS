@@ -141,7 +141,7 @@ extension TalentOnboardingViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let size = CGSize(width: (SizeLiterals.Screen.screenWidth - 70.adjustedWidth) / 3, height: 19)
+        let size = CGSize(width: (SizeLiterals.Screen.screenWidth - 73.adjustedWidth) / 3, height: 25)
         return size
     }
     

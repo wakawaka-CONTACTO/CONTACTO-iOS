@@ -22,7 +22,7 @@ final class TalentHeaderView: UICollectionReusableView {
     func setStyle() {
         talentTitle.do {
             $0.text = StringLiterals.Onboarding.Talent.art
-            $0.font = .fontContacto(.body2)
+            $0.font = .fontContacto(.button)
             $0.textColor = .ctblack
         }
     }

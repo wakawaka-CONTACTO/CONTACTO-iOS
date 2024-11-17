@@ -371,7 +371,7 @@ extension EditViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfileTalentCollectionViewCell.className,
                 for: indexPath) as? ProfileTalentCollectionViewCell else { return UICollectionViewCell() }
             
-            cell.talentLabel.text = talentData[indexPath.row].displayName
+            cell.talentLabel.text = talentData[indexPath.row].displayName.uppercased()
             cell.backgroundColor = talentData[indexPath.row].category.color
             return cell
         case 2:

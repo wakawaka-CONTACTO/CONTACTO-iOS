@@ -61,8 +61,8 @@ final class TalentCollectionViewCell: UICollectionViewCell {
         self.addSubviews(talentButton)
         
         talentButton.snp.makeConstraints {
-            $0.height.equalTo(19)
-            $0.width.equalTo((SizeLiterals.Screen.screenWidth - 70.adjustedWidth) / 3)
+            $0.height.equalTo(25)
+            $0.width.equalTo((SizeLiterals.Screen.screenWidth - 73.adjustedWidth) / 3)
             $0.edges.equalToSuperview()
         }
     }
