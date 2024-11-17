@@ -28,6 +28,8 @@ final class TalentOnboardingViewController: BaseViewController {
         }
     }
     
+    var updateTalent: (() -> Void) = {}
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
@@ -46,7 +48,7 @@ final class TalentOnboardingViewController: BaseViewController {
         }
     }
     
-    func setAddTargetForOnboarding() {
+    override func setAddTarget() {
         talentOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
     
@@ -61,8 +63,13 @@ final class TalentOnboardingViewController: BaseViewController {
     }
     
     @objc func nextButtonTapped() {
-        let portfolioOnboardingViewController = PortfolioOnboardingViewController()
-        self.navigationController?.pushViewController(portfolioOnboardingViewController, animated: true)
+        if isEdit {
+            self.navigationController?.popViewController(animated: true)
+            updateTalent()
+        } else {
+            let portfolioOnboardingViewController = PortfolioOnboardingViewController()
+            self.navigationController?.pushViewController(portfolioOnboardingViewController, animated: true)
+        }
     }
 }
 
@@ -106,7 +113,22 @@ extension TalentOnboardingViewController: UICollectionViewDataSource {
             } else {
                 self.selectedIndexPaths.insert(indexPath)
             }
-            print(self.selectedIndexPaths)
+            
+            var updatedTalent: [TalentInfo] = []
+            
+            let sortedIndexPaths = self.selectedIndexPaths.sorted {
+                $0.section < $1.section || ($0.section == $1.section && $0.row < $1.row)
+            }
+            
+            for indexPath in sortedIndexPaths {
+                if indexPath.section < self.talentDummy.count,
+                    indexPath.row < self.talentDummy[indexPath.section].count {
+                    let talent = self.talentDummy[indexPath.section][indexPath.row]
+                    updatedTalent.append(talent.info)
+                }
+            }
+            self.editTalent = []
+            self.editTalent = updatedTalent
         }
         return cell
     }

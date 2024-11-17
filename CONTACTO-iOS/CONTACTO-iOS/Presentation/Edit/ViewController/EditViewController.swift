@@ -209,13 +209,17 @@ final class EditViewController: UIViewController {
     
     private func setData() {
         self.checkMyPort { _ in
-            self.editView.talentCollectionView.layoutIfNeeded()
-            
-            self.editView.talentCollectionView.snp.remakeConstraints {
-                $0.top.equalTo(self.editView.talentLabel.snp.bottom).offset(7)
-                $0.leading.trailing.equalToSuperview().inset(16)
-                $0.height.equalTo(self.editView.talentCollectionView.contentSize.height + 4)
-            }
+            self.checkTalentLayout()
+        }
+    }
+    
+    private func checkTalentLayout() {
+       editView.talentCollectionView.layoutIfNeeded()
+        
+        editView.talentCollectionView.snp.remakeConstraints {
+            $0.top.equalTo(editView.talentLabel.snp.bottom).offset(7)
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(editView.talentCollectionView.contentSize.height + 4)
         }
     }
     
@@ -319,14 +323,15 @@ extension EditViewController {
         let talentViewController = TalentOnboardingViewController()
         talentViewController.hidesBottomBarWhenPushed = true
         talentViewController.talentOnboardingView.nextButton.setTitle(StringLiterals.Edit.doneButton, for: .normal)
-        talentViewController.talentOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
         talentViewController.isEdit = true
         talentViewController.editTalent = talentData
+        talentViewController.updateTalent = {
+            self.talentData = talentViewController.editTalent
+            print(self.talentData)
+            self.editView.talentCollectionView.reloadData()
+            self.checkTalentLayout()
+        }
         navigationController?.pushViewController(talentViewController, animated: true)
-    }
-    
-    @objc private func nextButtonTapped() {
-        navigationController?.popViewController(animated: true)
     }
 }
 
@@ -338,7 +343,7 @@ extension EditViewController: UICollectionViewDataSource {
         case 0:
             return 10
         case 1:
-            return portfolioData.userTalents.count
+            return talentData.count
         case 2:
             return 5
         default:
