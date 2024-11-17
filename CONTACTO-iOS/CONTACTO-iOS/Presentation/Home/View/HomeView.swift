@@ -30,8 +30,7 @@ final class HomeView: BaseView {
     let yesButton = UIButton()
     
     override func setStyle() {
-        self.backgroundColor = .ctblack1
-        
+        self.backgroundColor = .ctblack
         
         pageCollectionView.do {
             $0.backgroundColor = .clear
@@ -99,7 +98,7 @@ final class HomeView: BaseView {
         
         profileButton.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(13)
-            $0.leading.trailing.equalToSuperview().inset(22)
+            $0.leading.trailing.equalToSuperview().inset(17)
             $0.height.equalTo(48.adjustedHeight)
         }
         
