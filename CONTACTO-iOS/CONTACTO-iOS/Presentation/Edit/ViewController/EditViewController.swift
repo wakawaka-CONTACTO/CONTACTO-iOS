@@ -14,10 +14,16 @@ import Then
 
 final class EditViewController: UIViewController {
     
-    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", socialId: nil, loginType: "", email: "", description: "", instagramId: "", webUrl: nil, password: nil, userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
+    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: nil, userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
     var isEditEnable = false
-    var tappedStates: [Bool] = Array(repeating: false, count: 5)
+    var tappedStates: [Bool] = Array(repeating: false, count: 5) {
+        didSet {
+            portfolioData.userPurposes = tappedStates.enumerated().compactMap { index, state in
+               state ? index + 1 : nil
+           }
+        }
+    }
     private var activeTextField: UIView?
     
     var isTextFieldFilled = true {
@@ -437,6 +443,9 @@ extension EditViewController: UITextViewDelegate {
         } else {
             self.isTextViewFilled = false
         }
+        if let text = textView.text {
+            self.portfolioData.description = text
+        }
     }
 }
 
@@ -452,6 +461,19 @@ extension EditViewController: UITextFieldDelegate {
                 self.isTextFieldFilled = true
             } else {
                 self.isTextFieldFilled = false
+            }
+        }
+        
+        if let text = textField.text {
+            switch textField {
+            case editView.nameTextField:
+                self.portfolioData.username = text
+            case editView.instaTextField:
+                self.portfolioData.instagramId = text
+            case editView.websiteTextField:
+                self.portfolioData.webUrl = text
+            default:
+                print("default")
             }
         }
     }
