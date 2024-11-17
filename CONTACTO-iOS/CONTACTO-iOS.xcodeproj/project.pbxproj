@@ -97,6 +97,7 @@
 		C3EF05F22C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F12C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift */; };
 		C3EF05F42C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F32C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift */; };
 		C3EF05F62C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EF05F52C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift */; };
+		C3F21FF02CE9CA39005C4CA2 /* HapticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F21FEF2CE9CA39005C4CA2 /* HapticService.swift */; };
 		C3F574F92CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F574F82CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift */; };
 		C3F574FE2CC4096700440D98 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F574FD2CC4096700440D98 /* InfoViewController.swift */; };
 		C3F575002CC4097100440D98 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F574FF2CC4097100440D98 /* InfoView.swift */; };
@@ -224,6 +225,7 @@
 		C3EF05F12C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomDateCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3EF05F32C9DD4A5001BF9EC /* ChatRoomMyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomMyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3EF05F52C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomYourCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3F21FEF2CE9CA39005C4CA2 /* HapticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticService.swift; sourceTree = "<group>"; };
 		C3F574F82CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPortfolioCollectionViewCell.swift; sourceTree = "<group>"; };
 		C3F574FD2CC4096700440D98 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		C3F574FF2CC4097100440D98 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
@@ -837,6 +839,7 @@
 				C3FD90712C91550C0021D2BA /* FontLiterals.swift */,
 				C3FD905A2C91429C0021D2BA /* StringLiterals.swift */,
 				C3FD90732C91558E0021D2BA /* SizeLiterals.swift */,
+				C3F21FEF2CE9CA39005C4CA2 /* HapticService.swift */,
 			);
 			path = Literals;
 			sourceTree = "<group>";
@@ -1111,6 +1114,7 @@
 				C37A28DE2CB417BE004BC6AE /* EditViewController.swift in Sources */,
 				C33D73EA2CDEF14600889B1B /* HomeService.swift in Sources */,
 				C35E26492C9D2F4400B197CB /* MatchView.swift in Sources */,
+				C3F21FF02CE9CA39005C4CA2 /* HapticService.swift in Sources */,
 				C35E26432C9D10B800B197CB /* ProfileImageCollectionViewCell.swift in Sources */,
 				C3B95CEE2C9BE020002A4681 /* DetailProfileView.swift in Sources */,
 				C33D73F02CDEF16100889B1B /* InfoService.swift in Sources */,

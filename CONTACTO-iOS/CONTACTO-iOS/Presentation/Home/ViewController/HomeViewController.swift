@@ -98,9 +98,7 @@ extension HomeViewController {
     }
     
     @objc private func handleBackTap(_ sender: UITapGestureRecognizer) {
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.prepare()
-        generator.impactOccurred()
+        HapticService.impact(.light).run()
         
         if num == 0 {
             num = maxNum
@@ -110,9 +108,7 @@ extension HomeViewController {
     }
     
     @objc private func handleNextTap(_ sender: UITapGestureRecognizer) {
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.prepare()
-        generator.impactOccurred()
+        HapticService.impact(.light).run()
         
         if num == maxNum {
             num = 0
@@ -192,9 +188,7 @@ extension HomeViewController {
         guard !isAnimating else { return }  // 애니메이션 중이면 함수 실행 중단
         isAnimating = true
         
-        let generator = UIImpactFeedbackGenerator(style: .heavy)
-        generator.prepare()
-        generator.impactOccurred()
+        HapticService.impact(.heavy).run()
         
         var transform = CGAffineTransform(translationX: offsetX, y: offsetY)
         
@@ -222,6 +216,8 @@ extension HomeViewController {
     
     private func pushToMatch() {
         if self.isMatch, !self.isPreview {
+            HapticService.notification(.error).run()
+            
             let matchViewController = MatchViewController()
             matchViewController.modalPresentationStyle = .overFullScreen
             matchViewController.modalTransitionStyle = .crossDissolve

@@ -106,9 +106,7 @@ extension MatchViewController: UICollectionViewDataSource {
             cell.greetLabel.text = greetMessage[indexPath.row]
             cell.num = indexPath.row
             cell.selectButtonAction = {
-                let generator = UIImpactFeedbackGenerator(style: .light)
-                generator.prepare()
-                generator.impactOccurred()
+                HapticService.impact(.light).run()
                 self.greet.append(cell.num)
             }
             cell.deleteButton.isHidden = true
