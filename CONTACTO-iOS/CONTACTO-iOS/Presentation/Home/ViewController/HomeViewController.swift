@@ -13,7 +13,8 @@ import Then
 final class HomeViewController: BaseViewController {
     
     var isPreview = false
-    
+    var portUserId = 0
+    var isMatch = false
     var num = 0 {
         didSet {
             homeView.pageCollectionView.reloadData()
@@ -38,6 +39,11 @@ final class HomeViewController: BaseViewController {
         setCollectionView()
         setData()
         setPortImage()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setNavigationBar()
     }
     
     override func setNavigationBar() {
@@ -87,11 +93,7 @@ final class HomeViewController: BaseViewController {
 
 extension HomeViewController {
     @objc private func profileButtonTapped() {
-        // 추후 수정 예정
         let detailProfileViewController = DetailProfileViewController()
-//        detailProfileViewController.modalPresentationStyle = .fullScreen
-//        detailProfileViewController.modalTransitionStyle = .coverVertical
-//        self.present(detailProfileViewController, animated: true)
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
     
@@ -133,14 +135,14 @@ extension HomeViewController {
         if gesture.state == .ended {
             let velocity = gesture.velocity(in: self.view)
             if velocity.x > 500 {
-                animateImage(isMatch: true)
+                yesButtonTapped()
             } else if velocity.x < -500 {
-                animateImage(isMatch: false)
+                noButtonTapped()
             } else {
                 if rotationAngle < -0.1 {
-                    animateImage(isMatch: true)
+                    yesButtonTapped()
                 } else if rotationAngle > 0.1 {
-                    animateImage(isMatch: false)
+                    noButtonTapped()
                 } else {
                     UIView.animate(withDuration: 1) {
                         self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
@@ -160,15 +162,33 @@ extension HomeViewController {
         homeView.portImageView.image = imageDummy[self.num]
     }
     
+    private func likeOrDislike(bodyDTO: LikeRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.homeService.likeOrDislike(bodyDTO: bodyDTO) { [weak self] response in
+            switch response {
+            case .success(let data):
+                print(data)
+                self?.isMatch = data.matched
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
+    
     @objc private func yesButtonTapped() {
-        animateImage(isMatch: true)
+        likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: portUserId, status: LikeStatus.like.rawValue)) { _ in
+            self.animateImage(status: true)
+        }
     }
     
     @objc private func noButtonTapped() {
-        animateImage(isMatch: false)
+        likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: portUserId, status: LikeStatus.dislike.rawValue)) { _ in
+            self.animateImage(status: false)
+        }
     }
     
-    private func animateImage(isMatch: Bool) {
+    private func animateImage(status: Bool) {
         guard !isAnimating else { return }  // 애니메이션 중이면 함수 실행 중단
         isAnimating = true
         
@@ -179,23 +199,34 @@ extension HomeViewController {
         var transform = CGAffineTransform(translationX: offsetX, y: offsetY)
         
         UIView.animate(withDuration: 1) {
-            transform = transform.rotated(by: isMatch ? -(CGFloat.pi * 0.5) : (CGFloat.pi * 0.5))
+            transform = transform.rotated(by: status ? -(CGFloat.pi * 0.5) : (CGFloat.pi * 0.5))
             self.homeView.portView.layer.anchorPoint = self.newAnchorPoint
             self.homeView.portView.transform = transform
         } completion: { _ in
-            // 추후 쌍방 매칭 됐을 때로 변경
-            if isMatch, !self.isPreview {
-                let matchViewController = MatchViewController()
-                matchViewController.modalPresentationStyle = .fullScreen
-                matchViewController.modalTransitionStyle = .crossDissolve
-                self.present(matchViewController, animated: true)
-            }
+            // 추후 쌍방 매칭 됐을 때로 변경, 강한 햅틱 추가
+            self.pushToMatch()
             
             self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
             self.homeView.portView.transform = .identity
             self.num = 0
             self.isAnimating = false
-            // 다음 유저로 넘기는 작업 수행
+            self.isMatch = false
+            self.nextPort()
+        }
+    }
+    
+    private func nextPort() {
+        // 다음 유저로 넘기는 작업 수행
+        
+    }
+    
+    private func pushToMatch() {
+        if self.isMatch, !self.isPreview {
+            let matchViewController = MatchViewController()
+            matchViewController.modalPresentationStyle = .overFullScreen
+            matchViewController.modalTransitionStyle = .crossDissolve
+            matchViewController.modalPresentationCapturesStatusBarAppearance = false
+            self.present(matchViewController, animated: true)
         }
     }
 }

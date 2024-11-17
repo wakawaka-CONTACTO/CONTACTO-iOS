@@ -202,7 +202,6 @@ final class EditViewController: UIViewController {
     }
     
     private func setData() {
-        //data 받는 곳
         self.checkMyPort { _ in
             self.editView.talentCollectionView.layoutIfNeeded()
             
