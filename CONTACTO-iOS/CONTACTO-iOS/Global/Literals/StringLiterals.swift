@@ -119,12 +119,19 @@ enum StringLiterals {
         static let delete = "Delete Account"
         
         enum Alert {
-            static let logoutTitle = "Log out"
-            static let logoutDescription = "This is Log out Description"
-            static let deleteTitle = "This is Log out Description"
-            static let deleteDescription = "This is Delete Description"
-            static let yes = "Yes"
-            static let no = "No"
+            enum Logout {
+                static let logoutTitle = "Log out"
+                static let logoutDescription = "TAre you sure you want to\nlog out CONTACTO?"
+                static let yes = "Yes"
+                static let no = "No"
+                
+            }
+            enum Delete {
+                static let deleteTitle = "Delete Account"
+                static let deleteDescription = "Deleting your account will remove all of\nyour information from our database.\nThis cannot be undone."
+                static let notYet = "Not yet"
+                static let delete = "Delete"
+            }
         }
     }
 }

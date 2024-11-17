@@ -58,26 +58,46 @@ extension InfoViewController {
     }
     
     @objc private func logoutButtonTapped() {
-        self.setAlertController(isLogout: true)
+        self.setLogoutAlertController()
     }
     
     @objc private func deleteButtonTapped() {
-        self.setAlertController(isLogout: false)
+        self.setDeleteAlertController()
     }
     
-    private func setAlertController(isLogout: Bool) {
-        let title = isLogout ? StringLiterals.Info.Alert.logoutTitle : StringLiterals.Info.Alert.deleteTitle
-        let description = isLogout ? StringLiterals.Info.Alert.logoutDescription : StringLiterals.Info.Alert.deleteDescription
+    private func setLogoutAlertController() {
+        let title = StringLiterals.Info.Alert.Logout.logoutTitle
+        let description = StringLiterals.Info.Alert.Logout.logoutDescription
         
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         
-        let sucess = UIAlertAction(title: StringLiterals.Info.Alert.yes, style: .destructive){ action in
-            print("확인 버튼이 눌렸습니다.")
-        }
-        
-        let cancel = UIAlertAction(title: StringLiterals.Info.Alert.no, style: .cancel){ cancel in
+        let cancel = UIAlertAction(title: StringLiterals.Info.Alert.Logout.no, style: .cancel){ cancel in
             print("취소 버튼이 눌렸습니다.")
         }
+        
+        let sucess = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ action in
+            print("로그아웃 버튼이 눌렸습니다.")
+        }
+        
+        alert.addAction(cancel)
+        alert.addAction(sucess)
+        present(alert, animated: true)
+    }
+    
+    private func setDeleteAlertController() {
+        let title = StringLiterals.Info.Alert.Delete.deleteTitle
+        let description = StringLiterals.Info.Alert.Delete.deleteDescription
+        
+        let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
+        
+        let sucess = UIAlertAction(title: StringLiterals.Info.Alert.Delete.notYet, style: .default){ action in
+            print("취소 버튼이 눌렸습니다.")
+        }
+        
+        let cancel = UIAlertAction(title: StringLiterals.Info.Alert.Delete.delete, style: .destructive){ cancel in
+            print("탈퇴 버튼이 눌렸습니다.")
+        }
+        
         alert.addAction(sucess)
         alert.addAction(cancel)
         present(alert, animated: true)
