@@ -303,6 +303,8 @@ extension EditViewController {
     @objc private func previewButtonTapped() {
         let previewViewController = HomeViewController()
         previewViewController.isPreview = true
+        previewViewController.portfolioData = self.portfolioData
+        previewViewController.imageDummy = selectedImages
         let navigationController = UINavigationController(rootViewController: previewViewController)
         present(navigationController, animated: true)
     }

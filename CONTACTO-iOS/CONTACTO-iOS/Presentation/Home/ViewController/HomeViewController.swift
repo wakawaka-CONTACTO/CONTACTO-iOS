@@ -24,6 +24,8 @@ final class HomeViewController: BaseViewController {
     var maxNum = 0
     var isAnimating = false
     
+    var portfolioData = MyDetailResponseDTO(id: 0, username: "", socialId: nil, loginType: "", email: "", description: "", instagramId: "", webUrl: nil, password: nil, userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
+    
     let oldAnchorPoint = CGPoint(x: 0.5, y: 0.5)
     let newAnchorPoint = CGPoint(x: 0.5, y: -0.5)
     lazy var offsetX = self.homeView.portView.bounds.width * (newAnchorPoint.x - oldAnchorPoint.x)
@@ -94,6 +96,9 @@ final class HomeViewController: BaseViewController {
 extension HomeViewController {
     @objc private func profileButtonTapped() {
         let detailProfileViewController = DetailProfileViewController()
+        detailProfileViewController.portfolioData = self.portfolioData
+        detailProfileViewController.imageArray = self.imageDummy
+        detailProfileViewController.isPreview = self.isPreview
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
     
@@ -150,7 +155,11 @@ extension HomeViewController {
     }
     
     private func setData() {
-        imageDummy = [.imgex1, .imgex2, .imgex3, .imgex4, .imgex1, .imgex2, .imgex3, .imgex4, .imgex3, .imgex4]
+        if !isPreview {
+            imageDummy = [.imgex1, .imgex2, .imgex3, .imgex4, .imgex1, .imgex2, .imgex3, .imgex4, .imgex3, .imgex4]
+        } else {
+            homeView.profileNameLabel.text = portfolioData.username
+        }
         maxNum = imageDummy.count - 1
     }
     

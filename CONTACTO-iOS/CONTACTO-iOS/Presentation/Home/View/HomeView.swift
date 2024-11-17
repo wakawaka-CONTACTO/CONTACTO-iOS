@@ -66,7 +66,7 @@ final class HomeView: BaseView {
         }
         
         profileNameLabel.do {
-            $0.text = "abcdefg"
+            $0.text = "contacto"
             $0.textColor = .ctblack
             $0.font = .fontContacto(.button4)
             $0.textAlignment = .center

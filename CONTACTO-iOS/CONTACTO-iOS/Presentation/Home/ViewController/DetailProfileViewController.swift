@@ -20,9 +20,10 @@ final class DetailProfileViewController: BaseViewController {
         }
     }
     var userId: Int = 3
+    var isPreview = false
     
     let detailProfileView = DetailProfileView()
-    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", socialId: nil, loginType: "", email: "", description: "", instagramId: "", webUrl: nil, password: nil, userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
+    var portfolioData = MyDetailResponseDTO(id: 0, username: "", socialId: nil, loginType: "", email: "", description: "", instagramId: "", webUrl: nil, password: nil, userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
     
     override func viewDidLoad() {
@@ -74,18 +75,23 @@ final class DetailProfileViewController: BaseViewController {
     
     // MARK: - Server Function
     private func detailPort(userId: Int, completion: @escaping (Bool) -> Void) {
-        NetworkService.shared.homeService.detailPort(userId: userId) { [weak self] response in
-            switch response {
-            case .success(let data):
-                self?.portfolioData = data
-                self?.updatePortfolio()
-                print(data)
-                completion(true)
-            default:
-                completion(false)
-                print("error")
+        if !isPreview {
+            NetworkService.shared.homeService.detailPort(userId: userId) { [weak self] response in
+                switch response {
+                case .success(let data):
+                    self?.portfolioData = data
+                    self?.updatePortfolio()
+                    print(data)
+                    completion(true)
+                default:
+                    completion(false)
+                    print("error")
+                }
             }
+        } else {
+            self.updatePortfolio()
         }
+        completion(true)
     }
     
     private func updatePortfolio() {
@@ -93,29 +99,31 @@ final class DetailProfileViewController: BaseViewController {
             Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
         }
         
-        let dispatchGroup = DispatchGroup()
-        
-        portfolioData.userPortfolio.portfolioImages.forEach { url in
-            guard let imageUrl = URL(string: url) else { return }
+        if !isPreview {
+            let dispatchGroup = DispatchGroup()
             
-            dispatchGroup.enter() // 작업 시작
-            KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { [weak self] result in
-                switch result {
-                case .success(let value):
-                    DispatchQueue.main.async {
-                        self?.imageArray.append(value.image)
+            portfolioData.userPortfolio.portfolioImages.forEach { url in
+                guard let imageUrl = URL(string: url) else { return }
+                
+                dispatchGroup.enter() // 작업 시작
+                KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { [weak self] result in
+                    switch result {
+                    case .success(let value):
+                        DispatchQueue.main.async {
+                            self?.imageArray.append(value.image)
+                        }
+                    case .failure(let error):
+                        print("Failed to load image: \(error.localizedDescription)")
                     }
-                case .failure(let error):
-                    print("Failed to load image: \(error.localizedDescription)")
+                    dispatchGroup.leave() // 작업 완료
                 }
-                dispatchGroup.leave() // 작업 완료
             }
-        }
-        
-        // 모든 작업이 완료된 후 실행
-        dispatchGroup.notify(queue: .main) {
-            self.detailProfileView.portImageCollectionView.reloadData()
-            self.detailProfileView.pageCollectionView.reloadData()
+            
+            // 모든 작업이 완료된 후 실행
+            dispatchGroup.notify(queue: .main) {
+                self.detailProfileView.portImageCollectionView.reloadData()
+                self.detailProfileView.pageCollectionView.reloadData()
+            }
         }
         
         self.detailProfileView.nameLabel.text = self.portfolioData.username
@@ -131,7 +139,6 @@ final class DetailProfileViewController: BaseViewController {
     }
     
     private func setData() {
-
         detailPort(userId: userId) { _ in
             self.detailProfileView.talentCollectionView.layoutIfNeeded()
             self.detailProfileView.purposeCollectionView.layoutIfNeeded()
@@ -187,7 +194,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
         case 0, 1:
             return imageArray.count
         case 2:
-            return portfolioData.userTalents.count
+            return talentData.count
         case 3:
             return portfolioData.userPurposes.count
         default:
