@@ -17,6 +17,15 @@ enum StringLiterals {
         static let appleButton = "Continue with Apple"
         static let help = "Need help signing in?"
         static let privacy = "Privacy"
+        
+        static let verify = "E-mail verification code"
+        static let nextButton = "next"
+        static let setPW = "Set password"
+        static let resetPW = "Reset password"
+        static let condition1 = "at least 8 char."
+        static let condition2 = "at least 1 special char."
+        static let condition3 = "at least 1 number"
+        static let confirmPW = "confirm password"
     }
     
     enum Onboarding {

@@ -51,7 +51,7 @@ final class LoginView: BaseView {
             $0.backgroundColor = .ctwhite
             $0.keyboardType = .asciiCapable
             $0.autocapitalizationType = .none
-            $0.textContentType = .password
+            $0.isSecureTextEntry = true
             $0.returnKeyType = .done
         }
         
