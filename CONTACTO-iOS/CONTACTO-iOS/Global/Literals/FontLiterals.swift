@@ -51,6 +51,9 @@ enum FontLevel {
     case button8
     
     case button
+    case title
+    case subTitle
+    case chat
 }
 
 extension FontLevel {
@@ -70,8 +73,14 @@ extension FontLevel {
         case .caption4, .caption5, .caption8, .caption10:
             return FontName.PretendardRegular.rawValue
             
-        case .button:
+        case .button, .subTitle:
             return FontName.ABCDiatypeBold.rawValue
+            
+        case .title:
+            return FontName.FKRasterRomanBlended.rawValue
+            
+        case .chat:
+            return FontName.PretendardRegular.rawValue
         }
     }
     
@@ -108,6 +117,12 @@ extension FontLevel {
             
         case .button:
             return 16.adjusted
+        case .title:
+            return 20.adjusted
+        case .subTitle:
+            return 13.adjusted
+        case .chat:
+            return 15.adjusted
         }
     }
     
@@ -126,6 +141,10 @@ extension FontLevel {
             
         case .button:
             return FontLevel.button.fontSize * 1.5
+        case .title, .chat:
+            return FontLevel.button.fontSize * 1.35
+        case .subTitle:
+            return FontLevel.button.fontSize * 1.3
         }
     }
 }

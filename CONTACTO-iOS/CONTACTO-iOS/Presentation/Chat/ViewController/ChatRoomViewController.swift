@@ -29,6 +29,7 @@ final class ChatRoomViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        chatRoomView.fadeoutDisclaimer()
     }
     
     override func setNavigationBar() {

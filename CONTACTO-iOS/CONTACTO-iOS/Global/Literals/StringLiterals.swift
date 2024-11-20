@@ -89,6 +89,11 @@ enum StringLiterals {
             static let title = "Not\nYet"
             static let description = "If we find first match,\nWe’ll notice you on push."
         }
+        
+        enum Disclaimer {
+            static let title = "Congratulation!"
+            static let description = "We think you both have a lot in common.\nFeel free to talk comfortably."
+        }
     }
     
     enum Edit {

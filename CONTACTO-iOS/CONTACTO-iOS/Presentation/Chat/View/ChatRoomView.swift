@@ -12,11 +12,23 @@ import Then
 
 final class ChatRoomView: BaseView {
     
+    var isFirstChat = true {
+        didSet {
+            if !isFirstChat {
+                disclaimerView.removeFromSuperview()
+            }
+        }
+    }
+    
     let topView = UIView()
     let backButton = UIButton()
     let profileImageView = UIImageView()
     let nameLabel = UILabel()
     let dividerLine = UIView()
+    
+    let disclaimerView = UIView()
+    let disclaimerTitleLabel = UILabel()
+    let disclaimerDescriptionLabel = UILabel()
     
     lazy var chatRoomCollectionView = UICollectionView(
         frame: .zero,
@@ -28,6 +40,15 @@ final class ChatRoomView: BaseView {
     let plusButton = UIButton()
     let messageTextView = UITextView()
     let sendButton = UIButton()
+    
+    func fadeoutDisclaimer() {
+        if isFirstChat {
+            UIView.animate(withDuration: 5.0, animations: {
+                self.disclaimerView.alpha = 0.0
+            })
+            disclaimerView.removeFromSuperview()
+        }
+    }
     
     override func setStyle() {
         self.backgroundColor = .ctmainpink
@@ -81,8 +102,9 @@ final class ChatRoomView: BaseView {
         messageTextView.do {
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.backgroundColor = .ctwhite
-            $0.font = .fontContacto(.title4)
-            // contentInset 확인
+            $0.font = .fontContacto(.chat)
+            $0.contentInset = UIEdgeInsets(top: 7, left: 8, bottom: 6, right: 45)
+            $0.textColor = .ctblack
         }
         
         sendButton.do {
@@ -91,12 +113,30 @@ final class ChatRoomView: BaseView {
             $0.setImage(.icPolygon, for: .normal)
             $0.isHidden = true
         }
+        
+        disclaimerView.do {
+            $0.backgroundColor = .ctsubgreen2
+            $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+        }
+        
+        disclaimerTitleLabel.do {
+            $0.text = StringLiterals.Chat.Disclaimer.title
+            $0.font = .fontContacto(.title)
+            $0.textColor = .ctblack
+        }
+        
+        disclaimerDescriptionLabel.do {
+            $0.text = StringLiterals.Chat.Disclaimer.description
+            $0.font = .fontContacto(.subTitle)
+            $0.textColor = .ctblack
+        }
     }
     
     override func setLayout() {
         self.addSubviews(chatRoomCollectionView,
                          topView,
-                         bottomView)
+                         bottomView,
+                         disclaimerView)
         
         topView.addSubviews(backButton,
                             profileImageView,
@@ -107,9 +147,28 @@ final class ChatRoomView: BaseView {
                                messageTextView,
                                sendButton)
         
+        disclaimerView.addSubviews(disclaimerTitleLabel,
+                                   disclaimerDescriptionLabel)
+        
         topView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(safeAreaLayoutGuide.snp.top).offset(66.adjustedHeight)
+        }
+        
+        disclaimerView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.top.equalTo(topView.snp.bottom).offset(28.adjustedHeight)
+            $0.height.equalTo(72)
+        }
+        
+        disclaimerTitleLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().inset(5)
+        }
+        
+        disclaimerDescriptionLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(12)
         }
         
         backButton.snp.makeConstraints {
