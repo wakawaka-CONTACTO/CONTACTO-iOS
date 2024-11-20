@@ -46,13 +46,13 @@ extension InfoViewController {
     }
     
     @objc private func guidelinesTapped() {
-        guard let url = URL(string: "https://naver.com") else { return }
+        guard let url = URL(string: StringLiterals.URL.guidelines) else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
     }
     
     @objc private func cookieButtonTapped() {
-        guard let url = URL(string: "https://naver.com") else { return }
+        guard let url = URL(string: StringLiterals.URL.privacy) else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
     }

@@ -131,6 +131,7 @@ enum StringLiterals {
                 static let no = "No"
                 
             }
+            
             enum Delete {
                 static let deleteTitle = "Delete Account"
                 static let deleteDescription = "Deleting your account will remove all of\nyour information from our database.\nThis cannot be undone."
@@ -138,5 +139,10 @@ enum StringLiterals {
                 static let delete = "Delete"
             }
         }
+    }
+    
+    enum URL {
+        static let guidelines = "https://pomus.notion.site/1437a75859a880deb38afb0ead0f8b39?pvs=4"
+        static let privacy = "https://contactocreator.notion.site/1437a75859a88040b512e1a9b98228ac?pvs=4"
     }
 }
