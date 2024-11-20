@@ -16,8 +16,6 @@ final class LoginView: BaseView {
     private let descriptionLabel = UILabel()
     lazy var emailTextField = BaseTextField()
     lazy var continueButton = UIButton()
-    private let orLabel = UILabel()
-    lazy var appleLoginButton = UIButton()
     lazy var helpButton = UIButton()
     lazy var privacyButton = UIButton()
     
@@ -51,19 +49,6 @@ final class LoginView: BaseView {
             $0.backgroundColor = .ctsubgreen2
         }
         
-        orLabel.do {
-            $0.text = StringLiterals.Login.orLabel
-            $0.font = .fontContacto(.caption1)
-            $0.textColor = .ctwhite
-        }
-        
-        appleLoginButton.do {
-            $0.setTitle(StringLiterals.Login.appleButton, for: .normal)
-            $0.setTitleColor(.ctblack, for: .normal)
-            $0.titleLabel?.font = .fontContacto(.button1)
-            $0.backgroundColor = .ctwhite
-        }
-        
         helpButton.do {
             $0.setTitle(StringLiterals.Login.help, for: .normal)
             $0.setTitleColor(.systemBlue, for: .normal)            
@@ -80,8 +65,6 @@ final class LoginView: BaseView {
                     descriptionLabel,
                     emailTextField,
                     continueButton,
-                    orLabel,
-                    appleLoginButton,
                     helpButton,
                     privacyButton)
         
@@ -107,19 +90,8 @@ final class LoginView: BaseView {
             $0.height.equalTo(34.adjustedHeight)
         }
         
-        orLabel.snp.makeConstraints {
-            $0.top.equalTo(continueButton.snp.bottom).offset(10.adjustedHeight)
-            $0.centerX.equalToSuperview()
-        }
-        
-        appleLoginButton.snp.makeConstraints {
-            $0.top.equalTo(orLabel.snp.bottom).offset(10.adjustedHeight)
-            $0.leading.trailing.equalTo(emailTextField)
-            $0.height.equalTo(34.adjustedHeight)
-        }
-        
         helpButton.snp.makeConstraints {
-            $0.top.equalTo(appleLoginButton.snp.bottom).offset(85.adjustedHeight)
+            $0.top.equalTo(continueButton.snp.bottom).offset(168.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
         
