@@ -38,4 +38,3 @@ final class LoginViewController: BaseViewController {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }
-

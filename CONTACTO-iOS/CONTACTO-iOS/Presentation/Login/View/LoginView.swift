@@ -15,6 +15,7 @@ final class LoginView: BaseView {
     private let logoImageView = UIImageView()
     private let descriptionLabel = UILabel()
     lazy var emailTextField = BaseTextField()
+    lazy var passwordTextField = BaseTextField()
     lazy var continueButton = UIButton()
     lazy var helpButton = UIButton()
     lazy var privacyButton = UIButton()
@@ -42,6 +43,18 @@ final class LoginView: BaseView {
             $0.returnKeyType = .done
         }
         
+        passwordTextField.do {
+            $0.font = .fontContacto(.button1)
+            $0.textColor = .ctblack
+            $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.pw, forColor: .ctgray2)
+            $0.textAlignment = .center
+            $0.backgroundColor = .ctwhite
+            $0.keyboardType = .asciiCapable
+            $0.autocapitalizationType = .none
+            $0.textContentType = .password
+            $0.returnKeyType = .done
+        }
+        
         continueButton.do {
             $0.setTitle(StringLiterals.Login.continueButton, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
@@ -64,6 +77,7 @@ final class LoginView: BaseView {
         addSubviews(logoImageView,
                     descriptionLabel,
                     emailTextField,
+                    passwordTextField,
                     continueButton,
                     helpButton,
                     privacyButton)
@@ -84,14 +98,20 @@ final class LoginView: BaseView {
             $0.height.equalTo(34.adjustedHeight)
         }
         
+        passwordTextField.snp.makeConstraints {
+            $0.top.equalTo(emailTextField.snp.bottom).offset(7.adjustedHeight)
+            $0.leading.trailing.equalToSuperview().inset(37.adjustedWidth)
+            $0.height.equalTo(34.adjustedHeight)
+        }
+        
         continueButton.snp.makeConstraints {
-            $0.top.equalTo(emailTextField.snp.bottom).offset(10.adjustedHeight)
+            $0.top.equalTo(passwordTextField.snp.bottom).offset(45.adjustedHeight)
             $0.leading.trailing.equalTo(emailTextField)
             $0.height.equalTo(34.adjustedHeight)
         }
         
         helpButton.snp.makeConstraints {
-            $0.top.equalTo(continueButton.snp.bottom).offset(168.adjustedHeight)
+            $0.top.equalTo(continueButton.snp.bottom).offset(91.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
         
