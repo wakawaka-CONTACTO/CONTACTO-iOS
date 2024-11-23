@@ -8,11 +8,17 @@
 import Foundation
 
 protocol ChatServiceProtocol {
-    func chatRoomList(completion: @escaping (NetworkResult<[ChatListResponseBodyDTO]>) -> Void)
+    func chatRoomList(completion: @escaping (NetworkResult<[ChatListResponseDTO]>) -> Void)
+    
+    func chatRoomMessage(roomId: Int, completion: @escaping (NetworkResult<ChatRoomResponseDTO>) -> Void)
 }
 
 final class ChatService: APIRequestLoader<ChatTarget>, ChatServiceProtocol {
-    func chatRoomList(completion: @escaping (NetworkResult<[ChatListResponseBodyDTO]>) -> Void) {
-        fetchData(target: .chatRoomList, responseData: [ChatListResponseBodyDTO].self, completion: completion)
+    func chatRoomList(completion: @escaping (NetworkResult<[ChatListResponseDTO]>) -> Void) {
+        fetchData(target: .chatRoomList, responseData: [ChatListResponseDTO].self, completion: completion)
+    }
+        
+    func chatRoomMessage(roomId: Int, completion: @escaping (NetworkResult<ChatRoomResponseDTO>) -> Void) {
+        fetchData(target: .chatRoomMessage(roomId), responseData: ChatRoomResponseDTO.self, completion: completion)
     }
 }

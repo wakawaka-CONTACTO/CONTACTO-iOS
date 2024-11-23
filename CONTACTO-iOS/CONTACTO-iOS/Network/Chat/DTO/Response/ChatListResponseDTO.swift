@@ -1,5 +1,5 @@
 //
-//  ChatListResponseBodyDTO.swift
+//  ChatListResponseDTO.swift
 //  CONTACTO-iOS
 //
 //  Created by 정채은 on 11/9/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ChatListResponseBodyDTO: Codable {
+struct ChatListResponseDTO: Codable {
     let id: Int
     let title: String
     let participants: [Int]
