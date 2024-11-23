@@ -17,7 +17,7 @@ struct ChatRoomResponseDTO: Codable {
 
 struct Message: Codable {
     let content: String
-    let senderID: Int
+    let senderId: Int
     let createdAt: String
     let readStatus: Bool
 }

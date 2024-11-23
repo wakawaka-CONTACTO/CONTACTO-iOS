@@ -68,7 +68,7 @@ final class ChatRoomView: BaseView {
         }
         
         nameLabel.do {
-            $0.text = "Contacto Manager"
+            $0.text = " "
             $0.textColor = .ctblack
             $0.font = .fontContacto(.button4)
         }

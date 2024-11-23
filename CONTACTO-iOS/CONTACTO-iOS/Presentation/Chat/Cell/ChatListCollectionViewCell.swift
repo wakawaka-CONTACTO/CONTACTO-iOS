@@ -108,7 +108,7 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configCell(data: ChatListResponseBodyDTO) {
+    func configCell(data: ChatListResponseDTO) {
         nameLabel.text = data.title
         messageLabel.text = data.latestMessageContent
         profileImageView.kfSetImage(url: data.chatRoomThumbnail)

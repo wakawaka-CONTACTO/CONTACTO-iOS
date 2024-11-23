@@ -11,7 +11,7 @@ import SnapKit
 import Then
 
 final class ChatRoomMyCollectionViewCell: UICollectionViewCell {
-    let yourMessageLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
+    let myMessageLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10))
     let timeLabel = UILabel()
     
     override init(frame: CGRect) {
@@ -29,11 +29,11 @@ final class ChatRoomMyCollectionViewCell: UICollectionViewCell {
     }
     
     private func setStyle() {
-        yourMessageLabel.do {
+        myMessageLabel.do {
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.backgroundColor = .ctmainblue
             $0.font = .fontContacto(.caption8)
-            $0.text = "Welcome to Contacto! If you have a problem using contacto, you can chat anytime this room."
+            $0.text = ""
             $0.textAlignment = .left
             $0.lineBreakMode = .byCharWrapping
             $0.textColor = .ctblack
@@ -41,25 +41,32 @@ final class ChatRoomMyCollectionViewCell: UICollectionViewCell {
         }
         
         timeLabel.do {
-            $0.text = "22:39"
+            $0.text = ""
             $0.font = .fontContacto(.caption9)
             $0.textColor = .ctblack
         }
     }
     
     private func setLayout() {
-        self.addSubviews(yourMessageLabel,
+        self.addSubviews(myMessageLabel,
                          timeLabel)
         
-        yourMessageLabel.snp.makeConstraints {
+        myMessageLabel.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(16)
             $0.top.bottom.equalToSuperview()
             $0.width.lessThanOrEqualTo(230)
         }
         
         timeLabel.snp.makeConstraints {
-            $0.trailing.equalTo(yourMessageLabel.snp.leading).offset(-3)
-            $0.bottom.equalTo(yourMessageLabel)
+            $0.trailing.equalTo(myMessageLabel.snp.leading).offset(-3)
+            $0.bottom.equalTo(myMessageLabel)
+        }
+    }
+    
+    func configMyChatCell(data: Message) {
+        myMessageLabel.text = data.content
+        if let time = data.createdAt.toTimeIn24HourFormat() {
+            timeLabel.text = time
         }
     }
 }

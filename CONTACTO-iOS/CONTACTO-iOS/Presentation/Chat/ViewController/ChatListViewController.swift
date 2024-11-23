@@ -11,7 +11,7 @@ import SnapKit
 import Then
 
 final class ChatListViewController: BaseViewController {
-    var chatRoomListData: [ChatListResponseBodyDTO] = []
+    var chatRoomListData: [ChatListResponseDTO] = []
     let chatListView = ChatListView()
     let chatEmptyView = ChatEmptyView()
     

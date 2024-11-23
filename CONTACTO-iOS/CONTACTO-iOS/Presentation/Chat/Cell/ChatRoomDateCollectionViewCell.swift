@@ -44,4 +44,10 @@ final class ChatRoomDateCollectionViewCell: UICollectionViewCell {
             $0.center.equalToSuperview()
         }
     }
+    
+    func configCell(date: String) {
+        if let formattedDate = date.toCustomDateFormat() {
+            dateLabel.text = formattedDate
+        }
+    }
 }

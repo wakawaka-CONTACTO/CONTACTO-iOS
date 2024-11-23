@@ -25,4 +25,54 @@ extension String {
     func isOnlyWhitespace() -> Bool {
         return self.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
+    
+    /// 2024-11-18T00:32:21.750245 -> 00:32
+    func toTimeIn24HourFormat() -> String? {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        guard let date = isoFormatter.date(from: self) else {
+            return nil
+        }
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        
+        return timeFormatter.string(from: date)
+    }
+    
+    /// 두 날짜 비교 후 다르다면 true
+    func isDateDifferent(from otherDateString: String) -> Bool? {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        guard let date1 = isoFormatter.date(from: self) else {
+            return nil
+        }
+        
+        guard let date2 = isoFormatter.date(from: otherDateString) else {
+            return nil
+        }
+        
+        let calendar = Calendar.current
+        let isDifferent = !calendar.isDate(date1, inSameDayAs: date2)
+        
+        return isDifferent
+    }
+    
+    /// NOV.19.2024
+    func toCustomDateFormat() -> String? {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        guard let date = isoFormatter.date(from: self) else {
+            return nil
+        }
+        
+        let customFormatter = DateFormatter()
+        customFormatter.dateFormat = "MMM.dd.yyyy"
+        customFormatter.locale = Locale(identifier: "en_US")
+        
+        return customFormatter.string(from: date).uppercased()
+    }
 }
