@@ -18,6 +18,12 @@ final class MainTabBarViewController: UITabBarController {
     let chatViewController = ChatListViewController()
     let editViewController = EditViewController()
     let infoViewController = InfoViewController()
+    
+    private var hasChatNotification: Bool = false {
+        didSet {
+            updateChatTabIcon()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +45,7 @@ final class MainTabBarViewController: UITabBarController {
         self.navigationController?.navigationBar.isHidden = true
         setTabs()
         setTabBarItems()
+        updateChatTabIcon()
     }
     
     private func setNotification() {
@@ -48,7 +55,24 @@ final class MainTabBarViewController: UITabBarController {
             name: NSNotification.Name("moveToChat"),
             object: nil
         )
-
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleChatNotification(_:)),
+            name: NSNotification.Name("newChatNotification"),
+            object: nil
+        )
+    }
+    
+    private func updateChatTabIcon() {
+        guard let chatTab = tabsList[1].tabBarItem else { return }
+        
+        if hasChatNotification {
+            chatTab.image = .chatnew
+            chatTab.selectedImage = .chatnewSelected
+        } else {
+            chatTab.image = .chat
+            chatTab.selectedImage = .chatSelected
+        }
     }
     
     private func setTabBarAppearance() {
@@ -88,6 +112,12 @@ final class MainTabBarViewController: UITabBarController {
     
     @objc private func moveToChat(_ notification: Notification) {
         self.selectedIndex = 1
+    }
+    
+    @objc private func handleChatNotification(_ notification: Notification) {
+        if let unreadCount = notification.userInfo?["hasUnreadMessages"] as? Bool {
+            hasChatNotification = unreadCount
+        }
     }
 }
 
