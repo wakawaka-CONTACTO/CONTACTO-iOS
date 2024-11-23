@@ -29,7 +29,7 @@ extension String {
     /// 2024-11-18T00:32:21.750245 -> 00:32
     func toTimeIn24HourFormat() -> String? {
         let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        isoFormatter.formatOptions = [.withFullDate, .withTime, .withColonSeparatorInTime]
         
         guard let date = isoFormatter.date(from: self) else {
             return nil
@@ -44,7 +44,7 @@ extension String {
     /// 두 날짜 비교 후 다르다면 true
     func isDateDifferent(from otherDateString: String) -> Bool? {
         let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        isoFormatter.formatOptions = [.withFullDate, .withTime, .withColonSeparatorInTime]
         
         guard let date1 = isoFormatter.date(from: self) else {
             return nil
@@ -63,7 +63,7 @@ extension String {
     /// NOV.19.2024
     func toCustomDateFormat() -> String? {
         let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        isoFormatter.formatOptions = [.withFullDate, .withTime, .withColonSeparatorInTime]
         
         guard let date = isoFormatter.date(from: self) else {
             return nil
