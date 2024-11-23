@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C314354B2C9930ED001E4BC1 /* TabBarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = C314354A2C9930ED001E4BC1 /* TabBarItems.swift */; };
+		C320E88E2CF22A3E0098AC1D /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C320E88D2CF22A3E0098AC1D /* UserInfo.swift */; };
 		C32D06F52CE633260016F497 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C32D06F42CE633260016F497 /* Kingfisher */; };
 		C32D06F72CE633340016F497 /* UIImageView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F62CE633340016F497 /* UIImageView+.swift */; };
 		C32D06F92CE63CC30016F497 /* DetailRequestQueryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */; };
@@ -138,6 +139,7 @@
 
 /* Begin PBXFileReference section */
 		C314354A2C9930ED001E4BC1 /* TabBarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItems.swift; sourceTree = "<group>"; };
+		C320E88D2CF22A3E0098AC1D /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		C32D06F62CE633340016F497 /* UIImageView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
 		C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRequestQueryDTO.swift; sourceTree = "<group>"; };
 		C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeaderFieldKey.swift; sourceTree = "<group>"; };
@@ -854,6 +856,7 @@
 				C33D73D92CDEEF4900889B1B /* Config.swift */,
 				C3FD90412C9139D70021D2BA /* Assets.xcassets */,
 				C3FD90462C9139D70021D2BA /* Info.plist */,
+				C320E88D2CF22A3E0098AC1D /* UserInfo.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1143,6 +1146,7 @@
 				C3F574FE2CC4096700440D98 /* InfoViewController.swift in Sources */,
 				C3E88C7B2C92A93F005A19BE /* SNSOnboardingViewController.swift in Sources */,
 				C3AEC29E2C943B7800E2DED9 /* BaseTextField.swift in Sources */,
+				C320E88E2CF22A3E0098AC1D /* UserInfo.swift in Sources */,
 				C3FD90932C917F2F0021D2BA /* NameOnboardingView.swift in Sources */,
 				C34C1F582CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift in Sources */,
 				C393A6172C941FFA00ECF1B5 /* MainTabBarViewController.swift in Sources */,
