@@ -14,12 +14,15 @@ import Then
 final class ChatRoomViewController: BaseViewController {
     
     var chatRoomId = 0
+    var participants: [Int] = []
+    var chatList: [Message] = []
     var isKeyboardShow = false
     let chatRoomView = ChatRoomView()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.addKeyboardNotifications()
+        self.setData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -61,6 +64,29 @@ final class ChatRoomViewController: BaseViewController {
         chatRoomView.chatRoomCollectionView.register(ChatRoomDateCollectionViewCell.self, forCellWithReuseIdentifier: ChatRoomDateCollectionViewCell.className)
         chatRoomView.chatRoomCollectionView.register(ChatRoomYourCollectionViewCell.self, forCellWithReuseIdentifier: ChatRoomYourCollectionViewCell.className)
         chatRoomView.chatRoomCollectionView.register(ChatRoomMyCollectionViewCell.self, forCellWithReuseIdentifier: ChatRoomMyCollectionViewCell.className)
+    }
+    
+    private func setData() {
+        chatRoomMessage(roomId: chatRoomId) { _ in
+            self.chatRoomView.chatRoomCollectionView.reloadData()
+            // scroll to bottom
+        }
+    }
+    
+    private func chatRoomMessage(roomId: Int, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.chatService.chatRoomMessage(roomId: roomId) { [weak self] response in
+            switch response {
+            case .success(let data):
+                self?.chatRoomId = data.id
+                self?.participants = data.participants
+                self?.chatList = data.messages
+                self?.chatRoomView.nameLabel.text = data.title
+                self?.chatRoomView.profileImageView.kfSetImage(url: data.chatRoomThumbnail)
+                completion(true)
+            default:
+                completion(false)
+            }
+        }
     }
 }
 
@@ -154,30 +180,62 @@ extension ChatRoomViewController {
         
         return offsetY >= contentHeight - height
     }
+    
+    func calculateCellCount() -> Int {
+        var cellCount = 0
+        
+        for i in 0..<chatList.count {
+            if i == 0 || (chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
+                cellCount += 1
+            }
+            cellCount += 1
+        }
+        
+        return cellCount
+    }
 }
 
 extension ChatRoomViewController: UICollectionViewDelegate { }
 
 extension ChatRoomViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 30
+        print(calculateCellCount())
+        return calculateCellCount()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item % 3 == 0 {
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: ChatRoomDateCollectionViewCell.className,
-                for: indexPath) as? ChatRoomDateCollectionViewCell else { return UICollectionViewCell() }
-            return cell
-        } else if indexPath.item % 3 == 1 {
+        var messageIndex = 0
+        var cellCount = 0
+        
+        for i in 0..<chatList.count {
+            if i == 0 || (chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
+                if cellCount == indexPath.row {
+                    guard let dateCell = collectionView.dequeueReusableCell(
+                        withReuseIdentifier: ChatRoomDateCollectionViewCell.className,
+                        for: indexPath) as? ChatRoomDateCollectionViewCell else { return UICollectionViewCell() }
+                    dateCell.configCell(date: chatList[i].createdAt)
+                    return dateCell
+                }
+                cellCount += 1
+            }
+            if cellCount == indexPath.row {
+                messageIndex = i
+                break
+            }
+            cellCount += 1
+        }
+
+        if participants.contains(chatList[messageIndex].senderId) {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ChatRoomYourCollectionViewCell.className,
                 for: indexPath) as? ChatRoomYourCollectionViewCell else { return UICollectionViewCell() }
+            cell.configYourChatCell(data: chatList[messageIndex])
             return cell
         } else {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ChatRoomMyCollectionViewCell.className,
                 for: indexPath) as? ChatRoomMyCollectionViewCell else { return UICollectionViewCell() }
+            cell.configMyChatCell(data: chatList[messageIndex])
             return cell
         }
     }
@@ -185,11 +243,23 @@ extension ChatRoomViewController: UICollectionViewDataSource {
 
 extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.item % 3 == 0 {
-            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 28.adjustedHeight)
-        } else {
-            return CGSize(width: SizeLiterals.Screen.screenWidth, height: 27)
+        var messageIndex = 0
+        var cellCount = 0
+        
+        for i in 0..<chatList.count {
+            if i == 0 || (chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
+                if cellCount == indexPath.row {
+                    return CGSize(width: SizeLiterals.Screen.screenWidth, height: 28.adjustedHeight)
+                }
+                cellCount += 1
+            }
+            if cellCount == indexPath.row {
+                messageIndex = i
+                break
+            }
+            cellCount += 1
         }
+        return CGSize(width: SizeLiterals.Screen.screenWidth, height: 27)
     }
 }
 

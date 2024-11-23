@@ -63,7 +63,7 @@ final class ChatRoomYourCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configMyChatCell(data: Message) {
+    func configYourChatCell(data: Message) {
         yourMessageLabel.text = data.content
         if let time = data.createdAt.toTimeIn24HourFormat() {
             timeLabel.text = time

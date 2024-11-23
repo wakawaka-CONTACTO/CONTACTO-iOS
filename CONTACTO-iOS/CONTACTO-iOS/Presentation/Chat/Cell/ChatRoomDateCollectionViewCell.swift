@@ -30,7 +30,7 @@ final class ChatRoomDateCollectionViewCell: UICollectionViewCell {
     
     private func setStyle() {
         dateLabel.do {
-            $0.text = "SEP.19.2024"
+            $0.text = " "
             $0.font = .fontContacto(.caption2)
             $0.textColor = .ctblack
         }
