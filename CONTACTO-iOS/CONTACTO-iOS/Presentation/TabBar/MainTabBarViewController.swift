@@ -67,11 +67,11 @@ final class MainTabBarViewController: UITabBarController {
         guard let chatTab = tabsList[1].tabBarItem else { return }
         
         if hasChatNotification {
-            chatTab.image = .chatnew
-            chatTab.selectedImage = .chatnewSelected
+            chatTab.image = UIImage(resource: .chatnew)
+            chatTab.selectedImage = UIImage(resource: .chatnewSelected).withRenderingMode(.alwaysOriginal)
         } else {
-            chatTab.image = .chat
-            chatTab.selectedImage = .chatSelected
+            chatTab.image = UIImage(resource: .chat)
+            chatTab.selectedImage = UIImage(resource: .chatSelected).withRenderingMode(.alwaysOriginal)
         }
     }
     
