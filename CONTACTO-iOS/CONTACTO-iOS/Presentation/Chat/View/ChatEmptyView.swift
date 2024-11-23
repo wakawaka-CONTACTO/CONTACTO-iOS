@@ -23,6 +23,7 @@ final class ChatEmptyView: BaseView {
         titleLabel.do {
             $0.text = StringLiterals.Chat.Empty.title
             $0.font = .fontContacto(.title6)
+            $0.asLineHeight(.title6)
             $0.textColor = .ctblack
             $0.numberOfLines = 0
             $0.textAlignment = .center

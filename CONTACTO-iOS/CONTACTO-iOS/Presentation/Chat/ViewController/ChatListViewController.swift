@@ -70,6 +70,17 @@ final class ChatListViewController: BaseViewController {
         self.navigationController?.pushViewController(chatRoomViewController, animated: true)
     }
     
+    @objc private func pushToChatRoom(_ sender: UITapGestureRecognizer) {
+        guard let cell = sender.view as? ChatListCollectionViewCell,
+              let indexPath = chatListView.chatListCollectionView.indexPath(for: cell) else { return }
+        let id = chatRoomListData[indexPath.row].id
+        let chatRoomViewController = ChatRoomViewController()
+        chatRoomViewController.hidesBottomBarWhenPushed = true
+        chatRoomViewController.chatRoomId = id
+        print(chatRoomViewController.chatRoomId)
+        self.navigationController?.pushViewController(chatRoomViewController, animated: true)
+    }
+
     private func chatRoomList(completion: @escaping (Bool) -> Void) {
         NetworkService.shared.chatService.chatRoomList { [weak self] response in
             switch response {
@@ -95,7 +106,7 @@ extension ChatListViewController: UICollectionViewDataSource {
             withReuseIdentifier: ChatListCollectionViewCell.className,
             for: indexPath) as? ChatListCollectionViewCell else { return UICollectionViewCell() }
         cell.configCell(data: chatRoomListData[indexPath.row])
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushToChatRoom))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushToChatRoom(_:)))
         cell.addGestureRecognizer(tapGesture)
         return cell
     }

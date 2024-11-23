@@ -13,6 +13,7 @@ import Then
 
 final class ChatRoomViewController: BaseViewController {
     
+    var chatRoomId = 0
     var isKeyboardShow = false
     let chatRoomView = ChatRoomView()
     
