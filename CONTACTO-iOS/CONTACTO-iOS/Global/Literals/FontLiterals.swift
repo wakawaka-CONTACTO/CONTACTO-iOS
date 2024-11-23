@@ -25,6 +25,7 @@ enum FontLevel {
     case title3
     case title4
     case title5
+    case title6
     
     case body1
     case body2
@@ -54,6 +55,7 @@ enum FontLevel {
     case title
     case subTitle
     case chat
+    case body
 }
 
 extension FontLevel {
@@ -68,12 +70,12 @@ extension FontLevel {
             return FontName.ABCDiatypeBoldItalic.rawValue
         case .caption6, .caption7, .caption9:
             return FontName.ABCDiatypeRegular.rawValue
-        case .button1, .button4, .title3, .button6, .title4, .title5, .button7:
+        case .button1, .button4, .title3, .button6, .title4, .title5, .button7, .title6:
             return FontName.FKRasterRomanBlended.rawValue
         case .caption4, .caption5, .caption8, .caption10:
             return FontName.PretendardRegular.rawValue
             
-        case .button, .subTitle:
+        case .button, .subTitle, .body:
             return FontName.ABCDiatypeBold.rawValue
             
         case .title:
@@ -114,10 +116,12 @@ extension FontLevel {
             return 25.adjusted
         case .title5:
             return 23.adjusted
+        case .title6:
+            return 100.adjusted
             
         case .button:
             return 16.adjusted
-        case .title:
+        case .title, .body:
             return 20.adjusted
         case .subTitle:
             return 13.adjusted
@@ -138,13 +142,19 @@ extension FontLevel {
             return FontLevel.button3.fontSize * 1.3
         case .title3, .caption9:
             return FontLevel.title3.fontSize
+        case .title6:
+            return FontLevel.title6.fontSize
             
         case .button:
             return FontLevel.button.fontSize * 1.5
-        case .title, .chat:
-            return FontLevel.button.fontSize * 1.35
+        case .title:
+            return FontLevel.title.fontSize * 1.35
+        case .chat:
+            return FontLevel.chat.fontSize * 1.35
         case .subTitle:
-            return FontLevel.button.fontSize * 1.3
+            return FontLevel.subTitle.fontSize * 1.3
+        case .body:
+            return FontLevel.body.fontSize * 1.3
         }
     }
 }

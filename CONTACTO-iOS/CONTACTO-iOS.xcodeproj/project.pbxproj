@@ -36,7 +36,7 @@
 		C33D74022CDEF1D500889B1B /* EditRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74012CDEF1D500889B1B /* EditRequestBodyDTO.swift */; };
 		C33D74082CDEF1F100889B1B /* EditTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74072CDEF1F100889B1B /* EditTarget.swift */; };
 		C33D740D2CDEF20D00889B1B /* ChatRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D740C2CDEF20D00889B1B /* ChatRequestBodyDTO.swift */; };
-		C33D74102CDEF21900889B1B /* ChatResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D740F2CDEF21900889B1B /* ChatResponseDTO.swift */; };
+		C33D74102CDEF21900889B1B /* ChatListResponseBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D740F2CDEF21900889B1B /* ChatListResponseBodyDTO.swift */; };
 		C33D74132CDEF23900889B1B /* ChatTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74122CDEF23900889B1B /* ChatTarget.swift */; };
 		C33D74172CDEF25600889B1B /* DeleteRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74162CDEF25600889B1B /* DeleteRequestBodyDTO.swift */; };
 		C33D74192CDEF25E00889B1B /* DeleteResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74182CDEF25E00889B1B /* DeleteResponseDTO.swift */; };
@@ -163,7 +163,7 @@
 		C33D74012CDEF1D500889B1B /* EditRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C33D74072CDEF1F100889B1B /* EditTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTarget.swift; sourceTree = "<group>"; };
 		C33D740C2CDEF20D00889B1B /* ChatRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRequestBodyDTO.swift; sourceTree = "<group>"; };
-		C33D740F2CDEF21900889B1B /* ChatResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatResponseDTO.swift; sourceTree = "<group>"; };
+		C33D740F2CDEF21900889B1B /* ChatListResponseBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListResponseBodyDTO.swift; sourceTree = "<group>"; };
 		C33D74122CDEF23900889B1B /* ChatTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTarget.swift; sourceTree = "<group>"; };
 		C33D74162CDEF25600889B1B /* DeleteRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C33D74182CDEF25E00889B1B /* DeleteResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteResponseDTO.swift; sourceTree = "<group>"; };
@@ -474,7 +474,7 @@
 		C33D740E2CDEF21100889B1B /* Response */ = {
 			isa = PBXGroup;
 			children = (
-				C33D740F2CDEF21900889B1B /* ChatResponseDTO.swift */,
+				C33D740F2CDEF21900889B1B /* ChatListResponseBodyDTO.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -1145,7 +1145,7 @@
 				C393A6172C941FFA00ECF1B5 /* MainTabBarViewController.swift in Sources */,
 				C3FD90592C9142880021D2BA /* adjust+.swift in Sources */,
 				C33D73D32CDEEEA300889B1B /* APIRequestLoader.swift in Sources */,
-				C33D74102CDEF21900889B1B /* ChatResponseDTO.swift in Sources */,
+				C33D74102CDEF21900889B1B /* ChatListResponseBodyDTO.swift in Sources */,
 				C33D73D72CDEEEBE00889B1B /* ContactoRequestInterceptor.swift in Sources */,
 				C3B95CF32C9C08B7002A4681 /* ProfileTalentCollectionViewCell.swift in Sources */,
 				C3E88C8A2C92E661005A19BE /* PortfolioOnboardingView.swift in Sources */,

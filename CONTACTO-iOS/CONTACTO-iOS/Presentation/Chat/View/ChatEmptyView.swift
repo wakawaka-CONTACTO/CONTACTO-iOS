@@ -22,7 +22,7 @@ final class ChatEmptyView: BaseView {
         
         titleLabel.do {
             $0.text = StringLiterals.Chat.Empty.title
-            $0.font = .fontContacto(.title1)
+            $0.font = .fontContacto(.title6)
             $0.textColor = .ctblack
             $0.numberOfLines = 0
             $0.textAlignment = .center
@@ -30,7 +30,7 @@ final class ChatEmptyView: BaseView {
         
         descriptionLabel.do {
             $0.text = StringLiterals.Chat.Empty.description
-            $0.font = .fontContacto(.body2)
+            $0.font = .fontContacto(.body)
             $0.textColor = .ctblack
             $0.numberOfLines = 0
             $0.textAlignment = .center
