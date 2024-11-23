@@ -12,11 +12,9 @@ import Then
 
 final class ChatRoomView: BaseView {
     
-    var isFirstChat = true {
+    var isFirstChat = false {
         didSet {
-            if !isFirstChat {
-                disclaimerView.removeFromSuperview()
-            }
+            fadeoutDisclaimer()
         }
     }
     
@@ -43,10 +41,13 @@ final class ChatRoomView: BaseView {
     
     func fadeoutDisclaimer() {
         if isFirstChat {
+            disclaimerView.isHidden = false
             UIView.animate(withDuration: 5.0, animations: {
                 self.disclaimerView.alpha = 0.0
+            }, completion: { _ in
+                self.disclaimerView.removeFromSuperview()
+                self.isFirstChat.toggle()
             })
-            disclaimerView.removeFromSuperview()
         }
     }
     
@@ -117,6 +118,7 @@ final class ChatRoomView: BaseView {
         disclaimerView.do {
             $0.backgroundColor = .ctsubgreen2
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            $0.isHidden = true
         }
         
         disclaimerTitleLabel.do {

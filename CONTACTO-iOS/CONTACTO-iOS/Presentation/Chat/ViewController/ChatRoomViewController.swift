@@ -33,7 +33,6 @@ final class ChatRoomViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
-        chatRoomView.fadeoutDisclaimer()
     }
     
     override func setNavigationBar() {
@@ -80,6 +79,8 @@ final class ChatRoomViewController: BaseViewController {
                 self?.chatRoomId = data.id
                 self?.participants = data.participants
                 self?.chatList = data.messages
+                self?.chatRoomView.isFirstChat = data.messages.isEmpty
+                
                 self?.chatRoomView.nameLabel.text = data.title
                 self?.chatRoomView.profileImageView.kfSetImage(url: data.chatRoomThumbnail)
                 completion(true)
