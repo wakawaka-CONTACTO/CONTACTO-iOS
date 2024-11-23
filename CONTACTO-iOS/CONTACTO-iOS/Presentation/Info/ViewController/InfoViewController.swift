@@ -14,6 +14,11 @@ import Then
 final class InfoViewController: BaseViewController {
     private let infoView = InfoView()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        checkMyPort { _ in }
+    }
+    
     override func setNavigationBar() {
         self.navigationController?.navigationBar.isHidden = true
     }
@@ -36,6 +41,20 @@ final class InfoViewController: BaseViewController {
         infoView.cookieButton.addTarget(self, action: #selector(cookieButtonTapped), for: .touchUpInside)
         infoView.logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         infoView.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+    }
+    
+    private func checkMyPort(completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.editService.checkMyPort { [weak self] response in
+            switch response {
+            case .success(let data):
+                self?.infoView.emailLabel.text = data.email
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
     }
 }
 

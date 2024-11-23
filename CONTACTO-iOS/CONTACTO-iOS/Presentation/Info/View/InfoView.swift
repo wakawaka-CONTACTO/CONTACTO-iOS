@@ -61,7 +61,7 @@ final class InfoView: BaseView {
         }
         
         emailLabel.do {
-            $0.text = "contacto@wakawaka.kr"
+            $0.text = " "
             $0.textColor = .ctblack
             $0.font = .fontContacto(.button1)
         }

@@ -174,7 +174,7 @@ final class EditViewController: UIViewController {
         
         let dispatchGroup = DispatchGroup()
         
-        portfolioData.userPortfolio.portfolioImages.forEach { url in
+        portfolioData.userPortfolio?.portfolioImages.forEach { url in
             guard let imageUrl = URL(string: url) else { return }
             
             dispatchGroup.enter() // 작업 시작

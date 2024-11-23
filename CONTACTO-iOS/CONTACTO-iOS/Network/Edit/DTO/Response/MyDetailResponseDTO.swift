@@ -15,7 +15,7 @@ struct MyDetailResponseDTO: Codable {
     let loginType, email: String
     var webUrl: String?
     let password: String?
-    var userPortfolio: UserPortfolio
+    var userPortfolio: UserPortfolio?
     var userPurposes: [Int]
     var userTalents: [UserTalent]
 }
