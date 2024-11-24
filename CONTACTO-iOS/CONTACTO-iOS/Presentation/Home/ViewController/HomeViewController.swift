@@ -192,6 +192,7 @@ extension HomeViewController {
     private func setData() {
         if !isPreview {
             imageDummy = [.imgex1, .imgex2, .imgex3, .imgex4, .imgex1, .imgex2, .imgex3, .imgex4, .imgex3, .imgex4]
+            homeList { _ in }
         } else {
             homeView.profileNameLabel.text = portfolioData.username
         }
@@ -201,6 +202,19 @@ extension HomeViewController {
     private func setPortImage() {
         if num < imageDummy.count {
             homeView.portImageView.image = imageDummy[self.num]
+        }
+    }
+    
+    private func homeList(completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.homeService.homeList { [weak self] response in
+            switch response {
+            case .success(let data):
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
         }
     }
     
