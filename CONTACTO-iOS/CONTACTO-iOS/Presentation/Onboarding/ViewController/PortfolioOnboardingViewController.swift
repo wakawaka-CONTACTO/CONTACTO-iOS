@@ -41,8 +41,11 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
-        let mainTabBarViewController = MainTabBarViewController()
-        navigationController?.pushViewController(mainTabBarViewController, animated: true)
+//        signup(bodyDTO: <#T##SignUpRequestBodyDTO#>) { _ in
+            let mainTabBarViewController = MainTabBarViewController()
+            mainTabBarViewController.homeViewController.isFirst = true
+            navigationController?.pushViewController(mainTabBarViewController, animated: true)
+//        }
     }
     
     private func setCollectionView() {
@@ -65,6 +68,19 @@ final class PortfolioOnboardingViewController: BaseViewController {
         configuration.selection = .ordered
         self.present(picker, animated: true, completion: nil)
         picker.delegate = self
+    }
+    
+    private func signup(bodyDTO: SignUpRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.signup(bodyDTO: bodyDTO) { [weak self] response in
+            switch response {
+            case .success(let data):
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
     }
 }
 

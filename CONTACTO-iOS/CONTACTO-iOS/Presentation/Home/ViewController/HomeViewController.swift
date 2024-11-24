@@ -12,6 +12,7 @@ import Then
 
 final class HomeViewController: BaseViewController {
     
+    var isFirst = false
     var isPreview = false
     var portUserId = 0
     var isMatch = false
@@ -108,9 +109,12 @@ final class HomeViewController: BaseViewController {
         homeView.backView.addGestureRecognizer(backTapGestureRecognizer)
         homeView.nextView.addGestureRecognizer(nextTapGestureRecognizer)
         
-        // if 처음이라면
-        let tutorialTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tutorialTap(_:)))
-        tutorialView.addGestureRecognizer(tutorialTapGestureRecognizer)
+        if isFirst {
+            let tutorialTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tutorialTap(_:)))
+            tutorialView.addGestureRecognizer(tutorialTapGestureRecognizer)
+        } else {
+            homeView.isHidden = false
+        }
     }
     
     private func setCollectionView() {

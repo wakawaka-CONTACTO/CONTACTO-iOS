@@ -37,4 +37,19 @@ final class LoginViewController: BaseViewController {
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
+    
+    
+    // MARK: - Network
+    private func login(bodyDTO: LoginRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.login(bodyDTO: bodyDTO) { [weak self] response in
+            switch response {
+            case .success(let data):
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
 }
