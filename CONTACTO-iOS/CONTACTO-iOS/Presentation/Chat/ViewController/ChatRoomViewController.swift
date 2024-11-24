@@ -118,9 +118,17 @@ extension ChatRoomViewController {
                 $0.height.equalTo(62.adjustedHeight)
             }
             
-            self.chatRoomView.chatRoomCollectionView.snp.remakeConstraints {
-                $0.top.leading.trailing.equalToSuperview()
-                $0.bottom.equalTo(chatRoomView.bottomView.snp.top)
+            if self.isAtBottom() {
+                self.chatRoomView.chatRoomCollectionView.snp.remakeConstraints {
+                    $0.top.leading.trailing.equalToSuperview()
+                    $0.bottom.equalTo(chatRoomView.bottomView.snp.top)
+                }
+                // 레이아웃 변경 후 스크롤 이동
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                    self.view.layoutIfNeeded()
+                }) { _ in
+                    self.scrollToBottom()
+                }
             }
             
             if !isKeyboardShow {
@@ -129,15 +137,6 @@ extension ChatRoomViewController {
                 }, completion: nil)
             } else {
                 self.view.layoutIfNeeded()
-            }
-            
-            // 레이아웃 변경 후 스크롤 이동
-            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
-                self.view.layoutIfNeeded()
-            }) { _ in
-                if self.isAtBottom() {
-                    self.scrollToBottom()
-                }
             }
             
             isKeyboardShow = true
