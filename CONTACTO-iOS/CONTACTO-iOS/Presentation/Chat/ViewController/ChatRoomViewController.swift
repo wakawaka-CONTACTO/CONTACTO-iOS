@@ -68,7 +68,7 @@ final class ChatRoomViewController: BaseViewController {
     private func setData() {
         chatRoomMessage(roomId: chatRoomId) { _ in
             self.chatRoomView.chatRoomCollectionView.reloadData()
-            // scroll to bottom
+            self.scrollToBottom()
         }
     }
     
@@ -117,16 +117,27 @@ extension ChatRoomViewController {
                 $0.leading.trailing.equalToSuperview()
                 $0.height.equalTo(62.adjustedHeight)
             }
-            // 가장 아래에 있을 때 bottom scroll 추후
-//            if self.isAtBottom() {
-//                self.scrollToBottom()
-//            }
+            
+            self.chatRoomView.chatRoomCollectionView.snp.remakeConstraints {
+                $0.top.leading.trailing.equalToSuperview()
+                $0.bottom.equalTo(chatRoomView.bottomView.snp.top)
+            }
+            
             if !isKeyboardShow {
                 UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
                     self.view.layoutIfNeeded()
                 }, completion: nil)
             } else {
                 self.view.layoutIfNeeded()
+            }
+            
+            // 레이아웃 변경 후 스크롤 이동
+            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+                self.view.layoutIfNeeded()
+            }) { _ in
+                if self.isAtBottom() {
+                    self.scrollToBottom()
+                }
             }
             
             isKeyboardShow = true
@@ -162,10 +173,9 @@ extension ChatRoomViewController {
     
     @objc private func sendButtonTapped() {
         chatRoomView.messageTextView.text = ""
-        scrollToBottom() // 확인필요
+        scrollToBottom()
     }
     
-    // 채팅방 진입 시 가장 bottom에 있도록, 채팅 숫자 적을 때도 확인 필요
     private func scrollToBottom() {
         let itemCount = chatRoomView.chatRoomCollectionView.numberOfItems(inSection: 0)
         if itemCount > 0 {
@@ -177,10 +187,11 @@ extension ChatRoomViewController {
     private func isAtBottom() -> Bool {
         let offsetY = chatRoomView.chatRoomCollectionView.contentOffset.y
         let contentHeight = chatRoomView.chatRoomCollectionView.contentSize.height
-        let height = chatRoomView.chatRoomCollectionView.frame.size.height
+        let height = chatRoomView.chatRoomCollectionView.bounds.height
         
         return offsetY >= contentHeight - height
     }
+
     
     func calculateCellCount() -> Int {
         var cellCount = 0
