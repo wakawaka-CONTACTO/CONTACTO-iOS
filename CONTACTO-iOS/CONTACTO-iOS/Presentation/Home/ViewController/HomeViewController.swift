@@ -34,6 +34,10 @@ final class HomeViewController: BaseViewController {
     var imageDummy: [UIImage] = []
     let homeView = HomeView()
     
+    let tutorialImageDummy: [UIImage] = [.imgTutorial1, .imgTutorial2, .imgTutorial3, .imgTutorial4]
+    var tutorialNum = 0
+    let tutorialView = UIImageView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setPanAction()
@@ -52,15 +56,32 @@ final class HomeViewController: BaseViewController {
         self.navigationController?.navigationBar.isHidden = true
     }
     
+    override func setStyle() {
+        tutorialView.do {
+            $0.image = tutorialImageDummy[tutorialNum]
+            $0.isUserInteractionEnabled = true
+        }
+        
+        homeView.do {
+            $0.isHidden = true
+        }
+    }
+    
     override func setLayout() {
         let safeAreaHeight = view.safeAreaInsets.bottom
         let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
         
         view.addSubviews(homeView)
+        UIApplication.shared.keyWindow?.addSubviews(tutorialView)
         
         homeView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
+        }
+        
+        tutorialView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.center.equalToSuperview()
         }
     }
     
@@ -86,6 +107,10 @@ final class HomeViewController: BaseViewController {
         
         homeView.backView.addGestureRecognizer(backTapGestureRecognizer)
         homeView.nextView.addGestureRecognizer(nextTapGestureRecognizer)
+        
+        // if 처음이라면
+        let tutorialTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tutorialTap(_:)))
+        tutorialView.addGestureRecognizer(tutorialTapGestureRecognizer)
     }
     
     private func setCollectionView() {
@@ -119,6 +144,16 @@ extension HomeViewController {
             num = 0
         } else {
             num += 1
+        }
+    }
+    
+    @objc private func tutorialTap(_ sender: UITapGestureRecognizer) {
+        if tutorialNum < 4 {
+            tutorialView.image = tutorialImageDummy[tutorialNum]
+            tutorialNum += 1
+        } else if tutorialNum == 4 {
+            tutorialView.removeFromSuperview()
+            homeView.isHidden = false
         }
     }
     
