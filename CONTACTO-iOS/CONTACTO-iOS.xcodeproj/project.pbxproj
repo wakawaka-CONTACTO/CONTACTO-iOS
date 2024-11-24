@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */; };
+		C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */; };
+		C30C2E462CF2F79600FAE056 /* SignUpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */; };
+		C30C2E482CF2FA2000FAE056 /* SignUpResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E472CF2FA2000FAE056 /* SignUpResponseDTO.swift */; };
 		C314354B2C9930ED001E4BC1 /* TabBarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = C314354A2C9930ED001E4BC1 /* TabBarItems.swift */; };
 		C320E88E2CF22A3E0098AC1D /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C320E88D2CF22A3E0098AC1D /* UserInfo.swift */; };
 		C32D06F52CE633260016F497 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C32D06F42CE633260016F497 /* Kingfisher */; };
@@ -26,7 +30,6 @@
 		C33D73DD2CDEEFFD00889B1B /* OnboardingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73DC2CDEEFFD00889B1B /* OnboardingService.swift */; };
 		C33D73E12CDEF03B00889B1B /* OnboardingTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73E02CDEF03B00889B1B /* OnboardingTarget.swift */; };
 		C33D73E62CDEF0A900889B1B /* LoginRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73E52CDEF0A900889B1B /* LoginRequestBodyDTO.swift */; };
-		C33D73E82CDEF0C000889B1B /* LoginResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73E72CDEF0C000889B1B /* LoginResponseDTO.swift */; };
 		C33D73EA2CDEF14600889B1B /* HomeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73E92CDEF14600889B1B /* HomeService.swift */; };
 		C33D73EC2CDEF15300889B1B /* EditService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73EB2CDEF15300889B1B /* EditService.swift */; };
 		C33D73EE2CDEF15800889B1B /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73ED2CDEF15800889B1B /* ChatService.swift */; };
@@ -45,7 +48,6 @@
 		C34C1F562CE38E2800F94BCD /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = C34C1F552CE38E2800F94BCD /* Alamofire */; };
 		C34C1F582CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F572CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift */; };
 		C34C1F5A2CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */; };
-		C34C1F5C2CE39CAD00F94BCD /* SignUpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F5B2CE39CAD00F94BCD /* SignUpRequestBodyDTO.swift */; };
 		C34C1F612CE39F9100F94BCD /* LikeRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F602CE39F9100F94BCD /* LikeRequestBodyDTO.swift */; };
 		C34C1F632CE3A02300F94BCD /* LikeResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F622CE3A02300F94BCD /* LikeResponseDTO.swift */; };
 		C35E26412C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26402C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift */; };
@@ -138,6 +140,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpRequestBodyDTO.swift; sourceTree = "<group>"; };
+		C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpResponseDTO.swift; sourceTree = "<group>"; };
+		C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRequestBodyDTO.swift; sourceTree = "<group>"; };
+		C30C2E472CF2FA2000FAE056 /* SignUpResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpResponseDTO.swift; sourceTree = "<group>"; };
 		C314354A2C9930ED001E4BC1 /* TabBarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItems.swift; sourceTree = "<group>"; };
 		C320E88D2CF22A3E0098AC1D /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		C32D06F62CE633340016F497 /* UIImageView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
@@ -155,7 +161,6 @@
 		C33D73DC2CDEEFFD00889B1B /* OnboardingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingService.swift; sourceTree = "<group>"; };
 		C33D73E02CDEF03B00889B1B /* OnboardingTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTarget.swift; sourceTree = "<group>"; };
 		C33D73E52CDEF0A900889B1B /* LoginRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequestBodyDTO.swift; sourceTree = "<group>"; };
-		C33D73E72CDEF0C000889B1B /* LoginResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponseDTO.swift; sourceTree = "<group>"; };
 		C33D73E92CDEF14600889B1B /* HomeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeService.swift; sourceTree = "<group>"; };
 		C33D73EB2CDEF15300889B1B /* EditService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditService.swift; sourceTree = "<group>"; };
 		C33D73ED2CDEF15800889B1B /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
@@ -174,7 +179,6 @@
 		C34C1F532CE38C3A00F94BCD /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		C34C1F572CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSendRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailCheckRequestBodyDTO.swift; sourceTree = "<group>"; };
-		C34C1F5B2CE39CAD00F94BCD /* SignUpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C34C1F602CE39F9100F94BCD /* LikeRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C34C1F622CE3A02300F94BCD /* LikeResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeResponseDTO.swift; sourceTree = "<group>"; };
 		C35E26402C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePurposeCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -337,10 +341,11 @@
 		C33D73E32CDEF08F00889B1B /* Request */ = {
 			isa = PBXGroup;
 			children = (
-				C34C1F572CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift */,
-				C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */,
-				C34C1F5B2CE39CAD00F94BCD /* SignUpRequestBodyDTO.swift */,
+				C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */,
 				C33D73E52CDEF0A900889B1B /* LoginRequestBodyDTO.swift */,
+				C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */,
+				C34C1F572CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift */,
+				C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -348,7 +353,8 @@
 		C33D73E42CDEF09600889B1B /* Response */ = {
 			isa = PBXGroup;
 			children = (
-				C33D73E72CDEF0C000889B1B /* LoginResponseDTO.swift */,
+				C30C2E472CF2FA2000FAE056 /* SignUpResponseDTO.swift */,
+				C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -1079,7 +1085,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3FD90762C9157060021D2BA /* UIFont+.swift in Sources */,
-				C34C1F5C2CE39CAD00F94BCD /* SignUpRequestBodyDTO.swift in Sources */,
 				C3B95CEC2C9BE004002A4681 /* DetailProfileViewController.swift in Sources */,
 				C33D73BF2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift in Sources */,
 				C37FC4C02CCCE5AF005B7BDF /* ChatEmptyView.swift in Sources */,
@@ -1111,7 +1116,9 @@
 				C33D73F72CDEF19000889B1B /* PortfoliosResponseDTO.swift in Sources */,
 				C35E26542C9D6F6900B197CB /* ChatListView.swift in Sources */,
 				C3FD90392C9139D40021D2BA /* AppDelegate.swift in Sources */,
+				C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */,
 				C393A6192C94200800ECF1B5 /* HomeView.swift in Sources */,
+				C30C2E482CF2FA2000FAE056 /* SignUpResponseDTO.swift in Sources */,
 				C3E88C812C92B25D005A19BE /* TalentOnboardingViewController.swift in Sources */,
 				C3EF05F22C9DD4A3001BF9EC /* ChatRoomDateCollectionViewCell.swift in Sources */,
 				C3E88C6F2C927830005A19BE /* OnboardingNextButton.swift in Sources */,
@@ -1150,6 +1157,7 @@
 				C3FD90932C917F2F0021D2BA /* NameOnboardingView.swift in Sources */,
 				C34C1F582CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift in Sources */,
 				C393A6172C941FFA00ECF1B5 /* MainTabBarViewController.swift in Sources */,
+				C30C2E462CF2F79600FAE056 /* SignUpRequestBodyDTO.swift in Sources */,
 				C3FD90592C9142880021D2BA /* adjust+.swift in Sources */,
 				C33D73D32CDEEEA300889B1B /* APIRequestLoader.swift in Sources */,
 				C33D74102CDEF21900889B1B /* ChatListResponseDTO.swift in Sources */,
@@ -1166,6 +1174,7 @@
 				C3E88C862C92C8B3005A19BE /* TalentHeaderView.swift in Sources */,
 				C393A61E2C9427F500ECF1B5 /* String+.swift in Sources */,
 				C33D74132CDEF23900889B1B /* ChatTarget.swift in Sources */,
+				C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */,
 				C3C7ECF42CF1D2C300509CD4 /* ChatRoomResponseDTO.swift in Sources */,
 				C33D73CF2CDEEE8700889B1B /* BaseResponse.swift in Sources */,
 				C33D73D52CDEEEB300889B1B /* NetworkService.swift in Sources */,
@@ -1174,7 +1183,6 @@
 				C3E88C7F2C92B256005A19BE /* TalentOnboardingView.swift in Sources */,
 				C3FD90702C9154FC0021D2BA /* NSObject+.swift in Sources */,
 				C33D73E62CDEF0A900889B1B /* LoginRequestBodyDTO.swift in Sources */,
-				C33D73E82CDEF0C000889B1B /* LoginResponseDTO.swift in Sources */,
 				C3FD903B2C9139D40021D2BA /* SceneDelegate.swift in Sources */,
 				C35E264D2C9D458500B197CB /* GreetCollectionViewCell.swift in Sources */,
 				C3FD90812C915E880021D2BA /* LoginView.swift in Sources */,
