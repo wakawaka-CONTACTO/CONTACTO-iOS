@@ -164,7 +164,9 @@ extension HomeViewController {
     }
     
     private func setPortImage() {
-        homeView.portImageView.image = imageDummy[self.num]
+        if num < imageDummy.count {
+            homeView.portImageView.image = imageDummy[self.num]
+        }
     }
     
     private func likeOrDislike(bodyDTO: LikeRequestBodyDTO, completion: @escaping (Bool) -> Void) {
@@ -182,13 +184,21 @@ extension HomeViewController {
     }
     
     @objc private func yesButtonTapped() {
-        likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: portUserId, status: LikeStatus.like.rawValue)) { _ in
+        if !isPreview {
+            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: portUserId, status: LikeStatus.like.rawValue)) { _ in
+                self.animateImage(status: true)
+            }
+        } else {
             self.animateImage(status: true)
         }
     }
     
     @objc private func noButtonTapped() {
-        likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: portUserId, status: LikeStatus.dislike.rawValue)) { _ in
+        if !isPreview {
+            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: portUserId, status: LikeStatus.dislike.rawValue)) { _ in
+                self.animateImage(status: false)
+            }
+        } else {
             self.animateImage(status: false)
         }
     }
