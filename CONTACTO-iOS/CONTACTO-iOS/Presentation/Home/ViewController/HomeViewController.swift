@@ -114,6 +114,7 @@ final class HomeViewController: BaseViewController {
             tutorialView.addGestureRecognizer(tutorialTapGestureRecognizer)
         } else {
             homeView.isHidden = false
+            tutorialView.removeFromSuperview()
         }
     }
     
