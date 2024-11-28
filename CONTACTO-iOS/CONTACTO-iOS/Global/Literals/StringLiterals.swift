@@ -136,7 +136,7 @@ enum StringLiterals {
         enum Alert {
             enum Logout {
                 static let logoutTitle = "Log out"
-                static let logoutDescription = "TAre you sure you want to\nlog out CONTACTO?"
+                static let logoutDescription = "Are you sure you want to\nlog out CONTACTO?"
                 static let yes = "Yes"
                 static let no = "No"
                 

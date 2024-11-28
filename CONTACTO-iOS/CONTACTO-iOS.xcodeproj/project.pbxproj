@@ -50,6 +50,7 @@
 		C34C1F5A2CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */; };
 		C34C1F612CE39F9100F94BCD /* LikeRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F602CE39F9100F94BCD /* LikeRequestBodyDTO.swift */; };
 		C34C1F632CE3A02300F94BCD /* LikeResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F622CE3A02300F94BCD /* LikeResponseDTO.swift */; };
+		C35744112CF8B5FC00FE691D /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35744102CF8B5FC00FE691D /* SplashViewController.swift */; };
 		C35E26412C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26402C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift */; };
 		C35E26432C9D10B800B197CB /* ProfileImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26422C9D10B800B197CB /* ProfileImageCollectionViewCell.swift */; };
 		C35E26472C9D2EC300B197CB /* MatchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E26462C9D2EC300B197CB /* MatchViewController.swift */; };
@@ -181,6 +182,7 @@
 		C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailCheckRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C34C1F602CE39F9100F94BCD /* LikeRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C34C1F622CE3A02300F94BCD /* LikeResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeResponseDTO.swift; sourceTree = "<group>"; };
+		C35744102CF8B5FC00FE691D /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		C35E26402C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePurposeCollectionViewCell.swift; sourceTree = "<group>"; };
 		C35E26422C9D10B800B197CB /* ProfileImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		C35E26462C9D2EC300B197CB /* MatchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchViewController.swift; sourceTree = "<group>"; };
@@ -567,6 +569,14 @@
 			name = Request;
 			sourceTree = "<group>";
 		};
+		C35744122CF8B60300FE691D /* Splash */ = {
+			isa = PBXGroup;
+			children = (
+				C35744102CF8B5FC00FE691D /* SplashViewController.swift */,
+			);
+			path = Splash;
+			sourceTree = "<group>";
+		};
 		C35E264E2C9D6F3E00B197CB /* Chat */ = {
 			isa = PBXGroup;
 			children = (
@@ -884,6 +894,7 @@
 			isa = PBXGroup;
 			children = (
 				C3FD90842C915EBE0021D2BA /* Base */,
+				C35744122CF8B60300FE691D /* Splash */,
 				C3FD90792C915E160021D2BA /* Login */,
 				C3FD908D2C917C760021D2BA /* Onboarding */,
 				C393A61A2C94200C00ECF1B5 /* TabBar */,
@@ -1158,6 +1169,7 @@
 				C34C1F582CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift in Sources */,
 				C393A6172C941FFA00ECF1B5 /* MainTabBarViewController.swift in Sources */,
 				C30C2E462CF2F79600FAE056 /* SignUpRequestBodyDTO.swift in Sources */,
+				C35744112CF8B5FC00FE691D /* SplashViewController.swift in Sources */,
 				C3FD90592C9142880021D2BA /* adjust+.swift in Sources */,
 				C33D73D32CDEEEA300889B1B /* APIRequestLoader.swift in Sources */,
 				C33D74102CDEF21900889B1B /* ChatListResponseDTO.swift in Sources */,
