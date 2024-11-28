@@ -7,6 +7,7 @@
 
 import Foundation
 
+    // TODO : error에 따른 reponse 바꾸기 필요
 protocol EditServiceProtocol {
     func checkMyPort(completion: @escaping (NetworkResult<MyDetailResponseDTO>) -> Void)
     
@@ -22,5 +23,4 @@ final class EditService: APIRequestLoader<EditTarget>, EditServiceProtocol {
     func editMyPort(bodyDTO: EditRequestBodyDTO, completion: @escaping (NetworkResult<MyDetailResponseDTO>) -> Void) {
         fetchData(target: .editMyPort(bodyDTO), responseData: MyDetailResponseDTO.self, completion: completion)
     }
-    
 }

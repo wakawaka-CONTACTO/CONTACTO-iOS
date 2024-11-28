@@ -78,7 +78,7 @@ extension EditRequestBodyDTO {
                 print("portfolioImages is not empty. Count: \(portfolioImages.count)")
                 for (index, image) in portfolioImages.enumerated() {
                     print("Index: \(index), Photo Size: \(image.count) bytes")
-                    formData.append(image, withName: "portfolioImages", fileName: "image\(index).jpg", mimeType: "image/jpeg")
+                    formData.append(image, withName: "portfolioImages[\(index)]", fileName: "image\(index).jpg", mimeType: "image/jpeg")
                 }
             } else {
                 print("portfolioImages is nil or empty")
