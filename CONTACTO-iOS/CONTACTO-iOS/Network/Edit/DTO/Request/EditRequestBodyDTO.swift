@@ -8,7 +8,8 @@
 import Foundation
 
 struct EditRequestBodyDTO: Codable {
-    let username, email, description, instagramId, password: String
+    let username: String
+    let email, description, instagramId, password: String
     let webUrl: String?
     let userPurposes: [Int]
     let userTalents: [String]

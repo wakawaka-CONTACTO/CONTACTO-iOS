@@ -7,10 +7,9 @@
 
 import Foundation
 
-/// list 형태
 struct PortfoliosResponseDTO: Codable {
-    let portfolioID: Double
-    let userID: Int
+    let portfolioId: Double
+    let userId: Int
     let username: String
     let portfolioImages: [String]
 }

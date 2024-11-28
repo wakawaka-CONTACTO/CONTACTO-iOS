@@ -12,7 +12,7 @@ import Alamofire
 final class APIEventLogger: EventMonitor {
     func requestDidFinish(_ request: Request) {
         
-        print("===========================🛰 NETWORK Reqeust LOG===========================")
+        print("===========================🛰 NETWORK Request LOG===========================")
         print(request.description)
         
         print(

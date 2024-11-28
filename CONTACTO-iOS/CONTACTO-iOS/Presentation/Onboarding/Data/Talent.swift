@@ -28,8 +28,8 @@ enum Talent: String, CaseIterable {
     case TEXTILE
     case FABRIC_PRODUCT
     case STYLING
-    case BAG_DESIGN = "BAG DESIGN"
-    case SHOES_DESIGN = "SHOES DESIGN"
+    case BAG_DESIGN
+    case SHOES_DESIGN
 
     // Art & Craft
     case PAINTING
