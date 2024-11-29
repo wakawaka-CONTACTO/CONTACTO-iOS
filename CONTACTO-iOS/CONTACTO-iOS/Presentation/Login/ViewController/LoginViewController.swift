@@ -10,11 +10,34 @@ import UIKit
 import SnapKit
 import Then
 
-final class LoginViewController: BaseViewController {
+final class LoginViewController: UIViewController {
     
     private let loginView = LoginView()
     
-    override func setLayout() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setUI()
+        setDelegate()
+        setAddTarget()
+        hideKeyboardWhenTappedAround()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setNavigationBar()
+    }
+    
+    // MARK: UI
+    private func setUI() {
+        setStyle()
+        setLayout()
+    }
+    
+    private func setStyle() {
+        view.backgroundColor = .ctblack
+    }
+    
+    private func setLayout() {
         view.addSubviews(loginView)
         
         loginView.snp.makeConstraints {
@@ -22,15 +45,24 @@ final class LoginViewController: BaseViewController {
         }
     }
     
-    override func setAddTarget() {
-        loginView.continueButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        loginView.helpButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+    private func setNavigationBar() {
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
+    private func setAddTarget() {
+//        loginView.continueButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+//        loginView.helpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+        loginView.newAccountButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         loginView.privacyButton.addTarget(self, action: #selector(privacyButtonTapped), for: .touchUpInside)
     }
     
-    @objc func buttonTapped() {
-        let onboardingViewController = NameOnboardingViewController()
-        self.navigationController?.pushViewController(onboardingViewController, animated: true)
+    private func setDelegate() {
+        loginView.mainTextField.delegate = self
+    }
+    
+    @objc func signUpButtonTapped() {
+        let signUpViewController = SignUpViewController()
+        self.navigationController?.pushViewController(signUpViewController, animated: false)
     }
     
     @objc private func privacyButtonTapped() {
@@ -49,6 +81,23 @@ final class LoginViewController: BaseViewController {
             default:
                 completion(false)
                 print("error")
+            }
+        }
+    }
+}
+
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if let text = textField.text {
+            if !text.isEmpty || !text.isOnlyWhitespace() {
+                self.loginView.continueButton.isEnabled = true
+            } else {
+                self.loginView.continueButton.isEnabled = false
             }
         }
     }

@@ -17,6 +17,7 @@
 		C32D06F72CE633340016F497 /* UIImageView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F62CE633340016F497 /* UIImageView+.swift */; };
 		C32D06F92CE63CC30016F497 /* DetailRequestQueryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */; };
 		C33C65012CF9E262009FA2BD /* LoginBaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33C65002CF9E262009FA2BD /* LoginBaseTextField.swift */; };
+		C33C65032CF9F20A009FA2BD /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33C65022CF9F20A009FA2BD /* SignUpViewController.swift */; };
 		C33D73BF2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */; };
 		C33D73C12CDEEE0B00889B1B /* NetworkResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */; };
 		C33D73C32CDEEE1C00889B1B /* TargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C22CDEEE1C00889B1B /* TargetType.swift */; };
@@ -151,6 +152,7 @@
 		C32D06F62CE633340016F497 /* UIImageView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
 		C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRequestQueryDTO.swift; sourceTree = "<group>"; };
 		C33C65002CF9E262009FA2BD /* LoginBaseTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBaseTextField.swift; sourceTree = "<group>"; };
+		C33C65022CF9F20A009FA2BD /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeaderFieldKey.swift; sourceTree = "<group>"; };
 		C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkResult.swift; sourceTree = "<group>"; };
 		C33D73C22CDEEE1C00889B1B /* TargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetType.swift; sourceTree = "<group>"; };
@@ -930,6 +932,7 @@
 			isa = PBXGroup;
 			children = (
 				C3FD907C2C915E550021D2BA /* LoginViewController.swift */,
+				C33C65022CF9F20A009FA2BD /* SignUpViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -1122,6 +1125,7 @@
 				C3FD90862C915EC90021D2BA /* BaseView.swift in Sources */,
 				C34C1F612CE39F9100F94BCD /* LikeRequestBodyDTO.swift in Sources */,
 				C3F575002CC4097100440D98 /* InfoView.swift in Sources */,
+				C33C65032CF9F20A009FA2BD /* SignUpViewController.swift in Sources */,
 				C35E26522C9D6F5E00B197CB /* ChatListViewController.swift in Sources */,
 				C33D73C32CDEEE1C00889B1B /* TargetType.swift in Sources */,
 				C33D73EE2CDEF15800889B1B /* ChatService.swift in Sources */,

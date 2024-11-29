@@ -290,12 +290,6 @@ final class EditViewController: UIViewController {
         }
     }
     
-    private func tapAroundKeyboard() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
-        tap.cancelsTouchesInView = true
-        view.addGestureRecognizer(tap)
-    }
-    
     private func addKeyboardNotifications(){
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)

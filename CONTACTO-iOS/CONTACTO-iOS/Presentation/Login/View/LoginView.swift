@@ -38,6 +38,7 @@ final class LoginView: BaseView {
             $0.titleLabel?.font = .fontContacto(.button1)
             $0.setBackgroundColor(.ctgray3, for: .disabled)
             $0.setBackgroundColor(.ctsubgreen2, for: .normal)
+            $0.isEnabled = false
         }
         
         newAccountButton.do {
