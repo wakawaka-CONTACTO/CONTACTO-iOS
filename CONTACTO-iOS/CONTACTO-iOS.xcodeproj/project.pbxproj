@@ -16,6 +16,7 @@
 		C32D06F52CE633260016F497 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C32D06F42CE633260016F497 /* Kingfisher */; };
 		C32D06F72CE633340016F497 /* UIImageView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F62CE633340016F497 /* UIImageView+.swift */; };
 		C32D06F92CE63CC30016F497 /* DetailRequestQueryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */; };
+		C33C65012CF9E262009FA2BD /* LoginBaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33C65002CF9E262009FA2BD /* LoginBaseTextField.swift */; };
 		C33D73BF2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */; };
 		C33D73C12CDEEE0B00889B1B /* NetworkResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */; };
 		C33D73C32CDEEE1C00889B1B /* TargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73C22CDEEE1C00889B1B /* TargetType.swift */; };
@@ -149,6 +150,7 @@
 		C320E88D2CF22A3E0098AC1D /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		C32D06F62CE633340016F497 /* UIImageView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
 		C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRequestQueryDTO.swift; sourceTree = "<group>"; };
+		C33C65002CF9E262009FA2BD /* LoginBaseTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBaseTextField.swift; sourceTree = "<group>"; };
 		C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeaderFieldKey.swift; sourceTree = "<group>"; };
 		C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkResult.swift; sourceTree = "<group>"; };
 		C33D73C22CDEEE1C00889B1B /* TargetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetType.swift; sourceTree = "<group>"; };
@@ -737,6 +739,7 @@
 				C3AEC29D2C943B7800E2DED9 /* BaseTextField.swift */,
 				C3B95CF72C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift */,
 				C35E264A2C9D39E900B197CB /* BasePaddingLabel.swift */,
+				C33C65002CF9E262009FA2BD /* LoginBaseTextField.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1135,6 +1138,7 @@
 				C3E88C6F2C927830005A19BE /* OnboardingNextButton.swift in Sources */,
 				C32D06F72CE633340016F497 /* UIImageView+.swift in Sources */,
 				C33D741B2CDEF26200889B1B /* InfoTarget.swift in Sources */,
+				C33C65012CF9E262009FA2BD /* LoginBaseTextField.swift in Sources */,
 				C37A28DE2CB417BE004BC6AE /* EditViewController.swift in Sources */,
 				C33D73EA2CDEF14600889B1B /* HomeService.swift in Sources */,
 				C35E26492C9D2F4400B197CB /* MatchView.swift in Sources */,
