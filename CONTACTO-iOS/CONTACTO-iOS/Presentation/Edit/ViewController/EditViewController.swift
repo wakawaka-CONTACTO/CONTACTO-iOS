@@ -479,6 +479,7 @@ extension EditViewController: PHPickerViewControllerDelegate {
         group.notify(queue: .main) {
             let newImages = addedImages.compactMap { $0 }
             self.selectedImages.append(contentsOf: newImages)
+            self.isPortfolioFilled = !self.selectedImages.isEmpty
             self.editView.portfolioCollectionView.reloadData()
         }
     }
