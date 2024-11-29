@@ -34,7 +34,7 @@ enum StringLiterals {
         static let needHelp = "Need help signing in?"
         static let backToLogin = "Back to Log in"
         
-        
+        static let sendCode = "Send a verification code"
         static let verify = "E-mail verification code"
         static let nextButton = "next"
         static let resendButton = "Resend E-mail"

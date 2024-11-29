@@ -11,6 +11,7 @@ import UIKit
     case email
     case name
     case pw
+    case findEmail
 }
 
 final class LoginBaseTextField: UITextField {
@@ -34,18 +35,12 @@ final class LoginBaseTextField: UITextField {
     
     init(state: textState) {
         super.init(frame: CGRect())
-        textFieldState = state
         setTextFieldState(state: state)
         setUI()
-        setAddTarget()
     }
 }
 
 extension LoginBaseTextField {
-    
-    private func setAddTarget() {
-        eyeButton.addTarget(self, action: #selector(eyeButtonTapped), for: .touchUpInside)
-    }
     
     private func setUI() {
         setStyle()
@@ -65,36 +60,65 @@ extension LoginBaseTextField {
         
         eyeButton.do {
             $0.setImage(.icEye, for: .normal)
+            $0.isUserInteractionEnabled = true
         }
     }
     
     private func setLayout() {
         self.addSubviews(eyeButton)
+        self.bringSubviewToFront(eyeButton)
+        
+        eyeButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.trailing.equalToSuperview()
+        }
     }
     
-    private func setTextFieldState(state: textState) {
+    func setTextFieldState(state: textState) {
+        self.textFieldState = state
         switch state {
         case .email:
+            self.backgroundColor = .ctwhite
+            self.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            self.textColor = .ctblack
+            self.isEnabled = true
             self.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.email, forColor: .ctgray2)
             self.keyboardType = .emailAddress
-            eyeButton.isHidden = false
+            self.isSecureTextEntry = false
+            eyeButton.isHidden = true
+            
         case .name:
+            self.backgroundColor = .ctwhite
+            self.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            self.textColor = .ctblack
+            self.isEnabled = true
             self.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.name, forColor: .ctgray2)
             self.keyboardType = .asciiCapable
-            eyeButton.isHidden = false
+            self.isSecureTextEntry = false
+            eyeButton.isHidden = true
+            
         case .pw:
+            self.backgroundColor = .ctwhite
+            self.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            self.textColor = .ctblack
+            self.isEnabled = true
             self.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.pw, forColor: .ctgray2)
             self.keyboardType = .asciiCapable
+            self.isSecureTextEntry = true
+            eyeButton.isHidden = false
+            
+        case .findEmail:
+            self.backgroundColor = .clear
+            self.setRoundBorder(borderColor: .ctwhite, borderWidth: 1.5, cornerRadius: 0)
+            self.textColor = .ctwhite
+            self.changePlaceholderColor(forPlaceHolder: "jo***rk@wa****ka.***", forColor: .ctgray2)
+            self.isEnabled = false
+            self.isSecureTextEntry = false
             eyeButton.isHidden = true
         }
     }
     
-    func errorText() {            self.setRoundBorder(borderColor: isError ? .ctblack : .ctsubred, borderWidth: 1.5, cornerRadius: 0)
-    }
-    
-    @objc func eyeButtonTapped() {
-        self.isButtonTapped.toggle()
-        self.isSecureTextEntry = !isButtonTapped
-        eyeButton.setImage(isButtonTapped ? .icEyeHide : .icEye, for: .normal)
+    func errorText() {            
+        self.setRoundBorder(borderColor: isError ? .ctblack : .ctsubred, borderWidth: 1.5, cornerRadius: 0)
     }
 }
