@@ -56,6 +56,7 @@ enum FontLevel {
     case subTitle
     case chat
     case body
+    case gothicButton
 }
 
 extension FontLevel {
@@ -83,6 +84,9 @@ extension FontLevel {
             
         case .chat:
             return FontName.PretendardRegular.rawValue
+            
+        case .gothicButton:
+            return FontName.ABCDiatypeBold.rawValue
         }
     }
     
@@ -119,7 +123,7 @@ extension FontLevel {
         case .title6:
             return 100.adjusted
             
-        case .button:
+        case .button, .gothicButton:
             return 16.adjusted
         case .title, .body:
             return 20.adjusted
@@ -155,6 +159,8 @@ extension FontLevel {
             return FontLevel.subTitle.fontSize * 1.3
         case .body:
             return FontLevel.body.fontSize * 1.3
+        case .gothicButton:
+            return FontLevel.gothicButton.fontSize * 1.5
         }
     }
 }

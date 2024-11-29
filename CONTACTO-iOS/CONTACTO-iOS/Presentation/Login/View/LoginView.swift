@@ -14,9 +14,9 @@ final class LoginView: BaseView {
     
     private let logoImageView = UIImageView()
     private let descriptionLabel = UILabel()
-    lazy var emailTextField = BaseTextField()
-    lazy var passwordTextField = BaseTextField()
+    lazy var mainTextField = LoginBaseTextField()
     lazy var continueButton = UIButton()
+    let newAccountButton = UIButton()
     lazy var helpButton = UIButton()
     lazy var privacyButton = UIButton()
     
@@ -27,44 +27,29 @@ final class LoginView: BaseView {
         }
         
         descriptionLabel.do {
-            $0.text = StringLiterals.Login.title
+            $0.text = StringLiterals.Login.login
             $0.font = .fontContacto(.caption1)
             $0.textColor = .ctwhite
-        }
-        
-        emailTextField.do {
-            $0.font = .fontContacto(.button1)
-            $0.textColor = .ctblack
-            $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.email, forColor: .ctgray2)
-            $0.textAlignment = .center
-            $0.backgroundColor = .ctwhite
-            $0.keyboardType = .emailAddress
-            $0.autocapitalizationType = .none
-            $0.returnKeyType = .done
-        }
-        
-        passwordTextField.do {
-            $0.font = .fontContacto(.button1)
-            $0.textColor = .ctblack
-            $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.pw, forColor: .ctgray2)
-            $0.textAlignment = .center
-            $0.backgroundColor = .ctwhite
-            $0.keyboardType = .asciiCapable
-            $0.autocapitalizationType = .none
-            $0.isSecureTextEntry = true
-            $0.returnKeyType = .done
         }
         
         continueButton.do {
             $0.setTitle(StringLiterals.Login.continueButton, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
             $0.titleLabel?.font = .fontContacto(.button1)
-            $0.backgroundColor = .ctsubgreen2
+            $0.setBackgroundColor(.ctgray3, for: .disabled)
+            $0.setBackgroundColor(.ctsubgreen2, for: .normal)
+        }
+        
+        newAccountButton.do {
+            $0.setRoundBorder(borderColor: .ctwhite, borderWidth: 1.5, cornerRadius: 0)
+            $0.setTitle(StringLiterals.Login.createButton, for: .normal)
+            $0.setTitleColor(.systemBlue, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.gothicButton)
         }
         
         helpButton.do {
             $0.setTitle(StringLiterals.Login.help, for: .normal)
-            $0.setTitleColor(.systemBlue, for: .normal)            
+            $0.setTitleColor(.systemBlue, for: .normal)
         }
         
         privacyButton.do {
@@ -76,9 +61,9 @@ final class LoginView: BaseView {
     override func setLayout() {
         addSubviews(logoImageView,
                     descriptionLabel,
-                    emailTextField,
-                    passwordTextField,
+                    mainTextField,
                     continueButton,
+                    newAccountButton,
                     helpButton,
                     privacyButton)
         
@@ -92,26 +77,26 @@ final class LoginView: BaseView {
             $0.centerX.equalToSuperview()
         }
         
-        emailTextField.snp.makeConstraints {
+        mainTextField.snp.makeConstraints {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(25.adjustedHeight)
             $0.leading.trailing.equalToSuperview().inset(37.adjustedWidth)
             $0.height.equalTo(34.adjustedHeight)
         }
         
-        passwordTextField.snp.makeConstraints {
-            $0.top.equalTo(emailTextField.snp.bottom).offset(7.adjustedHeight)
+        continueButton.snp.makeConstraints {
+            $0.top.equalTo(mainTextField.snp.bottom).offset(10.5.adjustedHeight)
             $0.leading.trailing.equalToSuperview().inset(37.adjustedWidth)
             $0.height.equalTo(34.adjustedHeight)
         }
         
-        continueButton.snp.makeConstraints {
-            $0.top.equalTo(passwordTextField.snp.bottom).offset(45.adjustedHeight)
-            $0.leading.trailing.equalTo(emailTextField)
+        newAccountButton.snp.makeConstraints {
+            $0.top.equalTo(continueButton.snp.bottom).offset(20.5.adjustedHeight)
+            $0.leading.trailing.equalTo(mainTextField)
             $0.height.equalTo(34.adjustedHeight)
         }
         
         helpButton.snp.makeConstraints {
-            $0.top.equalTo(continueButton.snp.bottom).offset(91.adjustedHeight)
+            $0.top.equalTo(newAccountButton.snp.bottom).offset(113.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
         
