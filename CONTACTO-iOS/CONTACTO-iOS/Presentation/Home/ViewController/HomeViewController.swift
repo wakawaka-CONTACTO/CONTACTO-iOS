@@ -58,6 +58,8 @@ final class HomeViewController: BaseViewController {
     }
     
     override func setStyle() {
+        super.setStyle()
+        
         tutorialView.do {
             $0.image = tutorialImageDummy[tutorialNum]
             $0.isUserInteractionEnabled = true
