@@ -127,8 +127,7 @@ final class HomeView: BaseView {
         }
         
         portImageView.snp.makeConstraints {
-            $0.height.equalToSuperview()
-            $0.center.equalToSuperview()
+            $0.edges.equalToSuperview()
         }
         
         backView.snp.makeConstraints {
