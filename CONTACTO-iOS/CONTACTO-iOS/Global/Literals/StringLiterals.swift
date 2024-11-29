@@ -9,23 +9,47 @@ import Foundation
 
 enum StringLiterals {
     enum Login {
-        static let title = "Log in or sign up"
+        static let login = "Log in"
         static let email = "E-mail"
-        static let pw = "password"
         static let continueButton = "Continue"
-        static let orLabel = "or"
-        static let appleButton = "Continue with Apple"
+        
+        static let createButton = "Create a new account"
         static let help = "Need help signing in?"
         static let privacy = "Privacy"
         
+        static let pw = "password"
+        static let forgetPwButton = "Forgot your password?"
+        static let firstStepButton = "Go to First step"
+        
+        static let noAccountTitle = "No account found"
+        static let noAccountDesc = "There’s no CONTACTO account with the info you provided.\nplease input correct e-mail or click below help button.".uppercased()
+        static let forgetEmailButton = "Forgot your E-mail?"
+        
+        static let incorrectPWTitle = "Incorrect password"
+        static let incorrectPWDesc = "please input correct password or click below help button.".uppercased()
+        
+        static let signUp = "Sign Up"
+        static let agreePrivacy = "agree privacy policy".uppercased()
+        static let detailButton = "see detail".uppercased()
+        static let needHelp = "Need help signing in?"
+        static let backToLogin = "Back to Log in"
+        
+        
         static let verify = "E-mail verification code"
         static let nextButton = "next"
+        static let resendButton = "Resend E-mail"
+        
         static let setPW = "Set password"
         static let resetPW = "Reset password"
-        static let condition1 = "at least 8 char."
-        static let condition2 = "at least 1 special char."
-        static let condition3 = "at least 1 number"
+        static let condition1 = "at least 8 char.".uppercased()
+        static let condition2 = "at least 1 special char.".uppercased()
+        static let condition3 = "at least 1 number".uppercased()
         static let confirmPW = "confirm password"
+        
+        static let inputName = "Input your Profile name."
+        static let name = "name"
+        static let yourEmail = "Your E-mail is"
+        static let goToLogin = "Go to Log in"
     }
     
     enum Onboarding {
