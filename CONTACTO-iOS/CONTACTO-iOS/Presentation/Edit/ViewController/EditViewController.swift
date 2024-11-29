@@ -24,6 +24,8 @@ final class EditViewController: UIViewController {
             }
         }
     }
+    let activityIndicator = UIActivityIndicatorView(style: .large)
+
     private var activeTextField: UIView?
     
     var isTextFieldFilled = true {
@@ -31,7 +33,7 @@ final class EditViewController: UIViewController {
             changeSaveButtonStatus()
         }
     }
-    var isTextViewFilled = true { // 확인 필요. data 들어갔을 때도
+    var isTextViewFilled = true {
         didSet {
             changeSaveButtonStatus()
         }
@@ -65,6 +67,9 @@ final class EditViewController: UIViewController {
         super.viewWillAppear(animated)
         setNavigationBar()
         self.addKeyboardNotifications()
+        if !isEditEnable {
+            setData()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -103,9 +108,33 @@ final class EditViewController: UIViewController {
     private func setClosure() {
         editView.editAction = {
             self.isEditEnable.toggle()
-            self.editView.portfolioCollectionView.reloadData()
-            self.editView.purposeCollectionView.reloadData()
-            self.view.endEditing(true)
+            let imageDataArray = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+            
+            let body = EditRequestBodyDTO(
+                username: self.portfolioData.username,
+                email: self.portfolioData.email,
+                description: self.portfolioData.description,
+                instagramId: self.portfolioData.instagramId,
+                password: "",
+                webUrl: self.portfolioData.webUrl,
+                userPurposes: self.portfolioData.userPurposes,
+                userTalents: self.convertToTalent(koreanNames: self.portfolioData.userTalents.map { $0.talentType }),
+                portfolioImages: imageDataArray)
+            self.editMyPort(bodyDTO: body) { _ in
+                self.editView.portfolioCollectionView.reloadData()
+                self.editView.purposeCollectionView.reloadData()
+                self.view.endEditing(true)
+            }
+        }
+    }
+    
+    func convertToTalent(koreanNames: [String]) -> [String] {
+        return koreanNames.compactMap { koreanName in
+            if let talent = Talent.allCases.first(where: { $0.info.koreanName == koreanName }) {
+                return talent.rawValue
+            } else {
+                return nil
+            }
         }
     }
     
@@ -131,21 +160,30 @@ final class EditViewController: UIViewController {
     }
     
     // MARK: - Server Function
-    private func myList(bodyDTO: EditRequestBodyDTO, completion: @escaping (Bool) -> Void) {
-        NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { [weak self] response in
-            switch response {
-            case .success(let data):
-                guard let data = data.data else { return }
-                print(data)
-                completion(true)
-            default:
-                completion(false)
-                print("error")
+    private func editMyPort(bodyDTO: EditRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        if !self.isEditEnable {
+            NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { [weak self] response in
+                switch response {
+                case .success(let data):
+                    print(data)
+                    completion(true)
+                default:
+                    completion(false)
+                    print("error")
+                }
             }
+        } else {
+            completion(true)
         }
     }
     
     private func checkMyPort(completion: @escaping (Bool) -> Void) {
+        editView.editButton.isUserInteractionEnabled = false
+        editView.previewButton.isUserInteractionEnabled = false
+        activityIndicator.startAnimating()
+        activityIndicator.center = view.center
+        
+        view.addSubview(activityIndicator)
         NetworkService.shared.editService.checkMyPort { [weak self] response in
             switch response {
             case .success(let data):
@@ -157,6 +195,11 @@ final class EditViewController: UIViewController {
                 completion(false)
                 print("error")
             }
+            
+            self?.editView.editButton.isUserInteractionEnabled = true
+            self?.editView.previewButton.isUserInteractionEnabled = true
+            self?.activityIndicator.stopAnimating()
+            self?.activityIndicator.removeFromSuperview()
         }
     }
     
@@ -182,7 +225,8 @@ final class EditViewController: UIViewController {
                 switch result {
                 case .success(let value):
                     DispatchQueue.main.async {
-                        self?.selectedImages.append(value.image)
+                        let images = [value.image]
+                        self?.selectedImages = images
                     }
                 case .failure(let error):
                     print("Failed to load image: \(error.localizedDescription)")
@@ -199,7 +243,7 @@ final class EditViewController: UIViewController {
         
         portfolioData.userPurposes.forEach { index in
             if index < tappedStates.count {
-                tappedStates[index - 1] = true
+                tappedStates[index] = true
             }
         }
         
@@ -234,6 +278,7 @@ final class EditViewController: UIViewController {
     }
     
     private func changeSaveButtonStatus() {
+        print("textField:\(isTextFieldFilled)\ntextView:\(isTextViewFilled)\nportfolio:\(isPortfolioFilled)\npurpose:\(isPurposeFilled)\neditEnabled:\(isEditEnable)")
         if isTextFieldFilled,
            isTextViewFilled,
            isPortfolioFilled,
@@ -331,7 +376,7 @@ extension EditViewController {
             var talents: [UserTalent] = []
             self.talentData.forEach {
                 talents.append(
-                    UserTalent(id: 0, userId: self.portfolioData.id, talentType: $0.koreanName)
+                    UserTalent(id: 0, userId: self.portfolioData.id, talentType: $0.displayName)
                 )
             }
             self.portfolioData.userTalents = talents
@@ -449,7 +494,7 @@ extension EditViewController: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        if !textView.text.isEmpty, !textView.text.isOnlyWhitespace() {
+        if !textView.text.isEmpty || !textView.text.isOnlyWhitespace() {
             self.isTextViewFilled = true
         } else {
             self.isTextViewFilled = false
@@ -468,10 +513,12 @@ extension EditViewController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField != editView.websiteTextField  {
-            if !textField.text!.isEmpty,  !textField.text!.isOnlyWhitespace() {
-                self.isTextFieldFilled = true
-            } else {
-                self.isTextFieldFilled = false
+            if let text = textField.text {
+                if !text.isEmpty || !text.isOnlyWhitespace() {
+                    self.isTextFieldFilled = true
+                } else {
+                    self.isTextFieldFilled = false
+                }
             }
         }
         
