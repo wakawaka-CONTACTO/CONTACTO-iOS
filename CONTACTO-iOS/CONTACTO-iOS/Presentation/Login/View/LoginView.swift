@@ -14,11 +14,11 @@ final class LoginView: BaseView {
     
     private let logoImageView = UIImageView()
     private let descriptionLabel = UILabel()
-    lazy var mainTextField = LoginBaseTextField()
-    lazy var continueButton = UIButton()
+    let mainTextField = LoginBaseTextField(state: .email)
+    let continueButton = UIButton()
     let newAccountButton = UIButton()
-    lazy var helpButton = UIButton()
-    lazy var privacyButton = UIButton()
+    let helpButton = UIButton()
+    let privacyButton = UIButton()
     
     override func setStyle() {
         logoImageView.do {

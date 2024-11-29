@@ -32,11 +32,10 @@ final class LoginBaseTextField: UITextField {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(state: textState, placeholder: String = "") {
+    init(state: textState) {
         super.init(frame: CGRect())
         textFieldState = state
         setTextFieldState(state: state)
-        self.placeholder = placeholder
         setUI()
         setAddTarget()
     }
