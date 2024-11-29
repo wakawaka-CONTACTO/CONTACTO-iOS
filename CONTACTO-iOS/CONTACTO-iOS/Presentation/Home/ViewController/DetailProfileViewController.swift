@@ -96,7 +96,11 @@ final class DetailProfileViewController: BaseViewController {
     
     private func updatePortfolio() {
         self.talentData = self.portfolioData.userTalents.compactMap { userTalent in
-            Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
+            if self.isPreview {
+                return Talent.allCases.first(where: { $0.info.displayName == userTalent.talentType })?.info
+            } else {
+                return Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
+            }
         }
         
         if !isPreview {
@@ -119,7 +123,6 @@ final class DetailProfileViewController: BaseViewController {
                 }
             }
             
-            // 모든 작업이 완료된 후 실행
             dispatchGroup.notify(queue: .main) {
                 self.detailProfileView.portImageCollectionView.reloadData()
                 self.detailProfileView.pageCollectionView.reloadData()
@@ -136,25 +139,28 @@ final class DetailProfileViewController: BaseViewController {
         
         self.detailProfileView.talentCollectionView.reloadData()
         self.detailProfileView.purposeCollectionView.reloadData()
+        self.resetCollectionViewLayout()
     }
     
     private func setData() {
-        detailPort(userId: userId) { _ in
-            self.detailProfileView.talentCollectionView.layoutIfNeeded()
-            self.detailProfileView.purposeCollectionView.layoutIfNeeded()
-            
-            self.detailProfileView.talentCollectionView.snp.remakeConstraints {
-                $0.top.equalTo(self.detailProfileView.nameLabel.snp.bottom).offset(17)
-                $0.leading.equalToSuperview().inset(13)
-                $0.trailing.equalToSuperview().inset(46)
-                $0.height.equalTo(self.detailProfileView.talentCollectionView.contentSize.height + 10)
-            }
-            
-            self.detailProfileView.purposeCollectionView.snp.remakeConstraints {
-                $0.top.equalTo(self.detailProfileView.purposeLabel.snp.bottom).offset(4)
-                $0.leading.trailing.equalToSuperview().inset(13)
-                $0.height.equalTo(self.detailProfileView.purposeCollectionView.contentSize.height)
-            }
+        detailPort(userId: userId) { _ in }
+    }
+    
+    private func resetCollectionViewLayout() {
+        self.detailProfileView.talentCollectionView.layoutIfNeeded()
+        self.detailProfileView.purposeCollectionView.layoutIfNeeded()
+        
+        self.detailProfileView.talentCollectionView.snp.remakeConstraints {
+            $0.top.equalTo(self.detailProfileView.nameLabel.snp.bottom).offset(17)
+            $0.leading.equalToSuperview().inset(13)
+            $0.trailing.equalToSuperview().inset(46)
+            $0.height.equalTo(self.detailProfileView.talentCollectionView.contentSize.height + 10)
+        }
+        
+        self.detailProfileView.purposeCollectionView.snp.remakeConstraints {
+            $0.top.equalTo(self.detailProfileView.purposeLabel.snp.bottom).offset(4)
+            $0.leading.trailing.equalToSuperview().inset(13)
+            $0.height.equalTo(self.detailProfileView.purposeCollectionView.contentSize.height)
         }
     }
     

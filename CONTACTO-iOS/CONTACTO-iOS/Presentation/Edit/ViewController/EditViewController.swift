@@ -360,6 +360,12 @@ extension EditViewController {
         previewViewController.isPreview = true
         previewViewController.portfolioData = self.portfolioData
         previewViewController.imageDummy = selectedImages
+        previewViewController.portfolioData.userTalents = []
+        self.talentData.forEach {
+            previewViewController.portfolioData.userTalents.append(
+                UserTalent(id: 0, userId: self.portfolioData.id, talentType: $0.displayName)
+            )
+        }
         let navigationController = UINavigationController(rootViewController: previewViewController)
         present(navigationController, animated: true)
     }
