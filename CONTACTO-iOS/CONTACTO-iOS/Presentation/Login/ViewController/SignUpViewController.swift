@@ -13,7 +13,7 @@ import Then
 final class SignUpViewController: UIViewController {
     
     let signUpView = SignUpView()
-    
+    let emailCodeView = EmailCodeView()
     var email = ""
     
     var isPrivacyAgree = false {
@@ -58,12 +58,19 @@ final class SignUpViewController: UIViewController {
     
     private func setStyle() {
         view.backgroundColor = .ctblack
+        
+        signUpView.isHidden = true
     }
     
     private func setLayout() {
-        view.addSubviews(signUpView)
+        view.addSubviews(signUpView,
+                         emailCodeView)
         
         signUpView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        emailCodeView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
     }
@@ -77,6 +84,7 @@ final class SignUpViewController: UIViewController {
     
     private func setDelegate() {
         signUpView.mainTextField.delegate = self
+        emailCodeView.mainTextField.delegate = self
     }
     
     private func setNavigationBar() {
@@ -117,14 +125,47 @@ extension SignUpViewController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if let text = textField.text {
-            if (!text.isEmpty || !text.isOnlyWhitespace()) {
-                if text.isValidEmail() {
-                    self.email = text
-                    self.isTextFilled = true
-                } else {
-                    self.isTextFilled = false
+            switch textField {
+            case signUpView.mainTextField:
+                if (!text.isEmpty || !text.isOnlyWhitespace()) {
+                    if text.isValidEmail() {
+                        self.email = text
+                        self.isTextFilled = true
+                    } else {
+                        self.isTextFilled = false
+                    }
                 }
+            case emailCodeView.mainTextField:
+                print(text)
+            default:
+                print("hello")
             }
         }
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == emailCodeView.mainTextField {
+            let currentText = (textField.text ?? "") as NSString
+            let updatedText = currentText.replacingCharacters(in: range, with: string)
+            
+            guard updatedText.count <= 6 else {
+                return false
+            }
+            
+            let attributedString = NSMutableAttributedString(string: updatedText)
+            let textLength = updatedText.count
+            
+            if textLength > 1 {
+                attributedString.addAttribute(.kern, value: 35, range: NSRange(location: 0, length: textLength - 1))
+            }
+            
+            attributedString.addAttribute(.font, value: UIFont.fontContacto(.number), range: NSRange(location: 0, length: textLength))
+            textField.attributedText = attributedString
+            emailCodeView.continueButton.isEnabled = (textLength == 6)
+            return false
+        } else {
+            return true
+        }
+    }
+
 }

@@ -14,7 +14,7 @@ import UIKit
     case findEmail
 }
 
-final class LoginBaseTextField: UITextField {
+final class LoginBaseTextField: BaseTextField {
     
     var textFieldState = textState.email
     

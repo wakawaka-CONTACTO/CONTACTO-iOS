@@ -17,6 +17,7 @@ enum FontName: String {
     case FKRasterRomanSharp = "FKRasterRomanCompactTrial-Sharp"
     case FKRasterRomanSmooth = "FKRasterRomanCompactTrial-Smooth"
     case PretendardRegular = "Pretendard-Regular"
+    case PretendardBold = "Pretendard-Bold"
 }
 
 enum FontLevel {
@@ -58,6 +59,7 @@ enum FontLevel {
     case body
     case gothicButton
     case gothicSubButton
+    case number
 }
 
 extension FontLevel {
@@ -85,6 +87,9 @@ extension FontLevel {
             
         case .chat:
             return FontName.PretendardRegular.rawValue
+            
+        case .number:
+            return FontName.PretendardBold.rawValue
         }
     }
     
@@ -131,6 +136,8 @@ extension FontLevel {
             return 15.adjusted
         case .gothicSubButton:
             return 10.adjusted
+        case .number:
+            return 17.adjusted
         }
     }
     
@@ -149,6 +156,7 @@ extension FontLevel {
         case .title6:
             return FontLevel.title6.fontSize
             
+            
         case .button:
             return FontLevel.button.fontSize * 1.5
         case .title:
@@ -163,6 +171,8 @@ extension FontLevel {
             return FontLevel.gothicButton.fontSize * 1.5
         case .gothicSubButton:
             return FontLevel.gothicSubButton.fontSize * 1.5
+        case .number:
+            return FontLevel.number.fontSize * 1.3
         }
     }
 }

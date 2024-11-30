@@ -85,6 +85,8 @@
 		C3B95CF82C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B95CF72C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift */; };
 		C3C7ECF42CF1D2C300509CD4 /* ChatRoomResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7ECF32CF1D2C300509CD4 /* ChatRoomResponseDTO.swift */; };
 		C3E6D90E2CFAC7B500D6ABDC /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E6D90D2CFAC7B500D6ABDC /* SignUpView.swift */; };
+		C3E6D9102CFAD27E00D6ABDC /* EmailCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E6D90F2CFAD27E00D6ABDC /* EmailCodeView.swift */; };
+		C3E6D9122CFAD76900D6ABDC /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C3E6D9112CFAD76900D6ABDC /* Pretendard-Bold.otf */; };
 		C3E88C6F2C927830005A19BE /* OnboardingNextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C6E2C927830005A19BE /* OnboardingNextButton.swift */; };
 		C3E88C712C927D1C005A19BE /* PurposeOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C702C927D1C005A19BE /* PurposeOnboardingViewController.swift */; };
 		C3E88C732C927D25005A19BE /* PurposeOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C722C927D25005A19BE /* PurposeOnboardingView.swift */; };
@@ -221,6 +223,8 @@
 		C3B95CF72C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		C3C7ECF32CF1D2C300509CD4 /* ChatRoomResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomResponseDTO.swift; sourceTree = "<group>"; };
 		C3E6D90D2CFAC7B500D6ABDC /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		C3E6D90F2CFAD27E00D6ABDC /* EmailCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailCodeView.swift; sourceTree = "<group>"; };
+		C3E6D9112CFAD76900D6ABDC /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		C3E88C6E2C927830005A19BE /* OnboardingNextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNextButton.swift; sourceTree = "<group>"; };
 		C3E88C702C927D1C005A19BE /* PurposeOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurposeOnboardingViewController.swift; sourceTree = "<group>"; };
 		C3E88C722C927D25005A19BE /* PurposeOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurposeOnboardingView.swift; sourceTree = "<group>"; };
@@ -944,6 +948,7 @@
 			children = (
 				C3FD90802C915E870021D2BA /* LoginView.swift */,
 				C3E6D90D2CFAC7B500D6ABDC /* SignUpView.swift */,
+				C3E6D90F2CFAD27E00D6ABDC /* EmailCodeView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -960,6 +965,7 @@
 		C3FD90872C9160F30021D2BA /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				C3E6D9112CFAD76900D6ABDC /* Pretendard-Bold.otf */,
 				C393A6092C93CD5C00ECF1B5 /* Pretendard-Regular.otf */,
 				C3FD90962C9189850021D2BA /* FKRasterRomanCompactTrial-Blended.otf */,
 				C3FD90952C9189850021D2BA /* FKRasterRomanCompactTrial-Sharp.otf */,
@@ -1084,6 +1090,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3FD90992C9189850021D2BA /* FKRasterRomanCompactTrial-Blended.otf in Resources */,
+				C3E6D9122CFAD76900D6ABDC /* Pretendard-Bold.otf in Resources */,
 				C3FD90422C9139D70021D2BA /* Assets.xcassets in Resources */,
 				C3FD90982C9189850021D2BA /* FKRasterRomanCompactTrial-Sharp.otf in Resources */,
 				C3FD90972C9189850021D2BA /* FKRasterRomanCompactTrial-Smooth.otf in Resources */,
@@ -1188,6 +1195,7 @@
 				C33D73D72CDEEEBE00889B1B /* ContactoRequestInterceptor.swift in Sources */,
 				C3B95CF32C9C08B7002A4681 /* ProfileTalentCollectionViewCell.swift in Sources */,
 				C3E88C8A2C92E661005A19BE /* PortfolioOnboardingView.swift in Sources */,
+				C3E6D9102CFAD27E00D6ABDC /* EmailCodeView.swift in Sources */,
 				C3E88C712C927D1C005A19BE /* PurposeOnboardingViewController.swift in Sources */,
 				C3FD906E2C9154EC0021D2BA /* UIView+.swift in Sources */,
 				C3E88C7D2C92A95A005A19BE /* SNSOnboardingView.swift in Sources */,
