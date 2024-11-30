@@ -17,6 +17,8 @@ final class SignUpViewController: UIViewController {
     let emailCodeView = EmailCodeView()
     let setPWView = SetPassWordView()
     var email = ""
+    var pw = ""
+    var confirmPw = ""
     
     var isPrivacyAgree = false {
         didSet {
@@ -92,11 +94,15 @@ final class SignUpViewController: UIViewController {
         
         emailCodeView.continueButton.addTarget(self, action: #selector(codeVerifyButtonTapped), for: .touchUpInside)
         emailCodeView.resendButton.addTarget(self, action: #selector(sendCode), for: .touchUpInside)
+        
+        setPWView.continueButton.addTarget(self, action: #selector(pwContinueButton), for: .touchUpInside)
     }
     
     private func setDelegate() {
         signUpView.mainTextField.delegate = self
         emailCodeView.mainTextField.delegate = self
+        setPWView.mainTextField.delegate = self
+        setPWView.confirmTextField.delegate = self
     }
     
     private func setNavigationBar() {
@@ -137,6 +143,25 @@ extension SignUpViewController {
         emailCodeView.isHidden = true
         setPWView.isHidden = false
     }
+    
+    @objc private func pwContinueButton() {
+        let mainTabBarViewController = MainTabBarViewController()
+        mainTabBarViewController.homeViewController.isFirst = true
+        view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+    }
+    
+    private func changePWButton() {
+        if setPWView.conditionViewLetter.isSatisfied,
+           setPWView.conditionViewSpecial.isSatisfied,
+           setPWView.conditionViewNum.isSatisfied, 
+            self.pw == self.confirmPw {
+            setPWView.continueButton.isEnabled = true
+        } else {
+            setPWView.continueButton.isEnabled = false
+        }
+        print("pw: \(pw), confirm: \(confirmPw)")
+        print(self.pw == self.confirmPw)
+    }
 }
 
 extension SignUpViewController: UIGestureRecognizerDelegate {
@@ -144,7 +169,6 @@ extension SignUpViewController: UIGestureRecognizerDelegate {
         return true
     }
 }
-
 
 extension SignUpViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -164,8 +188,24 @@ extension SignUpViewController: UITextFieldDelegate {
                         self.isTextFilled = false
                     }
                 }
+                
             case emailCodeView.mainTextField:
                 print(text)
+                
+            case setPWView.mainTextField:
+                print(text)
+                setPWView.conditionViewLetter.isSatisfied = text.isMinimumLength(textField.text ?? "")
+                setPWView.conditionViewSpecial.isSatisfied = text.containsSpecialCharacter(textField.text ?? "")
+                setPWView.conditionViewNum.isSatisfied = text.containsNumber(textField.text ?? "")
+                
+                self.pw = textField.text ?? ""
+                changePWButton()
+                
+            case setPWView.confirmTextField:
+                print(text)
+                self.confirmPw = textField.text ?? ""
+                changePWButton()
+                
             default:
                 print("hello")
             }
@@ -173,7 +213,8 @@ extension SignUpViewController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if textField == emailCodeView.mainTextField {
+        switch textField {
+        case emailCodeView.mainTextField:
             let currentText = (textField.text ?? "") as NSString
             let updatedText = currentText.replacingCharacters(in: range, with: string)
             
@@ -192,9 +233,9 @@ extension SignUpViewController: UITextFieldDelegate {
             textField.attributedText = attributedString
             emailCodeView.continueButton.isEnabled = (textLength == 6)
             return false
-        } else {
+            
+        default:
             return true
         }
     }
-
 }
