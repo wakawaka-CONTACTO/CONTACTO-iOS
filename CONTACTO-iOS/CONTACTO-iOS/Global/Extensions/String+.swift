@@ -81,4 +81,25 @@ extension String {
           let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
           return emailTest.evaluate(with: self)
     }
+    
+    /// 비밀번호 최소 8자
+    func isMinimumLength(_ password: String) -> Bool {
+        let minLengthRegex = ".{8,}"
+        let minLengthPredicate = NSPredicate(format: "SELF MATCHES %@", minLengthRegex)
+        return minLengthPredicate.evaluate(with: password)
+    }
+
+    /// 비밀번호 특수문자 하나 이상 포함
+    func containsSpecialCharacter(_ password: String) -> Bool {
+        let specialCharRegex = ".*[!@#$%^&*(),.?\":{}|<>].*"
+        let specialCharPredicate = NSPredicate(format: "SELF MATCHES %@", specialCharRegex)
+        return specialCharPredicate.evaluate(with: password)
+    }
+
+    /// 비밀번호 숫자 하나 이상 포함
+    func containsNumber(_ password: String) -> Bool {
+        let numberRegex = ".*[0-9].*"
+        let numberPredicate = NSPredicate(format: "SELF MATCHES %@", numberRegex)
+        return numberPredicate.evaluate(with: password)
+    }
 }
