@@ -14,7 +14,7 @@ final class SignUpViewController: UIViewController {
     
     let signUpView = SignUpView()
     let emailCodeView = EmailCodeView()
-    let setPWView = UIView()
+    let setPWView = SetPassWordView()
     var email = ""
     
     var isPrivacyAgree = false {
@@ -67,13 +67,18 @@ final class SignUpViewController: UIViewController {
     
     private func setLayout() {
         view.addSubviews(signUpView,
-                         emailCodeView)
+                         emailCodeView,
+                         setPWView)
         
         signUpView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         
         emailCodeView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        setPWView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
     }
