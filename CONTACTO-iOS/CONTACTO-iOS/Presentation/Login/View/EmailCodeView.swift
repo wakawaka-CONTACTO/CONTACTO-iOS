@@ -55,7 +55,7 @@ final class EmailCodeView: BaseView {
         }
         
         resendButton.do {
-            $0.setTitle(StringLiterals.Login.backToLogin, for: .normal)
+            $0.setTitle(StringLiterals.Login.resendButton, for: .normal)
             $0.setTitleColor(.systemBlue, for: .normal)
             $0.titleLabel?.font = .fontContacto(.gothicButton)
         }

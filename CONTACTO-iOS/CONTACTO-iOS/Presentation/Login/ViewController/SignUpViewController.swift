@@ -14,6 +14,7 @@ final class SignUpViewController: UIViewController {
     
     let signUpView = SignUpView()
     let emailCodeView = EmailCodeView()
+    let setPWView = UIView()
     var email = ""
     
     var isPrivacyAgree = false {
@@ -59,7 +60,9 @@ final class SignUpViewController: UIViewController {
     private func setStyle() {
         view.backgroundColor = .ctblack
         
-        signUpView.isHidden = true
+        signUpView.isHidden = false
+        emailCodeView.isHidden = true
+        setPWView.isHidden = true
     }
     
     private func setLayout() {
@@ -80,6 +83,9 @@ final class SignUpViewController: UIViewController {
         signUpView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         signUpView.privacyAgreeButton.addTarget(self, action: #selector(privacyAgreeButtonTapped), for: .touchUpInside)
         signUpView.privacyAgreeDetailButton.addTarget(self, action: #selector(privacyAgreeDetailButtonTapped), for: .touchUpInside)
+        
+        emailCodeView.continueButton.addTarget(self, action: #selector(codeVerifyButtonTapped), for: .touchUpInside)
+        emailCodeView.resendButton.addTarget(self, action: #selector(sendCode), for: .touchUpInside)
     }
     
     private func setDelegate() {
@@ -91,8 +97,17 @@ final class SignUpViewController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
-    
+}
+
+extension SignUpViewController {
     @objc private func continueButtonTapped() {
+        sendCode()
+        signUpView.isHidden = true
+        emailCodeView.isHidden = false
+        setPWView.isHidden = true
+    }
+    
+    @objc private func sendCode() {
         print("continue: 이메일 인증번호 보내기")
     }
     
@@ -107,6 +122,13 @@ final class SignUpViewController: UIViewController {
     @objc private func privacyAgreeDetailButtonTapped() {
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    @objc private func codeVerifyButtonTapped() {
+        // 맞다면 reset view로 바꾸기
+        signUpView.isHidden = true
+        emailCodeView.isHidden = true
+        setPWView.isHidden = false
     }
 }
 
