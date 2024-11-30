@@ -111,7 +111,7 @@ extension LoginBaseTextField {
             self.backgroundColor = .clear
             self.setRoundBorder(borderColor: .ctwhite, borderWidth: 1.5, cornerRadius: 0)
             self.textColor = .ctwhite
-            self.changePlaceholderColor(forPlaceHolder: "jo***rk@wa****ka.***", forColor: .ctgray2)
+            self.changePlaceholderColor(forPlaceHolder: "aa**aa@aa****aa.***", forColor: .ctgray2)
             self.isEnabled = false
             self.isSecureTextEntry = false
             eyeButton.isHidden = true

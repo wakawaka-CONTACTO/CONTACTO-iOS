@@ -167,9 +167,8 @@ final class LoginView: BaseView {
     
     func setLoginState(state: loginState) {
         self.state = state
-        /// email / pw 구분
         switch state {
-        case .email, .emailError:
+        case .email:
             newAccountButton.isHidden = false
             helpButton.isHidden = false
             privacyButton.isHidden = false
@@ -178,8 +177,24 @@ final class LoginView: BaseView {
             mainTextField.setTextFieldState(state: .email)
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.login
+            mainTextField.isError = false
+            forgetEmailButton.isHidden = true
+            
+        case .emailError:
+            newAccountButton.isHidden = false
+            helpButton.isHidden = false
+            privacyButton.isHidden = false
+            forgetPwButton.isHidden = true
+            backButton.isHidden = true
+            mainTextField.setTextFieldState(state: .email)
+            continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
+            continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.noAccountTitle
+            mainTextField.isError = true
+            forgetEmailButton.isHidden = false
 
-        case .pw, .pwError:
+        case .pw:
             newAccountButton.isHidden = true
             helpButton.isHidden = true
             privacyButton.isHidden = true
@@ -188,6 +203,22 @@ final class LoginView: BaseView {
             mainTextField.setTextFieldState(state: .pw)
             continueButton.setTitle(StringLiterals.Login.login, for: .normal)
             continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.login
+            mainTextField.isError = false
+            forgetEmailButton.isHidden = true
+            
+        case .pwError:
+            newAccountButton.isHidden = true
+            helpButton.isHidden = true
+            privacyButton.isHidden = true
+            forgetPwButton.isHidden = false
+            backButton.isHidden = false
+            mainTextField.setTextFieldState(state: .pw)
+            continueButton.setTitle(StringLiterals.Login.login, for: .normal)
+            continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.incorrectPWTitle
+            mainTextField.isError = true
+            forgetEmailButton.isHidden = true
             
         case .emailForget:
             newAccountButton.isHidden = true
@@ -198,6 +229,9 @@ final class LoginView: BaseView {
             mainTextField.setTextFieldState(state: .name)
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.inputName
+            mainTextField.isError = false
+            forgetEmailButton.isHidden = true
             
         case .pwForget:
             newAccountButton.isHidden = true
@@ -208,6 +242,9 @@ final class LoginView: BaseView {
             mainTextField.setTextFieldState(state: .email)
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.sendCode
+            mainTextField.isError = false
+            forgetEmailButton.isHidden = false
             
         case .findEmail:
             newAccountButton.isHidden = true
@@ -218,36 +255,6 @@ final class LoginView: BaseView {
             mainTextField.setTextFieldState(state: .findEmail)
             continueButton.setTitle(StringLiterals.Login.goToLogin, for: .normal)
             continueButton.isEnabled = true
-        }
-        
-        /// error 구분
-        switch state {
-        case .email, .pw:
-            descriptionLabel.text = StringLiterals.Login.login
-            mainTextField.isError = false
-            forgetEmailButton.isHidden = true
-            
-        case .emailError:
-            descriptionLabel.text = StringLiterals.Login.noAccountTitle
-            mainTextField.isError = true
-            forgetEmailButton.isHidden = false
-            
-        case .pwError:
-            descriptionLabel.text = StringLiterals.Login.incorrectPWTitle
-            mainTextField.isError = true
-            forgetEmailButton.isHidden = true
-            
-        case .emailForget:
-            descriptionLabel.text = StringLiterals.Login.inputName
-            mainTextField.isError = false
-            forgetEmailButton.isHidden = true
-
-        case .pwForget:
-            descriptionLabel.text = StringLiterals.Login.sendCode
-            mainTextField.isError = false
-            forgetEmailButton.isHidden = false
-            
-        case .findEmail:
             descriptionLabel.text = StringLiterals.Login.yourEmail
             mainTextField.isError = false
             forgetEmailButton.isHidden = true
