@@ -140,14 +140,16 @@ extension LoginViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if let text = textField.text {
             if !text.isEmpty || !text.isOnlyWhitespace() {
-                self.loginView.continueButton.isEnabled = true
                 switch loginView.mainTextField.textFieldState {
                 case .email:
+                    self.loginView.continueButton.isEnabled = text.isValidEmail()
                     self.email = text
                     print(self.email)
                 case .pw:
+                    self.loginView.continueButton.isEnabled = true
                     self.password = text
                 case .name:
+                    self.loginView.continueButton.isEnabled = true
                     self.name = text
                 case .findEmail:
                     print("텍스트에 이메일 뜹니다..")

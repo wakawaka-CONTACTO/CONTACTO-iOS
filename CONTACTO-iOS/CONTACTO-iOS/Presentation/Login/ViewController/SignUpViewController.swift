@@ -118,11 +118,12 @@ extension SignUpViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if let text = textField.text {
             if (!text.isEmpty || !text.isOnlyWhitespace()) {
-                // email 정규식을 띄고 있다면
-                self.email = text
-                self.isTextFilled = true
-            } else {
-                self.isTextFilled = false
+                if text.isValidEmail() {
+                    self.email = text
+                    self.isTextFilled = true
+                } else {
+                    self.isTextFilled = false
+                }
             }
         }
     }
