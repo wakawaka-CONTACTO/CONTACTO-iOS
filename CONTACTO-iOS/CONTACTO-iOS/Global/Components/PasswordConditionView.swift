@@ -66,6 +66,10 @@ extension PasswordConditionView {
         self.addSubviews(checkImageView,
                          conditionLabel)
         
+        self.snp.makeConstraints {
+            $0.height.equalTo(15)
+        }
+        
         checkImageView.snp.makeConstraints {
             $0.leading.centerY.equalToSuperview()
         }

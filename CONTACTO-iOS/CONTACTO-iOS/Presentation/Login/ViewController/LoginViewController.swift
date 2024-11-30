@@ -9,6 +9,7 @@ import UIKit
 
 import SnapKit
 import Then
+import SafariServices
 
 final class LoginViewController: UIViewController {
     
@@ -113,7 +114,8 @@ final class LoginViewController: UIViewController {
     
     @objc private func privacyButtonTapped() {
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        let safariViewController = SFSafariViewController(url: url)
+        present(safariViewController, animated: true, completion: nil)
     }
     
     // MARK: - Network

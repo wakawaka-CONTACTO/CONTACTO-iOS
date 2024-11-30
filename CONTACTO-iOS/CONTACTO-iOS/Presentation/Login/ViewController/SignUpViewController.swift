@@ -9,6 +9,7 @@ import UIKit
 
 import SnapKit
 import Then
+import SafariServices
 
 final class SignUpViewController: UIViewController {
     
@@ -126,7 +127,8 @@ extension SignUpViewController {
     
     @objc private func privacyAgreeDetailButtonTapped() {
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        let safariViewController = SFSafariViewController(url: url)
+        present(safariViewController, animated: true, completion: nil)
     }
     
     @objc private func codeVerifyButtonTapped() {
