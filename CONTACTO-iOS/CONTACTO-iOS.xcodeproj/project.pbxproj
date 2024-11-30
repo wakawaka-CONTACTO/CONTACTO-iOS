@@ -87,6 +87,8 @@
 		C3E6D90E2CFAC7B500D6ABDC /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E6D90D2CFAC7B500D6ABDC /* SignUpView.swift */; };
 		C3E6D9102CFAD27E00D6ABDC /* EmailCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E6D90F2CFAD27E00D6ABDC /* EmailCodeView.swift */; };
 		C3E6D9122CFAD76900D6ABDC /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C3E6D9112CFAD76900D6ABDC /* Pretendard-Bold.otf */; };
+		C3E6D9142CFADC9200D6ABDC /* SetPassWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E6D9132CFADC9200D6ABDC /* SetPassWordView.swift */; };
+		C3E6D9162CFADE1400D6ABDC /* PasswordConditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E6D9152CFADE1400D6ABDC /* PasswordConditionView.swift */; };
 		C3E88C6F2C927830005A19BE /* OnboardingNextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C6E2C927830005A19BE /* OnboardingNextButton.swift */; };
 		C3E88C712C927D1C005A19BE /* PurposeOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C702C927D1C005A19BE /* PurposeOnboardingViewController.swift */; };
 		C3E88C732C927D25005A19BE /* PurposeOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C722C927D25005A19BE /* PurposeOnboardingView.swift */; };
@@ -225,6 +227,8 @@
 		C3E6D90D2CFAC7B500D6ABDC /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		C3E6D90F2CFAD27E00D6ABDC /* EmailCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailCodeView.swift; sourceTree = "<group>"; };
 		C3E6D9112CFAD76900D6ABDC /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
+		C3E6D9132CFADC9200D6ABDC /* SetPassWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPassWordView.swift; sourceTree = "<group>"; };
+		C3E6D9152CFADE1400D6ABDC /* PasswordConditionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordConditionView.swift; sourceTree = "<group>"; };
 		C3E88C6E2C927830005A19BE /* OnboardingNextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNextButton.swift; sourceTree = "<group>"; };
 		C3E88C702C927D1C005A19BE /* PurposeOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurposeOnboardingViewController.swift; sourceTree = "<group>"; };
 		C3E88C722C927D25005A19BE /* PurposeOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurposeOnboardingView.swift; sourceTree = "<group>"; };
@@ -748,6 +752,7 @@
 				C3B95CF72C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift */,
 				C35E264A2C9D39E900B197CB /* BasePaddingLabel.swift */,
 				C33C65002CF9E262009FA2BD /* LoginBaseTextField.swift */,
+				C3E6D9152CFADE1400D6ABDC /* PasswordConditionView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -949,6 +954,7 @@
 				C3FD90802C915E870021D2BA /* LoginView.swift */,
 				C3E6D90D2CFAC7B500D6ABDC /* SignUpView.swift */,
 				C3E6D90F2CFAD27E00D6ABDC /* EmailCodeView.swift */,
+				C3E6D9132CFADC9200D6ABDC /* SetPassWordView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1121,6 +1127,7 @@
 				C3FD907D2C915E550021D2BA /* LoginViewController.swift in Sources */,
 				C33D73CA2CDEEE6800889B1B /* KeychainHandler.swift in Sources */,
 				C393A61C2C94201C00ECF1B5 /* HomeViewController.swift in Sources */,
+				C3E6D9142CFADC9200D6ABDC /* SetPassWordView.swift in Sources */,
 				C3FD90832C915EB90021D2BA /* BaseViewController.swift in Sources */,
 				C3E88C772C9299E0005A19BE /* ExplainOnboardingViewController.swift in Sources */,
 				C3FD90912C917D770021D2BA /* NameOnboardingViewController.swift in Sources */,
@@ -1143,6 +1150,7 @@
 				C35E265A2C9D733500B197CB /* ChatListCollectionViewCell.swift in Sources */,
 				C33D73F72CDEF19000889B1B /* PortfoliosResponseDTO.swift in Sources */,
 				C35E26542C9D6F6900B197CB /* ChatListView.swift in Sources */,
+				C3E6D9162CFADE1400D6ABDC /* PasswordConditionView.swift in Sources */,
 				C3FD90392C9139D40021D2BA /* AppDelegate.swift in Sources */,
 				C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */,
 				C393A6192C94200800ECF1B5 /* HomeView.swift in Sources */,
