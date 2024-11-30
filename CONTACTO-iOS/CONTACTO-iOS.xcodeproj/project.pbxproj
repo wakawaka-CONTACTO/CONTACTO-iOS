@@ -84,6 +84,7 @@
 		C3B95CF62C9C0AB7002A4681 /* Portfolio.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B95CF52C9C0AB7002A4681 /* Portfolio.swift */; };
 		C3B95CF82C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B95CF72C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift */; };
 		C3C7ECF42CF1D2C300509CD4 /* ChatRoomResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C7ECF32CF1D2C300509CD4 /* ChatRoomResponseDTO.swift */; };
+		C3E6D90E2CFAC7B500D6ABDC /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E6D90D2CFAC7B500D6ABDC /* SignUpView.swift */; };
 		C3E88C6F2C927830005A19BE /* OnboardingNextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C6E2C927830005A19BE /* OnboardingNextButton.swift */; };
 		C3E88C712C927D1C005A19BE /* PurposeOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C702C927D1C005A19BE /* PurposeOnboardingViewController.swift */; };
 		C3E88C732C927D25005A19BE /* PurposeOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E88C722C927D25005A19BE /* PurposeOnboardingView.swift */; };
@@ -219,6 +220,7 @@
 		C3B95CF52C9C0AB7002A4681 /* Portfolio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Portfolio.swift; sourceTree = "<group>"; };
 		C3B95CF72C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		C3C7ECF32CF1D2C300509CD4 /* ChatRoomResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomResponseDTO.swift; sourceTree = "<group>"; };
+		C3E6D90D2CFAC7B500D6ABDC /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		C3E88C6E2C927830005A19BE /* OnboardingNextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNextButton.swift; sourceTree = "<group>"; };
 		C3E88C702C927D1C005A19BE /* PurposeOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurposeOnboardingViewController.swift; sourceTree = "<group>"; };
 		C3E88C722C927D25005A19BE /* PurposeOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurposeOnboardingView.swift; sourceTree = "<group>"; };
@@ -941,6 +943,7 @@
 			isa = PBXGroup;
 			children = (
 				C3FD90802C915E870021D2BA /* LoginView.swift */,
+				C3E6D90D2CFAC7B500D6ABDC /* SignUpView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1181,6 +1184,7 @@
 				C3FD90592C9142880021D2BA /* adjust+.swift in Sources */,
 				C33D73D32CDEEEA300889B1B /* APIRequestLoader.swift in Sources */,
 				C33D74102CDEF21900889B1B /* ChatListResponseDTO.swift in Sources */,
+				C3E6D90E2CFAC7B500D6ABDC /* SignUpView.swift in Sources */,
 				C33D73D72CDEEEBE00889B1B /* ContactoRequestInterceptor.swift in Sources */,
 				C3B95CF32C9C08B7002A4681 /* ProfileTalentCollectionViewCell.swift in Sources */,
 				C3E88C8A2C92E661005A19BE /* PortfolioOnboardingView.swift in Sources */,
