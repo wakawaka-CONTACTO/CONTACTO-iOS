@@ -118,7 +118,7 @@ final class EditViewController: UIViewController {
                 instagramId: self.portfolioData.instagramId,
                 password: "",
                 webUrl: self.portfolioData.webUrl,
-                userPurposes: self.portfolioData.userPurposes,
+                userPurposes: self.portfolioData.userPurposes.map { $0 - 1 },
                 userTalents: self.convertToTalent(koreanNames: self.portfolioData.userTalents.map { $0.talentType }),
                 portfolioImages: imageDataArray)
             self.editMyPort(bodyDTO: body) { _ in
@@ -353,11 +353,11 @@ extension EditViewController {
     @objc private func previewButtonTapped() {
         let previewViewController = HomeViewController()
         previewViewController.isPreview = true
-        previewViewController.portfolioData = self.portfolioData
+        previewViewController.previewPortfolioData = self.portfolioData
         previewViewController.imageDummy = selectedImages
-        previewViewController.portfolioData.userTalents = []
+        previewViewController.previewPortfolioData.userTalents = []
         self.talentData.forEach {
-            previewViewController.portfolioData.userTalents.append(
+            previewViewController.previewPortfolioData.userTalents.append(
                 UserTalent(id: 0, userId: self.portfolioData.id, talentType: $0.displayName)
             )
         }
