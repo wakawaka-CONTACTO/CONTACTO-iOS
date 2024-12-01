@@ -91,7 +91,7 @@ extension String {
 
     /// 비밀번호 특수문자 하나 이상 포함
     func containsSpecialCharacter(_ password: String) -> Bool {
-        let specialCharRegex = ".*[!@#$%^&*(),.?\":{}|<>].*"
+        let specialCharRegex = ".*[!@#$%^&*(),.?\":{}|<>~_\\-+].*"
         let specialCharPredicate = NSPredicate(format: "SELF MATCHES %@", specialCharRegex)
         return specialCharPredicate.evaluate(with: password)
     }
