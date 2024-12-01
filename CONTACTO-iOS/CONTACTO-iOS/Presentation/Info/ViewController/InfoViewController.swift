@@ -96,11 +96,7 @@ extension InfoViewController {
         
         let success = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ action in
             print("로그아웃 버튼이 눌렸습니다.")
-            KeychainHandler.shared.accessToken.removeAll()
-            KeychainHandler.shared.refreshToken.removeAll()
-            
-            let mainTabBarViewController = MainTabBarViewController()
-            self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+            KeychainHandler.shared.logout()
         }
         
         alert.addAction(cancel)

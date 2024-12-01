@@ -17,11 +17,9 @@ struct Credentials {
 struct KeychainHandler {
     static var shared = KeychainHandler()
     
-    private let keychain = KeychainWrapper(serviceName: "PINGLE", accessGroup: "com.PINGLE.iOS.keychainGroup")
+    private let keychain = KeychainWrapper(serviceName: "CONTACTO", accessGroup: "com.CONTACTO.iOS.keychainGroup")
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"
-    private let providerTokenKey = "providerToken"
-    private let authorizationCodeKey = "authorizationCode"
     private let userIDKey = "userID"
     private let userNameKey = "userName"
     
@@ -40,24 +38,6 @@ struct KeychainHandler {
         }
         set {
             KeychainWrapper.standard.set(newValue, forKey: refreshTokenKey)
-        }
-    }
-    
-    var providerToken: String {
-        get {
-            return KeychainWrapper.standard.string(forKey: providerTokenKey) ?? ""
-        }
-        set {
-            KeychainWrapper.standard.set(newValue, forKey: providerTokenKey)
-        }
-    }
-    
-    var authorizationCode: String {
-        get {
-            return KeychainWrapper.standard.string(forKey: authorizationCodeKey) ?? ""
-        }
-        set {
-            KeychainWrapper.standard.set(newValue, forKey: authorizationCodeKey)
         }
     }
     
@@ -82,6 +62,7 @@ struct KeychainHandler {
     mutating func logout() {
         accessToken = ""
         refreshToken = ""
+        
         KeychainWrapper.standard.removeObject(forKey: userIDKey)
         KeychainWrapper.standard.removeObject(forKey: accessTokenKey)
         KeychainWrapper.standard.removeObject(forKey: refreshTokenKey)
@@ -90,13 +71,9 @@ struct KeychainHandler {
     mutating func deleteID() {
         accessToken = ""
         refreshToken = ""
-        providerToken = ""
-        authorizationCode = ""
         
         KeychainWrapper.standard.removeObject(forKey: userIDKey)
         KeychainWrapper.standard.removeObject(forKey: accessTokenKey)
         KeychainWrapper.standard.removeObject(forKey: refreshTokenKey)
-        KeychainWrapper.standard.removeObject(forKey: providerTokenKey)
-        KeychainWrapper.standard.removeObject(forKey: authorizationCodeKey)
     }
 }
