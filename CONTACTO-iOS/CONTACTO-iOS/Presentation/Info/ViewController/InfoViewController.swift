@@ -96,7 +96,10 @@ extension InfoViewController {
         
         let success = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ action in
             print("로그아웃 버튼이 눌렸습니다.")
-            KeychainHandler.shared.logout()
+            KeychainHandler.shared.accessToken.removeAll()
+            KeychainHandler.shared.refreshToken.removeAll()
+            guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+            sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
         }
         
         alert.addAction(cancel)
@@ -116,6 +119,11 @@ extension InfoViewController {
         
         let cancel = UIAlertAction(title: StringLiterals.Info.Alert.Delete.delete, style: .destructive){ cancel in
             print("탈퇴 버튼이 눌렸습니다.")
+            // 탈퇴 API 연결
+            KeychainHandler.shared.accessToken.removeAll()
+            KeychainHandler.shared.refreshToken.removeAll()
+            guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+            sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
         }
         
         alert.addAction(success)
