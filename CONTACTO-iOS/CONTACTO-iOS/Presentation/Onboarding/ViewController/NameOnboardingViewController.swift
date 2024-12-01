@@ -13,6 +13,7 @@ import Then
 final class NameOnboardingViewController: BaseViewController {
     
     private let nameOnboardingView = NameOnboardingView()
+    var name = ""
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -94,8 +95,18 @@ extension NameOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
+        UserInfo.shared.name = self.name
+        print(UserInfo.shared.name)
         let purposeOnboardingViewController = PurposeOnboardingViewController()
         self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if let text = textField.text {
+            if !text.isEmpty || !text.isOnlyWhitespace() {
+                self.name = text
+            }
+        }
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

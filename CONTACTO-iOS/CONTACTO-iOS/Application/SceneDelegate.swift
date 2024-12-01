@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
         self.window = window
         
-        let tabbarViewController = MainTabBarViewController()
+        let tabbarViewController = LoginViewController()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             let navigationController = UINavigationController(rootViewController: tabbarViewController)

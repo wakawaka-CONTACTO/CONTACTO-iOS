@@ -145,6 +145,9 @@ extension SignUpViewController {
     }
     
     @objc private func pwContinueButton() {
+        UserInfo.shared.email = self.email
+        UserInfo.shared.password = self.pw
+        
         let nameOnboardingViewController = NameOnboardingViewController()
         view.window?.rootViewController = UINavigationController(rootViewController: nameOnboardingViewController)
     }
