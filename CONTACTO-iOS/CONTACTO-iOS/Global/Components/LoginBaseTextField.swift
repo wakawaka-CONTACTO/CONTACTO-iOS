@@ -21,7 +21,11 @@ final class LoginBaseTextField: BaseTextField {
     /// 보이면 true, 가려져있으면 false
     var isButtonTapped = false
     /// error면 true, 아니면 false
-    var isError = false
+    var isError = false {
+        didSet {
+            errorText()
+        }
+    }
     let eyeButton = UIButton()
     
     override init(frame: CGRect) {
@@ -118,7 +122,7 @@ extension LoginBaseTextField {
     }
     
     func errorText() {            
-        self.setRoundBorder(borderColor: isError ? .ctblack : .ctsubred, borderWidth: 1.5, cornerRadius: 0)
+        self.setRoundBorder(borderColor: isError ? .ctsubred : .ctblack, borderWidth: 1.5, cornerRadius: 0)
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {

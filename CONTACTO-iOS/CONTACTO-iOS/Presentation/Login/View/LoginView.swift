@@ -175,6 +175,7 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = true
             backButton.isHidden = true
             mainTextField.setTextFieldState(state: .email)
+            mainTextField.isError = false
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.login
@@ -182,12 +183,13 @@ final class LoginView: BaseView {
             forgetEmailButton.isHidden = true
             
         case .emailError:
-            newAccountButton.isHidden = false
+            newAccountButton.isHidden = true
             helpButton.isHidden = false
             privacyButton.isHidden = false
             forgetPwButton.isHidden = true
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .email)
+            mainTextField.isError = true
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.noAccountTitle
@@ -201,6 +203,7 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = false
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .pw)
+            mainTextField.isError = false
             self.bringSubviewToFront(mainTextField.eyeButton)
             continueButton.setTitle(StringLiterals.Login.login, for: .normal)
             continueButton.isEnabled = false
@@ -215,6 +218,7 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = false
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .pw)
+            mainTextField.isError = true
             self.bringSubviewToFront(mainTextField.eyeButton)
             continueButton.setTitle(StringLiterals.Login.login, for: .normal)
             continueButton.isEnabled = false
@@ -229,6 +233,7 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = false
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .name)
+            mainTextField.isError = false
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.inputName
@@ -242,6 +247,7 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = true
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .email)
+            mainTextField.isError = false
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.sendCode
@@ -255,6 +261,7 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = false
             backButton.isHidden = true
             mainTextField.setTextFieldState(state: .findEmail)
+            mainTextField.isError = false
             continueButton.setTitle(StringLiterals.Login.goToLogin, for: .normal)
             continueButton.isEnabled = true
             descriptionLabel.text = StringLiterals.Login.yourEmail
