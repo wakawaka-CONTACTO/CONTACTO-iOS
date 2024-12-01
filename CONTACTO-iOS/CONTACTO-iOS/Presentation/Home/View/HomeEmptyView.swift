@@ -11,8 +11,6 @@ import SnapKit
 import Then
 
 final class HomeEmptyView: BaseView {
-    
-    // 추후 연결 시 폰트 및 레이아웃 확인 필요
 
     let titleLabel = UILabel()
     let descriptionLabel = UILabel()
@@ -22,7 +20,8 @@ final class HomeEmptyView: BaseView {
         
         titleLabel.do {
             $0.text = StringLiterals.Home.Main.emptyTitle
-            $0.font = .fontContacto(.title1)
+            $0.font = .fontContacto(.title6)
+            $0.asLineHeight(.title6)
             $0.textColor = .ctmainpink
             $0.numberOfLines = 0
             $0.textAlignment = .center
@@ -30,7 +29,7 @@ final class HomeEmptyView: BaseView {
         
         descriptionLabel.do {
             $0.text = StringLiterals.Home.Main.emptyDescription
-            $0.font = .fontContacto(.body2)
+            $0.font = .fontContacto(.body)
             $0.textColor = .ctmainpink
             $0.numberOfLines = 0
             $0.textAlignment = .center
