@@ -21,6 +21,7 @@ final class LoginViewController: UIViewController {
     var confirmPw = ""
     var name = ""
     var decodeEmail = ""
+    var authCode = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -153,10 +154,11 @@ extension LoginViewController {
     }
     
     @objc private func codeVerifyButtonTapped() {
-        // 맞다면 reset view로 바꾸기
-        loginView.isHidden = true
-        emailCodeView.isHidden = true
-        setPWView.isHidden = false
+        emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { _ in
+            self.loginView.isHidden = true
+            self.emailCodeView.isHidden = true
+            self.setPWView.isHidden = false
+        }
     }
     
     @objc private func sendCode() {
@@ -217,9 +219,9 @@ extension LoginViewController {
     }
     
     private func emailSend(bodyDTO: EmailSendRequestBodyDTO,completion: @escaping (Bool) -> Void) {
-        NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { [weak self] response in
+        NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
-            case .success(let data):
+            case .success(_):
                 completion(true)
             default:
                 completion(false)
@@ -228,6 +230,17 @@ extension LoginViewController {
         }
     }
     
+    private func emailCheck(bodyDTO: EmailCheckRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.emailCheck(bodyDTO: bodyDTO) { response in
+            switch response {
+            case .success(let data):
+                completion(data)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
 }
 
 extension LoginViewController: UITextFieldDelegate {
@@ -261,6 +274,7 @@ extension LoginViewController: UITextFieldDelegate {
                 }
                 
             case emailCodeView.mainTextField:
+                self.authCode = text
                 print(text)
                 
             case setPWView.mainTextField:

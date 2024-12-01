@@ -19,6 +19,7 @@ final class SignUpViewController: UIViewController {
     var email = ""
     var pw = ""
     var confirmPw = ""
+    var authCode = ""
     
     var isPrivacyAgree = false {
         didSet {
@@ -136,10 +137,11 @@ extension SignUpViewController {
     }
     
     @objc private func codeVerifyButtonTapped() {
-        // 맞다면 set view로 바꾸기
-        signUpView.isHidden = true
-        emailCodeView.isHidden = true
-        setPWView.isHidden = false
+        emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { _ in
+            self.signUpView.isHidden = true
+            self.emailCodeView.isHidden = true
+            self.setPWView.isHidden = false
+        }
     }
     
     @objc private func pwContinueButton() {
@@ -160,10 +162,22 @@ extension SignUpViewController {
     
     // MARK: - Network
     private func emailSend(bodyDTO: EmailSendRequestBodyDTO,completion: @escaping (Bool) -> Void) {
-        NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { [weak self] response in
+        NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
                 completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
+    
+    private func emailCheck(bodyDTO: EmailCheckRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.emailCheck(bodyDTO: bodyDTO) { response in
+            switch response {
+            case .success(let data):
+                completion(data)
             default:
                 completion(false)
                 print("error")
@@ -198,6 +212,7 @@ extension SignUpViewController: UITextFieldDelegate {
                 }
                 
             case emailCodeView.mainTextField:
+                self.authCode = text
                 print(text)
                 
             case setPWView.mainTextField:
