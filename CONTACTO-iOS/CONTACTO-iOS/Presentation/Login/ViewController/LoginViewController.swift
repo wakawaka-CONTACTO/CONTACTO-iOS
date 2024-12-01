@@ -109,8 +109,7 @@ extension LoginViewController {
         case .pw, .pwError:
             // 성공한다면
             // 로그인은 했는데 온보딩 정보는 없다면 onboarding으로 빠지도록
-            let mainTabBarViewController = MainTabBarViewController()
-            view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+            pwContinueButton()
             // 실패하면 다시 pwError
         case .emailForget:
             helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
@@ -190,13 +189,14 @@ extension LoginViewController {
     }
     
     // MARK: - Network
-    private func login(bodyDTO: LoginRequestBodyDTO,completion: @escaping (Bool) -> Void) {
-        NetworkService.shared.onboardingService.login(bodyDTO: bodyDTO) { [weak self] response in
+    private func login(bodyDTO: LoginRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.login(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
                 print(data)
+                KeychainHandler.shared.accessToken = data.accessToken
+                KeychainHandler.shared.refreshToken = data.refreshToken
                 // 로그인 실패 시 코드 받아야함
-                // 토큰 저장
                 completion(true)
             default:
                 completion(false)
@@ -218,7 +218,7 @@ extension LoginViewController {
         }
     }
     
-    private func emailSend(bodyDTO: EmailSendRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+    private func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(_):
@@ -230,7 +230,7 @@ extension LoginViewController {
         }
     }
     
-    private func emailCheck(bodyDTO: EmailCheckRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+    private func emailCheck(bodyDTO: EmailCheckRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.emailCheck(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
