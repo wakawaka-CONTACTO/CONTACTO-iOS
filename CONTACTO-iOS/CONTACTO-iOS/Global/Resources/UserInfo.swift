@@ -29,7 +29,7 @@ func updateUserInfo(_ data: MyDetailResponseDTO) {
     var userType = ""
     
     UserInfo.shared.email = data.email
-    UserInfo.shared.password = data.password
+//    UserInfo.shared.password = data.password
     UserInfo.shared.name = data.username
     UserInfo.shared.description = data.description
     UserInfo.shared.instagramId = data.instagramId

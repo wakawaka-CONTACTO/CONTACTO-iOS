@@ -14,7 +14,7 @@ struct MyDetailResponseDTO: Codable {
     let socialId: Int?
     let loginType, email: String
     var webUrl: String?
-    let password: String
+    let password: String?
     var userPortfolio: UserPortfolio?
     var userPurposes: [Int]
     var userTalents: [UserTalent]
