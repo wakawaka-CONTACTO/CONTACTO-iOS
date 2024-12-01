@@ -102,10 +102,15 @@ extension LoginViewController {
     @objc func continueButtonTapped() {
         switch loginView.state {
         case .email, .emailError:
+            // 틀렸을 때 분기처리 필요, 아래는 이메일 맞았을 때
             loginView.mainTextField.text = ""
             loginView.setLoginState(state: .pw)
         case .pw, .pwError:
-            loginButtonTapped()
+            // 성공한다면
+            // 로그인은 했는데 온보딩 정보는 없다면 onboarding으로 빠지도록
+            let mainTabBarViewController = MainTabBarViewController()
+            view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+            // 실패하면 다시 pwError
         case .emailForget:
             helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
                 self.loginView.mainTextField.text = ""
@@ -114,9 +119,7 @@ extension LoginViewController {
         }
         case .pwForget:
             sendCode()
-            loginView.isHidden = true
-            emailCodeView.isHidden = false
-            setPWView.isHidden = true
+            
         case .findEmail:
             loginView.mainTextField.text = ""
             loginView.setLoginState(state: .email)
@@ -158,6 +161,11 @@ extension LoginViewController {
     
     @objc private func sendCode() {
         print("continue: 이메일 인증번호 보내기")
+        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { _ in
+            self.loginView.isHidden = true
+            self.emailCodeView.isHidden = false
+            self.setPWView.isHidden = true
+        }
     }
     
     @objc private func pwContinueButton() {
@@ -177,13 +185,6 @@ extension LoginViewController {
         } else {
             setPWView.continueButton.isEnabled = false
         }
-    }
-    
-    @objc func loginButtonTapped() {
-        // 성공한다면
-        let mainTabBarViewController = MainTabBarViewController()
-        view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
-        // 실패하면 pwError
     }
     
     // MARK: - Network
@@ -214,6 +215,19 @@ extension LoginViewController {
             }
         }
     }
+    
+    private func emailSend(bodyDTO: EmailSendRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { [weak self] response in
+            switch response {
+            case .success(let data):
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
+    
 }
 
 extension LoginViewController: UITextFieldDelegate {

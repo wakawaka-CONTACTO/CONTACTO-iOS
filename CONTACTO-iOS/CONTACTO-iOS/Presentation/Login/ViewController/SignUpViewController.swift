@@ -87,7 +87,7 @@ final class SignUpViewController: UIViewController {
     }
     
     private func setAddTarget() {
-        signUpView.continueButton.addTarget(self, action: #selector(continueButtonTapped), for: .touchUpInside)
+        signUpView.continueButton.addTarget(self, action: #selector(sendCode), for: .touchUpInside)
         signUpView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         signUpView.privacyAgreeButton.addTarget(self, action: #selector(privacyAgreeButtonTapped), for: .touchUpInside)
         signUpView.privacyAgreeDetailButton.addTarget(self, action: #selector(privacyAgreeDetailButtonTapped), for: .touchUpInside)
@@ -112,15 +112,13 @@ final class SignUpViewController: UIViewController {
 }
 
 extension SignUpViewController {
-    @objc private func continueButtonTapped() {
-        sendCode()
-        signUpView.isHidden = true
-        emailCodeView.isHidden = false
-        setPWView.isHidden = true
-    }
-    
     @objc private func sendCode() {
         print("continue: 이메일 인증번호 보내기")
+        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { _ in
+            self.signUpView.isHidden = true
+            self.emailCodeView.isHidden = false
+            self.setPWView.isHidden = true
+        }
     }
     
     @objc private func backButtonTapped() {
@@ -157,6 +155,19 @@ extension SignUpViewController {
             setPWView.continueButton.isEnabled = true
         } else {
             setPWView.continueButton.isEnabled = false
+        }
+    }
+    
+    // MARK: - Network
+    private func emailSend(bodyDTO: EmailSendRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { [weak self] response in
+            switch response {
+            case .success(let data):
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
         }
     }
 }
