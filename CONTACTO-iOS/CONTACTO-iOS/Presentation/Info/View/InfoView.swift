@@ -115,7 +115,7 @@ final class InfoView: BaseView {
         }
         
         versionLabel.do {
-            $0.text = "v 1.0.0"
+            $0.text = "v \(AppStoreCheck.appVersion ?? "")"
             $0.textColor = .ctblack
             $0.font = .fontContacto(.caption2)
         }
