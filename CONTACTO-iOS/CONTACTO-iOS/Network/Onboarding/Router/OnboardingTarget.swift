@@ -109,32 +109,52 @@ extension OnboardingTarget: TargetType {
 extension SignUpRequestBodyDTO {
     func toMultipartFormData() -> (MultipartFormData) -> Void {
         return { formData in
-            formData.append(self.name.data(using: .utf8) ?? Data(), withName: "name")
-            formData.append(self.email.data(using: .utf8) ?? Data(), withName: "email")
-            formData.append(self.description.data(using: .utf8) ?? Data(), withName: "description")
-            formData.append(self.instagramId.data(using: .utf8) ?? Data(), withName: "instagramId")
-            formData.append(self.password.data(using: .utf8) ?? Data(), withName: "password")
+            if let userSignUpReqData = try? JSONEncoder().encode(self.userSignUpReq) {
+                formData.append(userSignUpReqData, withName: "userSignUpReq", mimeType: "application/json")
+            } else {
+                print("Failed to encode userSignUpReq")
+            }
             
-            if let webUrl = self.webUrl {
+            formData.append(self.userSignUpReq.name.data(using: .utf8) ?? Data(), withName: "name")
+            formData.append(self.userSignUpReq.loginType.data(using: .utf8) ?? Data(), withName: "loginType")
+            formData.append(self.userSignUpReq.email.data(using: .utf8) ?? Data(), withName: "email")
+            formData.append(self.userSignUpReq.description.data(using: .utf8) ?? Data(), withName: "description")
+            formData.append(self.userSignUpReq.instagramId.data(using: .utf8) ?? Data(), withName: "instagramId")
+            formData.append(self.userSignUpReq.password.data(using: .utf8) ?? Data(), withName: "password")
+            if let webUrl = self.userSignUpReq.webUrl {
                 formData.append(webUrl.data(using: .utf8) ?? Data(), withName: "webUrl")
             }
             
-            if let portfolioImages = self.portfolioImages, !portfolioImages.isEmpty {
+            if let portfolioImages = self.images, !portfolioImages.isEmpty {
                 print("portfolioImages is not empty. Count: \(portfolioImages.count)")
                 for (index, image) in portfolioImages.enumerated() {
                     print("Index: \(index), Photo Size: \(image.count) bytes")
-                    formData.append(image, withName: "portfolioImages", fileName: "image\(index).jpg", mimeType: "image/jpeg")
+                    formData.append(image, withName: "portfolioImgs", fileName: "image\(index).jpg", mimeType: "image/jpeg")
                 }
             } else {
                 print("portfolioImages is nil or empty")
             }
             
-            for (index, purpose) in self.userPurposes.enumerated() {
-                formData.append("\(purpose)".data(using: .utf8) ?? Data(), withName: "userPurposes[\(index)]")
+            let purposeArray = self.purpose.map { purpose in
+                return ["purposeType": purpose.purposeType]
             }
             
-            for (index, talent) in self.userTalents.enumerated() {
-                formData.append(talent.data(using: .utf8) ?? Data(), withName: "userTalents[\(index)]")
+            if let purposeData = try? JSONSerialization.data(withJSONObject: purposeArray, options: []),
+               let purposeString = String(data: purposeData, encoding: .utf8) {
+                formData.append(purposeString.data(using: .utf8) ?? Data(),
+                                withName: "purpose",
+                                mimeType: "application/json")
+            }
+            
+            let talentArray = self.talent.map { talent in
+                return ["talentType": talent.talentType]
+            }
+            
+            if let talentData = try? JSONSerialization.data(withJSONObject: talentArray, options: []),
+               let talentString = String(data: talentData, encoding: .utf8) {
+                formData.append(talentString.data(using: .utf8) ?? Data(),
+                                withName: "talent",
+                                mimeType: "application/json")
             }
         }
     }

@@ -8,9 +8,21 @@
 import Foundation
 
 struct SignUpRequestBodyDTO: Codable {
+    let userSignUpReq: UserSignUpRequest
+    let purpose: [Purpose]
+    let talent: [TalentType]
+    let images: [Data]?
+}
+
+struct UserSignUpRequest: Codable {
     let name, email, description, instagramId, password, loginType: String
     let webUrl: String?
-    let userPurposes: [Int]
-    let userTalents: [String]
-    let portfolioImages: [Data]?
+}
+
+struct Purpose: Codable {
+    let purposeType: Int
+}
+
+struct TalentType: Codable {
+    let talentType: String
 }

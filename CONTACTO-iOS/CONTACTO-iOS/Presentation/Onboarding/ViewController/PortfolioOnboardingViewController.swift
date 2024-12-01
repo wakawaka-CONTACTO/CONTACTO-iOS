@@ -43,19 +43,19 @@ final class PortfolioOnboardingViewController: BaseViewController {
     @objc private func nextButtonTapped() {
         UserInfo.shared.portfolioImages = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
         let bodyData = SignUpRequestBodyDTO(
-            name: UserInfo.shared.name,
-            email: UserInfo.shared.email,
-            description:  UserInfo.shared.description,
-            instagramId: UserInfo.shared.instagramId,
-            password: UserInfo.shared.password,
-            loginType: "LOCAL",
-            webUrl: UserInfo.shared.webUrl,
-            userPurposes: UserInfo.shared.userPurposes,
-            userTalents: UserInfo.shared.userTalents,
-            portfolioImages: UserInfo.shared.portfolioImages)
+            userSignUpReq: UserSignUpRequest(
+                name: UserInfo.shared.name,
+                email: UserInfo.shared.email,
+                description: UserInfo.shared.description,
+                instagramId: UserInfo.shared.instagramId,
+                password: UserInfo.shared.password,
+                loginType: "LOCAL",
+                webUrl: UserInfo.shared.webUrl),
+            purpose: UserInfo.shared.userPurposes.map { Purpose(purposeType: $0) },
+            talent: UserInfo.shared.userTalents.map { TalentType(talentType: $0) },
+            images: UserInfo.shared.portfolioImages)
         
         print(bodyData)
-        
         signup(bodyDTO: bodyData) { _ in
                 let mainTabBarViewController = MainTabBarViewController()
                 mainTabBarViewController.homeViewController.isFirst = true
@@ -86,10 +86,12 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     private func signup(bodyDTO: SignUpRequestBodyDTO,completion: @escaping (Bool) -> Void) {
-        NetworkService.shared.onboardingService.signup(bodyDTO: bodyDTO) { [weak self] response in
+        NetworkService.shared.onboardingService.signup(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
-                print(data)
+                KeychainHandler.shared.userID = String(data.userId)
+                KeychainHandler.shared.accessToken = data.accessToken
+                KeychainHandler.shared.refreshToken = data.refreshToken
                 completion(true)
             default:
                 completion(false)
