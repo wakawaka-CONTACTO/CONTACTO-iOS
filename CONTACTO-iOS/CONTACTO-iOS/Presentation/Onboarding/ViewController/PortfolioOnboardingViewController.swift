@@ -41,11 +41,26 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
-//        signup(bodyDTO: <#T##SignUpRequestBodyDTO#>) { _ in
-            let mainTabBarViewController = MainTabBarViewController()
-            mainTabBarViewController.homeViewController.isFirst = true
-            navigationController?.pushViewController(mainTabBarViewController, animated: true)
-//        }
+        UserInfo.shared.portfolioImages = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+        let bodyData = SignUpRequestBodyDTO(
+            name: UserInfo.shared.name,
+            email: UserInfo.shared.email,
+            description:  UserInfo.shared.description,
+            instagramId: UserInfo.shared.instagramId,
+            password: UserInfo.shared.password,
+            loginType: "LOCAL",
+            webUrl: UserInfo.shared.webUrl,
+            userPurposes: UserInfo.shared.userPurposes,
+            userTalents: UserInfo.shared.userTalents,
+            portfolioImages: UserInfo.shared.portfolioImages)
+        
+        print(bodyData)
+        
+        signup(bodyDTO: bodyData) { _ in
+                let mainTabBarViewController = MainTabBarViewController()
+                mainTabBarViewController.homeViewController.isFirst = true
+                self.navigationController?.pushViewController(mainTabBarViewController, animated: true)
+            }
     }
     
     private func setCollectionView() {
@@ -107,7 +122,6 @@ extension PortfolioOnboardingViewController: UICollectionViewDelegate {
             $0.leading.equalToSuperview().offset(indicatorX)
             $0.leading.trailing.lessThanOrEqualToSuperview()
         }
-        
     }
 }
 

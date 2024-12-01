@@ -73,6 +73,11 @@ final class TalentOnboardingViewController: BaseViewController {
             }
             updateTalent()
         } else {
+            let selectedTalents = editTalent.compactMap { talentInfo in
+                Talent.allCases.first(where: { $0.info.koreanName == talentInfo.koreanName })?.rawValue
+            }
+            UserInfo.shared.userTalents = selectedTalents
+            
             let portfolioOnboardingViewController = PortfolioOnboardingViewController()
             self.navigationController?.pushViewController(portfolioOnboardingViewController, animated: true)
         }

@@ -131,12 +131,14 @@ final class PurposeOnboardingView: BaseView {
     
     @objc private func purposeButtonTapped(_ sender: OnboardingPurposeButton) {
         selectedCount = 0
+        var purpose: [Int] = []
         sender.buttonTapped()
         [getButton, collaboButton, makeButton, artButton, groupButton].forEach {
             if $0.isTapped {
                 selectedCount += 1
-                selectedPurpose.append($0.num)
+                purpose.append($0.num)
             }
         }
+        selectedPurpose = purpose
     }
 }

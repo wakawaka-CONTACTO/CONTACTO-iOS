@@ -13,6 +13,7 @@ import Then
 final class ExplainOnboardingViewController: BaseViewController {
     
     let explainOnboardingView = ExplainOnboardingView()
+    var explain = ""
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -86,6 +87,7 @@ extension ExplainOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
+        UserInfo.shared.description = explainOnboardingView.explainTextView.text ?? ""
         let SNSOnboardingViewController = SNSOnboardingViewController()
         self.navigationController?.pushViewController(SNSOnboardingViewController, animated: true)
     }

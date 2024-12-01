@@ -92,6 +92,8 @@ extension SNSOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
+        UserInfo.shared.instagramId = self.snsOnboardingView.instaTextField.text ?? ""
+        UserInfo.shared.webUrl = self.snsOnboardingView.websiteTextField.text ?? ""
         let talentOnboardingViewController = TalentOnboardingViewController()
         self.navigationController?.pushViewController(talentOnboardingViewController, animated: true)
     }
