@@ -194,6 +194,7 @@ extension LoginViewController {
             switch response {
             case .success(let data):
                 print(data)
+                KeychainHandler.shared.userID = String(data.userId)
                 KeychainHandler.shared.accessToken = data.accessToken
                 KeychainHandler.shared.refreshToken = data.refreshToken
                 // 로그인 실패 시 코드 받아야함
