@@ -21,6 +21,11 @@ final class SetPassWordView: BaseView {
     let confirmTextField = LoginBaseTextField(state: .pw)
     let continueButton = UIButton()
     
+    override func setAddTarget() {
+        mainTextField.eyeButton.addTarget(self, action: #selector(mainEyeButtonTapped), for: .touchUpInside)
+        confirmTextField.eyeButton.addTarget(self, action: #selector(confirmEyeButtonTapped), for: .touchUpInside)
+    }
+    
     override func setStyle() {
         logoImageView.do {
             $0.image = UIImage(resource: .loginLogo)
@@ -56,6 +61,9 @@ final class SetPassWordView: BaseView {
                     conditionViewNum,
                     confirmTextField,
                     continueButton)
+        
+        self.bringSubviewToFront(mainTextField.eyeButton)
+        self.bringSubviewToFront(confirmTextField.eyeButton)
         
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(153.adjustedHeight)
@@ -99,6 +107,18 @@ final class SetPassWordView: BaseView {
             $0.leading.trailing.equalToSuperview().inset(37.adjustedWidth)
             $0.height.equalTo(34.adjustedHeight)
         }
+    }
+    
+    @objc func mainEyeButtonTapped() {
+        mainTextField.isButtonTapped.toggle()
+        mainTextField.isSecureTextEntry = !mainTextField.isButtonTapped
+        mainTextField.eyeButton.setImage(mainTextField.isButtonTapped ? .icEyeHide : .icEye, for: .normal)
+    }
+    
+    @objc func confirmEyeButtonTapped() {
+        confirmTextField.isButtonTapped.toggle()
+        confirmTextField.isSecureTextEntry = !confirmTextField.isButtonTapped
+        confirmTextField.eyeButton.setImage(confirmTextField.isButtonTapped ? .icEyeHide : .icEye, for: .normal)
     }
 }
     

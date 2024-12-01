@@ -201,6 +201,7 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = false
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .pw)
+            self.bringSubviewToFront(mainTextField.eyeButton)
             continueButton.setTitle(StringLiterals.Login.login, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.login
@@ -214,6 +215,7 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = false
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .pw)
+            self.bringSubviewToFront(mainTextField.eyeButton)
             continueButton.setTitle(StringLiterals.Login.login, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.incorrectPWTitle

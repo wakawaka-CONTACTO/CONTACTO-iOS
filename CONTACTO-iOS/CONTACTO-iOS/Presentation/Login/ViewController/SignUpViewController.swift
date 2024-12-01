@@ -159,8 +159,6 @@ extension SignUpViewController {
         } else {
             setPWView.continueButton.isEnabled = false
         }
-        print("pw: \(pw), confirm: \(confirmPw)")
-        print(self.pw == self.confirmPw)
     }
 }
 

@@ -66,7 +66,6 @@ extension LoginBaseTextField {
     
     private func setLayout() {
         self.addSubviews(eyeButton)
-        self.bringSubviewToFront(eyeButton)
         
         eyeButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
@@ -120,5 +119,13 @@ extension LoginBaseTextField {
     
     func errorText() {            
         self.setRoundBorder(borderColor: isError ? .ctblack : .ctsubred, borderWidth: 1.5, cornerRadius: 0)
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if eyeButton.frame.contains(point) {
+            return eyeButton
+        }
+        
+        return super.hitTest(point, with: event)
     }
 }
