@@ -1,13 +1,14 @@
 //
-//  ChatRequestBodyDTO.swift
+//  ChatResponseDTO.swift
 //  CONTACTO-iOS
 //
-//  Created by 정채은 on 11/9/24.
+//  Created by 정채은 on 12/1/24.
 //
 
 import Foundation
 
-struct ChatRequestBodyDTO: Codable {
+struct ChatResponseDTO: Codable {
+    let id: String
     let content: String
     let senderId: String
     let sendedId: String
