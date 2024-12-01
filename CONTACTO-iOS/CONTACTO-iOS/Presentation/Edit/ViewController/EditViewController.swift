@@ -222,12 +222,13 @@ final class EditViewController: UIViewController {
             guard let imageUrl = URL(string: url) else { return }
             
             dispatchGroup.enter() // 작업 시작
-            KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { [weak self] result in
+            KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { result in
                 switch result {
                 case .success(let value):
                     DispatchQueue.main.async {
-                        let images = [value.image]
-                        self?.selectedImages = images
+                        if !(self.selectedImages.contains(value.image)) {
+                            self.selectedImages.append(value.image)
+                        }
                     }
                 case .failure(let error):
                     print("Failed to load image: \(error.localizedDescription)")
@@ -409,6 +410,7 @@ extension EditViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: EditPortfolioCollectionViewCell.className,
                 for: indexPath) as? EditPortfolioCollectionViewCell else { return UICollectionViewCell() }
+            print(selectedImages.count) 
             if indexPath.row < selectedImages.count {
                 cell.isFilled = true
                 cell.backgroundImageView.image = selectedImages[indexPath.row]
