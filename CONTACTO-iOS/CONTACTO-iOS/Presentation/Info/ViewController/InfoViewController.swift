@@ -94,12 +94,17 @@ extension InfoViewController {
             print("취소 버튼이 눌렸습니다.")
         }
         
-        let sucess = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ action in
+        let success = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ action in
             print("로그아웃 버튼이 눌렸습니다.")
+            KeychainHandler.shared.accessToken.removeAll()
+            KeychainHandler.shared.refreshToken.removeAll()
+            
+            let mainTabBarViewController = MainTabBarViewController()
+            self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
         }
         
         alert.addAction(cancel)
-        alert.addAction(sucess)
+        alert.addAction(success)
         present(alert, animated: true)
     }
     
@@ -109,7 +114,7 @@ extension InfoViewController {
         
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         
-        let sucess = UIAlertAction(title: StringLiterals.Info.Alert.Delete.notYet, style: .default){ action in
+        let success = UIAlertAction(title: StringLiterals.Info.Alert.Delete.notYet, style: .default){ action in
             print("취소 버튼이 눌렸습니다.")
         }
         
@@ -117,7 +122,7 @@ extension InfoViewController {
             print("탈퇴 버튼이 눌렸습니다.")
         }
         
-        alert.addAction(sucess)
+        alert.addAction(success)
         alert.addAction(cancel)
         present(alert, animated: true)
     }
