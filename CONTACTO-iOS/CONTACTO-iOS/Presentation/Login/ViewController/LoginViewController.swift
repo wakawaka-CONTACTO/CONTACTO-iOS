@@ -20,6 +20,7 @@ final class LoginViewController: UIViewController {
     var pw = ""
     var confirmPw = ""
     var name = ""
+    var decodeEmail = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,8 +107,11 @@ extension LoginViewController {
         case .pw, .pwError:
             loginButtonTapped()
         case .emailForget:
-            loginView.mainTextField.text = ""
-            loginView.setLoginState(state: .findEmail)
+            helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
+                self.loginView.mainTextField.text = ""
+                self.loginView.setLoginState(state: .findEmail)
+                self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
+        }
         case .pwForget:
             sendCode()
             loginView.isHidden = true
@@ -157,9 +161,11 @@ extension LoginViewController {
     }
     
     @objc private func pwContinueButton() {
-        let mainTabBarViewController = MainTabBarViewController()
-        mainTabBarViewController.homeViewController.isFirst = false
-        view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+        login(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { _ in
+            let mainTabBarViewController = MainTabBarViewController()
+            mainTabBarViewController.homeViewController.isFirst = false
+            self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+        }
     }
     
     private func changePWButton() {
@@ -186,6 +192,21 @@ extension LoginViewController {
             switch response {
             case .success(let data):
                 print(data)
+                // 로그인 실패 시 코드 받아야함
+                // 토큰 저장
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
+    
+    private func helpEmail(bodyDTO: SignInHelpRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.signHelp(bodyDTO: bodyDTO) { [weak self] response in
+            switch response {
+            case .success(let data):
+                self?.decodeEmail = data.decodeEmail
                 completion(true)
             default:
                 completion(false)
