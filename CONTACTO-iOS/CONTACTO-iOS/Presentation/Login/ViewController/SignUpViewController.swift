@@ -138,16 +138,15 @@ extension SignUpViewController {
     }
     
     @objc private func codeVerifyButtonTapped() {
-        // 맞다면 reset view로 바꾸기
+        // 맞다면 set view로 바꾸기
         signUpView.isHidden = true
         emailCodeView.isHidden = true
         setPWView.isHidden = false
     }
     
     @objc private func pwContinueButton() {
-        let mainTabBarViewController = MainTabBarViewController()
-        mainTabBarViewController.homeViewController.isFirst = true
-        view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+        let nameOnboardingViewController = NameOnboardingViewController()
+        view.window?.rootViewController = UINavigationController(rootViewController: nameOnboardingViewController)
     }
     
     private func changePWButton() {
@@ -205,7 +204,7 @@ extension SignUpViewController: UITextFieldDelegate {
                 changePWButton()
                 
             default:
-                print("hello")
+                print("default")
             }
         }
     }
@@ -224,7 +223,7 @@ extension SignUpViewController: UITextFieldDelegate {
             let textLength = updatedText.count
             
             if textLength > 1 {
-                attributedString.addAttribute(.kern, value: 35, range: NSRange(location: 0, length: textLength - 1))
+                attributedString.addAttribute(.kern, value: 36, range: NSRange(location: 0, length: textLength - 1))
             }
             
             attributedString.addAttribute(.font, value: UIFont.fontContacto(.number), range: NSRange(location: 0, length: textLength))

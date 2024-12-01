@@ -87,6 +87,7 @@ final class EmailCodeView: BaseView {
         mainTextField.snp.makeConstraints {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(25.adjustedHeight)
             $0.leading.trailing.equalTo(underLineView).inset(15)
+            $0.centerX.equalToSuperview()
             $0.height.equalTo(34.adjustedHeight)
         }
         

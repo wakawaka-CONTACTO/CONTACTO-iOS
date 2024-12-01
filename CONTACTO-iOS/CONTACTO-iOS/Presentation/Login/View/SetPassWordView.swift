@@ -13,7 +13,7 @@ import Then
 final class SetPassWordView: BaseView {
     
     private let logoImageView = UIImageView()
-    private let descriptionLabel = UILabel()
+    let descriptionLabel = UILabel()
     let mainTextField = LoginBaseTextField(state: .pw)
     let conditionViewLetter = PasswordConditionView(state: .letter)
     let conditionViewSpecial = PasswordConditionView(state: .special)

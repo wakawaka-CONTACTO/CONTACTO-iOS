@@ -14,8 +14,11 @@ import SafariServices
 final class LoginViewController: UIViewController {
     
     private let loginView = LoginView(state: .email)
+    private let emailCodeView = EmailCodeView()
+    private let setPWView = SetPassWordView()
     var email = ""
-    var password = ""
+    var pw = ""
+    var confirmPw = ""
     var name = ""
     
     override func viewDidLoad() {
@@ -39,12 +42,30 @@ final class LoginViewController: UIViewController {
     
     private func setStyle() {
         view.backgroundColor = .ctblack
+        
+        loginView.isHidden = false
+        emailCodeView.isHidden = true
+        
+        setPWView.do {
+            $0.isHidden = true
+            $0.descriptionLabel.text = StringLiterals.Login.resetPW
+        }
     }
     
     private func setLayout() {
-        view.addSubviews(loginView)
+        view.addSubviews(loginView,
+                         emailCodeView,
+                         setPWView)
         
         loginView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        emailCodeView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        setPWView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
     }
@@ -61,12 +82,22 @@ final class LoginViewController: UIViewController {
         loginView.helpButton.addTarget(self, action: #selector(helpEmailButtonTapped), for: .touchUpInside)
         loginView.privacyButton.addTarget(self, action: #selector(privacyButtonTapped), for: .touchUpInside)
         loginView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        
+        emailCodeView.continueButton.addTarget(self, action: #selector(codeVerifyButtonTapped), for: .touchUpInside)
+        emailCodeView.resendButton.addTarget(self, action: #selector(sendCode), for: .touchUpInside)
+        
+        setPWView.continueButton.addTarget(self, action: #selector(pwContinueButton), for: .touchUpInside)
     }
     
     private func setDelegate() {
         loginView.mainTextField.delegate = self
+        emailCodeView.mainTextField.delegate = self
+        setPWView.mainTextField.delegate = self
+        setPWView.confirmTextField.delegate = self
     }
-    
+}
+
+extension LoginViewController {
     @objc func continueButtonTapped() {
         switch loginView.state {
         case .email, .emailError:
@@ -78,28 +109,19 @@ final class LoginViewController: UIViewController {
             loginView.mainTextField.text = ""
             loginView.setLoginState(state: .findEmail)
         case .pwForget:
-            print("verify로 넘어감")
+            sendCode()
+            loginView.isHidden = true
+            emailCodeView.isHidden = false
+            setPWView.isHidden = true
         case .findEmail:
             loginView.mainTextField.text = ""
             loginView.setLoginState(state: .email)
         }
     }
     
-    @objc func loginButtonTapped() {
-        // 성공한다면
-        let mainTabBarViewController = MainTabBarViewController()
-        view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
-        // 실패하면 pwError
-    }
-    
     @objc func signUpButtonTapped() {
         let signUpViewController = SignUpViewController()
         self.navigationController?.pushViewController(signUpViewController, animated: false)
-    }
-    
-    @objc func backButtonTapped() {
-        loginView.mainTextField.text = self.email
-        loginView.setLoginState(state: .email)
     }
     
     @objc func helpEmailButtonTapped() {
@@ -116,6 +138,46 @@ final class LoginViewController: UIViewController {
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
+    }
+    
+    @objc func backButtonTapped() {
+        loginView.mainTextField.text = self.email
+        loginView.setLoginState(state: .email)
+    }
+    
+    @objc private func codeVerifyButtonTapped() {
+        // 맞다면 reset view로 바꾸기
+        loginView.isHidden = true
+        emailCodeView.isHidden = true
+        setPWView.isHidden = false
+    }
+    
+    @objc private func sendCode() {
+        print("continue: 이메일 인증번호 보내기")
+    }
+    
+    @objc private func pwContinueButton() {
+        let mainTabBarViewController = MainTabBarViewController()
+        mainTabBarViewController.homeViewController.isFirst = false
+        view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+    }
+    
+    private func changePWButton() {
+        if setPWView.conditionViewLetter.isSatisfied,
+           setPWView.conditionViewSpecial.isSatisfied,
+           setPWView.conditionViewNum.isSatisfied,
+            self.pw == self.confirmPw {
+            setPWView.continueButton.isEnabled = true
+        } else {
+            setPWView.continueButton.isEnabled = false
+        }
+    }
+    
+    @objc func loginButtonTapped() {
+        // 성공한다면
+        let mainTabBarViewController = MainTabBarViewController()
+        view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+        // 실패하면 pwError
     }
     
     // MARK: - Network
@@ -141,24 +203,76 @@ extension LoginViewController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if let text = textField.text {
-            if !text.isEmpty || !text.isOnlyWhitespace() {
-                switch loginView.mainTextField.textFieldState {
-                case .email:
-                    self.loginView.continueButton.isEnabled = text.isValidEmail()
-                    self.email = text
-                    print(self.email)
-                case .pw:
-                    self.loginView.continueButton.isEnabled = true
-                    self.password = text
-                case .name:
-                    self.loginView.continueButton.isEnabled = true
-                    self.name = text
-                case .findEmail:
-                    print("텍스트에 이메일 뜹니다..")
+            
+            switch textField {
+            case loginView.mainTextField:
+                if !text.isEmpty || !text.isOnlyWhitespace() {
+                    switch loginView.mainTextField.textFieldState {
+                    case .email:
+                        self.loginView.continueButton.isEnabled = text.isValidEmail()
+                        self.email = text
+                        print(self.email)
+                    case .pw:
+                        self.loginView.continueButton.isEnabled = true
+                        self.pw = text
+                    case .name:
+                        self.loginView.continueButton.isEnabled = true
+                        self.name = text
+                    case .findEmail:
+                        print("텍스트에 이메일 뜹니다..")
+                    }
+                } else {
+                    self.loginView.continueButton.isEnabled = false
                 }
-            } else {
-                self.loginView.continueButton.isEnabled = false
+                
+            case emailCodeView.mainTextField:
+                print(text)
+                
+            case setPWView.mainTextField:
+                print(text)
+                setPWView.conditionViewLetter.isSatisfied = text.isMinimumLength(textField.text ?? "")
+                setPWView.conditionViewSpecial.isSatisfied = text.containsSpecialCharacter(textField.text ?? "")
+                setPWView.conditionViewNum.isSatisfied = text.containsNumber(textField.text ?? "")
+                
+                self.pw = textField.text ?? ""
+                changePWButton()
+                
+            case setPWView.confirmTextField:
+                print(text)
+                self.confirmPw = textField.text ?? ""
+                changePWButton()
+                
+            default:
+                print("default")
+                
             }
+        }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        switch textField {
+        case emailCodeView.mainTextField:
+            let currentText = (textField.text ?? "") as NSString
+            let updatedText = currentText.replacingCharacters(in: range, with: string)
+            
+            guard updatedText.count <= 6 else {
+                return false
+            }
+            
+            let attributedString = NSMutableAttributedString(string: updatedText)
+            let textLength = updatedText.count
+            
+            if textLength > 1 {
+                attributedString.addAttribute(.kern, value: 36, range: NSRange(location: 0, length: textLength - 1))
+            }
+            
+            attributedString.addAttribute(.font, value: UIFont.fontContacto(.number), range: NSRange(location: 0, length: textLength))
+            textField.attributedText = attributedString
+            emailCodeView.continueButton.isEnabled = (textLength == 6)
+            return false
+            
+        default:
+            return true
         }
     }
 }

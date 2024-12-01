@@ -186,7 +186,7 @@ final class LoginView: BaseView {
             helpButton.isHidden = false
             privacyButton.isHidden = false
             forgetPwButton.isHidden = true
-            backButton.isHidden = true
+            backButton.isHidden = false
             mainTextField.setTextFieldState(state: .email)
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
@@ -227,7 +227,7 @@ final class LoginView: BaseView {
             helpButton.isHidden = true
             privacyButton.isHidden = true
             forgetPwButton.isHidden = false
-            backButton.isHidden = true
+            backButton.isHidden = false
             mainTextField.setTextFieldState(state: .name)
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
@@ -240,7 +240,7 @@ final class LoginView: BaseView {
             helpButton.isHidden = true
             privacyButton.isHidden = true
             forgetPwButton.isHidden = true
-            backButton.isHidden = true
+            backButton.isHidden = false
             mainTextField.setTextFieldState(state: .email)
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
