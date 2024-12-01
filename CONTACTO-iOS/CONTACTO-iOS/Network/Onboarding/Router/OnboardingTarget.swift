@@ -16,7 +16,7 @@ enum OnboardingTarget {
     case emailSend(_ bodyDTO: EmailSendRequestBodyDTO)
     case signHelp(_ bodyDTO: SignInHelpRequestBodyDTO)
     case reissue
-    
+    case emailExist(_ queryDTO: EmailExistRequestQueryDTO)
 }
 
 extension OnboardingTarget: TargetType {
@@ -34,6 +34,8 @@ extension OnboardingTarget: TargetType {
             return .unauthorization
         case .reissue:
             return .authorization
+        case .emailExist(_):
+            return .unauthorization
         }
     }
     
@@ -51,6 +53,8 @@ extension OnboardingTarget: TargetType {
             return .plain
         case .reissue:
             return .hasToken
+        case .emailExist(_):
+            return .plain
         }
     }
     
@@ -68,6 +72,8 @@ extension OnboardingTarget: TargetType {
             return .post
         case .reissue:
             return .post
+        case .emailExist(_):
+            return .get
         }
     }
     
@@ -85,6 +91,8 @@ extension OnboardingTarget: TargetType {
             return "/v1/users/signin/help"
         case .reissue:
             return "/v1/auth/reissue"
+        case .emailExist:
+            return "/v1/users/me/email"
         }
     }
     
@@ -102,6 +110,8 @@ extension OnboardingTarget: TargetType {
             return .requestWithBody(bodyDTO)
         case .reissue:
             return .requestPlain
+        case .emailExist(let queryDTO):
+            return .requestQuery(queryDTO)
         }
     }
 }

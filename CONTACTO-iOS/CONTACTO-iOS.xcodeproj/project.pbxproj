@@ -16,6 +16,8 @@
 		C32D06F52CE633260016F497 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C32D06F42CE633260016F497 /* Kingfisher */; };
 		C32D06F72CE633340016F497 /* UIImageView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F62CE633340016F497 /* UIImageView+.swift */; };
 		C32D06F92CE63CC30016F497 /* DetailRequestQueryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */; };
+		C33B9A2B2CFCC3AA009A6B2D /* EmailExistRequestQueryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33B9A2A2CFCC3AA009A6B2D /* EmailExistRequestQueryDTO.swift */; };
+		C33B9A2D2CFCC3E7009A6B2D /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33B9A2C2CFCC3E7009A6B2D /* ErrorResponse.swift */; };
 		C33C65012CF9E262009FA2BD /* LoginBaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33C65002CF9E262009FA2BD /* LoginBaseTextField.swift */; };
 		C33C65032CF9F20A009FA2BD /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33C65022CF9F20A009FA2BD /* SignUpViewController.swift */; };
 		C33D73BF2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */; };
@@ -69,6 +71,7 @@
 		C37FC4C02CCCE5AF005B7BDF /* ChatEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37FC4BF2CCCE5AF005B7BDF /* ChatEmptyView.swift */; };
 		C384B6DB2CFC361E00F38ADB /* AppStoreCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = C384B6DA2CFC361E00F38ADB /* AppStoreCheck.swift */; };
 		C384B6DD2CFC785000F38ADB /* ChatResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C384B6DC2CFC785000F38ADB /* ChatResponseDTO.swift */; };
+		C384B6DF2CFC88BB00F38ADB /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = C384B6DE2CFC88BB00F38ADB /* WebSocket.swift */; };
 		C393A6082C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C393A6072C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift */; };
 		C393A60A2C93CD5C00ECF1B5 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C393A6092C93CD5C00ECF1B5 /* Pretendard-Regular.otf */; };
 		C393A60D2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C393A60C2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift */; };
@@ -158,6 +161,8 @@
 		C320E88D2CF22A3E0098AC1D /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		C32D06F62CE633340016F497 /* UIImageView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
 		C32D06F82CE63CC30016F497 /* DetailRequestQueryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRequestQueryDTO.swift; sourceTree = "<group>"; };
+		C33B9A2A2CFCC3AA009A6B2D /* EmailExistRequestQueryDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailExistRequestQueryDTO.swift; sourceTree = "<group>"; };
+		C33B9A2C2CFCC3E7009A6B2D /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 		C33C65002CF9E262009FA2BD /* LoginBaseTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBaseTextField.swift; sourceTree = "<group>"; };
 		C33C65022CF9F20A009FA2BD /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeaderFieldKey.swift; sourceTree = "<group>"; };
@@ -211,6 +216,7 @@
 		C37FC4BF2CCCE5AF005B7BDF /* ChatEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatEmptyView.swift; sourceTree = "<group>"; };
 		C384B6DA2CFC361E00F38ADB /* AppStoreCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreCheck.swift; sourceTree = "<group>"; };
 		C384B6DC2CFC785000F38ADB /* ChatResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatResponseDTO.swift; sourceTree = "<group>"; };
+		C384B6DE2CFC88BB00F38ADB /* WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		C393A6072C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioCollectionViewCell.swift; sourceTree = "<group>"; };
 		C393A6092C93CD5C00ECF1B5 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
 		C393A60C2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioIndicatorView.swift; sourceTree = "<group>"; };
@@ -319,6 +325,7 @@
 				C33D73D22CDEEEA300889B1B /* APIRequestLoader.swift */,
 				C33D73D42CDEEEB300889B1B /* NetworkService.swift */,
 				C33D73D62CDEEEBE00889B1B /* ContactoRequestInterceptor.swift */,
+				C33B9A2C2CFCC3E7009A6B2D /* ErrorResponse.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -366,6 +373,7 @@
 				C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */,
 				C34C1F572CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift */,
 				C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */,
+				C33B9A2A2CFCC3AA009A6B2D /* EmailExistRequestQueryDTO.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -895,6 +903,7 @@
 				C3FD90462C9139D70021D2BA /* Info.plist */,
 				C320E88D2CF22A3E0098AC1D /* UserInfo.swift */,
 				C384B6DA2CFC361E00F38ADB /* AppStoreCheck.swift */,
+				C384B6DE2CFC88BB00F38ADB /* WebSocket.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1144,6 +1153,7 @@
 				C33D73FC2CDEF1B100889B1B /* HomeTarget.swift in Sources */,
 				C32D06F92CE63CC30016F497 /* DetailRequestQueryDTO.swift in Sources */,
 				C3EF05F62C9DD4E5001BF9EC /* ChatRoomYourCollectionViewCell.swift in Sources */,
+				C384B6DF2CFC88BB00F38ADB /* WebSocket.swift in Sources */,
 				C3FD90722C91550C0021D2BA /* FontLiterals.swift in Sources */,
 				C3B95CF82C9C1942002A4681 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */,
 				C33D73EC2CDEF15300889B1B /* EditService.swift in Sources */,
@@ -1191,6 +1201,7 @@
 				C33D73DA2CDEEF4900889B1B /* Config.swift in Sources */,
 				C35E26472C9D2EC300B197CB /* MatchViewController.swift in Sources */,
 				C33D74082CDEF1F100889B1B /* EditTarget.swift in Sources */,
+				C33B9A2D2CFCC3E7009A6B2D /* ErrorResponse.swift in Sources */,
 				C3EF05EE2C9DC964001BF9EC /* ChatRoomViewController.swift in Sources */,
 				C393A60D2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift in Sources */,
 				C33D74022CDEF1D500889B1B /* EditRequestBodyDTO.swift in Sources */,
@@ -1199,6 +1210,7 @@
 				C3E88C7B2C92A93F005A19BE /* SNSOnboardingViewController.swift in Sources */,
 				C3AEC29E2C943B7800E2DED9 /* BaseTextField.swift in Sources */,
 				C320E88E2CF22A3E0098AC1D /* UserInfo.swift in Sources */,
+				C33B9A2B2CFCC3AA009A6B2D /* EmailExistRequestQueryDTO.swift in Sources */,
 				C3FD90932C917F2F0021D2BA /* NameOnboardingView.swift in Sources */,
 				C34C1F582CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift in Sources */,
 				C393A6172C941FFA00ECF1B5 /* MainTabBarViewController.swift in Sources */,

@@ -11,20 +11,17 @@ protocol OnboardingServiceProtocol {
     
     func signup(bodyDTO: SignUpRequestBodyDTO, completion: @escaping (NetworkResult<SignUpResponseDTO>) -> Void)
     
-    
     func login(bodyDTO: LoginRequestBodyDTO, completion: @escaping (NetworkResult<SignUpResponseDTO>) -> Void)
-    
     
     func emailCheck(bodyDTO: EmailCheckRequestBodyDTO, completion: @escaping (NetworkResult<Bool>) -> Void)
     
-    
     func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (NetworkResult<String>) -> Void)
-    
     
     func signHelp(bodyDTO: SignInHelpRequestBodyDTO, completion: @escaping (NetworkResult<SignInHelpResponseDTO>) -> Void)
     
-    
     func reissue(completion: @escaping (NetworkResult<SignUpResponseDTO>) -> Void)
+    
+    func emailExist(queryDTO: EmailExistRequestQueryDTO, completion: @escaping (NetworkResult<ErrorResponse<[String]>>) -> Void)
 }
 
 final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingServiceProtocol {
@@ -50,5 +47,9 @@ final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingSer
     
     func reissue(completion: @escaping (NetworkResult<SignUpResponseDTO>) -> Void) {
         fetchData(target: .reissue, responseData: SignUpResponseDTO.self, completion: completion)
+    }
+    
+    func emailExist(queryDTO: EmailExistRequestQueryDTO, completion: @escaping (NetworkResult<ErrorResponse<[String]>>) -> Void) {
+        fetchData(target: .emailExist(queryDTO), responseData: ErrorResponse<[String]>.self, completion: completion)
     }
 }
