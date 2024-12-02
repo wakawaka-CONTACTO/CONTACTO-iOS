@@ -48,6 +48,7 @@
 		C33D74172CDEF25600889B1B /* DeleteRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74162CDEF25600889B1B /* DeleteRequestBodyDTO.swift */; };
 		C33D74192CDEF25E00889B1B /* DeleteResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D74182CDEF25E00889B1B /* DeleteResponseDTO.swift */; };
 		C33D741B2CDEF26200889B1B /* InfoTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33D741A2CDEF26200889B1B /* InfoTarget.swift */; };
+		C33DCF8A2CFDF483009072C4 /* ResetPasswordResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33DCF892CFDF483009072C4 /* ResetPasswordResponseDTO.swift */; };
 		C34C1F562CE38E2800F94BCD /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = C34C1F552CE38E2800F94BCD /* Alamofire */; };
 		C34C1F582CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F572CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift */; };
 		C34C1F5A2CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */; };
@@ -191,6 +192,7 @@
 		C33D74162CDEF25600889B1B /* DeleteRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C33D74182CDEF25E00889B1B /* DeleteResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteResponseDTO.swift; sourceTree = "<group>"; };
 		C33D741A2CDEF26200889B1B /* InfoTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTarget.swift; sourceTree = "<group>"; };
+		C33DCF892CFDF483009072C4 /* ResetPasswordResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordResponseDTO.swift; sourceTree = "<group>"; };
 		C34C1F532CE38C3A00F94BCD /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		C34C1F572CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSendRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailCheckRequestBodyDTO.swift; sourceTree = "<group>"; };
@@ -381,6 +383,7 @@
 			children = (
 				C30C2E472CF2FA2000FAE056 /* SignUpResponseDTO.swift */,
 				C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */,
+				C33DCF892CFDF483009072C4 /* ResetPasswordResponseDTO.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -1230,6 +1233,7 @@
 				C3E88C862C92C8B3005A19BE /* TalentHeaderView.swift in Sources */,
 				C393A61E2C9427F500ECF1B5 /* String+.swift in Sources */,
 				C33D74132CDEF23900889B1B /* ChatTarget.swift in Sources */,
+				C33DCF8A2CFDF483009072C4 /* ResetPasswordResponseDTO.swift in Sources */,
 				C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */,
 				C3C7ECF42CF1D2C300509CD4 /* ChatRoomResponseDTO.swift in Sources */,
 				C33D73CF2CDEEE8700889B1B /* BaseResponse.swift in Sources */,

@@ -186,6 +186,8 @@ extension LoginViewController {
                 let mainTabBarViewController = MainTabBarViewController()
                 mainTabBarViewController.homeViewController.isFirst = false
                 self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+            } else {
+                self.view.showToast(message: "Something went wrong. Try Again")
             }
         }
     }
@@ -260,6 +262,7 @@ extension LoginViewController {
     }
     
     private func emailExist(queryDTO: EmailExistRequestQueryDTO, completion: @escaping (Bool) -> Void) {
+        self.isExistEmail = true
         NetworkService.shared.onboardingService.emailExist(queryDTO: queryDTO) { response in
             switch response {
             case .success(let data):
@@ -267,7 +270,6 @@ extension LoginViewController {
                     self.isExistEmail = false
                     completion(true)
                 }
-                
 //                if status == 200 {
 //                    self.isExistEmail = true
 //                    completion(true)
@@ -282,8 +284,8 @@ extension LoginViewController {
     private func updatePwd(bodyDTO: LoginRequestBodyDTO,completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.updatePwd(bodyDTO: bodyDTO) { response in
             switch response {
-            case .success(_):
-                completion(true)
+            case .success(let data):
+                completion(data.isSuccess)
             default:
                 completion(false)
                 print("error")

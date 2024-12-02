@@ -38,7 +38,7 @@ class APIRequestLoader<T: TargetType> {
             dataRequest = interceptorSession.request(target).validate()
         }
         
-        dataRequest.responseData { response in
+        dataRequest.responseData(emptyResponseCodes: [200]) { response in
             switch response.result {
             case .success:
                 guard let statusCode = response.response?.statusCode else { return }
@@ -92,4 +92,3 @@ class APIRequestLoader<T: TargetType> {
         return .success(decodedData)
     }
 }
-
