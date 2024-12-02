@@ -229,12 +229,10 @@ extension HomeViewController {
     private func homeList(completion: @escaping (Bool) -> Void) {
         NetworkService.shared.homeService.homeList { [weak self] response in
             switch response {
-            case .success(let data, _):
-                if let data = data {
-                    self?.portfolioData = data
-                    print(data)
-                    completion(true)
-                }
+            case .success(let data):
+                self?.portfolioData = data
+                print(data)
+                completion(true)
             default:
                 completion(false)
                 print("error")
@@ -245,12 +243,10 @@ extension HomeViewController {
     private func likeOrDislike(bodyDTO: LikeRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.homeService.likeOrDislike(bodyDTO: bodyDTO) { [weak self] response in
             switch response {
-            case .success(let data, _):
-                if let data = data {
-                    print(data)
-                    self?.isMatch = data.matched
-                    completion(true)
-                }
+            case .success(let data):
+                print(data)
+                self?.isMatch = data.matched
+                completion(true)
             default:
                 completion(false)
                 print("error")
