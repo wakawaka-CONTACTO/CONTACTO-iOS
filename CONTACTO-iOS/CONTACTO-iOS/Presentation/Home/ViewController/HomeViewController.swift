@@ -23,7 +23,7 @@ final class HomeViewController: BaseViewController {
             setPortImage()
         }
     }
-    var maxNum = 0 /// 포트폴리오의 총 장 수 (1장부터)
+    var maxNum = 0 /// 포트폴리오의 총 장 수 (0장부터)
     var isAnimating = false
     
     /// 현재 포폴이 리스트의 몇 번째인지
@@ -42,7 +42,9 @@ final class HomeViewController: BaseViewController {
     lazy var offsetX = self.homeView.portView.bounds.width * (newAnchorPoint.x - oldAnchorPoint.x)
     lazy var offsetY = self.homeView.portView.bounds.height * (newAnchorPoint.y - oldAnchorPoint.y)
     
-    var imageDummy: [UIImage] = []
+    var imageDummy: [String] = []
+    var imagePreviewDummy: [UIImage] = []
+    
     let homeView = HomeView()
     let homeEmptyView = HomeEmptyView()
     
@@ -55,7 +57,6 @@ final class HomeViewController: BaseViewController {
         setPanAction()
         setTapGesture()
         setCollectionView()
-        setPortImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -141,6 +142,7 @@ extension HomeViewController {
         let detailProfileViewController = DetailProfileViewController()
         detailProfileViewController.portfolioData = self.previewPortfolioData
         detailProfileViewController.imageArray = self.imageDummy
+        detailProfileViewController.imagePreviewDummy = self.imagePreviewDummy
         detailProfileViewController.isPreview = self.isPreview
         detailProfileViewController.userId = self.portUserId
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
@@ -211,18 +213,23 @@ extension HomeViewController {
     private func setData() {
         if !isPreview {
             homeList { _ in
-                self.maxNum = self.imageDummy.count - 1
                 self.setNewPortfolio()
             }
         } else {
             homeView.profileNameLabel.text = previewPortfolioData.username
-            maxNum = imageDummy.count - 1
+            maxNum = imagePreviewDummy.count - 1
         }
     }
     
     private func setPortImage() {
-        if num < imageDummy.count {
-            homeView.portImageView.image = imageDummy[self.num]
+        if !isPreview {
+            if num < imageDummy.count {
+                homeView.portImageView.kfSetImage(url: imageDummy[num])
+            }
+        } else {
+            if num < imagePreviewDummy.count {
+                homeView.portImageView.image = imagePreviewDummy[num]
+            }
         }
     }
     
@@ -287,8 +294,9 @@ extension HomeViewController {
             self.homeView.portView.layer.anchorPoint = self.newAnchorPoint
             self.homeView.portView.transform = transform
         } completion: { _ in
-            // 추후 쌍방 매칭 됐을 때로 변경, 강한 햅틱 추가
-            self.pushToMatch()
+            if self.isMatch {
+                self.pushToMatch()
+            }
             
             self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
             self.homeView.portView.transform = .identity
@@ -319,30 +327,10 @@ extension HomeViewController {
             self.homeEmptyView.isHidden = true
             self.portUserId = Int(portfolioData[nowCount].userId)
             self.homeView.profileNameLabel.text = portfolioData[nowCount].username
-            let dispatchGroup = DispatchGroup()
-            
-            portfolioData[nowCount].portfolioImages.forEach { url in
-                guard let imageUrl = URL(string: url) else { return }
-                
-                dispatchGroup.enter() // 작업 시작
-                KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { [weak self] result in
-                    switch result {
-                    case .success(let value):
-                        DispatchQueue.main.async {
-                            let images = [value.image]
-                            self?.imageDummy = images
-                        }
-                    case .failure(let error):
-                        print("Failed to load image: \(error.localizedDescription)")
-                    }
-                    dispatchGroup.leave() // 작업 완료
-                }
-            }
-            
-            dispatchGroup.notify(queue: .main) {
-
-            }
-            
+            self.imageDummy = portfolioData[nowCount].portfolioImages
+            self.maxNum = self.imageDummy.count - 1
+            self.setPortImage()
+            self.homeView.pageCollectionView.reloadData()
         } else {
             self.homeView.isHidden = true
             self.homeEmptyView.isHidden = false

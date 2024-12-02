@@ -13,7 +13,8 @@ import Then
 
 final class DetailProfileViewController: BaseViewController {
     
-    var imageArray: [UIImage] = []
+    var imageArray: [String] = []
+    var imagePreviewDummy: [UIImage] = []
     var currentNum = 0 {
         didSet {
             detailProfileView.pageCollectionView.reloadData()
@@ -104,29 +105,9 @@ final class DetailProfileViewController: BaseViewController {
         }
         
         if !isPreview {
-            let dispatchGroup = DispatchGroup()
-            
-            portfolioData.userPortfolio?.portfolioImages.forEach { url in
-                guard let imageUrl = URL(string: url) else { return }
-                
-                dispatchGroup.enter() // 작업 시작
-                KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { [weak self] result in
-                    switch result {
-                    case .success(let value):
-                        DispatchQueue.main.async {
-                            self?.imageArray.append(value.image)
-                        }
-                    case .failure(let error):
-                        print("Failed to load image: \(error.localizedDescription)")
-                    }
-                    dispatchGroup.leave() // 작업 완료
-                }
-            }
-            
-            dispatchGroup.notify(queue: .main) {
-                self.detailProfileView.portImageCollectionView.reloadData()
-                self.detailProfileView.pageCollectionView.reloadData()
-            }
+            self.imageArray = portfolioData.userPortfolio?.portfolioImages ?? []
+            self.detailProfileView.portImageCollectionView.reloadData()
+            self.detailProfileView.pageCollectionView.reloadData()
         }
         
         self.detailProfileView.nameLabel.text = self.portfolioData.username
@@ -198,7 +179,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
         case 0, 1:
-            return imageArray.count
+            return isPreview ? imagePreviewDummy.count : imageArray.count
         case 2:
             return talentData.count
         case 3:
@@ -214,7 +195,11 @@ extension DetailProfileViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfileImageCollectionViewCell.className,
                 for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
-            cell.portImageView.image = imageArray[indexPath.row]
+            if !isPreview {
+                cell.portImageView.kfSetImage(url: imageArray[indexPath.row])
+            } else {
+                cell.portImageView.image = imagePreviewDummy[indexPath.row]
+            }
             return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(
@@ -239,7 +224,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
             cell.isTapped = true
-            cell.config(num: portfolioData.userPurposes[indexPath.row] - 1)
+            cell.config(num: isPreview ? portfolioData.userPurposes[indexPath.row] - 1 : portfolioData.userPurposes[indexPath.row])
             return cell
         default:
             return UICollectionViewCell()
@@ -254,7 +239,7 @@ extension DetailProfileViewController: UICollectionViewDelegateFlowLayout {
         case 0:
             return CGSize(width: SizeLiterals.Screen.screenWidth, height: 432)
         case 1:
-            let totalItems = imageArray.count
+            let totalItems = isPreview ? imagePreviewDummy.count : imageArray.count
             
             let collectionViewWidth = SizeLiterals.Screen.screenWidth - 34.adjustedWidth
             let spacing: CGFloat = 5.adjustedWidth

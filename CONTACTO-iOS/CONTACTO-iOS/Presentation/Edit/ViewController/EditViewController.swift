@@ -355,7 +355,7 @@ extension EditViewController {
         let previewViewController = HomeViewController()
         previewViewController.isPreview = true
         previewViewController.previewPortfolioData = self.portfolioData
-        previewViewController.imageDummy = selectedImages
+        previewViewController.imagePreviewDummy = selectedImages
         previewViewController.previewPortfolioData.userTalents = []
         self.talentData.forEach {
             previewViewController.previewPortfolioData.userTalents.append(
