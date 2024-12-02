@@ -8,9 +8,12 @@
 import Foundation
 
 protocol InfoServiceProtocol {
-    
+    func deleteMe(completion: @escaping (NetworkResult<String?>) -> Void)
+
 }
 
 final class InfoService: APIRequestLoader<InfoTarget>, InfoServiceProtocol {
-    
+    func deleteMe(completion: @escaping (NetworkResult<String?>) -> Void) {
+        fetchData(target: .deleteMe, responseData: String?.self, completion: completion)
+    }
 }

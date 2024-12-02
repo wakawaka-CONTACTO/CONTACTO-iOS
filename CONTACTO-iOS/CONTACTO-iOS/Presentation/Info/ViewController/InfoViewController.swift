@@ -119,15 +119,28 @@ extension InfoViewController {
         
         let cancel = UIAlertAction(title: StringLiterals.Info.Alert.Delete.delete, style: .destructive){ cancel in
             print("탈퇴 버튼이 눌렸습니다.")
-            // 탈퇴 API 연결
-            KeychainHandler.shared.accessToken.removeAll()
-            KeychainHandler.shared.refreshToken.removeAll()
-            guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-            sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+            self.deleteMe { _ in
+                KeychainHandler.shared.accessToken.removeAll()
+                KeychainHandler.shared.refreshToken.removeAll()
+                guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+            }
         }
         
         alert.addAction(success)
         alert.addAction(cancel)
         present(alert, animated: true)
+    }
+    
+    private func deleteMe(completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.infoService.deleteMe() { response in
+            switch response {
+            case .success(let data, _):
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
     }
 }
