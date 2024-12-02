@@ -164,10 +164,14 @@ extension LoginViewController {
     }
     
     @objc private func codeVerifyButtonTapped() {
-        emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { _ in
-            self.loginView.isHidden = true
-            self.emailCodeView.isHidden = true
-            self.setPWView.isHidden = false
+        emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
+            if response {
+                self.loginView.isHidden = true
+                self.emailCodeView.isHidden = true
+                self.setPWView.isHidden = false
+            } else {
+                self.emailCodeView.underLineView.image = .imgUnderLineRed
+            }
         }
     }
     
@@ -208,16 +212,12 @@ extension LoginViewController {
         NetworkService.shared.onboardingService.login(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
-//                if let data = data, status < 300 {
-                    KeychainHandler.shared.userID = String(data.userId)
-                    KeychainHandler.shared.accessToken = data.accessToken
-                    KeychainHandler.shared.refreshToken = data.refreshToken
-                    completion(true)
-//                } else if status == 401 {
-//                    self.loginView.setLoginState(state: .pwError)
-//                    completion(false)
-//                }
+                KeychainHandler.shared.userID = String(data.userId)
+                KeychainHandler.shared.accessToken = data.accessToken
+                KeychainHandler.shared.refreshToken = data.refreshToken
+                completion(true)
             default:
+                self.loginView.setLoginState(state: .pwError)
                 completion(false)
                 print("error")
             }
@@ -253,7 +253,7 @@ extension LoginViewController {
         NetworkService.shared.onboardingService.emailCheck(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
-                completion(data)
+                completion(data.isSuccess)
             default:
                 completion(false)
                 print("error")

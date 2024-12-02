@@ -184,7 +184,7 @@ extension SignUpViewController {
         NetworkService.shared.onboardingService.emailCheck(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
-                completion(data)
+                completion(data.isSuccess)
             default:
                 completion(false)
                 print("error")

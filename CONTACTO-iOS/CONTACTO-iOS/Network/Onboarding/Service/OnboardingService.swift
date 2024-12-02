@@ -13,7 +13,7 @@ protocol OnboardingServiceProtocol {
     
     func login(bodyDTO: LoginRequestBodyDTO, completion: @escaping (NetworkResult<SignUpResponseDTO>) -> Void)
     
-    func emailCheck(bodyDTO: EmailCheckRequestBodyDTO, completion: @escaping (NetworkResult<Bool>) -> Void)
+    func emailCheck(bodyDTO: EmailCheckRequestBodyDTO, completion: @escaping (NetworkResult<ResetPasswordResponseDTO>) -> Void)
     
     func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (NetworkResult<String>) -> Void)
     
@@ -36,8 +36,8 @@ final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingSer
         fetchData(target: .login(bodyDTO), responseData: SignUpResponseDTO.self, completion: completion)
     }
     
-    func emailCheck(bodyDTO: EmailCheckRequestBodyDTO, completion: @escaping (NetworkResult<Bool>) -> Void) {
-        fetchData(target: .emailCheck(bodyDTO), responseData: Bool.self, completion: completion)
+    func emailCheck(bodyDTO: EmailCheckRequestBodyDTO, completion: @escaping (NetworkResult<ResetPasswordResponseDTO>) -> Void) {
+        fetchData(target: .emailCheck(bodyDTO), responseData: ResetPasswordResponseDTO.self, completion: completion)
     }
     
     func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (NetworkResult<String>) -> Void) {
