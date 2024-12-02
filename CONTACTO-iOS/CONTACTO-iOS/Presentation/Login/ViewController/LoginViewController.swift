@@ -23,6 +23,8 @@ final class LoginViewController: UIViewController {
     var decodeEmail = ""
     var authCode = ""
     
+    var isExistEmail = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
@@ -103,14 +105,23 @@ extension LoginViewController {
     @objc func continueButtonTapped() {
         switch loginView.state {
         case .email, .emailError:
-            // 틀렸을 때 분기처리 필요, 아래는 이메일 맞았을 때
-            loginView.mainTextField.text = ""
-            loginView.setLoginState(state: .pw)
+            emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
+                if self.isExistEmail {
+                    self.loginView.mainTextField.text = ""
+                    self.loginView.setLoginState(state: .pw)
+                } else {
+                    self.loginView.mainTextField.text = ""
+                    self.loginView.setLoginState(state: .emailError)
+                }
+            }
         case .pw, .pwError:
-            // 성공한다면
-            // 로그인은 했는데 온보딩 정보는 없다면 onboarding으로 빠지도록
-            pwContinueButton()
-            // 실패하면 다시 pwError
+            login(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { result in
+                if result {
+                    let mainTabBarViewController = MainTabBarViewController()
+                    mainTabBarViewController.homeViewController.isFirst = false
+                    self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+                }
+            }
         case .emailForget:
             helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
                 self.loginView.mainTextField.text = ""
@@ -170,10 +181,12 @@ extension LoginViewController {
     }
     
     @objc private func pwContinueButton() {
-        login(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { _ in
-            let mainTabBarViewController = MainTabBarViewController()
-            mainTabBarViewController.homeViewController.isFirst = false
-            self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+        updatePwd(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { response in
+            if response {
+                let mainTabBarViewController = MainTabBarViewController()
+                mainTabBarViewController.homeViewController.isFirst = false
+                self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+            }
         }
     }
     
@@ -192,13 +205,16 @@ extension LoginViewController {
     private func login(bodyDTO: LoginRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.login(bodyDTO: bodyDTO) { response in
             switch response {
-            case .success(let data):
-                print(data)
-                KeychainHandler.shared.userID = String(data.userId)
-                KeychainHandler.shared.accessToken = data.accessToken
-                KeychainHandler.shared.refreshToken = data.refreshToken
-                // 로그인 실패 시 코드 받아야함
-                completion(true)
+            case .success(let data, let status):
+                if let data = data, status < 300 {
+                    KeychainHandler.shared.userID = String(data.userId)
+                    KeychainHandler.shared.accessToken = data.accessToken
+                    KeychainHandler.shared.refreshToken = data.refreshToken
+                    completion(true)
+                } else if status == 401 {
+                    self.loginView.setLoginState(state: .pwError)
+                    completion(false)
+                }
             default:
                 completion(false)
                 print("error")
@@ -206,7 +222,7 @@ extension LoginViewController {
         }
     }
     
-    private func helpEmail(bodyDTO: SignInHelpRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+    private func helpEmail(bodyDTO: SignInHelpRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.signHelp(bodyDTO: bodyDTO) { [weak self] response in
             switch response {
             case .success(let data):
@@ -234,8 +250,44 @@ extension LoginViewController {
     private func emailCheck(bodyDTO: EmailCheckRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.emailCheck(bodyDTO: bodyDTO) { response in
             switch response {
-            case .success(let data):
-                completion(data)
+            case .success(let data, _):
+                if let data = data {
+                    completion(data)
+                }
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
+    
+    private func emailExist(queryDTO: EmailExistRequestQueryDTO, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.emailExist(queryDTO: queryDTO) { response in
+            switch response {
+            case .success(let data, let status):
+                print(status)
+                if let data = data {
+                    if data?.status == "NOT_FOUND" {
+                        self.isExistEmail = false
+                        completion(true)
+                    }
+                }
+                if status == 200 {
+                    self.isExistEmail = true
+                    completion(true)
+                }
+            default:
+                completion(false)
+                print("error")
+            }
+        }
+    }
+    
+    private func updatePwd(bodyDTO: LoginRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.updatePwd(bodyDTO: bodyDTO) { response in
+            switch response {
+            case .success(_, _):
+                completion(true)
             default:
                 completion(false)
                 print("error")
