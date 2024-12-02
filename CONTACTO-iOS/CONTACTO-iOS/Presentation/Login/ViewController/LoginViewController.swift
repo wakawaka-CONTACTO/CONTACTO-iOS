@@ -205,16 +205,16 @@ extension LoginViewController {
     private func login(bodyDTO: LoginRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.login(bodyDTO: bodyDTO) { response in
             switch response {
-            case .success(let data, let status):
-                if let data = data, status < 300 {
+            case .success(let data):
+//                if let data = data, status < 300 {
                     KeychainHandler.shared.userID = String(data.userId)
                     KeychainHandler.shared.accessToken = data.accessToken
                     KeychainHandler.shared.refreshToken = data.refreshToken
                     completion(true)
-                } else if status == 401 {
-                    self.loginView.setLoginState(state: .pwError)
-                    completion(false)
-                }
+//                } else if status == 401 {
+//                    self.loginView.setLoginState(state: .pwError)
+//                    completion(false)
+//                }
             default:
                 completion(false)
                 print("error")
@@ -250,10 +250,8 @@ extension LoginViewController {
     private func emailCheck(bodyDTO: EmailCheckRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.emailCheck(bodyDTO: bodyDTO) { response in
             switch response {
-            case .success(let data, _):
-                if let data = data {
-                    completion(data)
-                }
+            case .success(let data):
+                completion(data)
             default:
                 completion(false)
                 print("error")
@@ -264,18 +262,16 @@ extension LoginViewController {
     private func emailExist(queryDTO: EmailExistRequestQueryDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.emailExist(queryDTO: queryDTO) { response in
             switch response {
-            case .success(let data, let status):
-                print(status)
-                if let data = data {
-                    if data?.status == "NOT_FOUND" {
-                        self.isExistEmail = false
-                        completion(true)
-                    }
-                }
-                if status == 200 {
-                    self.isExistEmail = true
+            case .success(let data):
+                if data?.status == "NOT_FOUND" {
+                    self.isExistEmail = false
                     completion(true)
                 }
+                
+//                if status == 200 {
+//                    self.isExistEmail = true
+//                    completion(true)
+//                }
             default:
                 completion(false)
                 print("error")
@@ -286,7 +282,7 @@ extension LoginViewController {
     private func updatePwd(bodyDTO: LoginRequestBodyDTO,completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.updatePwd(bodyDTO: bodyDTO) { response in
             switch response {
-            case .success(_, _):
+            case .success(_):
                 completion(true)
             default:
                 completion(false)

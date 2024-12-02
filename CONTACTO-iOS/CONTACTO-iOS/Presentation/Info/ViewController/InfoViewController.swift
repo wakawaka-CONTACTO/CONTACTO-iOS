@@ -135,7 +135,7 @@ extension InfoViewController {
     private func deleteMe(completion: @escaping (Bool) -> Void) {
         NetworkService.shared.infoService.deleteMe() { response in
             switch response {
-            case .success(let data, _):
+            case .success(let data):
                 completion(true)
             default:
                 completion(false)
