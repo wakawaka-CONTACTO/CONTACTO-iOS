@@ -7,25 +7,35 @@
 
 import UIKit
 
+import Kingfisher
 import SnapKit
 import Then
 
 final class HomeViewController: BaseViewController {
     
-    var isFirst = false
-    var isPreview = false
-    var portUserId = 0
-    var isMatch = false
-    var num = 0 {
+    var isFirst = false /// 튜토리얼 필요 유무
+    var isPreview = false /// edit의 preview인지
+    var portUserId = 0 /// 현재 보고 있는 유저의 id
+    var isMatch = false /// 지금 매칭이 되었는지 response
+    var num = 0 { /// 현재 보고 있는 포트폴리오가 몇 번째 장인지 (0부터)
         didSet {
             homeView.pageCollectionView.reloadData()
             setPortImage()
         }
     }
-    var maxNum = 0
+    var maxNum = 0 /// 포트폴리오의 총 장 수 (1장부터)
     var isAnimating = false
     
-    var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
+    /// 현재 포폴이 리스트의 몇 번째인지
+    var nowCount = 0 {
+        didSet {
+            setData()
+        }
+    }
+    var portfolioData: [PortfoliosResponseDTO] = []
+    
+    /// preview의 내 포폴 데이터
+    var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
 
     let oldAnchorPoint = CGPoint(x: 0.5, y: 0.5)
     let newAnchorPoint = CGPoint(x: 0.5, y: -0.5)
@@ -34,6 +44,7 @@ final class HomeViewController: BaseViewController {
     
     var imageDummy: [UIImage] = []
     let homeView = HomeView()
+    let homeEmptyView = HomeEmptyView()
     
     let tutorialImageDummy: [UIImage] = [.imgTutorial1, .imgTutorial2, .imgTutorial3, .imgTutorial4]
     var tutorialNum = 0
@@ -44,13 +55,13 @@ final class HomeViewController: BaseViewController {
         setPanAction()
         setTapGesture()
         setCollectionView()
-        setData()
         setPortImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationBar()
+        setData()
     }
     
     override func setNavigationBar() {
@@ -128,9 +139,10 @@ final class HomeViewController: BaseViewController {
 extension HomeViewController {
     @objc private func profileButtonTapped() {
         let detailProfileViewController = DetailProfileViewController()
-        detailProfileViewController.portfolioData = self.portfolioData
+        detailProfileViewController.portfolioData = self.previewPortfolioData
         detailProfileViewController.imageArray = self.imageDummy
         detailProfileViewController.isPreview = self.isPreview
+        detailProfileViewController.userId = self.portUserId
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
     
@@ -198,12 +210,14 @@ extension HomeViewController {
     
     private func setData() {
         if !isPreview {
-            imageDummy = [.imgex1, .imgex2, .imgex3, .imgex4, .imgex1, .imgex2, .imgex3, .imgex4, .imgex3, .imgex4]
-            homeList { _ in }
+            homeList { _ in
+                self.maxNum = self.imageDummy.count - 1
+                self.setNewPortfolio()
+            }
         } else {
-            homeView.profileNameLabel.text = portfolioData.username
+            homeView.profileNameLabel.text = previewPortfolioData.username
+            maxNum = imageDummy.count - 1
         }
-        maxNum = imageDummy.count - 1
     }
     
     private func setPortImage() {
@@ -215,9 +229,12 @@ extension HomeViewController {
     private func homeList(completion: @escaping (Bool) -> Void) {
         NetworkService.shared.homeService.homeList { [weak self] response in
             switch response {
-            case .success(let data):
-                print(data)
-                completion(true)
+            case .success(let data, _):
+                if let data = data {
+                    self?.portfolioData = data
+                    print(data)
+                    completion(true)
+                }
             default:
                 completion(false)
                 print("error")
@@ -228,10 +245,12 @@ extension HomeViewController {
     private func likeOrDislike(bodyDTO: LikeRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.homeService.likeOrDislike(bodyDTO: bodyDTO) { [weak self] response in
             switch response {
-            case .success(let data):
-                print(data)
-                self?.isMatch = data.matched
-                completion(true)
+            case .success(let data, _):
+                if let data = data {
+                    print(data)
+                    self?.isMatch = data.matched
+                    completion(true)
+                }
             default:
                 completion(false)
                 print("error")
@@ -280,15 +299,11 @@ extension HomeViewController {
             self.num = 0
             self.isAnimating = false
             self.isMatch = false
-            self.nextPort()
+            self.nowCount += 1
         }
     }
     
-    private func nextPort() {
-        // 다음 유저로 넘기는 작업 수행
-        
-    }
-    
+    /// 쌍 방 매칭 되었을 때
     private func pushToMatch() {
         if self.isMatch, !self.isPreview {
             HapticService.notification(.error).run()
@@ -298,6 +313,43 @@ extension HomeViewController {
             matchViewController.modalTransitionStyle = .crossDissolve
             matchViewController.modalPresentationCapturesStatusBarAppearance = false
             self.present(matchViewController, animated: true)
+        }
+    }
+    
+    /// 새 포트폴리오(다음 사람)로 넘길 때
+    private func setNewPortfolio() {
+        if self.nowCount < self.portfolioData.count {
+            self.homeView.isHidden = false
+            self.homeEmptyView.isHidden = true
+            self.portUserId = Int(portfolioData[nowCount].userId)
+            self.homeView.profileNameLabel.text = portfolioData[nowCount].username
+            let dispatchGroup = DispatchGroup()
+            
+            portfolioData[nowCount].portfolioImages.forEach { url in
+                guard let imageUrl = URL(string: url) else { return }
+                
+                dispatchGroup.enter() // 작업 시작
+                KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { [weak self] result in
+                    switch result {
+                    case .success(let value):
+                        DispatchQueue.main.async {
+                            let images = [value.image]
+                            self?.imageDummy = images
+                        }
+                    case .failure(let error):
+                        print("Failed to load image: \(error.localizedDescription)")
+                    }
+                    dispatchGroup.leave() // 작업 완료
+                }
+            }
+            
+            dispatchGroup.notify(queue: .main) {
+
+            }
+            
+        } else {
+            self.homeView.isHidden = true
+            self.homeEmptyView.isHidden = false
         }
     }
 }
