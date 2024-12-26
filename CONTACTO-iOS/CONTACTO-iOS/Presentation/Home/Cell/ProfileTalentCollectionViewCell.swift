@@ -47,19 +47,4 @@ final class ProfileTalentCollectionViewCell: UICollectionViewCell {
             $0.top.bottom.leading.trailing.equalToSuperview().inset(3)
         }
     }
-    
-    func configData(category: String, title: String) {
-        switch category {
-        case "design":
-            self.backgroundColor = .ctsubpink
-        case "art":
-            self.backgroundColor = .ctsubblue1
-        case "media":
-            self.backgroundColor = .ctsubbrown
-        default:
-            self.backgroundColor = .ctsubpink
-        }
-        
-        talentLabel.text = title
-    }
 }

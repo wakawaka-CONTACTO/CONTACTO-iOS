@@ -9,13 +9,47 @@ import Foundation
 
 enum StringLiterals {
     enum Login {
-        static let title = "Log in or sign up"
+        static let login = "Log in"
         static let email = "E-mail"
         static let continueButton = "Continue"
-        static let orLabel = "or"
-        static let appleButton = "Continue with Apple"
+        
+        static let createButton = "Create a new account"
         static let help = "Need help signing in?"
         static let privacy = "Privacy"
+        
+        static let pw = "password"
+        static let forgetPwButton = "Forgot your password?"
+        static let firstStepButton = "Go to First step"
+        
+        static let noAccountTitle = "No account found"
+        static let noAccountDesc = "There’s no CONTACTO account with the info you provided.\nplease input correct e-mail or click below help button.".uppercased()
+        static let forgetEmailButton = "Forgot your E-mail?"
+        
+        static let incorrectPWTitle = "Incorrect password"
+        static let incorrectPWDesc = "please input correct password or click below help button.".uppercased()
+        
+        static let signUp = "Sign Up"
+        static let agreePrivacy = "agree privacy policy".uppercased()
+        static let detailButton = "see detail".uppercased()
+        static let needHelp = "Need help signing in?"
+        static let backToLogin = "Back to Log in"
+        
+        static let sendCode = "Send a verification code"
+        static let verify = "E-mail verification code"
+        static let nextButton = "Next"
+        static let resendButton = "Resend E-mail"
+        
+        static let setPW = "Set password"
+        static let resetPW = "Reset password"
+        static let condition1 = "at least 8 char.".uppercased()
+        static let condition2 = "at least 1 special char.".uppercased()
+        static let condition3 = "at least 1 number".uppercased()
+        static let confirmPW = "confirm password"
+        
+        static let inputName = "Input your Profile name."
+        static let name = "name"
+        static let yourEmail = "Your E-mail is"
+        static let goToLogin = "Go to Log in"
     }
     
     enum Onboarding {
@@ -89,6 +123,11 @@ enum StringLiterals {
             static let title = "Not\nYet"
             static let description = "If we find first match,\nWe’ll notice you on push."
         }
+        
+        enum Disclaimer {
+            static let title = "Congratulation!"
+            static let description = "We think you both have a lot in common.\nFeel free to talk comfortably."
+        }
     }
     
     enum Edit {
@@ -112,13 +151,32 @@ enum StringLiterals {
         static let account = "Account Setting"
         static let email = "E-mail"
         static let password = "Password"
-        static let contact = "Contact Us"
         static let help = "Help & Support"
-        static let community = "Community"
         static let guidelines = "Community Guidelines"
         static let privacy = "Privacy"
-        static let cookie = "Cookie Policy"
         static let logout = "Log out"
         static let delete = "Delete Account"
+        
+        enum Alert {
+            enum Logout {
+                static let logoutTitle = "Log out"
+                static let logoutDescription = "Are you sure you want to\nlog out CONTACTO?"
+                static let yes = "Yes"
+                static let no = "No"
+                
+            }
+            
+            enum Delete {
+                static let deleteTitle = "Delete Account"
+                static let deleteDescription = "Deleting your account will remove all of\nyour information from our database.\nThis cannot be undone."
+                static let notYet = "Not yet"
+                static let delete = "Delete"
+            }
+        }
+    }
+    
+    enum URL {
+        static let guidelines = "https://pomus.notion.site/1437a75859a880deb38afb0ead0f8b39?pvs=4"
+        static let privacy = "https://contactocreator.notion.site/1437a75859a88040b512e1a9b98228ac?pvs=4"
     }
 }

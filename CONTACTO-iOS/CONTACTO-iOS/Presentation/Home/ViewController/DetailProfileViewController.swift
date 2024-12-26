@@ -7,20 +7,25 @@
 
 import UIKit
 
+import Kingfisher
 import SnapKit
 import Then
 
 final class DetailProfileViewController: BaseViewController {
     
-    var imageArray: [UIImage] = [.imgex1, .imgex2, .imgex3, .imgex4, .imgex1, .imgex2, .imgex3]
+    var imageArray: [String] = []
+    var imagePreviewDummy: [UIImage] = []
     var currentNum = 0 {
         didSet {
             detailProfileView.pageCollectionView.reloadData()
         }
     }
+    var userId: Int = 3
+    var isPreview = false
     
     let detailProfileView = DetailProfileView()
-    var port: Portfolio = Portfolio(image: [], name: "", talent: [], description: "", purpose: [], insta: "", web: "")
+    var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
+    private var talentData: [TalentInfo] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,44 +74,85 @@ final class DetailProfileViewController: BaseViewController {
         detailProfileView.pageCollectionView.register(PageCollectionViewCell.self, forCellWithReuseIdentifier: PageCollectionViewCell.className)
     }
     
-    private func setData() {
-        // data 받는 곳
-        port = Portfolio.portDummy()
-        
-        detailProfileView.nameLabel.text = port.name
-        detailProfileView.descriptionLabel.text = port.description
-        if port.web != nil {
-            detailProfileView.webButton.isHidden = false
+    // MARK: - Server Function
+    private func detailPort(userId: Int, completion: @escaping (Bool) -> Void) {
+        if !isPreview {
+            NetworkService.shared.homeService.detailPort(userId: userId) { [weak self] response in
+                switch response {
+                case .success(let data):
+                    self?.portfolioData = data
+                    self?.updatePortfolio()
+                    print(data)
+                    completion(true)
+                default:
+                    completion(false)
+                    print("error")
+                }
+            }
         } else {
-            detailProfileView.webButton.isHidden = true
+            self.updatePortfolio()
+        }
+        completion(true)
+    }
+    
+    private func updatePortfolio() {
+        self.talentData = self.portfolioData.userTalents.compactMap { userTalent in
+            if self.isPreview {
+                return Talent.allCases.first(where: { $0.info.displayName == userTalent.talentType })?.info
+            } else {
+                return Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
+            }
         }
         
-        detailProfileView.talentCollectionView.reloadData()
-        detailProfileView.talentCollectionView.layoutIfNeeded()
-        detailProfileView.purposeCollectionView.layoutIfNeeded()
+        if !isPreview {
+            self.imageArray = portfolioData.userPortfolio?.portfolioImages ?? []
+            self.detailProfileView.portImageCollectionView.reloadData()
+            self.detailProfileView.pageCollectionView.reloadData()
+        }
         
-        detailProfileView.talentCollectionView.snp.remakeConstraints {
-            $0.top.equalTo(detailProfileView.nameLabel.snp.bottom).offset(17)
+        self.detailProfileView.nameLabel.text = self.portfolioData.username
+        self.detailProfileView.descriptionLabel.text = self.portfolioData.description
+        if self.portfolioData.webUrl != nil {
+            self.detailProfileView.webButton.isHidden = false
+        } else {
+            self.detailProfileView.webButton.isHidden = true
+        }
+        
+        self.detailProfileView.talentCollectionView.reloadData()
+        self.detailProfileView.purposeCollectionView.reloadData()
+        self.resetCollectionViewLayout()
+    }
+    
+    private func setData() {
+        detailPort(userId: userId) { _ in }
+    }
+    
+    private func resetCollectionViewLayout() {
+        self.detailProfileView.talentCollectionView.layoutIfNeeded()
+        self.detailProfileView.purposeCollectionView.layoutIfNeeded()
+        
+        self.detailProfileView.talentCollectionView.snp.remakeConstraints {
+            $0.top.equalTo(self.detailProfileView.nameLabel.snp.bottom).offset(17)
             $0.leading.equalToSuperview().inset(13)
             $0.trailing.equalToSuperview().inset(46)
-            $0.height.equalTo(detailProfileView.talentCollectionView.contentSize.height + 10)
+            $0.height.equalTo(self.detailProfileView.talentCollectionView.contentSize.height + 10)
         }
         
-        detailProfileView.purposeCollectionView.snp.remakeConstraints {
-            $0.top.equalTo(detailProfileView.purposeLabel.snp.bottom).offset(4)
+        self.detailProfileView.purposeCollectionView.snp.remakeConstraints {
+            $0.top.equalTo(self.detailProfileView.purposeLabel.snp.bottom).offset(4)
             $0.leading.trailing.equalToSuperview().inset(13)
-            $0.height.equalTo(detailProfileView.purposeCollectionView.contentSize.height)
+            $0.height.equalTo(self.detailProfileView.purposeCollectionView.contentSize.height)
         }
     }
     
     @objc private func instaButtonTapped() {
-        let id = port.insta
+        let id = portfolioData.instagramId
         let url = URL(string: "https://www.instagram.com/\(id)")!
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @objc private func webButtonTapped() {
-        guard let url = URL(string: port.web ?? "google.com") else {
+        guard let url = URL(string: portfolioData.webUrl ?? "google.com") else {
             print("url error")
             return
         }
@@ -114,7 +160,7 @@ final class DetailProfileViewController: BaseViewController {
         if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
-            guard let chatURL = URL(string: "https://" + (port.web ?? "google.com")) else {
+            guard let chatURL = URL(string: "https://" + (portfolioData.webUrl ?? "google.com")) else {
                 print("url error")
                 return
             }
@@ -133,11 +179,11 @@ extension DetailProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
         case 0, 1:
-            return port.image.count
+            return isPreview ? imagePreviewDummy.count : imageArray.count
         case 2:
-            return port.talent.flatMap { $0.talent }.count
+            return talentData.count
         case 3:
-            return port.purpose.count
+            return portfolioData.userPurposes.count
         default:
             return 0
         }
@@ -149,7 +195,11 @@ extension DetailProfileViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfileImageCollectionViewCell.className,
                 for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
-            cell.portImageView.image = imageArray[indexPath.row]
+            if !isPreview {
+                cell.portImageView.kfSetImage(url: imageArray[indexPath.row])
+            } else {
+                cell.portImageView.image = imagePreviewDummy[indexPath.row]
+            }
             return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(
@@ -166,18 +216,15 @@ extension DetailProfileViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfileTalentCollectionViewCell.className,
                 for: indexPath) as? ProfileTalentCollectionViewCell else { return UICollectionViewCell() }
             
-            let allTalents = port.talent.flatMap { $0.talent }
-            let category = port.talent.first { $0.talent.contains(allTalents[indexPath.row]) }?.category ?? ""
-            let title = allTalents[indexPath.row]
-            
-            cell.configData(category: category, title: title)
+            cell.talentLabel.text = talentData[indexPath.row].displayName.uppercased()
+            cell.backgroundColor = talentData[indexPath.row].category.color
             return cell
         case 3:
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
             cell.isTapped = true
-            cell.config(num: port.purpose[indexPath.row])
+            cell.config(num: isPreview ? portfolioData.userPurposes[indexPath.row] - 1 : portfolioData.userPurposes[indexPath.row])
             return cell
         default:
             return UICollectionViewCell()
@@ -192,12 +239,12 @@ extension DetailProfileViewController: UICollectionViewDelegateFlowLayout {
         case 0:
             return CGSize(width: SizeLiterals.Screen.screenWidth, height: 432)
         case 1:
-            let totalItems = port.image.count
+            let totalItems = isPreview ? imagePreviewDummy.count : imageArray.count
             
-            let collectionViewWidth = collectionView.frame.width
+            let collectionViewWidth = SizeLiterals.Screen.screenWidth - 34.adjustedWidth
             let spacing: CGFloat = 5.adjustedWidth
             
-            let cellWidth = (collectionViewWidth - CGFloat(totalItems) * spacing) / CGFloat(totalItems + 1)
+            let cellWidth = (collectionViewWidth - CGFloat(totalItems - 1) * spacing) / CGFloat(totalItems)
             return CGSize(width: cellWidth, height: collectionView.frame.height)
         case 2:
            return CGSize(width: .bitWidth, height: 19)

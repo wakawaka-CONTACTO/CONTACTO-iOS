@@ -108,16 +108,17 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func configCell(data: ChatList) {
-        nameLabel.text = data.name
-        messageLabel.text = data.message
+    func configCell(data: ChatListResponseDTO) {
+        nameLabel.text = data.title
+        messageLabel.text = data.latestMessageContent
+        profileImageView.kfSetImage(url: data.chatRoomThumbnail)
         
-        switch data.new {
+        switch data.unreadMessageCount {
         case 0:
             newLabel.isHidden = true
         case 1...99:
             newLabel.isHidden = false
-            newLabel.text = "+\(data.new)"
+            newLabel.text = "+\(data.unreadMessageCount)"
         default:
             newLabel.isHidden = false
             newLabel.text = "+99"

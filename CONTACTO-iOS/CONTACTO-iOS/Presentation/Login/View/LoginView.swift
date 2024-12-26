@@ -10,16 +10,39 @@ import UIKit
 import SnapKit
 import Then
 
+@frozen enum loginState {
+    case email
+    case emailError
+    case emailForget
+    case pw
+    case pwError
+    case pwForget
+    case findEmail
+}
+
 final class LoginView: BaseView {
+    
+    var state = loginState.email
     
     private let logoImageView = UIImageView()
     private let descriptionLabel = UILabel()
-    lazy var emailTextField = BaseTextField()
-    lazy var continueButton = UIButton()
-    private let orLabel = UILabel()
-    lazy var appleLoginButton = UIButton()
-    lazy var helpButton = UIButton()
-    lazy var privacyButton = UIButton()
+    let mainTextField = LoginBaseTextField(state: .email)
+    let continueButton = UIButton()
+    let newAccountButton = UIButton()
+    let forgetEmailButton = UIButton()
+    let forgetPwButton = UIButton()
+    let helpButton = UIButton()
+    let privacyButton = UIButton()
+    let backButton = UIButton()
+    
+    init(state: loginState) {
+        super.init(frame: CGRect())
+        setLoginState(state: state)
+    }
+    
+    override func setAddTarget() {
+        mainTextField.eyeButton.addTarget(self, action: #selector(eyeButtonTapped), for: .touchUpInside)
+    }
     
     override func setStyle() {
         logoImageView.do {
@@ -28,60 +51,65 @@ final class LoginView: BaseView {
         }
         
         descriptionLabel.do {
-            $0.text = StringLiterals.Login.title
+            $0.text = StringLiterals.Login.login
             $0.font = .fontContacto(.caption1)
             $0.textColor = .ctwhite
-        }
-        
-        emailTextField.do {
-            $0.font = .fontContacto(.button1)
-            $0.textColor = .ctblack
-            $0.changePlaceholderColor(forPlaceHolder: StringLiterals.Login.email, forColor: .ctgray2)
-            $0.textAlignment = .center
-            $0.backgroundColor = .ctwhite
-            $0.keyboardType = .emailAddress
-            $0.autocapitalizationType = .none
-            $0.returnKeyType = .done
         }
         
         continueButton.do {
             $0.setTitle(StringLiterals.Login.continueButton, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
             $0.titleLabel?.font = .fontContacto(.button1)
-            $0.backgroundColor = .ctsubgreen2
+            $0.setBackgroundColor(.ctgray3, for: .disabled)
+            $0.setBackgroundColor(.ctsubgreen2, for: .normal)
+            $0.isEnabled = false
         }
         
-        orLabel.do {
-            $0.text = StringLiterals.Login.orLabel
-            $0.font = .fontContacto(.caption1)
-            $0.textColor = .ctwhite
+        forgetPwButton.do {
+            $0.setTitle(StringLiterals.Login.forgetPwButton, for: .normal)
+            $0.setTitleColor(.systemBlue, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.gothicButton)
         }
         
-        appleLoginButton.do {
-            $0.setTitle(StringLiterals.Login.appleButton, for: .normal)
-            $0.setTitleColor(.ctblack, for: .normal)
-            $0.titleLabel?.font = .fontContacto(.button1)
-            $0.backgroundColor = .ctwhite
+        forgetEmailButton.do {
+            $0.setTitle(StringLiterals.Login.forgetEmailButton, for: .normal)
+            $0.setTitleColor(.systemBlue, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.gothicButton)
+        }
+        
+        newAccountButton.do {
+            $0.setRoundBorder(borderColor: .ctwhite, borderWidth: 1.5, cornerRadius: 0)
+            $0.setTitle(StringLiterals.Login.createButton, for: .normal)
+            $0.setTitleColor(.systemBlue, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.gothicButton)
         }
         
         helpButton.do {
             $0.setTitle(StringLiterals.Login.help, for: .normal)
-            $0.setTitleColor(.systemBlue, for: .normal)            
+            $0.setTitleColor(.systemBlue, for: .normal)
         }
         
         privacyButton.do {
             $0.setTitle(StringLiterals.Login.privacy, for: .normal)
             $0.setTitleColor(.systemBlue, for: .normal)
         }
+        
+        backButton.do {
+            $0.setTitle(StringLiterals.Login.firstStepButton, for: .normal)
+            $0.setTitleColor(.systemBlue, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.gothicButton)
+        }
     }
     
     override func setLayout() {
         addSubviews(logoImageView,
                     descriptionLabel,
-                    emailTextField,
+                    mainTextField,
                     continueButton,
-                    orLabel,
-                    appleLoginButton,
+                    forgetPwButton,
+                    forgetEmailButton,
+                    newAccountButton,
+                    backButton,
                     helpButton,
                     privacyButton)
         
@@ -95,37 +123,156 @@ final class LoginView: BaseView {
             $0.centerX.equalToSuperview()
         }
         
-        emailTextField.snp.makeConstraints {
+        mainTextField.snp.makeConstraints {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(25.adjustedHeight)
             $0.leading.trailing.equalToSuperview().inset(37.adjustedWidth)
             $0.height.equalTo(34.adjustedHeight)
         }
         
         continueButton.snp.makeConstraints {
-            $0.top.equalTo(emailTextField.snp.bottom).offset(10.adjustedHeight)
-            $0.leading.trailing.equalTo(emailTextField)
+            $0.top.equalTo(mainTextField.snp.bottom).offset(10.5.adjustedHeight)
+            $0.leading.trailing.equalToSuperview().inset(37.adjustedWidth)
             $0.height.equalTo(34.adjustedHeight)
         }
         
-        orLabel.snp.makeConstraints {
-            $0.top.equalTo(continueButton.snp.bottom).offset(10.adjustedHeight)
+        forgetPwButton.snp.makeConstraints {
+            $0.top.equalTo(continueButton.snp.bottom).offset(19.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
         
-        appleLoginButton.snp.makeConstraints {
-            $0.top.equalTo(orLabel.snp.bottom).offset(10.adjustedHeight)
-            $0.leading.trailing.equalTo(emailTextField)
+        forgetEmailButton.snp.makeConstraints {
+            $0.center.equalTo(forgetPwButton)
+        }
+        
+        newAccountButton.snp.makeConstraints {
+            $0.top.equalTo(continueButton.snp.bottom).offset(20.5.adjustedHeight)
+            $0.leading.trailing.equalTo(mainTextField)
             $0.height.equalTo(34.adjustedHeight)
         }
         
         helpButton.snp.makeConstraints {
-            $0.top.equalTo(appleLoginButton.snp.bottom).offset(85.adjustedHeight)
+            $0.top.equalTo(newAccountButton.snp.bottom).offset(113.adjustedHeight)
             $0.centerX.equalToSuperview()
+        }
+        
+        backButton.snp.makeConstraints {
+            $0.center.equalTo(helpButton)
         }
         
         privacyButton.snp.makeConstraints {
             $0.top.equalTo(helpButton.snp.bottom).offset(15.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
+    }
+    
+    func setLoginState(state: loginState) {
+        self.state = state
+        switch state {
+        case .email:
+            newAccountButton.isHidden = false
+            helpButton.isHidden = false
+            privacyButton.isHidden = false
+            forgetPwButton.isHidden = true
+            backButton.isHidden = true
+            mainTextField.setTextFieldState(state: .email)
+            mainTextField.isError = false
+            continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
+            continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.login
+            mainTextField.isError = false
+            forgetEmailButton.isHidden = true
+            
+        case .emailError:
+            newAccountButton.isHidden = true
+            helpButton.isHidden = false
+            privacyButton.isHidden = false
+            forgetPwButton.isHidden = true
+            backButton.isHidden = false
+            mainTextField.setTextFieldState(state: .email)
+            mainTextField.isError = true
+            continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
+            continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.noAccountTitle
+            mainTextField.isError = true
+            forgetEmailButton.isHidden = false
+
+        case .pw:
+            newAccountButton.isHidden = true
+            helpButton.isHidden = true
+            privacyButton.isHidden = true
+            forgetPwButton.isHidden = false
+            backButton.isHidden = false
+            mainTextField.setTextFieldState(state: .pw)
+            mainTextField.isError = false
+            self.bringSubviewToFront(mainTextField.eyeButton)
+            continueButton.setTitle(StringLiterals.Login.login, for: .normal)
+            continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.login
+            mainTextField.isError = false
+            forgetEmailButton.isHidden = true
+            
+        case .pwError:
+            newAccountButton.isHidden = true
+            helpButton.isHidden = true
+            privacyButton.isHidden = true
+            forgetPwButton.isHidden = false
+            backButton.isHidden = false
+            mainTextField.setTextFieldState(state: .pw)
+            mainTextField.isError = true
+            self.bringSubviewToFront(mainTextField.eyeButton)
+            continueButton.setTitle(StringLiterals.Login.login, for: .normal)
+            continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.incorrectPWTitle
+            mainTextField.isError = true
+            forgetEmailButton.isHidden = true
+            
+        case .emailForget:
+            newAccountButton.isHidden = true
+            helpButton.isHidden = true
+            privacyButton.isHidden = true
+            forgetPwButton.isHidden = false
+            backButton.isHidden = false
+            mainTextField.setTextFieldState(state: .name)
+            mainTextField.isError = false
+            continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
+            continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.inputName
+            mainTextField.isError = false
+            forgetEmailButton.isHidden = true
+            
+        case .pwForget:
+            newAccountButton.isHidden = true
+            helpButton.isHidden = true
+            privacyButton.isHidden = true
+            forgetPwButton.isHidden = true
+            backButton.isHidden = false
+            mainTextField.setTextFieldState(state: .email)
+            mainTextField.isError = false
+            continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
+            continueButton.isEnabled = false
+            descriptionLabel.text = StringLiterals.Login.sendCode
+            mainTextField.isError = false
+            forgetEmailButton.isHidden = false
+            
+        case .findEmail:
+            newAccountButton.isHidden = true
+            helpButton.isHidden = true
+            privacyButton.isHidden = true
+            forgetPwButton.isHidden = false
+            backButton.isHidden = true
+            mainTextField.setTextFieldState(state: .findEmail)
+            mainTextField.isError = false
+            continueButton.setTitle(StringLiterals.Login.goToLogin, for: .normal)
+            continueButton.isEnabled = true
+            descriptionLabel.text = StringLiterals.Login.yourEmail
+            mainTextField.isError = false
+            forgetEmailButton.isHidden = true
+        }
+    }
+    
+    @objc func eyeButtonTapped() {
+        mainTextField.isButtonTapped.toggle()
+        mainTextField.isSecureTextEntry = !mainTextField.isButtonTapped
+        mainTextField.eyeButton.setImage(mainTextField.isButtonTapped ? .icEyeHide : .icEye, for: .normal)
     }
 }

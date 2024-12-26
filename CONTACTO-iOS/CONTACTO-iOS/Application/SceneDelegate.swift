@@ -15,11 +15,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        let rootViewController = LoginViewController()
+        let rootViewController = SplashViewController()
         let navigationController = UINavigationController(rootViewController: rootViewController)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         self.window = window
+        var tabbarViewController: UIViewController = MainTabBarViewController()
+        
+        if KeychainHandler.shared.accessToken.isEmpty {
+            tabbarViewController = LoginViewController()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            let navigationController = UINavigationController(rootViewController: tabbarViewController)
+            
+            self.window?.rootViewController = navigationController
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

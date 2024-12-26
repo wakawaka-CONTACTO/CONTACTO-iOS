@@ -47,9 +47,7 @@ final class GreetCollectionViewCell: UICollectionViewCell {
     }
     
     @objc private func deleteButtonTapped() {
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.prepare()
-        generator.impactOccurred()
+        HapticService.impact(.light).run()
         deleteButtonAction()
     }
     

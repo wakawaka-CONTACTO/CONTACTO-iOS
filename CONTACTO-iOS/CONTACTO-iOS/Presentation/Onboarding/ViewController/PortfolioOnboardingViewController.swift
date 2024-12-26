@@ -41,8 +41,26 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
-        let mainTabBarViewController = MainTabBarViewController()
-        navigationController?.pushViewController(mainTabBarViewController, animated: true)
+        UserInfo.shared.portfolioImages = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+        let bodyData = SignUpRequestBodyDTO(
+            userSignUpReq: UserSignUpRequest(
+                name: UserInfo.shared.name,
+                email: UserInfo.shared.email,
+                description: UserInfo.shared.description,
+                instagramId: UserInfo.shared.instagramId,
+                password: UserInfo.shared.password,
+                loginType: "LOCAL",
+                webUrl: UserInfo.shared.webUrl),
+            purpose: UserInfo.shared.userPurposes.map { Purpose(purposeType: $0) },
+            talent: UserInfo.shared.userTalents.map { TalentType(talentType: $0) },
+            images: UserInfo.shared.portfolioImages)
+        
+        print(bodyData)
+        signup(bodyDTO: bodyData) { _ in
+                let mainTabBarViewController = MainTabBarViewController()
+                mainTabBarViewController.homeViewController.isFirst = true
+                self.navigationController?.pushViewController(mainTabBarViewController, animated: true)
+            }
     }
     
     private func setCollectionView() {
@@ -65,6 +83,21 @@ final class PortfolioOnboardingViewController: BaseViewController {
         configuration.selection = .ordered
         self.present(picker, animated: true, completion: nil)
         picker.delegate = self
+    }
+    
+    private func signup(bodyDTO: SignUpRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.signup(bodyDTO: bodyDTO) { response in
+            switch response {
+            case .success(let data):
+                KeychainHandler.shared.userID = String(data.userId)
+                KeychainHandler.shared.accessToken = data.accessToken
+                KeychainHandler.shared.refreshToken = data.refreshToken
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+        }
     }
 }
 
@@ -91,7 +124,6 @@ extension PortfolioOnboardingViewController: UICollectionViewDelegate {
             $0.leading.equalToSuperview().offset(indicatorX)
             $0.leading.trailing.lessThanOrEqualToSuperview()
         }
-        
     }
 }
 

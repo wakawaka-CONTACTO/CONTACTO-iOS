@@ -7,22 +7,34 @@
 
 import UIKit
 
+import Kingfisher
 import PhotosUI
 import SnapKit
 import Then
 
+// TODO: - put 확인 (500 확인)
 final class EditViewController: UIViewController {
     
-    private var talentDummy = Talent.talents()
+    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
+    private var talentData: [TalentInfo] = []
     var isEditEnable = false
-    var tappedStates: [Bool] = Array(repeating: false, count: 5)
+    var tappedStates: [Bool] = Array(repeating: false, count: 5) {
+        didSet {
+            portfolioData.userPurposes = tappedStates.enumerated().compactMap { index, state in
+                state ? index + 1 : nil
+            }
+        }
+    }
+    let activityIndicator = UIActivityIndicatorView(style: .large)
+
+    private var activeTextField: UIView?
     
     var isTextFieldFilled = true {
         didSet {
             changeSaveButtonStatus()
         }
     }
-    var isTextViewFilled = true { // 확인 필요. data 들어갔을 때도
+    var isTextViewFilled = true {
         didSet {
             changeSaveButtonStatus()
         }
@@ -44,17 +56,25 @@ final class EditViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
+        setData()
         setDelegate()
         setAddTarget()
         hideKeyboardWhenTappedAround()
         setCollectionView()
-        setData()
         setClosure()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationBar()
+        self.addKeyboardNotifications()
+        if !isEditEnable {
+            setData()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.removeKeyboardNotifications()
     }
     
     // MARK: UI
@@ -89,8 +109,33 @@ final class EditViewController: UIViewController {
     private func setClosure() {
         editView.editAction = {
             self.isEditEnable.toggle()
-            self.editView.portfolioCollectionView.reloadData()
-            self.editView.purposeCollectionView.reloadData()
+            let imageDataArray = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+            
+            let body = EditRequestBodyDTO(
+                username: self.portfolioData.username,
+                email: self.portfolioData.email,
+                description: self.portfolioData.description,
+                instagramId: self.portfolioData.instagramId,
+                password: "",
+                webUrl: self.portfolioData.webUrl,
+                userPurposes: self.portfolioData.userPurposes.map { $0 - 1 },
+                userTalents: self.convertToTalent(koreanNames: self.portfolioData.userTalents.map { $0.talentType }),
+                portfolioImages: imageDataArray)
+            self.editMyPort(bodyDTO: body) { _ in
+                self.editView.portfolioCollectionView.reloadData()
+                self.editView.purposeCollectionView.reloadData()
+                self.view.endEditing(true)
+            }
+        }
+    }
+    
+    func convertToTalent(koreanNames: [String]) -> [String] {
+        return koreanNames.compactMap { koreanName in
+            if let talent = Talent.allCases.first(where: { $0.info.koreanName == koreanName }) {
+                return talent.rawValue
+            } else {
+                return nil
+            }
         }
     }
     
@@ -106,6 +151,7 @@ final class EditViewController: UIViewController {
         
         editView.nameTextField.delegate = self
         editView.instaTextField.delegate = self
+        editView.websiteTextField.delegate = self
     }
     
     private func setCollectionView() {
@@ -114,15 +160,112 @@ final class EditViewController: UIViewController {
         editView.purposeCollectionView.register(ProfilePurposeCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePurposeCollectionViewCell.className)
     }
     
-    private func setData() {
-        //data 받는 곳
+    // MARK: - Server Function
+    private func editMyPort(bodyDTO: EditRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        if !self.isEditEnable {
+            NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { [weak self] response in
+                switch response {
+                case .success(let data):
+                    print(data)
+                    completion(true)
+                default:
+                    completion(false)
+                    print("error")
+                }
+            }
+        } else {
+            completion(true)
+        }
+    }
+    
+    private func checkMyPort(completion: @escaping (Bool) -> Void) {
+        editView.editButton.isUserInteractionEnabled = false
+        editView.previewButton.isUserInteractionEnabled = false
+        activityIndicator.startAnimating()
+        activityIndicator.center = view.center
         
+        view.addSubview(activityIndicator)
+        NetworkService.shared.editService.checkMyPort { [weak self] response in
+            switch response {
+            case .success(let data):
+                self?.portfolioData = data
+                self?.updatePortfolio()
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            }
+            
+            self?.editView.editButton.isUserInteractionEnabled = true
+            self?.editView.previewButton.isUserInteractionEnabled = true
+            self?.activityIndicator.stopAnimating()
+            self?.activityIndicator.removeFromSuperview()
+        }
+    }
+    
+    private func updatePortfolio() {
+        editView.nameTextField.text = portfolioData.username
+        editView.descriptionTextView.text = portfolioData.description
+        editView.instaTextField.text = portfolioData.instagramId
+        if let web = portfolioData.webUrl {
+            editView.websiteTextField.text = web
+        }
+        
+        talentData = portfolioData.userTalents.compactMap { userTalent in
+            Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
+        }
+        
+        let dispatchGroup = DispatchGroup()
+        
+        portfolioData.userPortfolio?.portfolioImages.forEach { url in
+            guard let imageUrl = URL(string: url) else { return }
+            
+            dispatchGroup.enter() // 작업 시작
+            KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { result in
+                switch result {
+                case .success(let value):
+                    DispatchQueue.main.async {
+                        if !(self.selectedImages.contains(value.image)) {
+                            self.selectedImages.append(value.image)
+                        }
+                    }
+                case .failure(let error):
+                    print("Failed to load image: \(error.localizedDescription)")
+                }
+                dispatchGroup.leave() // 작업 완료
+            }
+        }
+        
+        // 모든 작업이 완료된 후 실행
+        dispatchGroup.notify(queue: .main) {
+            print(self.selectedImages)
+            self.editView.portfolioCollectionView.reloadData()
+        }
+        
+        portfolioData.userPurposes.forEach { index in
+            if index < tappedStates.count {
+                tappedStates[index] = true
+            }
+        }
+        
+        editView.talentCollectionView.reloadData()
+        editView.purposeCollectionView.reloadData()
+    }
+    
+    private func setData() {
+        self.checkMyPort { _ in
+            self.checkTalentLayout()
+        }
+    }
+    
+    private func checkTalentLayout() {
         editView.talentCollectionView.layoutIfNeeded()
         
         editView.talentCollectionView.snp.remakeConstraints {
             $0.top.equalTo(editView.talentLabel.snp.bottom).offset(7)
             $0.leading.trailing.equalToSuperview().inset(16)
-            $0.height.equalTo(editView.talentCollectionView.contentSize.height)
+            $0.height.equalTo(editView.talentCollectionView.contentSize.height + 4)
         }
     }
     
@@ -137,6 +280,7 @@ final class EditViewController: UIViewController {
     }
     
     private func changeSaveButtonStatus() {
+        print("textField:\(isTextFieldFilled)\ntextView:\(isTextViewFilled)\nportfolio:\(isPortfolioFilled)\npurpose:\(isPurposeFilled)\neditEnabled:\(isEditEnable)")
         if isTextFieldFilled,
            isTextViewFilled,
            isPortfolioFilled,
@@ -147,12 +291,77 @@ final class EditViewController: UIViewController {
             editView.editButton.isEnabled = false
         }
     }
+    
+    private func addKeyboardNotifications(){
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func removeKeyboardNotifications(){
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(_ noti: NSNotification) {
+        guard let keyboardFrame = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        
+        let keyboardHeight = keyboardFrame.height
+        let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
+        
+        self.editView.editButton.snp.remakeConstraints {
+            $0.bottom.equalToSuperview().inset(keyboardHeight - tabBarHeight + 13.adjustedHeight)
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(34.adjustedHeight)
+        }
+        
+        // 현재 활성화된 텍스트 필드가 있는지 확인
+        if let activeField = activeTextField {
+            print(activeField)
+            if activeField.frame.minY > (view.frame.height - keyboardHeight) {
+                let yOffset = activeField.frame.maxY - (view.frame.height + tabBarHeight - keyboardHeight) + 45.adjustedHeight
+                editView.scrollView.setContentOffset(CGPoint(x: 0, y: keyboardHeight + yOffset), animated: false)
+            }
+        }
+        
+        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+        
+    }
+    
+    @objc func keyboardWillHide(_ noti: NSNotification){
+        self.editView.editButton.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.height.equalTo(34.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(41.adjustedHeight)
+        }
+        
+        if let activeField = activeTextField {
+            if activeField == editView.instaTextField || activeField == editView.websiteTextField {
+                editView.scrollView.setContentOffset(CGPoint(x: 0,
+                                                             y: editView.scrollView.contentSize.height - editView.scrollView.bounds.height),
+                                                     animated: true)
+            }
+        }
+        
+        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
 }
 
 extension EditViewController {
     @objc private func previewButtonTapped() {
         let previewViewController = HomeViewController()
         previewViewController.isPreview = true
+        previewViewController.previewPortfolioData = self.portfolioData
+        previewViewController.imagePreviewDummy = selectedImages
+        previewViewController.previewPortfolioData.userTalents = []
+        self.talentData.forEach {
+            previewViewController.previewPortfolioData.userTalents.append(
+                UserTalent(id: 0, userId: self.portfolioData.id, talentType: $0.displayName)
+            )
+        }
         let navigationController = UINavigationController(rootViewController: previewViewController)
         present(navigationController, animated: true)
     }
@@ -161,12 +370,21 @@ extension EditViewController {
         let talentViewController = TalentOnboardingViewController()
         talentViewController.hidesBottomBarWhenPushed = true
         talentViewController.talentOnboardingView.nextButton.setTitle(StringLiterals.Edit.doneButton, for: .normal)
-        talentViewController.talentOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        talentViewController.isEdit = true
+        talentViewController.editTalent = talentData
+        talentViewController.updateTalent = {
+            self.talentData = talentViewController.editTalent
+            self.editView.talentCollectionView.reloadData()
+            var talents: [UserTalent] = []
+            self.talentData.forEach {
+                talents.append(
+                    UserTalent(id: 0, userId: self.portfolioData.id, talentType: $0.displayName)
+                )
+            }
+            self.portfolioData.userTalents = talents
+            self.checkTalentLayout()
+        }
         navigationController?.pushViewController(talentViewController, animated: true)
-    }
-    
-    @objc private func nextButtonTapped() {
-        navigationController?.popViewController(animated: true)
     }
 }
 
@@ -178,7 +396,7 @@ extension EditViewController: UICollectionViewDataSource {
         case 0:
             return 10
         case 1:
-            return talentDummy.flatMap { $0.talent }.count
+            return talentData.count
         case 2:
             return 5
         default:
@@ -192,6 +410,7 @@ extension EditViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: EditPortfolioCollectionViewCell.className,
                 for: indexPath) as? EditPortfolioCollectionViewCell else { return UICollectionViewCell() }
+            print(selectedImages.count) 
             if indexPath.row < selectedImages.count {
                 cell.isFilled = true
                 cell.backgroundImageView.image = selectedImages[indexPath.row]
@@ -218,18 +437,15 @@ extension EditViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfileTalentCollectionViewCell.className,
                 for: indexPath) as? ProfileTalentCollectionViewCell else { return UICollectionViewCell() }
             
-            let allTalents = talentDummy.flatMap { $0.talent }
-            let category = talentDummy.first { $0.talent.contains(allTalents[indexPath.row]) }?.category ?? ""
-            let title = allTalents[indexPath.row]
-            
-            cell.configData(category: category, title: title)
+            cell.talentLabel.text = talentData[indexPath.row].displayName.uppercased()
+            cell.backgroundColor = talentData[indexPath.row].category.color
             return cell
         case 2:
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
-            cell.config(num: indexPath.item)
             cell.isTapped = tappedStates[indexPath.row]
+            cell.config(num: indexPath.item)
             cell.isEditing = isEditEnable
             cell.setAddTarget()
             cell.tapAction = {
@@ -266,17 +482,29 @@ extension EditViewController: PHPickerViewControllerDelegate {
         group.notify(queue: .main) {
             let newImages = addedImages.compactMap { $0 }
             self.selectedImages.append(contentsOf: newImages)
+            self.isPortfolioFilled = !self.selectedImages.isEmpty
             self.editView.portfolioCollectionView.reloadData()
         }
     }
 }
 
 extension EditViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        activeTextField = textView
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        activeTextField = nil
+    }
+    
     func textViewDidChange(_ textView: UITextView) {
-        if !textView.text.isEmpty, !textView.text.isOnlyWhitespace() {
+        if !textView.text.isEmpty || !textView.text.isOnlyWhitespace() {
             self.isTextViewFilled = true
         } else {
             self.isTextViewFilled = false
+        }
+        if let text = textView.text {
+            self.portfolioData.description = text
         }
     }
 }
@@ -288,10 +516,35 @@ extension EditViewController: UITextFieldDelegate {
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        if !textField.text!.isEmpty,  !textField.text!.isOnlyWhitespace() {
-            self.isTextFieldFilled = true
-        } else {
-            self.isTextFieldFilled = false
+        if textField != editView.websiteTextField  {
+            if let text = textField.text {
+                if !text.isEmpty || !text.isOnlyWhitespace() {
+                    self.isTextFieldFilled = true
+                } else {
+                    self.isTextFieldFilled = false
+                }
+            }
         }
+        
+        if let text = textField.text {
+            switch textField {
+            case editView.nameTextField:
+                self.portfolioData.username = text
+            case editView.instaTextField:
+                self.portfolioData.instagramId = text
+            case editView.websiteTextField:
+                self.portfolioData.webUrl = text
+            default:
+                print("default")
+            }
+        }
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeTextField = textField
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        activeTextField = nil
     }
 }

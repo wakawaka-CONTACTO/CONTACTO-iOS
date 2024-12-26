@@ -30,8 +30,7 @@ final class HomeView: BaseView {
     let yesButton = UIButton()
     
     override func setStyle() {
-        self.backgroundColor = .ctblack1
-        
+        self.backgroundColor = .ctblack
         
         pageCollectionView.do {
             $0.backgroundColor = .clear
@@ -67,7 +66,7 @@ final class HomeView: BaseView {
         }
         
         profileNameLabel.do {
-            $0.text = "abcdefg"
+            $0.text = " "
             $0.textColor = .ctblack
             $0.font = .fontContacto(.button4)
             $0.textAlignment = .center
@@ -99,7 +98,7 @@ final class HomeView: BaseView {
         
         profileButton.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(13)
-            $0.leading.trailing.equalToSuperview().inset(22)
+            $0.leading.trailing.equalToSuperview().inset(17)
             $0.height.equalTo(48.adjustedHeight)
         }
         
@@ -128,8 +127,7 @@ final class HomeView: BaseView {
         }
         
         portImageView.snp.makeConstraints {
-            $0.height.equalToSuperview()
-            $0.center.equalToSuperview()
+            $0.edges.equalToSuperview()
         }
         
         backView.snp.makeConstraints {

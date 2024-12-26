@@ -14,12 +14,20 @@ final class TalentOnboardingViewController: BaseViewController {
     
     let talentOnboardingView = TalentOnboardingView()
     
-    private var talentDummy = Talent.talents()
-    var selectedIndexPaths: Set<IndexPath> = [] {
+    private var talentDummy: [[TalentInfo]] = [
+        Talent.allCases.filter { $0.info.category == .DESIGN }.map { $0.info },
+        Talent.allCases.filter { $0.info.category == .ART_CRAFT }.map { $0.info },
+        Talent.allCases.filter { $0.info.category == .MEDIA_CONTENT }.map { $0.info }
+    ]
+    
+    var isEdit = false
+    var editTalent: [TalentInfo] = [] {
         didSet {
-            talentOnboardingView.nextButton.isEnabled = (!selectedIndexPaths.isEmpty)
+            talentOnboardingView.nextButton.isEnabled = (!editTalent.isEmpty)
         }
     }
+    
+    var updateTalent: (() -> Void) = {}
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +47,7 @@ final class TalentOnboardingViewController: BaseViewController {
         }
     }
     
-    func setAddTargetForOnboarding() {
+    override func setAddTarget() {
         talentOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
     
@@ -54,8 +62,25 @@ final class TalentOnboardingViewController: BaseViewController {
     }
     
     @objc func nextButtonTapped() {
-        let portfolioOnboardingViewController = PortfolioOnboardingViewController()
-        self.navigationController?.pushViewController(portfolioOnboardingViewController, animated: true)
+        if isEdit {
+            self.navigationController?.popViewController(animated: true)
+            self.editTalent.sort { (first, second) -> Bool in
+                guard let firstIndex = Talent.allCases.firstIndex(where: { $0.info.koreanName == first.koreanName }),
+                      let secondIndex = Talent.allCases.firstIndex(where: { $0.info.koreanName == second.koreanName }) else {
+                    return false
+                }
+                return firstIndex < secondIndex
+            }
+            updateTalent()
+        } else {
+            let selectedTalents = editTalent.compactMap { talentInfo in
+                Talent.allCases.first(where: { $0.info.koreanName == talentInfo.koreanName })?.rawValue
+            }
+            UserInfo.shared.userTalents = selectedTalents
+            
+            let portfolioOnboardingViewController = PortfolioOnboardingViewController()
+            self.navigationController?.pushViewController(portfolioOnboardingViewController, animated: true)
+        }
     }
 }
 
@@ -71,11 +96,11 @@ extension TalentOnboardingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return talentDummy[0].talent.count
+            return Talent.allCases.filter { $0.info.category == .DESIGN }.count
         case 1:
-            return talentDummy[1].talent.count
+            return Talent.allCases.filter { $0.info.category == .ART_CRAFT }.count
         case 2:
-            return talentDummy[2].talent.count
+            return Talent.allCases.filter { $0.info.category == .MEDIA_CONTENT }.count
         default:
             return 0
         }
@@ -85,24 +110,17 @@ extension TalentOnboardingViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TalentCollectionViewCell.className,
             for: indexPath) as? TalentCollectionViewCell else { return UICollectionViewCell() }
-        switch indexPath.section {
-        case 0:
-            cell.talentButton.setTitle(talentDummy[0].talent[indexPath.item], for: .normal)
-        case 1:
-            cell.talentButton.setTitle(talentDummy[1].talent[indexPath.item], for: .normal)
-        case 2:
-            cell.talentButton.setTitle(talentDummy[2].talent[indexPath.item], for: .normal)
-        default:
-            return cell
-        }
-        cell.num = indexPath.section
+        let talent = talentDummy[indexPath.section][indexPath.row]
+        
+        let isSelected = editTalent.contains { $0.koreanName == talent.koreanName }
+        cell.setTalent(talent, isSelectedFromEditTalent: isSelected)
+        
         cell.updateButtonAction = {
-            if self.selectedIndexPaths.contains(indexPath) {
-                self.selectedIndexPaths.remove(indexPath)
+            if let talentIndex = self.editTalent.firstIndex(where: { $0.koreanName == cell.talent.koreanName }) {
+                self.editTalent.remove(at: talentIndex)
             } else {
-                self.selectedIndexPaths.insert(indexPath)
+                self.editTalent.append(cell.talent)
             }
-            print(self.selectedIndexPaths)
         }
         return cell
     }
@@ -137,7 +155,7 @@ extension TalentOnboardingViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let size = CGSize(width: (SizeLiterals.Screen.screenWidth - 70.adjustedWidth) / 3, height: 19)
+        let size = CGSize(width: (SizeLiterals.Screen.screenWidth - 73.adjustedWidth) / 3, height: 25)
         return size
     }
     

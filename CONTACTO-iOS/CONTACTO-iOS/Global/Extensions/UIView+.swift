@@ -21,4 +21,32 @@ extension UIView {
         layer.borderWidth = borderWidth
         layer.cornerRadius = cornerRadius
     }
+    
+    func showToast(message: String, at: CGFloat = 50) {
+        let toastLabel = UILabel()
+        toastLabel.backgroundColor = UIColor(hex: "343A40", alpha: 0.5)
+        toastLabel.textColor = .ctgray1
+        toastLabel.textAlignment = .center
+        toastLabel.font = .fontContacto(.gothicButton)
+        toastLabel.text = message
+        toastLabel.alpha = 1.0
+        toastLabel.layer.cornerRadius = 0
+        toastLabel.clipsToBounds = true
+        
+        let toastWidth = 253.adjusted
+        let toastHeight = 40.adjusted
+        toastLabel.frame = CGRect(x: self.frame.size.width / 2 - toastWidth / 2,
+                                  y: at.adjusted,
+                                  width: toastWidth,
+                                  height: toastHeight)
+        if let window = UIApplication.shared.keyWindow {
+            window.addSubview(toastLabel)
+        }
+        
+        UIView.animate(withDuration: 5.0, delay: 0.1, options: .curveEaseOut, animations: {
+            toastLabel.alpha = 0.0
+        }, completion: {(isCompleted) in
+            toastLabel.removeFromSuperview()
+        })
+    }
 }

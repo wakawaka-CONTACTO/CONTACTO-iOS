@@ -12,8 +12,12 @@ import Then
 
 final class TalentCollectionViewCell: UICollectionViewCell {
     
-    var num = 0
     var isTapped = false
+    var talent = TalentInfo(koreanName: "", displayName: "", category: .ART_CRAFT) {
+        didSet {
+            self.talentButton.setTitle(talent.displayName, for: .normal)
+        }
+    }
     private let colorArray: [UIColor] = [.ctsubpink, .ctsubblue1, .ctsubbrown]
     
     var updateButtonAction: (() -> Void) = {}
@@ -57,22 +61,31 @@ final class TalentCollectionViewCell: UICollectionViewCell {
         self.addSubviews(talentButton)
         
         talentButton.snp.makeConstraints {
-            $0.height.equalTo(19)
-            $0.width.equalTo((SizeLiterals.Screen.screenWidth - 70.adjustedWidth) / 3)
+            $0.height.equalTo(25)
+            $0.width.equalTo((SizeLiterals.Screen.screenWidth - 73.adjustedWidth) / 3)
             $0.edges.equalToSuperview()
         }
     }
     
     @objc func buttonTapped() {
         isTapped.toggle()
-        
+        updateButtonAppearance()
+        updateButtonAction()
+    }
+    
+    func setTalent(_ talent: TalentInfo, isSelectedFromEditTalent: Bool) {
+        self.talent = talent
+        self.isTapped = isSelectedFromEditTalent
+        updateButtonAppearance()
+    }
+    
+    private func updateButtonAppearance() {
         if isTapped {
-            talentButton.setBackgroundColor(colorArray[num], for: .normal)
-            talentButton.setBackgroundColor(colorArray[num], for: .highlighted)
+            talentButton.setBackgroundColor(talent.category.color, for: .normal)
+            talentButton.setBackgroundColor(talent.category.color, for: .highlighted)
         } else {
             talentButton.setBackgroundColor(.ctwhite, for: .normal)
             talentButton.setBackgroundColor(.ctwhite, for: .highlighted)
         }
-        updateButtonAction()
     }
 }

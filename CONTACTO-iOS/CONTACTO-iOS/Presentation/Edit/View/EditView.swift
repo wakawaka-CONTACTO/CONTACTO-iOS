@@ -18,7 +18,7 @@ final class EditView: BaseView {
     private let topView = UIView()
     private let topImageView = UIImageView()
     
-    private let scrollView = UIScrollView()
+    let scrollView = UIScrollView()
     private let contentsView = UIView()
     private let editLabel = UILabel()
     private let editLineView = UIView()
@@ -93,7 +93,7 @@ final class EditView: BaseView {
         
         nameTextField.do {
             $0.backgroundColor = .ctmainblue
-            $0.text = "Pecay Pecay"
+            $0.text = " "
             $0.font = .fontContacto(.button4)
             $0.textColor = .ctblack
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
@@ -149,7 +149,7 @@ final class EditView: BaseView {
         descriptionTextView.do {
             $0.backgroundColor = .clear
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
-            $0.text = "We are make a ceramic for design."
+            $0.text = " "
             $0.textAlignment = .left
             $0.font = .fontContacto(.caption5)
             $0.textColor = .ctblack
@@ -207,7 +207,8 @@ final class EditView: BaseView {
             $0.addPadding(left: 27)
             $0.autocapitalizationType = .none
             $0.keyboardType = .asciiCapable
-            $0.text = "pecaypecay"
+            $0.text = " "
+            $0.isEnabled = false
         }
         
         instaAtLabel.do {
@@ -235,14 +236,17 @@ final class EditView: BaseView {
             $0.spellCheckingType = .no
             $0.autocapitalizationType = .none
             $0.addPadding(left: 10)
+            $0.isEnabled = false
         }
         
         editButton.do {
             $0.setTitle(StringLiterals.Edit.editButton, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
             $0.titleLabel?.font = .fontContacto(.button2)
-            $0.backgroundColor = .ctsubyellow1
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            $0.setBackgroundColor(.ctsubyellow1, for: .normal)
+            $0.setBackgroundColor(.ctgray3, for: .disabled)
+            
         }
     }
     
@@ -405,6 +409,8 @@ final class EditView: BaseView {
         talentEditButton.isHidden = !isEditEnable
         descriptionTextView.isEditable = isEditEnable
         descriptionTextView.backgroundColor = isEditEnable ? .ctwhite : .clear
+        instaTextField.isEnabled = isEditEnable
+        websiteTextField.isEnabled = isEditEnable
         instaTextField.backgroundColor = isEditEnable ? .ctwhite : .clear
         websiteTextField.backgroundColor = isEditEnable ? .ctwhite : .clear
         

@@ -21,13 +21,8 @@ final class InfoView: BaseView {
     let passwordButton = UIButton()
     let passwordLabel = UILabel()
     
-    private let contactLabel = UILabel()
     let helpButton = UIButton()
-    
-    private let communityLabel = UILabel()
     let guidelinesButton = UIButton()
-    
-    private let privacyLabel = UILabel()
     let cookieButton = UIButton()
     
     private let logoImageView = UIImageView()
@@ -58,6 +53,7 @@ final class InfoView: BaseView {
             $0.setTitle(StringLiterals.Info.email, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
             $0.setBackgroundColor(.ctgray3, for: .normal)
+            $0.setBackgroundColor(.ctgray3, for: .disabled)
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.titleLabel?.font = .fontContacto(.button1)
             $0.isEnabled = false
@@ -65,7 +61,7 @@ final class InfoView: BaseView {
         }
         
         emailLabel.do {
-            $0.text = "contacto@wakawaka.kr"
+            $0.text = " "
             $0.textColor = .ctblack
             $0.font = .fontContacto(.button1)
         }
@@ -74,6 +70,7 @@ final class InfoView: BaseView {
             $0.setTitle(StringLiterals.Info.password, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
             $0.setBackgroundColor(.ctgray3, for: .normal)
+            $0.setBackgroundColor(.ctgray3, for: .disabled)
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.titleLabel?.font = .fontContacto(.button1)
             $0.isEnabled = false
@@ -86,46 +83,28 @@ final class InfoView: BaseView {
             $0.font = .fontContacto(.button1)
         }
         
-        contactLabel.do {
-            $0.text = StringLiterals.Info.contact
-            $0.textColor = .ctblack
-            $0.font = .fontContacto(.button8)
-        }
-        
         helpButton.do {
             $0.setTitle(StringLiterals.Info.help, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
-            $0.setBackgroundColor(.ctwhite, for: .normal)
+            $0.setBackgroundColor(.ctsubgreen2, for: .normal)
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.titleLabel?.font = .fontContacto(.button1)
             $0.titleLabel?.textAlignment = .left
-        }
-        
-        communityLabel.do {
-            $0.text = StringLiterals.Info.community
-            $0.textColor = .ctblack
-            $0.font = .fontContacto(.button8)
         }
         
         guidelinesButton.do {
             $0.setTitle(StringLiterals.Info.guidelines, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
-            $0.setBackgroundColor(.ctwhite, for: .normal)
+            $0.setBackgroundColor(.ctsubgreen2, for: .normal)
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.titleLabel?.font = .fontContacto(.button1)
             $0.titleLabel?.textAlignment = .left
         }
         
-        privacyLabel.do {
-            $0.text = StringLiterals.Info.community
-            $0.textColor = .ctblack
-            $0.font = .fontContacto(.button8)
-        }
-        
         cookieButton.do {
-            $0.setTitle(StringLiterals.Info.cookie, for: .normal)
+            $0.setTitle(StringLiterals.Info.privacy, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
-            $0.setBackgroundColor(.ctwhite, for: .normal)
+            $0.setBackgroundColor(.ctsubgreen2, for: .normal)
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.titleLabel?.font = .fontContacto(.button1)
             $0.titleLabel?.textAlignment = .left
@@ -136,7 +115,7 @@ final class InfoView: BaseView {
         }
         
         versionLabel.do {
-            $0.text = "v 1.0.0"
+            $0.text = "v \(AppStoreCheck.appVersion ?? "")"
             $0.textColor = .ctblack
             $0.font = .fontContacto(.caption2)
         }
@@ -159,11 +138,8 @@ final class InfoView: BaseView {
                     accountLabel,
                     emailButton,
                     passwordButton,
-                    contactLabel,
                     helpButton,
-                    communityLabel,
                     guidelinesButton,
-                    privacyLabel,
                     cookieButton,
                     logoImageView,
                     versionLabel,
@@ -218,13 +194,8 @@ final class InfoView: BaseView {
             $0.trailing.equalToSuperview().inset(8)
         }
         
-        contactLabel.snp.makeConstraints {
-            $0.top.equalTo(passwordButton.snp.bottom).offset(15)
-            $0.leading.equalTo(accountLabel)
-        }
-        
         helpButton.snp.makeConstraints {
-            $0.top.equalTo(contactLabel.snp.bottom).offset(3)
+            $0.top.equalTo(passwordButton.snp.bottom).offset(5)
             $0.leading.trailing.height.equalTo(emailButton)
         }
         
@@ -233,13 +204,8 @@ final class InfoView: BaseView {
             $0.centerY.equalToSuperview()
         }
         
-        communityLabel.snp.makeConstraints {
-            $0.top.equalTo(helpButton.snp.bottom).offset(15)
-            $0.leading.equalTo(accountLabel)
-        }
-        
         guidelinesButton.snp.makeConstraints {
-            $0.top.equalTo(communityLabel.snp.bottom).offset(3)
+            $0.top.equalTo(helpButton.snp.bottom).offset(5)
             $0.leading.trailing.height.equalTo(emailButton)
         }
         
@@ -248,13 +214,8 @@ final class InfoView: BaseView {
             $0.centerY.equalToSuperview()
         }
         
-        privacyLabel.snp.makeConstraints {
-            $0.top.equalTo(guidelinesButton.snp.bottom).offset(15)
-            $0.leading.equalTo(accountLabel)
-        }
-        
         cookieButton.snp.makeConstraints {
-            $0.top.equalTo(privacyLabel.snp.bottom).offset(3)
+            $0.top.equalTo(guidelinesButton.snp.bottom).offset(5)
             $0.leading.trailing.height.equalTo(emailButton)
         }
         

@@ -94,6 +94,7 @@ extension NameOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
+        UserInfo.shared.name = nameOnboardingView.nameTextField.text ?? ""
         let purposeOnboardingViewController = PurposeOnboardingViewController()
         self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
     }

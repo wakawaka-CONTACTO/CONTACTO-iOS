@@ -8,7 +8,8 @@
 import UIKit
 
 class BaseTextField: UITextField {
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool { 
+    /// 복붙 막기
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return false
     }
 }
