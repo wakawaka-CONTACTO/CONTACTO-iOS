@@ -11,7 +11,7 @@ struct ChatListResponseDTO: Codable {
     let id: Int
     let title: String
     let participants: [Int]
-    let chatRoomThumbnail: String
+    let chatRoomThumbnail: String?
     let unreadMessageCount: Int
     let latestMessageContent: String?
 }

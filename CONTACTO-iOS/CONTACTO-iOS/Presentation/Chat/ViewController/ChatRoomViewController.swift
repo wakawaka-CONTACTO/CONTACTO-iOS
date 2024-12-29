@@ -13,19 +13,28 @@ import Then
 
 final class ChatRoomViewController: BaseViewController {
     
+    var content = ""
+    var senderId = KeychainHandler.shared.userID
+    var createdAt = ""
+    var isConnected = false
+    
     var chatRoomId = 0
     var participants: [Int] = []
     var chatList: [Message] = []
     var isKeyboardShow = false
     let chatRoomView = ChatRoomView()
+    private var webSocketTask: URLSessionWebSocketTask?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.addKeyboardNotifications()
         self.setData()
+        self.connect()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.closeSocket()
         self.removeKeyboardNotifications()
     }
     
@@ -41,7 +50,7 @@ final class ChatRoomViewController: BaseViewController {
     
     override func setAddTarget() {
         chatRoomView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        chatRoomView.plusButton.addTarget(self, action: #selector(plusButtonTappped), for: .touchUpInside)
+//        chatRoomView.plusButton.addTarget(self, action: #selector(plusButtonTappped), for: .touchUpInside)
         chatRoomView.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
     }
     
@@ -88,6 +97,134 @@ final class ChatRoomViewController: BaseViewController {
                 completion(false)
             }
         }
+    }
+    
+    private func connect() {
+        // SockJS URL 형식으로 변경
+        guard let url = URL(string: "\(Config.chatBaseURL)?userId=\(KeychainHandler.shared.userID)&accessToken=\(KeychainHandler.shared.accessToken)") else { return }
+
+        var request = URLRequest(url: url)
+        request.setValue(KeychainHandler.shared.accessToken, forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession(configuration: .default)
+        webSocketTask = session.webSocketTask(with: request)
+        webSocketTask?.resume()
+        
+        isConnected = true
+        receiveMessage()
+        subscribe()
+    }
+    
+    func receiveMessage() {
+        guard isConnected else {
+            print("WebSocket is not connected. Stopping message reception.")
+            return
+        }
+
+        webSocketTask?.receive { [weak self] result in
+            switch result {
+            case .success(let message):
+                switch message {
+                case .string(let text):
+                    print("Received string: \(text)")
+                    self?.handleReceivedMessage(text)
+                case .data(let data):
+                    print("Received binary data: \(data)")
+                @unknown default:
+                    print("Received an unknown message type.")
+                }
+
+                // 성공적으로 메시지를 받았다면 계속 수신 대기
+                self?.receiveMessage()
+
+            case .failure(let error):
+                print("Error receiving message: \(error.localizedDescription)")
+                
+                // 실패 시 재시도를 제한하거나 특정 조건에서만 다시 호출
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                    self?.retryConnectionIfNeeded()
+                }
+            }
+        }
+    }
+    
+    private func retryConnectionIfNeeded() {
+        guard !isConnected else { return }
+
+        print("Attempting to reconnect to WebSocket...")
+        connect()
+    }
+
+    
+    private func handleReceivedMessage(_ text: String) {
+        guard let data = text.data(using: .utf8) else { return }
+        do {
+            let message = try JSONDecoder().decode(Message.self, from: data)
+            print("Received chat message: \(message)")
+            
+            // 메시지를 UI에 추가
+            DispatchQueue.main.async {
+                self.chatList.append(message)
+                self.chatRoomView.chatRoomCollectionView.reloadData()
+                self.scrollToBottom()
+            }
+        } catch {
+            print("Failed to decode message: \(error)")
+        }
+    }
+
+    private func subscribe() {
+        let subscribeFrame = """
+        SUBSCRIBE
+        id:sub-\(chatRoomId)
+        destination:/topic/\(chatRoomId)
+        Authorization:\(KeychainHandler.shared.accessToken)
+        
+        \n\0
+        """
+        
+        let message = URLSessionWebSocketTask.Message.string(subscribeFrame)
+        webSocketTask?.send(message) { error in
+            if let error = error {
+                print("Subscribe error: \(error)")
+            } else {
+                print("Subscribed to: /topic/\(self.chatRoomId)")
+            }
+        }
+    }
+    
+    private func send(message: Message) {
+        guard let messageData = try? JSONEncoder().encode(message),
+              let messageString = String(data: messageData, encoding: .utf8) else { return }
+        
+        // STOMP 메시지 형식으로 변경
+        let stompFrame = """
+      SEND
+      destination:/app/chat.send/\(self.chatRoomId)
+      content-type:application/json
+      Authorization:\(KeychainHandler.shared.accessToken)
+      content-length:\(messageString.count)
+      
+      \(messageString)\n\0
+      """
+        
+        let message = URLSessionWebSocketTask.Message.string(stompFrame)
+        webSocketTask?.send(message) { error in
+            if let error = error {
+                print("WebSocket send error: \(error)")
+            }
+        }
+    }
+    
+    private func closeSocket() {
+        guard let webSocketTask = webSocketTask else {
+            print("WebSocket is not connected.")
+            return
+        }
+
+        webSocketTask.cancel(with: .normalClosure, reason: nil)
+        isConnected = false
+        print("WebSocket connection closed.")
     }
 }
 
@@ -171,6 +308,29 @@ extension ChatRoomViewController {
     }
     
     @objc private func sendButtonTapped() {
+        guard let messageText = chatRoomView.messageTextView.text, !messageText.isEmpty else { return }
+        
+        self.content = messageText
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let currentDate = Date()
+        self.createdAt = formatter.string(from: currentDate)
+        
+        let newMessage = Message(
+            content: content,
+            senderId: Int(senderId) ?? 0,
+            createdAt: createdAt,
+            readStatus: false)
+        chatList.append(newMessage)
+        self.send(message: newMessage)
+        
+        webSocketTask?.send(URLSessionWebSocketTask.Message.string(content)) { error in
+            if let error = error {
+                print("Error sending message: \(error)")
+            }
+        }
+        
+        chatRoomView.chatRoomCollectionView.reloadData()
         chatRoomView.messageTextView.text = ""
         scrollToBottom()
     }

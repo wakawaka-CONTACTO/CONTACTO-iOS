@@ -12,7 +12,7 @@ struct ChatRoomResponseDTO: Codable {
     let title: String
     let messages: [Message]
     let participants: [Int]
-    let chatRoomThumbnail: String
+    let chatRoomThumbnail: String?
 }
 
 struct Message: Codable {
