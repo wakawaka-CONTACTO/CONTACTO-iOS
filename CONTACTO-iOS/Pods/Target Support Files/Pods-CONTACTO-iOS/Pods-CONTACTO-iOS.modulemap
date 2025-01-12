@@ -1,0 +1,6 @@
+framework module Pods_CONTACTO_iOS {
+  umbrella header "Pods-CONTACTO-iOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -9,6 +9,7 @@ import UIKit
 
 import PhotosUI
 import SnapKit
+import StompClientLib
 import Then
 
 final class ChatRoomViewController: BaseViewController {
@@ -17,24 +18,25 @@ final class ChatRoomViewController: BaseViewController {
     var senderId = KeychainHandler.shared.userID
     var createdAt = ""
     var isConnected = false
+    var socketClient = StompClientLib()
     
     var chatRoomId = 0
     var participants: [Int] = []
     var chatList: [Message] = []
     var isKeyboardShow = false
     let chatRoomView = ChatRoomView()
-    private var webSocketTask: URLSessionWebSocketTask?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.addKeyboardNotifications()
         self.setData()
-        self.connect()
+        self.registerSocket()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.closeSocket()
+//        self.closeSocket()
+        self.socketClient.disconnect()
         self.removeKeyboardNotifications()
     }
     
@@ -99,132 +101,59 @@ final class ChatRoomViewController: BaseViewController {
         }
     }
     
-    private func connect() {
-        // SockJS URL 형식으로 변경
+    func registerSocket() {
         guard let url = URL(string: "\(Config.chatBaseURL)?userId=\(KeychainHandler.shared.userID)&accessToken=\(KeychainHandler.shared.accessToken)") else { return }
-
-        var request = URLRequest(url: url)
+        
+        let request = NSMutableURLRequest(url: url)
         request.setValue(KeychainHandler.shared.accessToken, forHTTPHeaderField: "Authorization")
+                    
+        socketClient.openSocketWithURLRequest(
+            request: NSURLRequest(url: url),
+            delegate: self
+        )
+    }
+}
+
+extension ChatRoomViewController: StompClientLibDelegate {
+    func serverDidSendReceipt(client: StompClientLib, withReceiptId receiptId: String) {
+        print("Receipt : \(receiptId)")
+    }
+    
+    func serverDidSendPing() {
+        print("Server ping")
+    }
+    
+    func stompClient(client: StompClientLib, didReceiveMessageWithJSONBody jsonBody: AnyObject?, akaStringBody stringBody: String?, withHeader header: [String : String]?, withDestination destination: String) {
+        print("Destination : \(destination)")
+        print("JSON Body : \(String(describing: jsonBody))")
         
-        let session = URLSession(configuration: .default)
-        webSocketTask = session.webSocketTask(with: request)
-        webSocketTask?.resume()
-        
-        isConnected = true
-        receiveMessage()
-        subscribe()
-    }
-    
-    func receiveMessage() {
-        guard isConnected else {
-            print("WebSocket is not connected. Stopping message reception.")
-            return
-        }
-
-        webSocketTask?.receive { [weak self] result in
-            switch result {
-            case .success(let message):
-                switch message {
-                case .string(let text):
-                    print("Received string: \(text)")
-                    self?.handleReceivedMessage(text)
-                case .data(let data):
-                    print("Received binary data: \(data)")
-                @unknown default:
-                    print("Received an unknown message type.")
-                }
-
-                // 성공적으로 메시지를 받았다면 계속 수신 대기
-                self?.receiveMessage()
-
-            case .failure(let error):
-                print("Error receiving message: \(error.localizedDescription)")
-                
-                // 실패 시 재시도를 제한하거나 특정 조건에서만 다시 호출
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-                    self?.retryConnectionIfNeeded()
-                }
-            }
-        }
-    }
-    
-    private func retryConnectionIfNeeded() {
-        guard !isConnected else { return }
-
-        print("Attempting to reconnect to WebSocket...")
-        connect()
-    }
-
-    
-    private func handleReceivedMessage(_ text: String) {
-        guard let data = text.data(using: .utf8) else { return }
-        do {
-            let message = try JSONDecoder().decode(Message.self, from: data)
-            print("Received chat message: \(message)")
-            
-            // 메시지를 UI에 추가
+        if let messageString = stringBody,
+           let data = messageString.data(using: .utf8),
+           let message = try? JSONDecoder().decode(Message.self, from: data) {
             DispatchQueue.main.async {
                 self.chatList.append(message)
                 self.chatRoomView.chatRoomCollectionView.reloadData()
                 self.scrollToBottom()
             }
-        } catch {
-            print("Failed to decode message: \(error)")
-        }
-    }
-
-    private func subscribe() {
-        let subscribeFrame = """
-        SUBSCRIBE
-        id:sub-\(chatRoomId)
-        destination:/topic/\(chatRoomId)
-        Authorization:\(KeychainHandler.shared.accessToken)
-        
-        \n\0
-        """
-        
-        let message = URLSessionWebSocketTask.Message.string(subscribeFrame)
-        webSocketTask?.send(message) { error in
-            if let error = error {
-                print("Subscribe error: \(error)")
-            } else {
-                print("Subscribed to: /topic/\(self.chatRoomId)")
-            }
         }
     }
     
-    private func send(message: Message) {
-        guard let messageData = try? JSONEncoder().encode(message),
-              let messageString = String(data: messageData, encoding: .utf8) else { return }
-        
-        // STOMP 메시지 형식으로 변경
-        let stompFrame = """
-      SEND
-      destination:/app/chat.send/\(self.chatRoomId)
-      content-type:application/json
-      Authorization:\(KeychainHandler.shared.accessToken)
-      content-length:\(messageString.count)
-      
-      \(messageString)\n\0
-      """
-        
-        let message = URLSessionWebSocketTask.Message.string(stompFrame)
-        webSocketTask?.send(message) { error in
-            if let error = error {
-                print("WebSocket send error: \(error)")
-            }
-        }
-    }
-    
-    private func closeSocket() {
-        guard let webSocketTask = webSocketTask else {
-            print("WebSocket is not connected.")
-            return
-        }
-
-        webSocketTask.cancel(with: .normalClosure, reason: nil)
+    func stompClientDidDisconnect(client: StompClientLib) {
+        print("Socket is Disconnected")
         isConnected = false
-        print("WebSocket connection closed.")
+    }
+    
+    func stompClientDidConnect(client: StompClientLib) {
+        print("Socket is connected")
+        isConnected = true
+        
+        // 연결 성공 시 구독 설정
+        let headers = ["Authorization": KeychainHandler.shared.accessToken]
+        socketClient.subscribeWithHeader(destination: "/topic/\(chatRoomId)", withHeader: headers)
+    }
+    
+    func serverDidSendError(client: StompClientLib, withErrorMessage description: String, detailedErrorMessage message: String?) {
+        print("Error Send : \(String(describing: message))")
     }
 }
 
@@ -322,14 +251,24 @@ extension ChatRoomViewController {
             createdAt: createdAt,
             readStatus: false)
         chatList.append(newMessage)
-        self.send(message: newMessage)
+//        self.send(message: newMessage)
+//        
+//        webSocketTask?.send(URLSessionWebSocketTask.Message.string(content)) { error in
+//            if let error = error {
+//                print("Error sending message: \(error)")
+//            }
+//        }
+//        socketClient.sendMessage(message: newMe, toDestination: <#T##String#>, withHeaders: <#T##[String : String]?#>, withReceipt: <#T##String?#>)
         
-        webSocketTask?.send(URLSessionWebSocketTask.Message.string(content)) { error in
-            if let error = error {
-                print("Error sending message: \(error)")
-            }
+        if let messageData = try? JSONEncoder().encode(newMessage) {
+            let headers = ["Authorization": KeychainHandler.shared.accessToken]
+            socketClient.sendMessage(
+                message: String(data: messageData, encoding: .utf8) ?? "",
+                toDestination: "/app/chat.send/\(chatRoomId)",
+                withHeaders: headers,
+                withReceipt: nil
+            )
         }
-        
         chatRoomView.chatRoomCollectionView.reloadData()
         chatRoomView.messageTextView.text = ""
         scrollToBottom()
