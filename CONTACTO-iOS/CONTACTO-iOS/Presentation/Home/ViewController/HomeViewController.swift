@@ -35,7 +35,7 @@ final class HomeViewController: BaseViewController {
     var portfolioData: [PortfoliosResponseDTO] = []
     
     /// preview의 내 포폴 데이터
-    var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
+    var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
 
     let oldAnchorPoint = CGPoint(x: 0.5, y: 0.5)
     let newAnchorPoint = CGPoint(x: 0.5, y: -0.5)
@@ -327,7 +327,7 @@ extension HomeViewController {
             self.homeEmptyView.isHidden = true
             self.portUserId = Int(portfolioData[nowCount].userId)
             self.homeView.profileNameLabel.text = portfolioData[nowCount].username
-            self.imageDummy = portfolioData[nowCount].portfolioImages
+            self.imageDummy = portfolioData[nowCount].portfolioImageUrl
             self.maxNum = self.imageDummy.count - 1
             self.setPortImage()
             self.homeView.pageCollectionView.reloadData()

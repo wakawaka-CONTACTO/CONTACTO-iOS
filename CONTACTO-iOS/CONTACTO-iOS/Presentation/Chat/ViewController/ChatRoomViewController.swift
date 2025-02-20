@@ -103,10 +103,8 @@ final class ChatRoomViewController: BaseViewController {
     
     func registerSocket() {
         guard let url = URL(string: "\(Config.chatBaseURL)?userId=\(KeychainHandler.shared.userID)&accessToken=\(KeychainHandler.shared.accessToken)") else { return }
-        
         let request = NSMutableURLRequest(url: url)
         request.setValue(KeychainHandler.shared.accessToken, forHTTPHeaderField: "Authorization")
-                    
         socketClient.openSocketWithURLRequest(
             request: NSURLRequest(url: url),
             delegate: self
@@ -251,6 +249,7 @@ extension ChatRoomViewController {
             createdAt: createdAt,
             readStatus: false)
         chatList.append(newMessage)
+        
 //        self.send(message: newMessage)
 //        
 //        webSocketTask?.send(URLSessionWebSocketTask.Message.string(content)) { error in

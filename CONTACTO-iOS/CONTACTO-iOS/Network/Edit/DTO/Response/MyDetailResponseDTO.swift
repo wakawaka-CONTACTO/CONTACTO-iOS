@@ -23,7 +23,7 @@ struct MyDetailResponseDTO: Codable {
 // MARK: - UserPortfolio
 struct UserPortfolio: Codable {
     let portfolioId, userId: Int
-    var portfolioImages: [String]
+    var portfolioImageUrl: [String]
 }
 
 // MARK: - UserTalent

@@ -15,7 +15,7 @@ import Then
 // TODO: - put 확인 (500 확인)
 final class EditViewController: UIViewController {
     
-    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
+    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
     var isEditEnable = false
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
@@ -120,7 +120,7 @@ final class EditViewController: UIViewController {
                 webUrl: self.portfolioData.webUrl,
                 userPurposes: self.portfolioData.userPurposes.map { $0 - 1 },
                 userTalents: self.convertToTalent(koreanNames: self.portfolioData.userTalents.map { $0.talentType }),
-                portfolioImages: imageDataArray)
+                                portfolioImageUrl: imageDataArray)
             self.editMyPort(bodyDTO: body) { _ in
                 self.editView.portfolioCollectionView.reloadData()
                 self.editView.purposeCollectionView.reloadData()
@@ -218,7 +218,7 @@ final class EditViewController: UIViewController {
         
         let dispatchGroup = DispatchGroup()
         
-        portfolioData.userPortfolio?.portfolioImages.forEach { url in
+        portfolioData.userPortfolio?.portfolioImageUrl.forEach { url in
             guard let imageUrl = URL(string: url) else { return }
             
             dispatchGroup.enter() // 작업 시작

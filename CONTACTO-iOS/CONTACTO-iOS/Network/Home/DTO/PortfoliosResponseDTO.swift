@@ -11,5 +11,5 @@ struct PortfoliosResponseDTO: Codable {
     let portfolioId: Double
     let userId: Int
     let username: String
-    let portfolioImages: [String]
+    let portfolioImageUrl: [String]
 }
