@@ -146,7 +146,8 @@ extension ChatRoomViewController: StompClientLibDelegate {
         isConnected = true
         
         // 연결 성공 시 구독 설정
-        let headers = ["Authorization": KeychainHandler.shared.accessToken]
+        var headers = ["Authorization": KeychainHandler.shared.accessToken]
+        headers["id"] = "sub-\(chatRoomId)"
         socketClient.subscribeWithHeader(destination: "/topic/\(chatRoomId)", withHeader: headers)
     }
     
@@ -246,6 +247,7 @@ extension ChatRoomViewController {
         let newMessage = Message(
             content: content,
             senderId: Int(senderId) ?? 0,
+            sendedId: Int(participants[0]),
             createdAt: createdAt,
             readStatus: false)
         chatList.append(newMessage)
@@ -260,7 +262,8 @@ extension ChatRoomViewController {
 //        socketClient.sendMessage(message: newMe, toDestination: <#T##String#>, withHeaders: <#T##[String : String]?#>, withReceipt: <#T##String?#>)
         
         if let messageData = try? JSONEncoder().encode(newMessage) {
-            let headers = ["Authorization": KeychainHandler.shared.accessToken]
+            var headers = ["Authorization": KeychainHandler.shared.accessToken]
+            headers["content-type"] = "application/json"
             socketClient.sendMessage(
                 message: String(data: messageData, encoding: .utf8) ?? "",
                 toDestination: "/app/chat.send/\(chatRoomId)",
