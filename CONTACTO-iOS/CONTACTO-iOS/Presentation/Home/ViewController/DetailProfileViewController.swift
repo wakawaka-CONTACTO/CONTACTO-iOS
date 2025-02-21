@@ -24,7 +24,7 @@ final class DetailProfileViewController: BaseViewController {
     var isPreview = false
     
     let detailProfileView = DetailProfileView()
-    var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImages: []), userPurposes: [], userTalents: [])
+    var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
     
     override func viewDidLoad() {
@@ -105,7 +105,7 @@ final class DetailProfileViewController: BaseViewController {
         }
         
         if !isPreview {
-            self.imageArray = portfolioData.userPortfolio?.portfolioImages ?? []
+            self.imageArray = portfolioData.userPortfolio?.portfolioImageUrl ?? []
             self.detailProfileView.portImageCollectionView.reloadData()
             self.detailProfileView.pageCollectionView.reloadData()
         }

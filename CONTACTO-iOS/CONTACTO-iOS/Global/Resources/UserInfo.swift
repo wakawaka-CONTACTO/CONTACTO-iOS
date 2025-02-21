@@ -19,7 +19,7 @@ final class UserInfo {
     var webUrl: String?
     var userPurposes: [Int] = []
     var userTalents: [String] = []
-    var portfolioImages: [Data] = []
+    var portfolioImageUrl: [Data] = []
     
     
     private init() {}
@@ -37,6 +37,6 @@ func updateUserInfo(_ data: MyDetailResponseDTO) {
     UserInfo.shared.webUrl = data.webUrl
     UserInfo.shared.userPurposes = data.userPurposes
     UserInfo.shared.userTalents = data.userTalents.map { $0.talentType }
-//    UserInfo.shared.portfolioImages = data.portfolioImages
+//    UserInfo.shared.portfolioImageUrl = data.portfolioImageUrl
 }
 

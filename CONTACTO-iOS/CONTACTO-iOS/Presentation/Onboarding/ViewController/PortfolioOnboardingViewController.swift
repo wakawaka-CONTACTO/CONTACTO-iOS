@@ -41,7 +41,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
-        UserInfo.shared.portfolioImages = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+        UserInfo.shared.portfolioImageUrl = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
         let bodyData = SignUpRequestBodyDTO(
             userSignUpReq: UserSignUpRequest(
                 name: UserInfo.shared.name,
@@ -53,7 +53,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
                 webUrl: UserInfo.shared.webUrl),
             purpose: UserInfo.shared.userPurposes.map { Purpose(purposeType: $0) },
             talent: UserInfo.shared.userTalents.map { TalentType(talentType: $0) },
-            images: UserInfo.shared.portfolioImages)
+            images: UserInfo.shared.portfolioImageUrl)
         
         print(bodyData)
         signup(bodyDTO: bodyData) { _ in

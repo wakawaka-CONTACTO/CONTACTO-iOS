@@ -103,10 +103,8 @@ final class ChatRoomViewController: BaseViewController {
     
     func registerSocket() {
         guard let url = URL(string: "\(Config.chatBaseURL)?userId=\(KeychainHandler.shared.userID)&accessToken=\(KeychainHandler.shared.accessToken)") else { return }
-        
         let request = NSMutableURLRequest(url: url)
         request.setValue(KeychainHandler.shared.accessToken, forHTTPHeaderField: "Authorization")
-                    
         socketClient.openSocketWithURLRequest(
             request: NSURLRequest(url: url),
             delegate: self
@@ -148,7 +146,8 @@ extension ChatRoomViewController: StompClientLibDelegate {
         isConnected = true
         
         // 연결 성공 시 구독 설정
-        let headers = ["Authorization": KeychainHandler.shared.accessToken]
+        var headers = ["Authorization": KeychainHandler.shared.accessToken]
+        headers["id"] = "sub-\(chatRoomId)"
         socketClient.subscribeWithHeader(destination: "/topic/\(chatRoomId)", withHeader: headers)
     }
     
@@ -248,9 +247,11 @@ extension ChatRoomViewController {
         let newMessage = Message(
             content: content,
             senderId: Int(senderId) ?? 0,
+            sendedId: Int(participants[0]),
             createdAt: createdAt,
             readStatus: false)
         chatList.append(newMessage)
+        
 //        self.send(message: newMessage)
 //        
 //        webSocketTask?.send(URLSessionWebSocketTask.Message.string(content)) { error in
@@ -261,7 +262,8 @@ extension ChatRoomViewController {
 //        socketClient.sendMessage(message: newMe, toDestination: <#T##String#>, withHeaders: <#T##[String : String]?#>, withReceipt: <#T##String?#>)
         
         if let messageData = try? JSONEncoder().encode(newMessage) {
-            let headers = ["Authorization": KeychainHandler.shared.accessToken]
+            var headers = ["Authorization": KeychainHandler.shared.accessToken]
+            headers["content-type"] = "application/json"
             socketClient.sendMessage(
                 message: String(data: messageData, encoding: .utf8) ?? "",
                 toDestination: "/app/chat.send/\(chatRoomId)",

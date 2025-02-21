@@ -74,14 +74,14 @@ extension EditRequestBodyDTO {
                 formData.append(webUrl.data(using: .utf8) ?? Data(), withName: "webUrl")
             }
             
-            if let portfolioImages = self.portfolioImages, !portfolioImages.isEmpty {
-                print("portfolioImages is not empty. Count: \(portfolioImages.count)")
-                for (index, image) in portfolioImages.enumerated() {
+            if let portfolioImageUrl = self.portfolioImageUrl, !portfolioImageUrl.isEmpty {
+                print("portfolioImageUrl is not empty. Count: \(portfolioImageUrl.count)")
+                for (index, image) in portfolioImageUrl.enumerated() {
                     print("Index: \(index), Photo Size: \(image.count) bytes")
-                    formData.append(image, withName: "portfolioImages[\(index)]", fileName: "image\(index).jpg", mimeType: "image/jpeg")
+                    formData.append(image, withName: "portfolioImageUrl[\(index)]", fileName: "image\(index).jpg", mimeType: "image/jpeg")
                 }
             } else {
-                print("portfolioImages is nil or empty")
+                print("portfolioImageUrl is nil or empty")
             }
             
             for (index, purpose) in self.userPurposes.enumerated() {
