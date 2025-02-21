@@ -30,12 +30,14 @@ extension String {
     func toTimeIn24HourFormat() -> String? {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withFullDate, .withTime, .withColonSeparatorInTime]
+        isoFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         
         guard let date = isoFormatter.date(from: self) else {
             return nil
         }
-        
+
         let timeFormatter = DateFormatter()
+        
         timeFormatter.dateFormat = "HH:mm"
         
         return timeFormatter.string(from: date)

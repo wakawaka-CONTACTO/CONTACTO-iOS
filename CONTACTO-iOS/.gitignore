@@ -1,0 +1,49 @@
+# Xcode 관련
+DerivedData/
+*.xcworkspace/
+*.xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+.idea/
+*.DS_Store
+
+# Swift Package Manager 관련
+/.swiftpm
+/Packages
+/.build/
+
+# CocoaPods 관련
+Pods/
+*.lock
+
+# Carthage 관련
+Carthage/
+
+# Fastlane 관련
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+
+# Tuist 관련
+/.tuist/
+
+# SwiftLint 및 SwiftFormat 관련
+.swiftlint.yml
+.swiftformat
+
+# 환경 변수 및 보안 관련
+.env
+secrets.xcconfig
+Config.xcconfig  # ✅ Config.xcconfig 추가
+
+# 결과물
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Playgrounds 관련
+timeline.xctimeline
+playground.xcworkspace/
+
+# Xcode 11+ Cache
+.swiftpm/xcode
