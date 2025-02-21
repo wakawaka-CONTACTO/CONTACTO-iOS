@@ -65,10 +65,8 @@ final class ChatRoomMyCollectionViewCell: UICollectionViewCell {
     
     func configMyChatCell(data: Message) {
         myMessageLabel.text = data.content
-        //print("현재 시간 : ", data.createdAt)
         if let time = data.createdAt.toTimeIn24HourFormat() {
             timeLabel.text = time
-            //print("내 채팅 시간 : ", time)
         }
     }
 }
