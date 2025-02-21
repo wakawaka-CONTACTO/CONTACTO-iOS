@@ -12,7 +12,8 @@ struct MyDetailResponseDTO: Codable {
     let id: Int
     var username, description, instagramId: String
     let socialId: Int?
-    let loginType, email: String
+    let loginType: String?
+    let email: String
     var webUrl: String?
     let password: String?
     var userPortfolio: UserPortfolio?
@@ -28,6 +29,6 @@ struct UserPortfolio: Codable {
 
 // MARK: - UserTalent
 struct UserTalent: Codable {
-    let id, userId: Int
+    let id, userId: Int?
     var talentType: String
 }

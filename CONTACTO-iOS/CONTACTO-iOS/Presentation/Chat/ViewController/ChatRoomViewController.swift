@@ -144,13 +144,13 @@ extension ChatRoomViewController: StompClientLibDelegate {
     func stompClientDidConnect(client: StompClientLib) {
         print("Socket is connected")
         isConnected = true
-        
+
         // 연결 성공 시 구독 설정
         var headers = ["Authorization": KeychainHandler.shared.accessToken]
         headers["id"] = "sub-\(chatRoomId)"
         socketClient.subscribeWithHeader(destination: "/topic/\(chatRoomId)", withHeader: headers)
-    }
-    
+      }
+
     func serverDidSendError(client: StompClientLib, withErrorMessage description: String, detailedErrorMessage message: String?) {
         print("Error Send : \(String(describing: message))")
     }
