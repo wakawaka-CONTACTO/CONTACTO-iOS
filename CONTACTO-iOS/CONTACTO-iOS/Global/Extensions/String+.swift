@@ -30,16 +30,20 @@ extension String {
     func toTimeIn24HourFormat() -> String? {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withFullDate, .withTime, .withColonSeparatorInTime]
+        isoFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
         
         guard let date = isoFormatter.date(from: self) else {
             return nil
         }
-        
+
         let timeFormatter = DateFormatter()
+        
         timeFormatter.dateFormat = "HH:mm"
         
         return timeFormatter.string(from: date)
     }
+    
+    
     
     /// 두 날짜 비교 후 다르다면 true
     func isDateDifferent(from otherDateString: String) -> Bool? {
@@ -64,14 +68,17 @@ extension String {
     func toCustomDateFormat() -> String? {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withFullDate, .withTime, .withColonSeparatorInTime]
+        isoFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         
         guard let date = isoFormatter.date(from: self) else {
             return nil
         }
+        //print(date)
         
         let customFormatter = DateFormatter()
         customFormatter.dateFormat = "MMM.dd.yyyy"
         customFormatter.locale = Locale(identifier: "en_US")
+        customFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         
         return customFormatter.string(from: date).uppercased()
     }

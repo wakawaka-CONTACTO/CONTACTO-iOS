@@ -241,8 +241,14 @@ extension ChatRoomViewController {
         self.content = messageText
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul") // KST 설정
+        
         let currentDate = Date()
         self.createdAt = formatter.string(from: currentDate)
+        
+        if let plusRange = createdAt.range(of: "+09:00") { // "+09:00" 오프셋 제거
+            self.createdAt.removeSubrange(plusRange)
+        }
         
         let newMessage = Message(
             content: content,
