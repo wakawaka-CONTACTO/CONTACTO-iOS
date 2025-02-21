@@ -120,7 +120,7 @@ final class EditViewController: UIViewController {
                 webUrl: self.portfolioData.webUrl,
                 userPurposes: self.portfolioData.userPurposes.map { $0 - 1 },
                 userTalents: self.convertToTalent(koreanNames: self.portfolioData.userTalents.map { $0.talentType }),
-                portfolioImageUrl: imageDataArray)
+                                portfolioImageUrl: imageDataArray)
             self.editMyPort(bodyDTO: body) { _ in
                 self.editView.portfolioCollectionView.reloadData()
                 self.editView.purposeCollectionView.reloadData()
