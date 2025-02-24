@@ -282,6 +282,7 @@ final class EditView: BaseView {
         
         topImageView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(10)
         }
         
         scrollView.snp.makeConstraints {
@@ -296,7 +297,7 @@ final class EditView: BaseView {
         
         editLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(24)
-            $0.centerX.equalToSuperview().offset(-SizeLiterals.Screen.screenWidth/4)
+            $0.centerX.equalToSuperview().offset(-SizeLiterals.Screen.screenWidth/4.5)
         }
         
         editLineView.snp.makeConstraints {
@@ -308,7 +309,7 @@ final class EditView: BaseView {
         
         previewButton.snp.makeConstraints {
             $0.centerY.equalTo(editLabel)
-            $0.centerX.equalToSuperview().offset(SizeLiterals.Screen.screenWidth/4)
+            $0.centerX.equalToSuperview().offset(SizeLiterals.Screen.screenWidth/4.5)
         }
         
         nameTextField.snp.makeConstraints {
