@@ -308,6 +308,11 @@ final class EditViewController: UIViewController {
         let keyboardHeight = keyboardFrame.height
         let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
         
+        let bottomInset = keyboardHeight - tabBarHeight - 35.adjustedHeight
+
+        editView.scrollView.contentInset.bottom = bottomInset
+        editView.scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
+        
         self.editView.editButton.snp.remakeConstraints {
             $0.bottom.equalToSuperview().inset(keyboardHeight - tabBarHeight + 13.adjustedHeight)
             $0.leading.trailing.equalToSuperview().inset(16)
@@ -330,6 +335,10 @@ final class EditViewController: UIViewController {
     }
     
     @objc func keyboardWillHide(_ noti: NSNotification){
+        
+        editView.scrollView.contentInset.bottom = 0
+        editView.scrollView.verticalScrollIndicatorInsets.bottom = 0
+        
         self.editView.editButton.snp.remakeConstraints {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(34.adjustedHeight)
