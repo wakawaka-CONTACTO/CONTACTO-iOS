@@ -57,6 +57,7 @@ final class EditView: BaseView {
     private let websiteLabel = UILabel()
     let websiteTextField = UITextField()
     
+    let cancelButton = UIButton()
     let editButton = UIButton()
     
     override func setAddTarget() {
@@ -239,6 +240,14 @@ final class EditView: BaseView {
             $0.isEnabled = false
         }
         
+        cancelButton.do {
+            $0.setImage(.icUndo, for: .normal)
+            $0.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+            $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            $0.setBackgroundColor(.ctwhite, for: .normal)
+            $0.isHidden = true
+        }
+        
         editButton.do {
             $0.setTitle(StringLiterals.Edit.editButton, for: .normal)
             $0.setTitleColor(.ctblack, for: .normal)
@@ -253,6 +262,7 @@ final class EditView: BaseView {
     override func setLayout() {
         addSubviews(topView,
                     scrollView,
+                    cancelButton,
                     editButton)
         topView.addSubviews(topImageView)
         scrollView.addSubviews(contentsView)
@@ -394,14 +404,20 @@ final class EditView: BaseView {
             $0.height.equalTo(34.adjustedHeight)
             $0.bottom.equalToSuperview().inset(100)
         }
-        
+
         editButton.snp.makeConstraints {
             $0.height.equalTo(34.adjustedHeight)
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview().inset(41.adjustedHeight)
         }
+        
+        cancelButton.snp.makeConstraints {
+            $0.height.equalTo(34.adjustedHeight)
+            $0.width.equalTo(cancelButton.snp.height)
+            $0.leading.equalToSuperview().inset(16)
+            $0.bottom.equalToSuperview().inset(41.adjustedHeight)
+        }
     }
-    
     
     @objc private func editButtonTapped() {
         isEditEnable.toggle()
@@ -417,6 +433,19 @@ final class EditView: BaseView {
         
         editButton.setTitle(isEditEnable ? StringLiterals.Edit.saveButton : StringLiterals.Edit.editButton, for: .normal)
         editButton.setBackgroundColor(isEditEnable ? .ctsubgreen3 : .ctsubyellow1, for: .normal)
+        
+        cancelButton.isHidden = !isEditEnable
+        
+        editButton.snp.remakeConstraints {
+            $0.height.equalTo(34.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(41.adjustedHeight)
+            if isEditEnable {
+                $0.leading.equalTo(cancelButton.snp.trailing).offset(8)
+                $0.trailing.equalToSuperview().inset(16)
+            } else {
+                $0.leading.trailing.equalToSuperview().inset(16)
+            }
+        }
         
         editAction()
     }

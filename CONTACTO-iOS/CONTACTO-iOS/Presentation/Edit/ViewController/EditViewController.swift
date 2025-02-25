@@ -104,6 +104,7 @@ final class EditViewController: UIViewController {
     private func setAddTarget() {
         editView.previewButton.addTarget(self, action: #selector(previewButtonTapped), for: .touchUpInside)
         editView.talentEditButton.addTarget(self, action: #selector(talentEditButtonTapped), for: .touchUpInside)
+        editView.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
     
     private func setClosure() {
@@ -315,8 +316,16 @@ final class EditViewController: UIViewController {
         
         self.editView.editButton.snp.remakeConstraints {
             $0.bottom.equalToSuperview().inset(keyboardHeight - tabBarHeight + 13.adjustedHeight)
-            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.leading.equalTo(self.editView.cancelButton.snp.trailing).offset(8)
+            $0.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(34.adjustedHeight)
+        }
+        
+        self.editView.cancelButton.snp.remakeConstraints {
+            $0.bottom.equalToSuperview().inset(keyboardHeight - tabBarHeight + 13.adjustedHeight)
+            $0.height.equalTo(34.adjustedHeight)
+            $0.width.equalTo(self.editView.cancelButton.snp.height)
+            $0.leading.equalToSuperview().inset(16)
         }
         
         // 현재 활성화된 텍스트 필드가 있는지 확인
@@ -340,8 +349,20 @@ final class EditViewController: UIViewController {
         editView.scrollView.verticalScrollIndicatorInsets.bottom = 0
         
         self.editView.editButton.snp.remakeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(34.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(41.adjustedHeight)
+            if isEditEnable {
+                $0.leading.equalTo(self.editView.cancelButton.snp.trailing).offset(8)
+                $0.trailing.equalToSuperview().inset(16)
+            } else {
+                $0.leading.trailing.equalToSuperview().inset(16)
+            }
+        }
+        
+        self.editView.cancelButton.snp.remakeConstraints {
+            $0.height.equalTo(34.adjustedHeight)
+            $0.width.equalTo(self.editView.cancelButton.snp.height)
+            $0.leading.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview().inset(41.adjustedHeight)
         }
         
@@ -555,5 +576,12 @@ extension EditViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         activeTextField = nil
+    }
+    
+    @objc private func cancelButtonTapped() {
+        // 데이터 초기화
+        selectedImages.removeAll()
+        setData()
+        self.view.layoutIfNeeded()
     }
 }
