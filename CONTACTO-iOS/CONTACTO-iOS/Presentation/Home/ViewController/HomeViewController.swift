@@ -63,6 +63,7 @@ final class HomeViewController: BaseViewController {
         super.viewWillAppear(animated)
         setNavigationBar()
         setData()
+        num = 0
     }
     
     override func setNavigationBar() {
