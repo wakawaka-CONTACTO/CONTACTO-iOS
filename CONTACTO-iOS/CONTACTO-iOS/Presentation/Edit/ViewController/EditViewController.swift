@@ -192,6 +192,7 @@ final class EditViewController: UIViewController {
     }
     
     private func updatePortfolio() {
+        selectedImages.removeAll()
         editView.nameTextField.text = portfolioData.username
         editView.descriptionTextView.text = portfolioData.description
         editView.instaTextField.text = portfolioData.instagramId
@@ -342,9 +343,7 @@ final class EditViewController: UIViewController {
             }
         }
         
-        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
+        self.view.layoutIfNeeded()
         
     }
     
@@ -379,9 +378,7 @@ final class EditViewController: UIViewController {
             }
         }
         
-        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
+        self.view.layoutIfNeeded()
     }
 }
 
@@ -634,6 +631,9 @@ extension EditViewController: UITextFieldDelegate {
                 self.editView.purposeCollectionView.reloadData()
                 self.view.endEditing(true)
             }
+            
+            self.isDataChanged = false
+            self.editView.editButton.isEnabled = true
         }
         
         editView.purposeCollectionView.reloadData()
