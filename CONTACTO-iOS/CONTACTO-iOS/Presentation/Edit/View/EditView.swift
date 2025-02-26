@@ -12,9 +12,6 @@ import Then
 
 final class EditView: BaseView {
     
-    var isEditEnable = false
-    var editAction: (() -> Void) = {}
-    
     private let topView = UIView()
     private let topImageView = UIImageView()
     
@@ -59,10 +56,6 @@ final class EditView: BaseView {
     
     let cancelButton = UIButton()
     let editButton = UIButton()
-    
-    override func setAddTarget() {
-        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-    }
     
     override func setStyle() {
         self.backgroundColor = .ctgray4
@@ -419,34 +412,31 @@ final class EditView: BaseView {
         }
     }
     
-    @objc private func editButtonTapped() {
-        isEditEnable.toggle()
-        nameTextField.isEnabled = isEditEnable
-        nameTextField.backgroundColor = isEditEnable ? .ctwhite : .ctmainblue
-        talentEditButton.isHidden = !isEditEnable
-        descriptionTextView.isEditable = isEditEnable
-        descriptionTextView.backgroundColor = isEditEnable ? .ctwhite : .clear
-        instaTextField.isEnabled = isEditEnable
-        websiteTextField.isEnabled = isEditEnable
-        instaTextField.backgroundColor = isEditEnable ? .ctwhite : .clear
-        websiteTextField.backgroundColor = isEditEnable ? .ctwhite : .clear
-        
-        editButton.setTitle(isEditEnable ? StringLiterals.Edit.saveButton : StringLiterals.Edit.editButton, for: .normal)
-        editButton.setBackgroundColor(isEditEnable ? .ctsubgreen3 : .ctsubyellow1, for: .normal)
-        
-        cancelButton.isHidden = !isEditEnable
-        
+    func toggleEditMode(_ isEditEnabled: Bool) {
+        nameTextField.isEnabled = isEditEnabled
+        nameTextField.backgroundColor = isEditEnabled ? .ctwhite : .ctmainblue
+        talentEditButton.isHidden = !isEditEnabled
+        descriptionTextView.isEditable = isEditEnabled
+        descriptionTextView.backgroundColor = isEditEnabled ? .ctwhite : .clear
+        instaTextField.isEnabled = isEditEnabled
+        websiteTextField.isEnabled = isEditEnabled
+        instaTextField.backgroundColor = isEditEnabled ? .ctwhite : .clear
+        websiteTextField.backgroundColor = isEditEnabled ? .ctwhite : .clear
+
+        editButton.setTitle(isEditEnabled ? StringLiterals.Edit.saveButton : StringLiterals.Edit.editButton, for: .normal)
+        editButton.setBackgroundColor(isEditEnabled ? .ctsubgreen3 : .ctsubyellow1, for: .normal)
+        editButton.isEnabled = isEditEnabled
+        cancelButton.isHidden = !isEditEnabled
+
         editButton.snp.remakeConstraints {
             $0.height.equalTo(34.adjustedHeight)
             $0.bottom.equalToSuperview().inset(41.adjustedHeight)
-            if isEditEnable {
+            if isEditEnabled {
                 $0.leading.equalTo(cancelButton.snp.trailing).offset(8)
                 $0.trailing.equalToSuperview().inset(16)
             } else {
                 $0.leading.trailing.equalToSuperview().inset(16)
             }
         }
-        
-        editAction()
     }
 }
