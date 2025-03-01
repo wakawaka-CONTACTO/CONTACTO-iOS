@@ -88,9 +88,15 @@ final class HomeViewController: BaseViewController {
         let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
         
         view.addSubviews(homeView)
+        view.addSubviews(homeEmptyView)
         UIApplication.shared.keyWindow?.addSubviews(tutorialView)
         
         homeView.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
+        }
+        
+        homeEmptyView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
         }
