@@ -280,7 +280,7 @@ final class EditViewController: UIViewController {
             portfolioData.description != originalData.description ||
             portfolioData.instagramId != originalData.instagramId ||
             portfolioData.webUrl != originalData.webUrl ||
-            selectedImages.count != originalData.userPortfolio?.portfolioImageUrl.count ||
+            selectedImages.map { $0.pngData() }.compactMap { $0 } != originalData.userPortfolio?.portfolioImageUrl.compactMap { URL(string: $0) }.compactMap { try? Data(contentsOf: $0) } ||
             portfolioData.userPurposes.sorted() != originalData.userPurposes.sorted() ||
             portfolioData.userTalents.map({ $0.talentType }).sorted() != originalData.userTalents.map({ $0.talentType }).sorted()
         )
@@ -636,6 +636,7 @@ extension EditViewController: UITextFieldDelegate {
             self.editView.editButton.isEnabled = true
         }
         
+        editView.portfolioCollectionView.reloadData()
         editView.purposeCollectionView.reloadData()
     }
 }
