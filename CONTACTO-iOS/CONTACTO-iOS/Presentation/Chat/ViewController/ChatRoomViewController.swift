@@ -235,6 +235,7 @@ extension ChatRoomViewController {
         print("프로필을 누름")
         let detailProfileViewController = DetailProfileViewController()
         detailProfileViewController.userId = self.participants[0]
+        detailProfileViewController.isFromChat = true
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
     
