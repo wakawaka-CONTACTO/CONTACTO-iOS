@@ -81,6 +81,10 @@ final class HomeViewController: BaseViewController {
         homeView.do {
             $0.isHidden = true
         }
+        
+        homeView.do {
+            $0.isHidden = true
+        }
     }
     
     override func setLayout() {
@@ -225,6 +229,7 @@ extension HomeViewController {
         } else {
             homeView.profileNameLabel.text = previewPortfolioData.username
             maxNum = imagePreviewDummy.count - 1
+            homeEmptyView.isHidden = true
         }
     }
     
