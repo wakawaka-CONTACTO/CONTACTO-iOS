@@ -90,9 +90,23 @@ final class ChatRoomViewController: BaseViewController {
             case .success(let data):
                 self?.chatRoomId = data.id
                 self?.participants = data.participants
-                self?.chatList = data.messages
-                self?.chatRoomView.isFirstChat = data.messages.isEmpty
                 
+                // ▼ createdAt 기준 정렬 추가 ▼
+                // 서버에서 받은 messages를 createdAt 오름차순(과거→현재)으로 정렬
+                self?.chatList = data.messages.sorted(by: { lhs, rhs in
+                    // 문자열->Date 변환
+                    let dateFormatter = ISO8601DateFormatter()
+                    dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                    
+                    guard let leftDate = dateFormatter.date(from: lhs.createdAt),
+                          let rightDate = dateFormatter.date(from: rhs.createdAt) else {
+                        // 변환 실패 시, 원하는 우선순위에 따라 return
+                        return lhs.createdAt < rhs.createdAt
+                    }
+                    return leftDate < rightDate
+                })
+                
+                self?.chatRoomView.isFirstChat = data.messages.isEmpty
                 self?.chatRoomView.nameLabel.text = data.title
                 if let thumbnailUrlString = data.chatRoomThumbnail,
                    let imageUrl = URL(string: thumbnailUrlString) {
