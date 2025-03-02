@@ -226,6 +226,7 @@ extension HomeViewController {
             homeList { _ in
                 self.setNewPortfolio()
             }
+            checkMyPort()
         } else {
             homeView.profileNameLabel.text = previewPortfolioData.username
             maxNum = imagePreviewDummy.count - 1
@@ -269,6 +270,18 @@ extension HomeViewController {
             default:
                 completion(false)
                 print("error")
+            }
+        }
+    }
+    
+    private func checkMyPort() {
+        NetworkService.shared.editService.checkMyPort { [weak self] response in
+            switch response {
+            case .success(let data):
+                self?.previewPortfolioData = data
+                print("내 포트폴리오 데이터: \(data)")
+            default:
+                print("내 포트폴리오 데이터를 가져오지 못함")
             }
         }
     }
@@ -328,6 +341,16 @@ extension HomeViewController {
             matchViewController.modalPresentationStyle = .overFullScreen
             matchViewController.modalTransitionStyle = .crossDissolve
             matchViewController.modalPresentationCapturesStatusBarAppearance = false
+            
+            matchViewController.matchData = Match(
+                myId: previewPortfolioData.id,
+                myLabel: previewPortfolioData.username,
+                myImageURL: previewPortfolioData.userPortfolio?.portfolioImageUrl.first ?? "",
+                yourId: portfolioData[nowCount].userId,
+                yourLabel: portfolioData[nowCount].username,
+                yourImageURL: portfolioData[nowCount].portfolioImageUrl.first ?? ""
+            )
+            
             self.present(matchViewController, animated: true)
         }
     }
