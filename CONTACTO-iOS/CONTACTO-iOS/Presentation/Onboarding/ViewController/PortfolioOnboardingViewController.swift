@@ -56,11 +56,25 @@ final class PortfolioOnboardingViewController: BaseViewController {
             images: UserInfo.shared.portfolioImageUrl)
         
         print(bodyData)
-        signup(bodyDTO: bodyData) { _ in
+        signup(bodyDTO: bodyData) { success in
+            if success {
                 let mainTabBarViewController = MainTabBarViewController()
                 mainTabBarViewController.homeViewController.isFirst = true
                 self.navigationController?.pushViewController(mainTabBarViewController, animated: true)
+            } else {
+                let alertController = UIAlertController(title: "Error",
+                                                        message: "회원가입에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+                                                        preferredStyle: .alert)
+                let retryAction = UIAlertAction(title: "OK", style: .default) { _ in
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+                alertController.addAction(retryAction)
+                
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true, completion: nil)
+                }
             }
+        }
     }
     
     private func setCollectionView() {
