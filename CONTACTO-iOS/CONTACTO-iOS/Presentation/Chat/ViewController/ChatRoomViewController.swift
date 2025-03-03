@@ -52,7 +52,8 @@ final class ChatRoomViewController: BaseViewController {
     
     override func setAddTarget() {
         chatRoomView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        //        chatRoomView.plusButton.addTarget(self, action: #selector(plusButtonTappped), for: .touchUpInside)
+        chatRoomView.profileImageButton.addTarget(self, action: #selector(profileImageButtonTapped), for: .touchUpInside)
+//        chatRoomView.plusButton.addTarget(self, action: #selector(plusButtonTappped), for: .touchUpInside)
         chatRoomView.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
     }
     
@@ -104,13 +105,16 @@ final class ChatRoomViewController: BaseViewController {
                     }
                     return leftDate < rightDate
                 })
-                
                 self?.chatRoomView.isFirstChat = data.messages.isEmpty
                 self?.chatRoomView.nameLabel.text = data.title
-                self?.chatRoomView.profileImageView.kfSetImage(url: data.chatRoomThumbnail)
-                
+
+                if let thumbnailUrlString = data.chatRoomThumbnail,
+                   let imageUrl = URL(string: thumbnailUrlString) {
+                    self?.chatRoomView.profileImageButton.kf.setBackgroundImage(with: imageUrl, for: .normal)
+                } else {
+                    self?.chatRoomView.profileImageButton.setBackgroundImage(UIImage(named: "defaultProfile"), for: .normal)
+                }
                 completion(true)
-                
             default:
                 completion(false)
             }
@@ -314,6 +318,14 @@ extension ChatRoomViewController {
     
     @objc private func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func profileImageButtonTapped() {
+        print("프로필을 누름")
+        let detailProfileViewController = DetailProfileViewController()
+        detailProfileViewController.userId = self.participants[0]
+        detailProfileViewController.isFromChat = true
+        self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
     
     @objc private func plusButtonTappped() {
