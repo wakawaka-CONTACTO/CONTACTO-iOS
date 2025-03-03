@@ -62,10 +62,10 @@ final class PortfolioOnboardingViewController: BaseViewController {
                 mainTabBarViewController.homeViewController.isFirst = true
                 self.navigationController?.pushViewController(mainTabBarViewController, animated: true)
             } else {
-                let alertController = UIAlertController(title: "에러",
+                let alertController = UIAlertController(title: "Error",
                                                         message: "회원가입에 실패했습니다. 잠시 후 다시 시도해 주세요.",
                                                         preferredStyle: .alert)
-                let retryAction = UIAlertAction(title: "확인", style: .default) { _ in
+                let retryAction = UIAlertAction(title: "OK", style: .default) { _ in
                     self.navigationController?.popToRootViewController(animated: true)
                 }
                 alertController.addAction(retryAction)

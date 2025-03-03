@@ -94,9 +94,37 @@ extension NameOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
-        UserInfo.shared.name = nameOnboardingView.nameTextField.text ?? ""
+        let name = nameOnboardingView.nameTextField.text ?? ""
+            
+        if !isValidName(name) {
+            showInvalidNameAlert()
+            return
+        }
+        
+        UserInfo.shared.name = name
         let purposeOnboardingViewController = PurposeOnboardingViewController()
         self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+    }
+    
+    private func isValidName(_ name: String) -> Bool {
+        let regex = "^[a-zA-Z0-9가-힣]{2,20}$" // 2~20자의 영문자, 숫자, 한글만 허용
+        let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
+        return predicate.evaluate(with: name)
+    }
+    
+    private func showInvalidNameAlert() {
+        let alertController = UIAlertController(
+            title: "Error",
+            message: "이름은 2~20자의 영문자, 숫자, 한글만 사용할 수 있습니다.",
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        
+        DispatchQueue.main.async {
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
