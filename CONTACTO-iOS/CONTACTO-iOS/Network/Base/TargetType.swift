@@ -26,20 +26,19 @@ extension TargetType {
         switch headerType {
         case .plain:
             return [
-                HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue
+                HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
             ]
         case .hasToken:
             return [
                 HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
-                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.accessToken
+                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.accessToken,
             ]
         case .refreshToken:
             return [
                 HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
-                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.refreshToken
+                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.refreshToken,
             ]
-        }
-    }
+        }}
 }
 extension TargetType {
     func asURLRequest() throws -> URLRequest {
@@ -103,6 +102,7 @@ extension TargetType {
             
             urlRequest.httpBody = try multipartFormData.encode()
             urlRequest.setValue(multipartFormData.contentType, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
+            urlRequest.setValue("2", forHTTPHeaderField: "X-User-Id") // todo: 로컬 전용, 배포 상태에서 제외 시킬 것
         case .requestPlain:
             break
         }
