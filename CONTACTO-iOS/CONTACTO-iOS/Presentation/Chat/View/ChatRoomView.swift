@@ -20,7 +20,7 @@ final class ChatRoomView: BaseView {
     
     let topView = UIView()
     let backButton = UIButton()
-    let profileImageView = UIImageView()
+    let profileImageButton = UIButton()
     let nameLabel = UILabel()
     let dividerLine = UIView()
     
@@ -63,9 +63,11 @@ final class ChatRoomView: BaseView {
             $0.setImage(.icBack, for: .normal)
         }
         
-        profileImageView.do {
+        profileImageButton.do {
             $0.setRoundBorder(borderColor: .clear, borderWidth: 0, cornerRadius: 22.adjustedHeight)
             $0.backgroundColor = .ctblack
+            $0.imageView?.contentMode = .scaleAspectFill
+            $0.clipsToBounds = true
         }
         
         nameLabel.do {
@@ -141,7 +143,7 @@ final class ChatRoomView: BaseView {
                          disclaimerView)
         
         topView.addSubviews(backButton,
-                            profileImageView,
+                            profileImageButton,
                             nameLabel,
                             dividerLine)
         
@@ -178,15 +180,15 @@ final class ChatRoomView: BaseView {
             $0.bottom.equalToSuperview().inset(12.adjustedHeight)
         }
         
-        profileImageView.snp.makeConstraints {
+        profileImageButton.snp.makeConstraints {
             $0.size.equalTo(44.adjusted)
             $0.centerY.equalTo(backButton)
             $0.leading.equalTo(backButton.snp.trailing).offset(15)
         }
         
         nameLabel.snp.makeConstraints {
-            $0.centerY.equalTo(profileImageView)
-            $0.leading.equalTo(profileImageView.snp.trailing).offset(18)
+            $0.centerY.equalTo(profileImageButton)
+            $0.leading.equalTo(profileImageButton.snp.trailing).offset(18)
         }
         
         dividerLine.snp.makeConstraints {

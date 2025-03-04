@@ -8,7 +8,7 @@
 import Foundation
 
 struct LikeResponseDTO: Codable {
-    let userPortfolios: String?
+    let userPortfolios: [PortfoliosResponseDTO]?
     let chatRoomId: Int?
     let matched: Bool
 }

@@ -18,9 +18,9 @@ enum Talent: String, CaseIterable {
     case INDUSTRIAL
     case GRAPHIC
     case FASHION
-    case UX_UI = "UX/UI"
+    case UX_UI // = "UX/UI"
     case BRANDING
-    case MOTION
+    case MOTION_GRAPHIC //MOTION
     case ANIMATION
     case ILLUSTRATION
     case INTERIOR
@@ -62,7 +62,7 @@ enum Talent: String, CaseIterable {
     
     var category: TalentCategory {
         switch self {
-        case .INDUSTRIAL, .GRAPHIC, .FASHION, .UX_UI, .BRANDING, .MOTION, .ANIMATION, .ILLUSTRATION, .INTERIOR, .ARCHITECTURE, .TEXTILE, .FABRIC_PRODUCT, .STYLING, .BAG_DESIGN, .SHOES_DESIGN:
+        case .INDUSTRIAL, .GRAPHIC, .FASHION, .UX_UI, .BRANDING, .MOTION_GRAPHIC, .ANIMATION, .ILLUSTRATION, .INTERIOR, .ARCHITECTURE, .TEXTILE, .FABRIC_PRODUCT, .STYLING, .BAG_DESIGN, .SHOES_DESIGN:
             return .DESIGN
         case .PAINTING, .RIDICULE, .KINETIC, .CERAMICS, .WOOD, .JEWEL, .METAL, .GLASS, .PRINTMAKING, .AESTHETICS, .TUFTING:
             return .ART_CRAFT
@@ -83,7 +83,7 @@ enum Talent: String, CaseIterable {
             return TalentInfo(koreanName: "UX/UI 디자인", displayName: "UX/UI", category: .DESIGN)
         case .BRANDING:
             return TalentInfo(koreanName: "브랜딩", displayName: "Branding", category: .DESIGN)
-        case .MOTION:
+        case .MOTION_GRAPHIC:
             return TalentInfo(koreanName: "모션 그래픽", displayName: "Motion", category: .DESIGN)
         case .ANIMATION:
             return TalentInfo(koreanName: "애니메이션", displayName: "Animation", category: .DESIGN)

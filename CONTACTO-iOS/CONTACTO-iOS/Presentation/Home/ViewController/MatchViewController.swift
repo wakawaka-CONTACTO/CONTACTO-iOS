@@ -20,11 +20,14 @@ final class MatchViewController: BaseViewController {
                         StringLiterals.Home.Match.nice,
                         StringLiterals.Home.Match.hi,
                         StringLiterals.Home.Match.oh]
+    
+    var matchData: Match?
     let matchView = MatchView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        setData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -80,6 +83,16 @@ extension MatchViewController {
     
     @objc private func popButtonTapped() {
         self.dismiss(animated: true)
+    }
+    
+    private func setData() {
+        print("matchData: \(String(describing: matchData))")
+        if let matchData = matchData {
+            matchView.myImageView.kf.setImage(with: URL(string: matchData.myImageURL))
+            matchView.myLabel.text = matchData.myLabel
+            matchView.yourImageView.kf.setImage(with: URL(string: matchData.yourImageURL))
+            matchView.yourLabel.text = matchData.yourLabel
+        }
     }
 }
 

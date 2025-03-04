@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
 		8C6A7C97DD9DE3A79AFFCBC0 /* Pods_CONTACTO_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */; };
 		C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */; };
 		C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */; };
@@ -155,6 +156,7 @@
 
 /* Begin PBXFileReference section */
 		0DEA1664F7C3DD88F43E1FDF /* Pods-CONTACTO-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.release.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CONTACTO_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BE1A2D5A19E66A4ACF01783 /* Pods-CONTACTO-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		AC0EAA8E2D68451C00757EBD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -775,6 +777,7 @@
 			isa = PBXGroup;
 			children = (
 				C3B95CF52C9C0AB7002A4681 /* Portfolio.swift */,
+				335900AF2D74704D0088E78B /* Match.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1269,6 +1272,7 @@
 				C33D73E12CDEF03B00889B1B /* OnboardingTarget.swift in Sources */,
 				C33D73DA2CDEEF4900889B1B /* Config.swift in Sources */,
 				C35E26472C9D2EC300B197CB /* MatchViewController.swift in Sources */,
+				335900B02D74704D0088E78B /* Match.swift in Sources */,
 				C33D74082CDEF1F100889B1B /* EditTarget.swift in Sources */,
 				C33B9A2D2CFCC3E7009A6B2D /* ErrorResponse.swift in Sources */,
 				C3EF05EE2C9DC964001BF9EC /* ChatRoomViewController.swift in Sources */,

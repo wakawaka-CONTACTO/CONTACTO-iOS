@@ -15,6 +15,7 @@ import Then
 // TODO: - put 확인 (500 확인)
 final class EditViewController: UIViewController {
     
+    private var originalPortfolioData: MyDetailResponseDTO?
     private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
     var isEditEnable = false
@@ -23,6 +24,7 @@ final class EditViewController: UIViewController {
             portfolioData.userPurposes = tappedStates.enumerated().compactMap { index, state in
                 state ? index + 1 : nil
             }
+            self.hasChanges()
         }
     }
     let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -49,6 +51,11 @@ final class EditViewController: UIViewController {
             changeSaveButtonStatus()
         }
     }
+    var isDataChanged = false {
+        didSet {
+            changeSaveButtonStatus()
+        }
+    }
     
     var selectedImages: [UIImage] = []
     let editView = EditView()
@@ -61,7 +68,6 @@ final class EditViewController: UIViewController {
         setAddTarget()
         hideKeyboardWhenTappedAround()
         setCollectionView()
-        setClosure()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -104,6 +110,8 @@ final class EditViewController: UIViewController {
     private func setAddTarget() {
         editView.previewButton.addTarget(self, action: #selector(previewButtonTapped), for: .touchUpInside)
         editView.talentEditButton.addTarget(self, action: #selector(talentEditButtonTapped), for: .touchUpInside)
+        editView.editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        editView.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
     
     private func setClosure() {
@@ -205,6 +213,7 @@ final class EditViewController: UIViewController {
     }
     
     private func updatePortfolio() {
+        selectedImages.removeAll()
         editView.nameTextField.text = portfolioData.username
         editView.descriptionTextView.text = portfolioData.description
         editView.instaTextField.text = portfolioData.instagramId
@@ -255,6 +264,8 @@ final class EditViewController: UIViewController {
     
     private func setData() {
         self.checkMyPort { _ in
+            self.originalPortfolioData = self.portfolioData // 원본 데이터 저장
+            print("원본 데이터: \(String(describing: self.originalPortfolioData))")
             self.checkTalentLayout()
         }
     }
@@ -279,13 +290,30 @@ final class EditViewController: UIViewController {
         picker.delegate = self
     }
     
+    private func hasChanges() {
+        guard let originalData = originalPortfolioData else { 
+            isDataChanged = true
+            return
+        } // 원본 데이터가 없으면 변경된 것으로 간주
+
+        isDataChanged = (
+            portfolioData.username != originalData.username ||
+            portfolioData.description != originalData.description ||
+            portfolioData.instagramId != originalData.instagramId ||
+            portfolioData.webUrl != originalData.webUrl ||
+            selectedImages.map { $0.pngData() }.compactMap { $0 } != originalData.userPortfolio?.portfolioImageUrl.compactMap { URL(string: $0) }.compactMap { try? Data(contentsOf: $0) } ||
+            portfolioData.userPurposes.sorted() != originalData.userPurposes.sorted() ||
+            portfolioData.userTalents.map({ $0.talentType }).sorted() != originalData.userTalents.map({ $0.talentType }).sorted()
+        )
+    }
+    
     private func changeSaveButtonStatus() {
         print("textField:\(isTextFieldFilled)\ntextView:\(isTextViewFilled)\nportfolio:\(isPortfolioFilled)\npurpose:\(isPurposeFilled)\neditEnabled:\(isEditEnable)")
         if isTextFieldFilled,
            isTextViewFilled,
            isPortfolioFilled,
            isPurposeFilled,
-           isEditEnable {
+           isDataChanged {
             editView.editButton.isEnabled = true
         } else {
             editView.editButton.isEnabled = false
@@ -308,10 +336,23 @@ final class EditViewController: UIViewController {
         let keyboardHeight = keyboardFrame.height
         let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
         
+        let bottomInset = keyboardHeight - tabBarHeight - 35.adjustedHeight
+
+        editView.scrollView.contentInset.bottom = bottomInset
+        editView.scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
+        
         self.editView.editButton.snp.remakeConstraints {
             $0.bottom.equalToSuperview().inset(keyboardHeight - tabBarHeight + 13.adjustedHeight)
-            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.leading.equalTo(self.editView.cancelButton.snp.trailing).offset(8)
+            $0.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(34.adjustedHeight)
+        }
+        
+        self.editView.cancelButton.snp.remakeConstraints {
+            $0.bottom.equalToSuperview().inset(keyboardHeight - tabBarHeight + 13.adjustedHeight)
+            $0.height.equalTo(34.adjustedHeight)
+            $0.width.equalTo(self.editView.cancelButton.snp.height)
+            $0.leading.equalToSuperview().inset(16)
         }
         
         // 현재 활성화된 텍스트 필드가 있는지 확인
@@ -323,16 +364,30 @@ final class EditViewController: UIViewController {
             }
         }
         
-        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
+        self.view.layoutIfNeeded()
         
     }
     
     @objc func keyboardWillHide(_ noti: NSNotification){
+        
+        editView.scrollView.contentInset.bottom = 0
+        editView.scrollView.verticalScrollIndicatorInsets.bottom = 0
+        
         self.editView.editButton.snp.remakeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(34.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(41.adjustedHeight)
+            if isEditEnable {
+                $0.leading.equalTo(self.editView.cancelButton.snp.trailing).offset(8)
+                $0.trailing.equalToSuperview().inset(16)
+            } else {
+                $0.leading.trailing.equalToSuperview().inset(16)
+            }
+        }
+        
+        self.editView.cancelButton.snp.remakeConstraints {
+            $0.height.equalTo(34.adjustedHeight)
+            $0.width.equalTo(self.editView.cancelButton.snp.height)
+            $0.leading.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview().inset(41.adjustedHeight)
         }
         
@@ -344,9 +399,7 @@ final class EditViewController: UIViewController {
             }
         }
         
-        UIView.animate(withDuration: 2, delay: 0, options:.curveEaseOut, animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
+        self.view.layoutIfNeeded()
     }
 }
 
@@ -383,6 +436,7 @@ extension EditViewController {
             }
             self.portfolioData.userTalents = talents
             self.checkTalentLayout()
+            self.hasChanges()
         }
         navigationController?.pushViewController(talentViewController, animated: true)
     }
@@ -484,6 +538,8 @@ extension EditViewController: PHPickerViewControllerDelegate {
             self.selectedImages.append(contentsOf: newImages)
             self.isPortfolioFilled = !self.selectedImages.isEmpty
             self.editView.portfolioCollectionView.reloadData()
+            
+            self.hasChanges()
         }
     }
 }
@@ -506,6 +562,8 @@ extension EditViewController: UITextViewDelegate {
         if let text = textView.text {
             self.portfolioData.description = text
         }
+        
+        hasChanges()
     }
 }
 
@@ -538,6 +596,8 @@ extension EditViewController: UITextFieldDelegate {
                 print("default")
             }
         }
+        
+        hasChanges()
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -546,5 +606,58 @@ extension EditViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         activeTextField = nil
+    }
+    
+    @objc private func cancelButtonTapped() {
+        isEditEnable.toggle()
+        editView.toggleEditMode(isEditEnable)
+        // 데이터 초기화
+        selectedImages.removeAll()
+        setData()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.tappedStates = Array(repeating: false, count: 5)
+            self.portfolioData.userPurposes.forEach { index in
+                if index < self.tappedStates.count {
+                    self.tappedStates[index] = true
+                }
+            }
+            self.editView.purposeCollectionView.reloadData()
+        }
+        self.view.layoutIfNeeded()
+    }
+    
+    @objc private func editButtonTapped() {
+        isEditEnable.toggle()
+        editView.toggleEditMode(isEditEnable)
+        
+        if isEditEnable {
+            editView.editButton.isEnabled = false
+        } else {
+            let imageDataArray = selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+            let body = EditRequestBodyDTO(
+                username: portfolioData.username,
+                email: portfolioData.email,
+                description: portfolioData.description,
+                instagramId: portfolioData.instagramId,
+                password: "",
+                webUrl: portfolioData.webUrl,
+                userPurposes: portfolioData.userPurposes.map { $0 - 1 },
+                userTalents: convertToTalent(koreanNames: portfolioData.userTalents.map { $0.talentType }),
+                portfolioImageUrl: imageDataArray
+            )
+            
+            editMyPort(bodyDTO: body) { _ in
+                self.editView.portfolioCollectionView.reloadData()
+                self.editView.purposeCollectionView.reloadData()
+                self.view.endEditing(true)
+            }
+            
+            self.isDataChanged = false
+            self.editView.editButton.isEnabled = true
+        }
+        
+        editView.portfolioCollectionView.reloadData()
+        editView.purposeCollectionView.reloadData()
     }
 }

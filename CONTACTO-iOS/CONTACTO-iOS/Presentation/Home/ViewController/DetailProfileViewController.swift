@@ -22,6 +22,7 @@ final class DetailProfileViewController: BaseViewController {
     }
     var userId: Int = 3
     var isPreview = false
+    var isFromChat = false
     
     let detailProfileView = DetailProfileView()
     var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
@@ -38,15 +39,18 @@ final class DetailProfileViewController: BaseViewController {
     }
     
     override func setLayout() {
-        
-        let safeAreaHeight = view.safeAreaInsets.bottom
-        let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
-        
         view.addSubviews(detailProfileView)
-        
+
         detailProfileView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
+            
+            if isFromChat {
+                $0.bottom.leading.trailing.equalToSuperview()
+            } else {
+                let safeAreaHeight = view.safeAreaInsets.bottom
+                let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
+                $0.bottom.equalTo(safeAreaHeight).offset(-tabBarHeight)
+            }
         }
     }
     

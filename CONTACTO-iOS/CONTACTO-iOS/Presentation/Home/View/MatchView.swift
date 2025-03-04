@@ -12,12 +12,12 @@ import Then
 
 final class MatchView: BaseView {
     
-    private let titleLabel = UILabel()
-    private let myImageView = UIImageView()
-    private let myLabel = BasePaddingLabel()
+    let titleLabel = UILabel()
+    let myImageView = UIImageView()
+    let myLabel = BasePaddingLabel()
     
-    private let yourImageView = UIImageView()
-    private let yourLabel = BasePaddingLabel()
+    let yourImageView = UIImageView()
+    let yourLabel = BasePaddingLabel()
     
     let descriptionLabel = UILabel()
     
