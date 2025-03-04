@@ -35,7 +35,7 @@ final class ChatRoomViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        //        self.closeSocket()
+//        self.closeSocket()
         self.socketClient.disconnect()
         self.removeKeyboardNotifications()
     }
@@ -105,9 +105,9 @@ final class ChatRoomViewController: BaseViewController {
                     }
                     return leftDate < rightDate
                 })
+                
                 self?.chatRoomView.isFirstChat = data.messages.isEmpty
                 self?.chatRoomView.nameLabel.text = data.title
-
                 if let thumbnailUrlString = data.chatRoomThumbnail,
                    let imageUrl = URL(string: thumbnailUrlString) {
                     self?.chatRoomView.profileImageButton.kf.setBackgroundImage(with: imageUrl, for: .normal)
@@ -141,94 +141,19 @@ extension ChatRoomViewController: StompClientLibDelegate {
         print("Server ping")
     }
     
-    func stompClient(client: StompClientLib,
-                     didReceiveMessageWithJSONBody jsonBody: AnyObject?,
-                     akaStringBody stringBody: String?,
-                     withHeader header: [String : String]?,
-                     withDestination destination: String) {
+    func stompClient(client: StompClientLib, didReceiveMessageWithJSONBody jsonBody: AnyObject?, akaStringBody stringBody: String?, withHeader header: [String : String]?, withDestination destination: String) {
         print("Destination : \(destination)")
         print("JSON Body : \(String(describing: jsonBody))")
         
-        guard let messageString = stringBody,
-              let data = messageString.data(using: .utf8) else {
-            print("No valid message string or data received.")
-            return
-        }
-        
-        var message: Message?
-        let decoder = JSONDecoder()
-        
-        do {
-            // 기본 디코딩 시도
-            message = try decoder.decode(Message.self, from: data)
-        } catch {
-            print("Error decoding message: \(error)")
-            // 디코딩 실패 시, JSON을 Dictionary로 변환해서 보정
-            if var json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any] {
-                let formatter = ISO8601DateFormatter()
-                formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-                formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
-                
-                // createdAt 보정: nil, NSNull, "<null>" 또는 빈 문자열이면 현재 시간으로 설정
-                if let createdAtValue = json["createdAt"] as? String {
-                    if createdAtValue.lowercased() == "<null>" ||
-                        createdAtValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        json["createdAt"] = formatter.string(from: Date())
-                    }
-                } else {
-                    json["createdAt"] = formatter.string(from: Date())
-                }
-                
-                // sendedId 보정: nil, NSNull, 또는 "<null>"이면 participants[0] 값 사용
-                if let sendedIdValue = json["sendedId"] as? String {
-                    if sendedIdValue.lowercased() == "<null>" ||
-                        sendedIdValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        if let firstParticipant = self.participants.first {
-                            // Message 모델의 sendedId 타입이 숫자라면 그대로 숫자로 넣습니다.
-                            json["sendedId"] = firstParticipant
-                        }
-                    }
-                } else {
-                    if let firstParticipant = self.participants.first {
-                        json["sendedId"] = firstParticipant
-                    }
-                }
-                
-                if let newData = try? JSONSerialization.data(withJSONObject: json, options: []) {
-                    message = try? decoder.decode(Message.self, from: newData)
-                    print("Corrected message: \(String(describing: message))")
-                }
+        if let messageString = stringBody,
+           let data = messageString.data(using: .utf8),
+           let message = try? JSONDecoder().decode(Message.self, from: data) {
+            DispatchQueue.main.async {
+                self.chatList.append(message)
+                self.chatRoomView.chatRoomCollectionView.reloadData()
+                self.scrollToBottom()
             }
-            
         }
-        
-        // 디코딩에 실패하면 리턴
-        guard let receivedMessage = message else {
-            print("Message decoding failed even after correction.")
-            return
-        }
-        
-        // 만약 createdAt 값이 서버에서 "<null>"로 내려왔다면(보정하지 않은 경우)
-        // 또는 여전히 비어있다면, 이 메시지는 무시합니다.
-        if receivedMessage.createdAt.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "<null>" {
-            print("Received message has null createdAt, ignoring.")
-            return
-        }
-        
-        // 내 메시지 필터링: sendedId가 내 ID와 같으면 무시
-        if let sendedId = receivedMessage.sendedId,
-           let myUserId = Int(KeychainHandler.shared.userID),
-           sendedId == myUserId {
-            print("Received message is from me (sendedId == my userID), ignoring.")
-            return
-        }
-        
-        DispatchQueue.main.async {
-            self.chatList.append(receivedMessage)
-            self.chatRoomView.chatRoomCollectionView.reloadData()
-            self.scrollToBottom()
-        }
-        print("메시지 수신")
     }
     
     func stompClientDidDisconnect(client: StompClientLib) {
@@ -239,13 +164,13 @@ extension ChatRoomViewController: StompClientLibDelegate {
     func stompClientDidConnect(client: StompClientLib) {
         print("Socket is connected")
         isConnected = true
-        
+
         // 연결 성공 시 구독 설정
         var headers = ["Authorization": KeychainHandler.shared.accessToken]
         headers["id"] = "sub-\(chatRoomId)"
         socketClient.subscribeWithHeader(destination: "/topic/\(chatRoomId)", withHeader: headers)
-    }
-    
+      }
+
     func serverDidSendError(client: StompClientLib, withErrorMessage description: String, detailedErrorMessage message: String?) {
         print("Error Send : \(String(describing: message))")
     }
@@ -361,14 +286,14 @@ extension ChatRoomViewController {
             readStatus: false)
         chatList.append(newMessage)
         
-        //        self.send(message: newMessage)
-        //
-        //        webSocketTask?.send(URLSessionWebSocketTask.Message.string(content)) { error in
-        //            if let error = error {
-        //                print("Error sending message: \(error)")
-        //            }
-        //        }
-        //        socketClient.sendMessage(message: newMe, toDestination: <#T##String#>, withHeaders: <#T##[String : String]?#>, withReceipt: <#T##String?#>)
+//        self.send(message: newMessage)
+//        
+//        webSocketTask?.send(URLSessionWebSocketTask.Message.string(content)) { error in
+//            if let error = error {
+//                print("Error sending message: \(error)")
+//            }
+//        }
+//        socketClient.sendMessage(message: newMe, toDestination: <#T##String#>, withHeaders: <#T##[String : String]?#>, withReceipt: <#T##String?#>)
         
         if let messageData = try? JSONEncoder().encode(newMessage) {
             var headers = ["Authorization": KeychainHandler.shared.accessToken]
@@ -400,7 +325,7 @@ extension ChatRoomViewController {
         
         return offsetY >= contentHeight - height
     }
-    
+
     
     func calculateCellCount() -> Int {
         var cellCount = 0
@@ -445,7 +370,7 @@ extension ChatRoomViewController: UICollectionViewDataSource {
             }
             cellCount += 1
         }
-        
+
         if participants.contains(chatList[messageIndex].senderId) {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ChatRoomYourCollectionViewCell.className,
@@ -501,5 +426,3 @@ extension ChatRoomViewController: UITextViewDelegate {
         }
     }
 }
-
-
