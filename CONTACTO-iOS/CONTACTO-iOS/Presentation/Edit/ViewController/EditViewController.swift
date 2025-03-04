@@ -119,7 +119,7 @@ final class EditViewController: UIViewController {
                 password: "",
                 webUrl: self.portfolioData.webUrl,
                 userPurposes: self.portfolioData.userPurposes.map { $0 - 1 },
-                userTalents: self.convertToTalent(koreanNames: self.portfolioData.userTalents.map { $0.talentType }),
+                userTalents: self.convertToTalent(displayNames: self.portfolioData.userTalents.map { $0.talentType }),
                                 portfolioImageUrl: imageDataArray)
             self.editMyPort(bodyDTO: body) { _ in
                 self.editView.portfolioCollectionView.reloadData()
@@ -129,9 +129,9 @@ final class EditViewController: UIViewController {
         }
     }
     
-    func convertToTalent(koreanNames: [String]) -> [String] {
-        return koreanNames.compactMap { koreanName in
-            if let talent = Talent.allCases.first(where: { $0.info.koreanName == koreanName }) {
+    func convertToTalent(displayNames: [String]) -> [String] {
+        return displayNames.compactMap { displayName in
+            if let talent = Talent.allCases.first(where: { $0.info.displayName == displayName }) {
                 return talent.rawValue
             } else {
                 return nil
