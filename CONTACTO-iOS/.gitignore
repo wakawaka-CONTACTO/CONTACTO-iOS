@@ -1,5 +1,6 @@
 **/Config.xcconfig
 CONTACTO-iOS/Config.xcconfig
+CONTACTO-iOS/build/
 
 # Xcode 관련
 DerivedData/
