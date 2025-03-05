@@ -154,8 +154,9 @@ extension LoginViewController {
                     mainTabBarViewController.homeViewController.isFirst = false
                     self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
                 }
+                self.hideLoadingIndicator()
             }
-            hideLoadingIndicator()
+                
         case .emailForget:
             helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
                 self.loginView.mainTextField.text = ""
