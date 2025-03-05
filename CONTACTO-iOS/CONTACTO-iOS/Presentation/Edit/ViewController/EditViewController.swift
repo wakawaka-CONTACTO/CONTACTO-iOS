@@ -114,11 +114,32 @@ final class EditViewController: UIViewController {
         editView.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
     
-    private func setClosure() { }
+    private func setClosure() {
+        editView.editAction = {
+            self.isEditEnable.toggle()
+            let imageDataArray = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+            
+            let body = EditRequestBodyDTO(
+                username: self.portfolioData.username,
+                email: self.portfolioData.email,
+                description: self.portfolioData.description,
+                instagramId: self.portfolioData.instagramId,
+                password: "",
+                webUrl: self.portfolioData.webUrl,
+                userPurposes: self.portfolioData.userPurposes.map { $0 - 1 },
+                userTalents: self.convertToTalent(displayNames: self.portfolioData.userTalents.map { $0.talentType }),
+                                portfolioImageUrl: imageDataArray)
+            self.editMyPort(bodyDTO: body) { _ in
+                self.editView.portfolioCollectionView.reloadData()
+                self.editView.purposeCollectionView.reloadData()
+                self.view.endEditing(true)
+            }
+        }
+    }
     
-    func convertToTalent(koreanNames: [String]) -> [String] {
-        return koreanNames.compactMap { koreanName in
-            if let talent = Talent.allCases.first(where: { $0.info.koreanName == koreanName }) {
+    func convertToTalent(displayNames: [String]) -> [String] {
+        return displayNames.compactMap { displayName in
+            if let talent = Talent.allCases.first(where: { $0.info.displayName == displayName }) {
                 return talent.rawValue
             } else {
                 return nil

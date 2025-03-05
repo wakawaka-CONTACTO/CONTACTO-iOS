@@ -26,20 +26,19 @@ extension TargetType {
         switch headerType {
         case .plain:
             return [
-                HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue
+                HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
             ]
         case .hasToken:
             return [
                 HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
-                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.accessToken
+                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.accessToken,
             ]
         case .refreshToken:
             return [
                 HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
-                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.refreshToken
+                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.refreshToken,
             ]
-        }
-    }
+        }}
 }
 extension TargetType {
     func asURLRequest() throws -> URLRequest {

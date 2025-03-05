@@ -1,3 +1,8 @@
+**/Config.xcconfig
+CONTACTO-iOS/Config.xcconfig
+CONTACTO-iOS/build/*
+**/build/*
+
 # Xcode 관련
 DerivedData/
 *.xcworkspace/
