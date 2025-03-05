@@ -25,6 +25,16 @@ final class LoginViewController: UIViewController {
     
     var isExistEmail = false
     
+    
+    // 로딩 인디케이터: 전체 화면 오버레이
+    private var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.backgroundColor = UIColor(white: 0, alpha: 0.3)
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
@@ -59,7 +69,8 @@ final class LoginViewController: UIViewController {
     private func setLayout() {
         view.addSubviews(loginView,
                          emailCodeView,
-                         setPWView)
+                         setPWView,
+                         activityIndicator)
         
         loginView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -72,6 +83,13 @@ final class LoginViewController: UIViewController {
         setPWView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            activityIndicator.widthAnchor.constraint(equalTo: view.widthAnchor),
+            activityIndicator.heightAnchor.constraint(equalTo: view.heightAnchor)
+        ])
     }
     
     private func setNavigationBar() {
@@ -102,9 +120,22 @@ final class LoginViewController: UIViewController {
 }
 
 extension LoginViewController {
+    private func showLoadingIndicator() {
+        activityIndicator.startAnimating()
+        view.isUserInteractionEnabled = false
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.stopAnimating()
+        view.isUserInteractionEnabled = true
+    }
+}
+
+extension LoginViewController {
     @objc func continueButtonTapped() {
         switch loginView.state {
         case .email, .emailError:
+            showLoadingIndicator()
             emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
                 if self.isExistEmail {
                     self.loginView.mainTextField.text = ""
@@ -114,7 +145,9 @@ extension LoginViewController {
                     self.loginView.setLoginState(state: .emailError)
                 }
             }
+            hideLoadingIndicator()
         case .pw, .pwError:
+            showLoadingIndicator()
             login(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { result in
                 if result {
                     let mainTabBarViewController = MainTabBarViewController()
@@ -122,6 +155,7 @@ extension LoginViewController {
                     self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
                 }
             }
+            hideLoadingIndicator()
         case .emailForget:
             helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
                 self.loginView.mainTextField.text = ""
