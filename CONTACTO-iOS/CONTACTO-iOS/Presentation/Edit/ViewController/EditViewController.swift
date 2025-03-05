@@ -643,7 +643,7 @@ extension EditViewController: UITextFieldDelegate {
                 password: "",
                 webUrl: portfolioData.webUrl,
                 userPurposes: portfolioData.userPurposes.map { $0 - 1 },
-                userTalents: convertToTalent(koreanNames: portfolioData.userTalents.map { $0.talentType }),
+                userTalents: convertToTalent(displayNames: portfolioData.userTalents.map { $0.talentType }),
                 portfolioImageUrl: imageDataArray
             )
             
