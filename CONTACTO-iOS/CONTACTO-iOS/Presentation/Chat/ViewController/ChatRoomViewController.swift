@@ -141,7 +141,6 @@ extension ChatRoomViewController: StompClientLibDelegate {
         print("Server ping")
     }
     
-    
     func stompClient(client: StompClientLib,
                      didReceiveMessageWithJSONBody jsonBody: AnyObject?,
                      akaStringBody stringBody: String?,
@@ -151,22 +150,85 @@ extension ChatRoomViewController: StompClientLibDelegate {
         print("JSON Body : \(String(describing: jsonBody))")
         
         guard let messageString = stringBody,
-              let data = messageString.data(using: .utf8),
-              let message = try? JSONDecoder().decode(Message.self, from: data) else {
+              let data = messageString.data(using: .utf8) else {
             print("No valid message string or data received.")
             return
         }
         
-        // 내 메시지(에코)는 추가하지 않도록 senderId를 비교합니다.
-        if message.senderId == Int(KeychainHandler.shared.userID) {
-            print("Received echo message from self, ignoring.")
+        var message: Message?
+        let decoder = JSONDecoder()
+        
+        do {
+            // 기본 디코딩 시도
+            message = try decoder.decode(Message.self, from: data)
+        } catch {
+            print("Error decoding message: \(error)")
+            // 디코딩 실패 시, JSON을 Dictionary로 변환해서 보정
+            if var json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any] {
+                let formatter = ISO8601DateFormatter()
+                formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+                
+                // createdAt 보정: nil, NSNull, "<null>" 또는 빈 문자열이면 현재 시간으로 설정
+                if let createdAtValue = json["createdAt"] as? String {
+                    if createdAtValue.lowercased() == "<null>" ||
+                        createdAtValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        json["createdAt"] = formatter.string(from: Date())
+                    }
+                } else {
+                    json["createdAt"] = formatter.string(from: Date())
+                }
+                
+                // sendedId 보정: nil, NSNull, 또는 "<null>"이면 participants[0] 값 사용
+                if let sendedIdValue = json["sendedId"] as? String {
+                    if sendedIdValue.lowercased() == "<null>" ||
+                        sendedIdValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        if let firstParticipant = self.participants.first {
+                            // Message 모델의 sendedId 타입이 숫자라면 그대로 숫자로 넣습니다.
+                            json["sendedId"] = firstParticipant
+                        }
+                    }
+                } else {
+                    if let firstParticipant = self.participants.first {
+                        json["sendedId"] = firstParticipant
+                    }
+                }
+                
+                if let newData = try? JSONSerialization.data(withJSONObject: json, options: []) {
+                    message = try? decoder.decode(Message.self, from: newData)
+                    print("Corrected message: \(String(describing: message))")
+                }
+            }
+            
+        }
+        
+        // 디코딩에 실패하면 리턴
+        guard let receivedMessage = message else {
+            print("Message decoding failed even after correction.")
             return
         }
+        
+        // 만약 createdAt 값이 서버에서 "<null>"로 내려왔다면(보정하지 않은 경우)
+        // 또는 여전히 비어있다면, 이 메시지는 무시합니다.
+        if receivedMessage.createdAt.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "<null>" {
+            print("Received message has null createdAt, ignoring.")
+            return
+        }
+        
+        // 내 메시지 필터링: sendedId가 내 ID와 같으면 무시
+        if let sendedId = receivedMessage.sendedId,
+           let myUserId = Int(KeychainHandler.shared.userID),
+           sendedId == myUserId {
+            print("Received message is from me (sendedId == my userID), ignoring.")
+            return
+        }
+        
         DispatchQueue.main.async {
-            self.chatList.append(message)
+            self.chatList.append(receivedMessage)
             self.chatRoomView.chatRoomCollectionView.reloadData()
             self.scrollToBottom()
         }
+        print("메시지 수신")
     }
     
     func stompClientDidDisconnect(client: StompClientLib) {
