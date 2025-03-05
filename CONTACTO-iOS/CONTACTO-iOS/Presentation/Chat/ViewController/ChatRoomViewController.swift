@@ -157,7 +157,6 @@ extension ChatRoomViewController: StompClientLibDelegate {
             return
         }
         
-        // 내 메시지(에코)는 추가하지 않도록 senderId를 비교합니다.
         if message.senderId == Int(KeychainHandler.shared.userID) {
             print("Received echo message from self, ignoring.")
             return
