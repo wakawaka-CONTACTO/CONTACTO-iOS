@@ -412,6 +412,8 @@ final class EditView: BaseView {
         }
     }
     
+    var editAction: (() -> Void) = {}
+    
     func toggleEditMode(_ isEditEnabled: Bool) {
         nameTextField.isEnabled = isEditEnabled
         nameTextField.backgroundColor = isEditEnabled ? .ctwhite : .ctmainblue
@@ -431,6 +433,8 @@ final class EditView: BaseView {
         editButton.snp.remakeConstraints {
             $0.height.equalTo(34.adjustedHeight)
             $0.bottom.equalToSuperview().inset(41.adjustedHeight)
+            editAction()
+
             if isEditEnabled {
                 $0.leading.equalTo(cancelButton.snp.trailing).offset(8)
                 $0.trailing.equalToSuperview().inset(16)
