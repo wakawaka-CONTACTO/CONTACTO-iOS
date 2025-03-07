@@ -16,7 +16,20 @@ import Then
 final class EditViewController: UIViewController {
     
     private var originalPortfolioData: MyDetailResponseDTO?
-    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
+    private var portfolioData = MyDetailResponseDTO(
+        id: 0,
+        username: "",
+        description: "",
+        instagramId: "",
+        socialId: 0,
+        loginType: "",
+        email: "",
+        webUrl: nil,
+        password: "",
+        userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []),
+        userPurposes: [],
+        userTalents: []
+    )
     private var talentData: [TalentInfo] = []
     var isEditEnable = false
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
@@ -58,6 +71,9 @@ final class EditViewController: UIViewController {
     }
     
     var selectedImages: [UIImage] = []
+    var isImageNew: [Bool] = [] // selectedImages와 평행 배열: true면 새 이미지, false면 기존 이미지
+    var existingImageURLs: [String] = [] // 기존 이미지 URL 배열
+    
     let editView = EditView()
     
     override func viewDidLoad() {
