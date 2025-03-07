@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 
 enum ChatTarget {
-    case chatRoomList
+    case chatRoomList(_ page: Int, _ size: Int)
     case chatRoomMessage(_ roomId: Int)
     
 }
@@ -18,7 +18,7 @@ enum ChatTarget {
 extension ChatTarget: TargetType {
     var authorization: Authorization {
         switch self {
-        case .chatRoomList:
+        case .chatRoomList(_, _):
             return .authorization
         case .chatRoomMessage(_):
             return .authorization
@@ -27,7 +27,7 @@ extension ChatTarget: TargetType {
     
     var headerType: HTTPHeaderType {
         switch self {
-        case .chatRoomList:
+        case .chatRoomList(_, _):
             return .hasToken
         case .chatRoomMessage(_):
             return .hasToken
@@ -36,7 +36,7 @@ extension ChatTarget: TargetType {
     
     var method: HTTPMethod {
         switch self {
-        case .chatRoomList:
+        case .chatRoomList(_, _):
             return .get
         case .chatRoomMessage(_):
             return .get
@@ -45,7 +45,7 @@ extension ChatTarget: TargetType {
     
     var path: String {
         switch self {
-        case .chatRoomList:
+        case .chatRoomList(_, _):
             return "/v1/users/me/chatroom"
         case .chatRoomMessage(let roomId):
             return "/v1/users/me/chatroom/\(roomId)"
@@ -54,8 +54,8 @@ extension ChatTarget: TargetType {
     
     var parameters: RequestParams {
         switch self {
-        case .chatRoomList:
-            return .requestPlain
+        case .chatRoomList(let page, let size):
+            return .requestQuery(["page": page, "size": size])
         case.chatRoomMessage(_):
             return .requestPlain
         }
