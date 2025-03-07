@@ -224,6 +224,10 @@ final class EditViewController: UIViewController {
         talentData = portfolioData.userTalents.compactMap { userTalent in
             Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
         }
+
+        portfolioData.userTalents = talentData.map { talentInfo in
+            UserTalent(id: 0, userId: portfolioData.id, talentType: talentInfo.displayName)
+        }
         
         let dispatchGroup = DispatchGroup()
         
@@ -636,7 +640,7 @@ extension EditViewController: UITextFieldDelegate {
         } else {
             let imageDataArray = selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
             let body = EditRequestBodyDTO(
-                username: portfolioData.username,
+                username: portfolioData.username.trimmingCharacters(in: .whitespacesAndNewlines),
                 email: portfolioData.email,
                 description: portfolioData.description,
                 instagramId: portfolioData.instagramId,
