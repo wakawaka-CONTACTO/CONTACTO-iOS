@@ -19,15 +19,16 @@ final class ChatListViewController: BaseViewController {
     private var currentPage = 0
     private let pageSize = 10
     private var isFetching = false
+    private var isFirstLoad = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        setData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setData()
     }
     
     override func setNavigationBar() {
@@ -61,11 +62,12 @@ final class ChatListViewController: BaseViewController {
         chatListView.chatListCollectionView.register(ChatListCollectionViewCell.self, forCellWithReuseIdentifier: ChatListCollectionViewCell.className)
     }
     
-    private func setData() {        
+    private func setData() {
         self.chatRoomList(isFirstLoad: true) { _ in
             self.chatListView.chatListCollectionView.reloadData()
             self.chatListView.isHidden = self.chatRoomListData.isEmpty
             self.chatEmptyView.isHidden = !self.chatRoomListData.isEmpty
+            self.isFirstLoad = false
         }
     }
     
@@ -95,21 +97,22 @@ final class ChatListViewController: BaseViewController {
 
         NetworkService.shared.chatService.chatRoomList(page: currentPage, size: pageSize) { [weak self] response in
             guard let self = self else { return }
-            self.isFetching = false
 
             switch response {
             case .success(let data):
                 if isFirstLoad {
                     self.chatRoomListData = data.content
+                    self.isFetching = false
                 } else {
                     self.chatRoomListData.append(contentsOf: data.content)
+                    self.isFetching = false
                 }
 
                 self.hasNext = data.hasNext
                 self.currentPage += 1
                 completion(true)
-
             default:
+                self.isFetching = false
                 completion(false)
             }
         }

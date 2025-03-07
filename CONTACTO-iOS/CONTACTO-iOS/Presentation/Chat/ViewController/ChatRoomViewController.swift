@@ -112,6 +112,7 @@ final class ChatRoomViewController: BaseViewController {
                 let sortedMessages = data.content.sorted { $0.createdAt < $1.createdAt }
                 
                 if isFirstLoad {
+                    self.chatRoomView.isFirstChat = data.content.isEmpty
                     self.chatList = sortedMessages
                     self.chatRoomView.chatRoomCollectionView.reloadData()
                 
