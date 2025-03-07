@@ -70,8 +70,8 @@ final class EditViewController: UIViewController {
     }
     
     var selectedImages: [UIImage] = []
-    var isImageNew: [Bool] = [] // selectedImages와 평행 배열: true면 새 이미지, false면 기존 이미지
-    var existingImageURLs: [String] = [] // 기존 이미지 URL 배열
+    var isImageNew: [Bool] = []
+    var existingImageURLs: [String] = []
     
     let editView = EditView()
     
@@ -192,7 +192,7 @@ extension EditViewController{
         var existingKey = 101
         for (index, _) in selectedImages.enumerated() {
             if index < isImageNew.count, !isImageNew[index] {
-                if index < existingImageURLs.count { // 안전하게 인덱스 체크
+                if index < existingImageURLs.count {
                     let urlString = existingImageURLs[index]
                     existingImageURLsArray.append(urlString)
                     existingImageKeys.append(existingKey)
@@ -202,13 +202,6 @@ extension EditViewController{
         }
         return existingImageURLsArray.isEmpty ? (nil, nil) : (existingImageURLsArray, existingImageKeys)
     }
-    
-//    func convertToTalent(displayNames: [String]) -> [Talent] {
-//        return displayNames.compactMap { displayName in
-//            return Talent.allCases.first(where: { $0.info.displayName == displayName })
-//        }
-//    }
-    
     
     func convertToTalent(displayNames: [String]) -> [String] {
         return displayNames.compactMap { displayName in
@@ -292,7 +285,7 @@ extension EditViewController{
         talentData = portfolioData.userTalents.compactMap { userTalent in
             Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
         }
-        // talentData를 기반으로 portfolioData.userTalents를 다시 할당
+
         portfolioData.userTalents = talentData.map { talentInfo in
             UserTalent(id: 0, userId: portfolioData.id, talentType: talentInfo.displayName)
         }
@@ -302,7 +295,7 @@ extension EditViewController{
         portfolioData.userPortfolio?.portfolioImageUrl.forEach { url in
             guard let imageUrl = URL(string: url) else { return }
             
-            dispatchGroup.enter() // 작업 시작
+            dispatchGroup.enter()
             KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { result in
                 switch result {
                 case .success(let value):
@@ -314,7 +307,7 @@ extension EditViewController{
                 case .failure(let error):
                     print("Failed to load image: \(error.localizedDescription)")
                 }
-                dispatchGroup.leave() // 작업 완료
+                dispatchGroup.leave()
             }
         }
         
@@ -336,7 +329,7 @@ extension EditViewController{
     
     private func setData() {
         self.checkMyPort { _ in
-            self.originalPortfolioData = self.portfolioData // 원본 데이터 저장
+            self.originalPortfolioData = self.portfolioData
             print("원본 데이터: \(String(describing: self.originalPortfolioData))")
             self.checkTalentLayout()
         }
@@ -367,7 +360,7 @@ extension EditViewController{
         guard let originalData = originalPortfolioData else { 
             isDataChanged = true
             return
-        } // 원본 데이터가 없으면 변경된 것으로 간주
+        }
 
         isDataChanged = (
             portfolioData.username != originalData.username ||
@@ -429,7 +422,6 @@ extension EditViewController{
             $0.leading.equalToSuperview().inset(16)
         }
         
-        // 현재 활성화된 텍스트 필드가 있는지 확인
         if let activeField = activeTextField {
             print(activeField)
             if activeField.frame.minY > (view.frame.height - keyboardHeight) {
@@ -681,46 +673,6 @@ extension EditViewController: UITextFieldDelegate{
         editView.portfolioCollectionView.reloadData()
         editView.purposeCollectionView.reloadData()
     }
-
-//    /// 새 이미지 데이터와 키 배열을 생성합니다.
-//    /// 새 이미지는 selectedImages와 isImageNew 배열에서 isImageNew 값이 true인 항목으로 판단합니다.
-//    private func prepareNewImages() -> ([Data]?, [Int]?) {
-//        var newImageDataArray: [Data] = []
-//        var newImageKeys: [Int] = []
-//        // 예시로 새 이미지는 1부터 시작하는 키 부여 (서버와의 키 충돌 방지)
-//        var newKey = 1
-//        for (index, image) in selectedImages.enumerated() {
-//            if isImageNew[index] {
-//                if let data = image.jpegData(compressionQuality: 0.8) {
-//                    newImageDataArray.append(data)
-//                    newImageKeys.append(newKey)
-//                    newKey += 1
-//                }
-//            }
-//        }
-//        return newImageDataArray.isEmpty ? (nil, nil) : (newImageDataArray, newImageKeys)
-//    }
-
-//    /// 기존 이미지 URL과 키 배열을 생성합니다.
-//    /// 기존 이미지는 selectedImages와 isImageNew 배열에서 isImageNew 값이 false인 항목으로 판단하며,
-//    /// 기존 이미지 URL은 별도 existingImageURLs 배열에서 가져옵니다.
-//    private func prepareExistingImages() -> ([String]?, [Int]?) {
-//        var existingImageURLsArray: [String] = []
-//        var existingImageKeys: [Int] = []
-//        // 기존 이미지는 101부터 시작하는 키 부여 (서버와의 키 충돌 방지)
-//        var existingKey = 101
-//        for (index, _) in selectedImages.enumerated() {
-//            if !isImageNew[index] {
-//                // 인덱스가 유효하다고 가정합니다.
-//                let urlString = existingImageURLs[index]
-//                existingImageURLsArray.append(urlString)
-//                existingImageKeys.append(existingKey)
-//                existingKey += 1
-//            }
-//        }
-//        return existingImageURLsArray.isEmpty ? (nil, nil) : (existingImageURLsArray, existingImageKeys)
-//    }
-
 }
 
 extension EditViewController {
@@ -767,7 +719,6 @@ extension EditViewController {
     @objc private func cancelButtonTapped() {
         isEditEnable.toggle()
         editView.toggleEditMode(isEditEnable)
-        // 데이터 초기화
         selectedImages.removeAll()
         setData()
         DispatchQueue.main.async { [weak self] in

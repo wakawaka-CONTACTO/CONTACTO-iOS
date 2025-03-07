@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - MyDetailResponseDTO
 struct MyDetailResponseDTO: Codable {
     let id: Int
     var username, description, instagramId: String?
@@ -21,13 +20,11 @@ struct MyDetailResponseDTO: Codable {
     var userTalents: [UserTalent]
 }
 
-// MARK: - UserPortfolio
 struct UserPortfolio: Codable {
     let portfolioId, userId: Int
     var portfolioImageUrl: [String]
 }
 
-// MARK: - UserTalent
 struct UserTalent: Codable {
     let id, userId: Int?
     var talentType: String

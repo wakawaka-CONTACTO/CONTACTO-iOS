@@ -18,9 +18,9 @@ enum Talent: String, CaseIterable, Encodable {
     case INDUSTRIAL
     case GRAPHIC
     case FASHION
-    case UX_UI // = "UX/UI"
+    case UX_UI
     case BRANDING
-    case MOTION_GRAPHIC //MOTION
+    case MOTION_GRAPHIC
     case ANIMATION
     case ILLUSTRATION
     case INTERIOR
