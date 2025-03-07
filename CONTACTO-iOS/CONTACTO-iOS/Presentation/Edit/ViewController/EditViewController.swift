@@ -640,7 +640,7 @@ extension EditViewController: UITextFieldDelegate {
         } else {
             let imageDataArray = selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
             let body = EditRequestBodyDTO(
-                username: portfolioData.username,
+                username: portfolioData.username.trimmingCharacters(in: .whitespacesAndNewlines),
                 email: portfolioData.email,
                 description: portfolioData.description,
                 instagramId: portfolioData.instagramId,
