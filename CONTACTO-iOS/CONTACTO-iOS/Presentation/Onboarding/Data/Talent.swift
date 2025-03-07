@@ -13,7 +13,7 @@ struct TalentInfo: Codable {
     let category: TalentCategory
 }
 
-enum Talent: String, CaseIterable {
+enum Talent: String, CaseIterable, Encodable {
     // Design
     case INDUSTRIAL
     case GRAPHIC

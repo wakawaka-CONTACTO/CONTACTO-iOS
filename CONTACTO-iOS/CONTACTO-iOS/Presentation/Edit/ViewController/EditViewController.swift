@@ -12,7 +12,6 @@ import PhotosUI
 import SnapKit
 import Then
 
-// TODO: - put 확인 (500 확인)
 final class EditViewController: UIViewController {
     
     private var originalPortfolioData: MyDetailResponseDTO?
@@ -139,7 +138,7 @@ extension EditViewController{
     }
 }
 
-extension EditViewController{    
+extension EditViewController{
     private func setClosure() {
         editView.editAction = {
             self.isEditEnable.toggle()
@@ -162,7 +161,7 @@ extension EditViewController{
                 existingPortfolioImageUrls: existingImageURLsArray,
                 existingImageKeys: existingImageKeys
             )
-            
+                        
             self.editMyPort(bodyDTO: body) { _ in
                 self.editView.portfolioCollectionView.reloadData()
                 self.editView.purposeCollectionView.reloadData()
@@ -204,6 +203,13 @@ extension EditViewController{
         return existingImageURLsArray.isEmpty ? (nil, nil) : (existingImageURLsArray, existingImageKeys)
     }
     
+//    func convertToTalent(displayNames: [String]) -> [Talent] {
+//        return displayNames.compactMap { displayName in
+//            return Talent.allCases.first(where: { $0.info.displayName == displayName })
+//        }
+//    }
+    
+    
     func convertToTalent(displayNames: [String]) -> [String] {
         return displayNames.compactMap { displayName in
             if let talent = Talent.allCases.first(where: { $0.info.displayName == displayName }) {
@@ -213,7 +219,8 @@ extension EditViewController{
             }
         }
     }
-    
+
+
     private func setDelegate() {
         editView.portfolioCollectionView.delegate = self
         editView.portfolioCollectionView.dataSource = self
@@ -284,6 +291,10 @@ extension EditViewController{
         
         talentData = portfolioData.userTalents.compactMap { userTalent in
             Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
+        }
+        // talentData를 기반으로 portfolioData.userTalents를 다시 할당
+        portfolioData.userTalents = talentData.map { talentInfo in
+            UserTalent(id: 0, userId: portfolioData.id, talentType: talentInfo.displayName)
         }
         
         let dispatchGroup = DispatchGroup()
@@ -365,6 +376,7 @@ extension EditViewController{
             selectedImages.map { $0.pngData() }.compactMap { $0 } != originalData.userPortfolio?.portfolioImageUrl.compactMap { URL(string: $0) }.compactMap { try? Data(contentsOf: $0) } ||
             portfolioData.userPurposes.sorted() != originalData.userPurposes.sorted() ||
             portfolioData.userTalents.map({ $0.talentType }).sorted() != originalData.userTalents.map({ $0.talentType }).sorted()
+
         )
     }
     
@@ -638,7 +650,6 @@ extension EditViewController{
             return
         }
         
-        // 새 이미지와 기존 이미지 데이터를 준비합니다.
         let (newImageDataArray, newImageKeys) = prepareNewImages()
         let (existingImageURLsArray, existingImageKeys) = prepareExistingImages()
         

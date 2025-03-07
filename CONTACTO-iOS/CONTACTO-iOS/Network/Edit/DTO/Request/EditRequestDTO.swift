@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct EditRequestDTO: Codable{
+struct EditRequestDTO: Encodable{
     let username: String
     let email, description, instagramId, password: String
     let webUrl: String?

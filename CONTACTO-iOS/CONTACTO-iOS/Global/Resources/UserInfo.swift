@@ -36,7 +36,7 @@ func updateUserInfo(_ data: MyDetailResponseDTO) {
 //    UserInfo.shared.loginType = data.loginType
     UserInfo.shared.webUrl = data.webUrl
     UserInfo.shared.userPurposes = data.userPurposes
-    UserInfo.shared.userTalents = data.userTalents.map { $0.talentType }
+    UserInfo.shared.userTalents = data.userTalents.compactMap { $0.talentType }
 //    UserInfo.shared.portfolioImageUrl = data.portfolioImageUrl
 }
 

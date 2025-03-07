@@ -101,13 +101,21 @@ extension EditRequestDTO {
                                 mimeType: "application/json")
             }
             
-            // userTalents 배열을 JSON 문자열로 변환하여 추가
-            if let talentsData = try? JSONSerialization.data(withJSONObject: self.userTalents, options: []),
-               let talentsString = String(data: talentsData, encoding: .utf8) {
-                formData.append(talentsString.data(using: .utf8) ?? Data(),
-                                withName: "userTalents",
-                                mimeType: "application/json")
+            // userTalents 배열을 서버가 원하는 딕셔너리 배열로 변환하여 추가
+            // 예: [{"talentType": "노래"}, {"talentType": "춤"}]
+//            let talentArray = self.userTalents.map { talent in
+//                return ["talentType": talent.rawValue]
+//            }
+//            if let talentsData = try? JSONSerialization.data(withJSONObject: talentArray, options: []) {
+//                formData.append(talentsData,
+//                                withName: "userTalents",
+//                                mimeType: "application/json")
+//            }
+            
+            for (index, talent) in self.userTalents.enumerated() {
+                formData.append(talent.data(using: .utf8) ?? Data(), withName: "userTalents")
             }
+
         }
     }
 }
