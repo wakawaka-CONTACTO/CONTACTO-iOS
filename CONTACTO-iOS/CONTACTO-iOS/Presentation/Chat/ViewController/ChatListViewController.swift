@@ -15,6 +15,11 @@ final class ChatListViewController: BaseViewController {
     let chatListView = ChatListView()
     let chatEmptyView = ChatEmptyView()
     
+    private var hasNext = true
+    private var currentPage = 0
+    private let pageSize = 10
+    private var isFetching = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
@@ -57,7 +62,7 @@ final class ChatListViewController: BaseViewController {
     }
     
     private func setData() {
-        self.chatRoomList { _ in
+        self.chatRoomList(isFirstLoad: true) { _ in
             self.chatListView.chatListCollectionView.reloadData()
             self.chatListView.isHidden = self.chatRoomListData.isEmpty
             self.chatEmptyView.isHidden = !self.chatRoomListData.isEmpty
@@ -81,12 +86,26 @@ final class ChatListViewController: BaseViewController {
         self.navigationController?.pushViewController(chatRoomViewController, animated: true)
     }
 
-    private func chatRoomList(completion: @escaping (Bool) -> Void) {
-        NetworkService.shared.chatService.chatRoomList { [weak self] response in
+    private func chatRoomList(isFirstLoad: Bool = false, completion: @escaping (Bool) -> Void) {
+        guard !isFetching, hasNext else { return }
+        isFetching = true
+
+        NetworkService.shared.chatService.chatRoomList(page: currentPage, size: pageSize) { [weak self] response in
+            guard let self = self else { return }
+            self.isFetching = false
+
             switch response {
             case .success(let data):
-                self?.chatRoomListData = data
+                if isFirstLoad {
+                    self.chatRoomListData = data.content
+                } else {
+                    self.chatRoomListData.append(contentsOf: data.content)
+                }
+
+                self.hasNext = data.hasNext
+                self.currentPage += 1
                 completion(true)
+
             default:
                 completion(false)
             }
@@ -94,7 +113,23 @@ final class ChatListViewController: BaseViewController {
     }
 }
 
-extension ChatListViewController: UICollectionViewDelegate { }
+extension ChatListViewController: UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let scrollViewHeight = scrollView.frame.size.height
+        
+        if offsetY > contentHeight - scrollViewHeight - 50 {
+            chatRoomList { success in
+                if success {
+                    DispatchQueue.main.async {
+                        self.chatListView.chatListCollectionView.reloadData()
+                    }
+                }
+            }
+        }
+    }
+}
 
 extension ChatListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
