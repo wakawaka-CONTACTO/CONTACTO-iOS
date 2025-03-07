@@ -41,7 +41,7 @@ final class EditViewController: UIViewController {
         }
     }
     let activityIndicator = UIActivityIndicatorView(style: .large)
-
+    
     private var activeTextField: UIView?
     
     var isTextFieldFilled = true {
@@ -94,10 +94,12 @@ final class EditViewController: UIViewController {
             setData()
         }
     }
-    
     override func viewWillDisappear(_ animated: Bool) {
         self.removeKeyboardNotifications()
     }
+}
+
+extension EditViewController{
     
     // MARK: UI
     private func setUI() {
@@ -130,6 +132,14 @@ final class EditViewController: UIViewController {
         editView.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
     
+    private func setCollectionView() {
+        editView.portfolioCollectionView.register(EditPortfolioCollectionViewCell.self, forCellWithReuseIdentifier: EditPortfolioCollectionViewCell.className)
+        editView.talentCollectionView.register(ProfileTalentCollectionViewCell.self, forCellWithReuseIdentifier: ProfileTalentCollectionViewCell.className)
+        editView.purposeCollectionView.register(ProfilePurposeCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePurposeCollectionViewCell.className)
+    }
+}
+
+extension EditViewController{    
     private func setClosure() {
         editView.editAction = {
             self.isEditEnable.toggle()
@@ -176,12 +186,6 @@ final class EditViewController: UIViewController {
         editView.nameTextField.delegate = self
         editView.instaTextField.delegate = self
         editView.websiteTextField.delegate = self
-    }
-    
-    private func setCollectionView() {
-        editView.portfolioCollectionView.register(EditPortfolioCollectionViewCell.self, forCellWithReuseIdentifier: EditPortfolioCollectionViewCell.className)
-        editView.talentCollectionView.register(ProfileTalentCollectionViewCell.self, forCellWithReuseIdentifier: ProfileTalentCollectionViewCell.className)
-        editView.purposeCollectionView.register(ProfilePurposeCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePurposeCollectionViewCell.className)
     }
     
     // MARK: - Server Function
