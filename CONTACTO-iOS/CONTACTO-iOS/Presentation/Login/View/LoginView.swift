@@ -34,7 +34,6 @@ final class LoginView: BaseView {
     let helpButton = UIButton()
     let privacyButton = UIButton()
     let backButton = UIButton()
-    
     init(state: loginState) {
         super.init(frame: CGRect())
         setLoginState(state: state)
@@ -187,7 +186,7 @@ final class LoginView: BaseView {
             helpButton.isHidden = false
             privacyButton.isHidden = false
             forgetPwButton.isHidden = true
-            backButton.isHidden = false
+            backButton.isHidden = true
             mainTextField.setTextFieldState(state: .email)
             mainTextField.isError = true
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
