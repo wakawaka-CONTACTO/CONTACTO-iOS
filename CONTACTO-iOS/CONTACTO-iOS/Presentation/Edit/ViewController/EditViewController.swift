@@ -353,13 +353,14 @@ extension EditViewController{
     }
     
     func setPortfolio() {
+        print("this is set portfolio!! ")
         var configuration = PHPickerConfiguration()
-        lazy var picker = PHPickerViewController(configuration: configuration)
         configuration.selectionLimit = 10 - selectedImages.count
         configuration.filter = .any(of: [.images])
         configuration.selection = .ordered
-        self.present(picker, animated: true, completion: nil)
+        let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self
+        self.present(picker, animated: true, completion: nil)
     }
     
     private func hasChanges() {
@@ -640,42 +641,42 @@ extension EditViewController: UITextViewDelegate {
     }
 }
 
-extension EditViewController{
+extension EditViewController: UITextFieldDelegate{
     @objc private func editButtonTapped() {
         isEditEnable.toggle()
         editView.toggleEditMode(isEditEnable)
         
         if isEditEnable {
             editView.editButton.isEnabled = false
-            return
+        }else{
+            let (newImageDataArray, newImageKeys) = prepareNewImages()
+            let (existingImageURLsArray, existingImageKeys) = prepareExistingImages()
+            
+            let body = EditRequestDTO(
+                username: portfolioData.username?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+                email: portfolioData.email,
+                description: portfolioData.description ?? "",
+                instagramId: portfolioData.instagramId ?? "",
+                password: "",
+                webUrl: portfolioData.webUrl,
+                userPurposes: portfolioData.userPurposes.map { $0 - 1 },
+                userTalents: convertToTalent(displayNames: portfolioData.userTalents.map { $0.talentType }),
+                newPortfolioImages: newImageDataArray,
+                newImageKeys: newImageKeys,
+                existingPortfolioImageUrls: existingImageURLsArray,
+                existingImageKeys: existingImageKeys
+            )
+            
+            editMyPort(bodyDTO: body) { _ in
+                self.editView.portfolioCollectionView.reloadData()
+                self.editView.purposeCollectionView.reloadData()
+                self.view.endEditing(true)
+                
+                self.isDataChanged = false
+                self.editView.editButton.isEnabled = true
+            }
         }
-        
-        let (newImageDataArray, newImageKeys) = prepareNewImages()
-        let (existingImageURLsArray, existingImageKeys) = prepareExistingImages()
-        
-        let body = EditRequestDTO(
-            username: portfolioData.username?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
-            email: portfolioData.email,
-            description: portfolioData.description ?? "",
-            instagramId: portfolioData.instagramId ?? "",
-            password: "",
-            webUrl: portfolioData.webUrl,
-            userPurposes: portfolioData.userPurposes.map { $0 - 1 },
-            userTalents: convertToTalent(displayNames: portfolioData.userTalents.map { $0.talentType }),
-            newPortfolioImages: newImageDataArray,
-            newImageKeys: newImageKeys,
-            existingPortfolioImageUrls: existingImageURLsArray,
-            existingImageKeys: existingImageKeys
-        )
-        
-        editMyPort(bodyDTO: body) { _ in
-            self.editView.portfolioCollectionView.reloadData()
-            self.editView.purposeCollectionView.reloadData()
-            self.view.endEditing(true)
-        }
-        
-        self.isDataChanged = false
-        self.editView.editButton.isEnabled = true
+
         
         editView.portfolioCollectionView.reloadData()
         editView.purposeCollectionView.reloadData()
@@ -722,7 +723,7 @@ extension EditViewController{
 
 }
 
-extension EditViewController: UITextFieldDelegate {
+extension EditViewController {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true

@@ -64,7 +64,7 @@ extension TargetType {
         case .hasToken:
             urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
             urlRequest.setValue(KeychainHandler.shared.accessToken, forHTTPHeaderField: HTTPHeaderFieldKey.authentication.rawValue)
-            urlRequest.setValue("4", forHTTPHeaderField: "X-User-Id")
+            urlRequest.setValue("2", forHTTPHeaderField: "X-User-Id")
         case.refreshToken:
             urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
             urlRequest.setValue(KeychainHandler.shared.refreshToken, forHTTPHeaderField: HTTPHeaderFieldKey.authentication.rawValue)
