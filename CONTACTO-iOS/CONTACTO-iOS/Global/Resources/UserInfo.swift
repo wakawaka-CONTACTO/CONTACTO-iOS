@@ -30,9 +30,9 @@ func updateUserInfo(_ data: MyDetailResponseDTO) {
     
     UserInfo.shared.email = data.email
 //    UserInfo.shared.password = data.password
-    UserInfo.shared.name = data.username
-    UserInfo.shared.description = data.description
-    UserInfo.shared.instagramId = data.instagramId
+    UserInfo.shared.name = data.username ?? ""
+    UserInfo.shared.description = data.description ?? ""
+    UserInfo.shared.instagramId = data.instagramId ?? ""
 //    UserInfo.shared.loginType = data.loginType
     UserInfo.shared.webUrl = data.webUrl
     UserInfo.shared.userPurposes = data.userPurposes

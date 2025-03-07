@@ -344,7 +344,7 @@ extension HomeViewController {
             
             matchViewController.matchData = Match(
                 myId: previewPortfolioData.id,
-                myLabel: previewPortfolioData.username,
+                myLabel: previewPortfolioData.username ?? "",
                 myImageURL: previewPortfolioData.userPortfolio?.portfolioImageUrl.first ?? "",
                 yourId: portfolioData[nowCount].userId,
                 yourLabel: portfolioData[nowCount].username,

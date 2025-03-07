@@ -145,22 +145,63 @@ extension EditViewController{
             self.isEditEnable.toggle()
             let imageDataArray = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
             
-            let body = EditRequestBodyDTO(
-                username: self.portfolioData.username,
+            let (newImageDataArray, newImageKeys) = self.prepareNewImages()
+            let (existingImageURLsArray, existingImageKeys) = self.prepareExistingImages()
+            
+            let body = EditRequestDTO(
+                username: self.portfolioData.username?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
                 email: self.portfolioData.email,
-                description: self.portfolioData.description,
-                instagramId: self.portfolioData.instagramId,
+                description: self.portfolioData.description ?? "",
+                instagramId: self.portfolioData.instagramId ?? "",
                 password: "",
                 webUrl: self.portfolioData.webUrl,
                 userPurposes: self.portfolioData.userPurposes.map { $0 - 1 },
                 userTalents: self.convertToTalent(displayNames: self.portfolioData.userTalents.map { $0.talentType }),
-                                portfolioImageUrl: imageDataArray)
+                newPortfolioImages: newImageDataArray,
+                newImageKeys: newImageKeys,
+                existingPortfolioImageUrls: existingImageURLsArray,
+                existingImageKeys: existingImageKeys
+            )
+            
             self.editMyPort(bodyDTO: body) { _ in
                 self.editView.portfolioCollectionView.reloadData()
                 self.editView.purposeCollectionView.reloadData()
                 self.view.endEditing(true)
             }
         }
+    }
+    
+    private func prepareNewImages() -> ([Data]?, [Int]?) {
+        var newImageDataArray: [Data] = []
+        var newImageKeys: [Int] = []
+        var newKey = 1
+        for (index, image) in selectedImages.enumerated() {
+            if index < isImageNew.count, isImageNew[index] {
+                if let data = image.jpegData(compressionQuality: 0.8) {
+                    newImageDataArray.append(data)
+                    newImageKeys.append(newKey)
+                    newKey += 1
+                }
+            }
+        }
+        return newImageDataArray.isEmpty ? (nil, nil) : (newImageDataArray, newImageKeys)
+    }
+
+    private func prepareExistingImages() -> ([String]?, [Int]?) {
+        var existingImageURLsArray: [String] = []
+        var existingImageKeys: [Int] = []
+        var existingKey = 101
+        for (index, _) in selectedImages.enumerated() {
+            if index < isImageNew.count, !isImageNew[index] {
+                if index < existingImageURLs.count { // 안전하게 인덱스 체크
+                    let urlString = existingImageURLs[index]
+                    existingImageURLsArray.append(urlString)
+                    existingImageKeys.append(existingKey)
+                    existingKey += 1
+                }
+            }
+        }
+        return existingImageURLsArray.isEmpty ? (nil, nil) : (existingImageURLsArray, existingImageKeys)
     }
     
     func convertToTalent(displayNames: [String]) -> [String] {
@@ -189,7 +230,7 @@ extension EditViewController{
     }
     
     // MARK: - Server Function
-    private func editMyPort(bodyDTO: EditRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+    private func editMyPort(bodyDTO: EditRequestDTO, completion: @escaping (Bool) -> Void) {
         if !self.isEditEnable {
             NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { [weak self] response in
                 switch response {
@@ -587,6 +628,89 @@ extension EditViewController: UITextViewDelegate {
     }
 }
 
+extension EditViewController{
+    @objc private func editButtonTapped() {
+        isEditEnable.toggle()
+        editView.toggleEditMode(isEditEnable)
+        
+        if isEditEnable {
+            editView.editButton.isEnabled = false
+            return
+        }
+        
+        // 새 이미지와 기존 이미지 데이터를 준비합니다.
+        let (newImageDataArray, newImageKeys) = prepareNewImages()
+        let (existingImageURLsArray, existingImageKeys) = prepareExistingImages()
+        
+        let body = EditRequestDTO(
+            username: portfolioData.username?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "",
+            email: portfolioData.email,
+            description: portfolioData.description ?? "",
+            instagramId: portfolioData.instagramId ?? "",
+            password: "",
+            webUrl: portfolioData.webUrl,
+            userPurposes: portfolioData.userPurposes.map { $0 - 1 },
+            userTalents: convertToTalent(displayNames: portfolioData.userTalents.map { $0.talentType }),
+            newPortfolioImages: newImageDataArray,
+            newImageKeys: newImageKeys,
+            existingPortfolioImageUrls: existingImageURLsArray,
+            existingImageKeys: existingImageKeys
+        )
+        
+        editMyPort(bodyDTO: body) { _ in
+            self.editView.portfolioCollectionView.reloadData()
+            self.editView.purposeCollectionView.reloadData()
+            self.view.endEditing(true)
+        }
+        
+        self.isDataChanged = false
+        self.editView.editButton.isEnabled = true
+        
+        editView.portfolioCollectionView.reloadData()
+        editView.purposeCollectionView.reloadData()
+    }
+
+//    /// 새 이미지 데이터와 키 배열을 생성합니다.
+//    /// 새 이미지는 selectedImages와 isImageNew 배열에서 isImageNew 값이 true인 항목으로 판단합니다.
+//    private func prepareNewImages() -> ([Data]?, [Int]?) {
+//        var newImageDataArray: [Data] = []
+//        var newImageKeys: [Int] = []
+//        // 예시로 새 이미지는 1부터 시작하는 키 부여 (서버와의 키 충돌 방지)
+//        var newKey = 1
+//        for (index, image) in selectedImages.enumerated() {
+//            if isImageNew[index] {
+//                if let data = image.jpegData(compressionQuality: 0.8) {
+//                    newImageDataArray.append(data)
+//                    newImageKeys.append(newKey)
+//                    newKey += 1
+//                }
+//            }
+//        }
+//        return newImageDataArray.isEmpty ? (nil, nil) : (newImageDataArray, newImageKeys)
+//    }
+
+//    /// 기존 이미지 URL과 키 배열을 생성합니다.
+//    /// 기존 이미지는 selectedImages와 isImageNew 배열에서 isImageNew 값이 false인 항목으로 판단하며,
+//    /// 기존 이미지 URL은 별도 existingImageURLs 배열에서 가져옵니다.
+//    private func prepareExistingImages() -> ([String]?, [Int]?) {
+//        var existingImageURLsArray: [String] = []
+//        var existingImageKeys: [Int] = []
+//        // 기존 이미지는 101부터 시작하는 키 부여 (서버와의 키 충돌 방지)
+//        var existingKey = 101
+//        for (index, _) in selectedImages.enumerated() {
+//            if !isImageNew[index] {
+//                // 인덱스가 유효하다고 가정합니다.
+//                let urlString = existingImageURLs[index]
+//                existingImageURLsArray.append(urlString)
+//                existingImageKeys.append(existingKey)
+//                existingKey += 1
+//            }
+//        }
+//        return existingImageURLsArray.isEmpty ? (nil, nil) : (existingImageURLsArray, existingImageKeys)
+//    }
+
+}
+
 extension EditViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -645,39 +769,5 @@ extension EditViewController: UITextFieldDelegate {
             self.editView.purposeCollectionView.reloadData()
         }
         self.view.layoutIfNeeded()
-    }
-    
-    @objc private func editButtonTapped() {
-        isEditEnable.toggle()
-        editView.toggleEditMode(isEditEnable)
-        
-        if isEditEnable {
-            editView.editButton.isEnabled = false
-        } else {
-            let imageDataArray = selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
-            let body = EditRequestBodyDTO(
-                username: portfolioData.username,
-                email: portfolioData.email,
-                description: portfolioData.description,
-                instagramId: portfolioData.instagramId,
-                password: "",
-                webUrl: portfolioData.webUrl,
-                userPurposes: portfolioData.userPurposes.map { $0 - 1 },
-                userTalents: convertToTalent(displayNames: portfolioData.userTalents.map { $0.talentType }),
-                portfolioImageUrl: imageDataArray
-            )
-            
-            editMyPort(bodyDTO: body) { _ in
-                self.editView.portfolioCollectionView.reloadData()
-                self.editView.purposeCollectionView.reloadData()
-                self.view.endEditing(true)
-            }
-            
-            self.isDataChanged = false
-            self.editView.editButton.isEnabled = true
-        }
-        
-        editView.portfolioCollectionView.reloadData()
-        editView.purposeCollectionView.reloadData()
     }
 }

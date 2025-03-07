@@ -10,7 +10,7 @@ import Foundation
 // MARK: - MyDetailResponseDTO
 struct MyDetailResponseDTO: Codable {
     let id: Int
-    var username, description, instagramId: String
+    var username, description, instagramId: String?
     let socialId: Int?
     let loginType: String?
     let email: String

@@ -11,7 +11,7 @@ import Alamofire
 
 enum EditTarget {
     case checkMyPort
-    case editMyPort(_ bodyDTO: EditRequestBodyDTO)
+    case editMyPort(_ bodyDTO: EditRequestDTO)
 }
 
 extension EditTarget: TargetType {
@@ -61,9 +61,10 @@ extension EditTarget: TargetType {
     }
 }
 
-extension EditRequestBodyDTO {
+extension EditRequestDTO {
     func toMultipartFormData() -> (MultipartFormData) -> Void {
         return { formData in
+            // EditRequestDTO에 맞게 데이터를 첨부하는 로직 구현
             formData.append(self.username.data(using: .utf8) ?? Data(), withName: "username")
             formData.append(self.email.data(using: .utf8) ?? Data(), withName: "email")
             formData.append(self.description.data(using: .utf8) ?? Data(), withName: "description")
@@ -74,31 +75,38 @@ extension EditRequestBodyDTO {
                 formData.append(webUrl.data(using: .utf8) ?? Data(), withName: "webUrl")
             }
             
-            if let portfolioImageUrl = self.portfolioImageUrl, !portfolioImageUrl.isEmpty {
-                print("portfolioImageUrl is not empty. Count: \(portfolioImageUrl.count)")
-                
-                var keys: [Int] = [] // keys 배열 생성
-                
-                for (index, image) in portfolioImageUrl.enumerated() {
-                    print("Index: \(index), Photo Size: \(image.count) bytes")
-                    keys.append(index+1)
-                    formData.append(image, withName: "portfolioImages", fileName: "image\(index).jpg", mimeType: "image/jpeg")
+            // 예시: 새 이미지 처리
+            if let newImages = self.newPortfolioImages, !newImages.isEmpty {
+                for (index, imageData) in newImages.enumerated() {
+                    formData.append(imageData,
+                                    withName: "newPortfolioImages",
+                                    fileName: "newImage\(index).jpg",
+                                    mimeType: "image/jpeg")
                 }
-                
-                // keys[] 배열을 폼 데이터에 추가
-                for (index, key) in keys.enumerated() {
-                    formData.append("\(key)".data(using: .utf8) ?? Data(), withName: "keys")
-                }
-            } else {
-                print("portfolioImageUrl is nil or empty")
             }
             
-            for (index, purpose) in self.userPurposes.enumerated() {
-                formData.append("\(purpose)".data(using: .utf8) ?? Data(), withName: "userPurposes")
+            // 예시: 기존 이미지 URL 처리
+            if let existingUrls = self.existingPortfolioImageUrls, !existingUrls.isEmpty {
+                for url in existingUrls {
+                    formData.append(url.data(using: .utf8) ?? Data(),
+                                    withName: "existingPortfolioImageUrls")
+                }
             }
             
-            for (index, talent) in self.userTalents.enumerated() {
-                formData.append(talent.data(using: .utf8) ?? Data(), withName: "userTalents")
+            // userPurposes 배열을 JSON 문자열로 변환하여 추가
+            if let purposesData = try? JSONSerialization.data(withJSONObject: self.userPurposes, options: []),
+               let purposesString = String(data: purposesData, encoding: .utf8) {
+                formData.append(purposesString.data(using: .utf8) ?? Data(),
+                                withName: "userPurposes",
+                                mimeType: "application/json")
+            }
+            
+            // userTalents 배열을 JSON 문자열로 변환하여 추가
+            if let talentsData = try? JSONSerialization.data(withJSONObject: self.userTalents, options: []),
+               let talentsString = String(data: talentsData, encoding: .utf8) {
+                formData.append(talentsString.data(using: .utf8) ?? Data(),
+                                withName: "userTalents",
+                                mimeType: "application/json")
             }
         }
     }
