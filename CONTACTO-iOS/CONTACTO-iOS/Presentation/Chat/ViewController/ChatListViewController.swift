@@ -61,7 +61,7 @@ final class ChatListViewController: BaseViewController {
         chatListView.chatListCollectionView.register(ChatListCollectionViewCell.self, forCellWithReuseIdentifier: ChatListCollectionViewCell.className)
     }
     
-    private func setData() {
+    private func setData() {        
         self.chatRoomList(isFirstLoad: true) { _ in
             self.chatListView.chatListCollectionView.reloadData()
             self.chatListView.isHidden = self.chatRoomListData.isEmpty
@@ -77,11 +77,14 @@ final class ChatListViewController: BaseViewController {
     
     @objc private func pushToChatRoom(_ sender: UITapGestureRecognizer) {
         guard let cell = sender.view as? ChatListCollectionViewCell,
-              let indexPath = chatListView.chatListCollectionView.indexPath(for: cell) else { return }
+        let indexPath = chatListView.chatListCollectionView.indexPath(for: cell) else { return }
         let id = chatRoomListData[indexPath.row].id
         let chatRoomViewController = ChatRoomViewController()
         chatRoomViewController.hidesBottomBarWhenPushed = true
         chatRoomViewController.chatRoomId = id
+        chatRoomViewController.participants = chatRoomListData[indexPath.row].participants
+        chatRoomViewController.chatRoomTitle = chatRoomListData[indexPath.row].title
+        chatRoomViewController.chatRoomThumbnail = chatRoomListData[indexPath.row].chatRoomThumbnail ?? ""
         print(chatRoomViewController.chatRoomId)
         self.navigationController?.pushViewController(chatRoomViewController, animated: true)
     }

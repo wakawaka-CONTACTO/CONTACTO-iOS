@@ -11,6 +11,8 @@ protocol ChatServiceProtocol {
     func chatRoomList(page: Int, size: Int, completion: @escaping (NetworkResult<PageableResponse<[ChatListResponseDTO]>>) -> Void)
     
     func chatRoomMessage(roomId: Int, completion: @escaping (NetworkResult<ChatRoomResponseDTO>) -> Void)
+    
+    func chatMessages(roomId: Int, page: Int, size: Int, completion: @escaping (NetworkResult<PageableResponse<[Message]>>) -> Void)
 }
 
 final class ChatService: APIRequestLoader<ChatTarget>, ChatServiceProtocol {
@@ -20,5 +22,9 @@ final class ChatService: APIRequestLoader<ChatTarget>, ChatServiceProtocol {
         
     func chatRoomMessage(roomId: Int, completion: @escaping (NetworkResult<ChatRoomResponseDTO>) -> Void) {
         fetchData(target: .chatRoomMessage(roomId), responseData: ChatRoomResponseDTO.self, completion: completion)
+    }
+    
+    func chatMessages(roomId: Int, page: Int, size: Int, completion: @escaping (NetworkResult<PageableResponse<[Message]>>) -> Void) {
+        fetchData(target: .chatMessage(roomId, page, size), responseData: PageableResponse<[Message]>.self, completion: completion)
     }
 }
