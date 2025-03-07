@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33185B092D79A6A200B508A3 /* PageableResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B082D79A6A200B508A3 /* PageableResponse.swift */; };
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
 		8C6A7C97DD9DE3A79AFFCBC0 /* Pods_CONTACTO_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */; };
 		C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */; };
@@ -156,6 +157,7 @@
 
 /* Begin PBXFileReference section */
 		0DEA1664F7C3DD88F43E1FDF /* Pods-CONTACTO-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.release.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		33185B082D79A6A200B508A3 /* PageableResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableResponse.swift; sourceTree = "<group>"; };
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CONTACTO_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BE1A2D5A19E66A4ACF01783 /* Pods-CONTACTO-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 				C33D73D42CDEEEB300889B1B /* NetworkService.swift */,
 				C33D73D62CDEEEBE00889B1B /* ContactoRequestInterceptor.swift */,
 				C33B9A2C2CFCC3E7009A6B2D /* ErrorResponse.swift */,
+				33185B082D79A6A200B508A3 /* PageableResponse.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -1286,6 +1289,7 @@
 				C33B9A2B2CFCC3AA009A6B2D /* EmailExistRequestQueryDTO.swift in Sources */,
 				C3FD90932C917F2F0021D2BA /* NameOnboardingView.swift in Sources */,
 				C34C1F582CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift in Sources */,
+				33185B092D79A6A200B508A3 /* PageableResponse.swift in Sources */,
 				C393A6172C941FFA00ECF1B5 /* MainTabBarViewController.swift in Sources */,
 				C30C2E462CF2F79600FAE056 /* SignUpRequestBodyDTO.swift in Sources */,
 				C35744112CF8B5FC00FE691D /* SplashViewController.swift in Sources */,
