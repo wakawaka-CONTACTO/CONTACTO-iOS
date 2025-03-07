@@ -57,7 +57,7 @@ extension ChatTarget: TargetType {
         case .chatRoomMessage(let roomId):
             return "/v1/users/me/chatroom/\(roomId)"
         case .chatMessage(let roomId, _, _):
-            return "v1/users/me/chatroom/\(roomId)/messages"
+            return "/v1/users/me/chatroom/\(roomId)/messages"
         }
     }
     
