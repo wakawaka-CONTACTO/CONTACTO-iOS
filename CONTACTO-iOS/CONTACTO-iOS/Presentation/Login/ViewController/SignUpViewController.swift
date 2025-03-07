@@ -115,10 +115,15 @@ final class SignUpViewController: UIViewController {
 extension SignUpViewController {
     @objc private func sendCode() {
         print("continue: 이메일 인증번호 보내기")
-        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { _ in
-            self.signUpView.isHidden = true
-            self.emailCodeView.isHidden = false
-            self.setPWView.isHidden = true
+        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { response in
+            if response {
+                self.signUpView.isHidden = true
+                self.emailCodeView.isHidden = false
+                self.setPWView.isHidden = true
+            }else{
+                self.signUpView.mainTextField.text = ""
+                self.signUpView.mainTextField.isError = true
+            }
         }
     }
     
@@ -139,11 +144,11 @@ extension SignUpViewController {
     @objc private func codeVerifyButtonTapped() {
         emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
             if response {
+                self.emailCodeView.underLineView.image = .imgUnderLineRed
+            } else {
                 self.signUpView.isHidden = true
                 self.emailCodeView.isHidden = true
                 self.setPWView.isHidden = false
-            } else {
-                self.emailCodeView.underLineView.image = .imgUnderLineRed
             }
         }
     }
@@ -172,10 +177,11 @@ extension SignUpViewController {
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
+                print("reponse success")
                 completion(true)
             default:
+                print("reponse error")
                 completion(false)
-                print("error")
             }
         }
     }
