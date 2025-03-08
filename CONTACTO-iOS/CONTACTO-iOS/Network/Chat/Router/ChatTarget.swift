@@ -12,6 +12,7 @@ import Alamofire
 enum ChatTarget {
     case chatRoomList(_ page: Int, _ size: Int)
     case chatRoomMessage(_ roomId: Int)
+    case chatMessage(_ roomId: Int, _ page: Int, _ size: Int)
     
 }
 
@@ -22,6 +23,8 @@ extension ChatTarget: TargetType {
             return .authorization
         case .chatRoomMessage(_):
             return .authorization
+        case .chatMessage(_, _, _):
+            return .authorization
         }
     }
     
@@ -30,6 +33,8 @@ extension ChatTarget: TargetType {
         case .chatRoomList(_, _):
             return .hasToken
         case .chatRoomMessage(_):
+            return .hasToken
+        case .chatMessage(_, _, _):
             return .hasToken
         }
     }
@@ -40,6 +45,8 @@ extension ChatTarget: TargetType {
             return .get
         case .chatRoomMessage(_):
             return .get
+        case .chatMessage(_, _, _):
+            return .get
         }
     }
     
@@ -49,6 +56,8 @@ extension ChatTarget: TargetType {
             return "/v1/users/me/chatroom"
         case .chatRoomMessage(let roomId):
             return "/v1/users/me/chatroom/\(roomId)"
+        case .chatMessage(let roomId, _, _):
+            return "/v1/users/me/chatroom/\(roomId)/messages"
         }
     }
     
@@ -58,6 +67,9 @@ extension ChatTarget: TargetType {
             return .requestQuery(["page": page, "size": size])
         case.chatRoomMessage(_):
             return .requestPlain
+        case .chatMessage(_, let page, let size):
+            let query = PageableRequest(page: page, size: size, sort: "createdAt,desc")
+            return .requestQuery(query)
         }
     }
 }

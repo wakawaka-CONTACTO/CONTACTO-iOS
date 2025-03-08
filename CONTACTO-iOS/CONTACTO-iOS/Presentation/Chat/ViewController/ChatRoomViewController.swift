@@ -21,10 +21,18 @@ final class ChatRoomViewController: BaseViewController {
     var socketClient = StompClientLib()
     
     var chatRoomId = 0
+    var chatRoomTitle = ""
+    var chatRoomThumbnail = ""
     var participants: [Int] = []
     var chatList: [Message] = []
     var isKeyboardShow = false
     let chatRoomView = ChatRoomView()
+    
+    private var hasNext = true
+    private var currentPage = 0
+    private let pageSize = 30
+    private var isFetching = false
+    private var isFirstLoad = true
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -78,44 +86,64 @@ final class ChatRoomViewController: BaseViewController {
     }
     
     private func setData() {
-        chatRoomMessage(roomId: chatRoomId) { _ in
+        chatRoomView.nameLabel.text = chatRoomTitle
+        if !self.chatRoomThumbnail.isEmpty,
+           let imageUrl = URL(string: self.chatRoomThumbnail) {
+            self.chatRoomView.profileImageButton.kf.setBackgroundImage(with: imageUrl, for: .normal)
+        } else {
+            self.chatRoomView.profileImageButton.setBackgroundImage(UIImage(named: "defaultProfile"), for: .normal)
+        }
+        chatMessages(isFirstLoad: true) { _ in
             self.chatRoomView.chatRoomCollectionView.reloadData()
             self.scrollToBottom()
+            self.isFirstLoad = false
         }
     }
     
-    private func chatRoomMessage(roomId: Int, completion: @escaping (Bool) -> Void) {
-        NetworkService.shared.chatService.chatRoomMessage(roomId: roomId) { [weak self] response in
+    private func chatMessages(isFirstLoad: Bool = false, completion: @escaping (Bool) -> Void) {
+        guard !isFetching, hasNext else { return }
+        isFetching = true
+        
+        NetworkService.shared.chatService.chatMessages(roomId: chatRoomId, page: currentPage, size: pageSize) { [weak self] response in
+            guard let self = self else { return }
+            
             switch response {
             case .success(let data):
-                self?.chatRoomId = data.id
-                self?.participants = data.participants
+                let sortedMessages = data.content.sorted { $0.createdAt < $1.createdAt }
                 
-                // ▼ createdAt 기준 정렬 추가 ▼
-                // 서버에서 받은 messages를 createdAt 오름차순(과거→현재)으로 정렬
-                self?.chatList = data.messages.sorted(by: { lhs, rhs in
-                    // 문자열->Date 변환
-                    let dateFormatter = ISO8601DateFormatter()
-                    dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-                    
-                    guard let leftDate = dateFormatter.date(from: lhs.createdAt),
-                          let rightDate = dateFormatter.date(from: rhs.createdAt) else {
-                        // 변환 실패 시, 원하는 우선순위에 따라 return
-                        return lhs.createdAt < rhs.createdAt
+                if isFirstLoad {
+                    self.chatRoomView.isFirstChat = data.content.isEmpty
+                    self.chatList = sortedMessages
+                    self.chatRoomView.chatRoomCollectionView.reloadData()
+                
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        self.scrollToBottom()
+                        self.isFetching = false
                     }
-                    return leftDate < rightDate
-                })
-                self?.chatRoomView.isFirstChat = data.messages.isEmpty
-                self?.chatRoomView.nameLabel.text = data.title
-
-                if let thumbnailUrlString = data.chatRoomThumbnail,
-                   let imageUrl = URL(string: thumbnailUrlString) {
-                    self?.chatRoomView.profileImageButton.kf.setBackgroundImage(with: imageUrl, for: .normal)
                 } else {
-                    self?.chatRoomView.profileImageButton.setBackgroundImage(UIImage(named: "defaultProfile"), for: .normal)
+                    let previousContentHeight = chatRoomView.chatRoomCollectionView.contentSize.height
+                    let previousContentOffset = chatRoomView.chatRoomCollectionView.contentOffset
+
+                    self.chatList.insert(contentsOf: sortedMessages, at: 0)
+                    self.chatRoomView.chatRoomCollectionView.reloadData()
+                    chatRoomView.chatRoomCollectionView.layoutIfNeeded()
+
+                    let newContentHeight = chatRoomView.chatRoomCollectionView.contentSize.height
+                    let heightDifference = newContentHeight - previousContentHeight
+
+                    let newOffset = CGPoint(x: previousContentOffset.x, y: previousContentOffset.y + heightDifference)
+                    chatRoomView.chatRoomCollectionView.setContentOffset(newOffset, animated: false)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        self.isFetching = false
+                    }
                 }
+
+                self.hasNext = data.hasNext
+                self.currentPage += 1
                 completion(true)
             default:
+                self.isFetching = false
                 completion(false)
             }
         }
@@ -133,6 +161,16 @@ final class ChatRoomViewController: BaseViewController {
 }
 
 extension ChatRoomViewController: StompClientLibDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+
+        if isFirstLoad { return }
+        
+        if offsetY <= 20, !isFetching, hasNext {
+            chatMessages { _ in }
+        }
+    }
+    
     func serverDidSendReceipt(client: StompClientLib, withReceiptId receiptId: String) {
         print("Receipt : \(receiptId)")
     }
@@ -297,16 +335,7 @@ extension ChatRoomViewController {
             createdAt: createdAt,
             readStatus: false)
         chatList.append(newMessage)
-        
-        //        self.send(message: newMessage)
-        //
-        //        webSocketTask?.send(URLSessionWebSocketTask.Message.string(content)) { error in
-        //            if let error = error {
-        //                print("Error sending message: \(error)")
-        //            }
-        //        }
-        //        socketClient.sendMessage(message: newMe, toDestination: <#T##String#>, withHeaders: <#T##[String : String]?#>, withReceipt: <#T##String?#>)
-        
+          
         if let messageData = try? JSONEncoder().encode(newMessage) {
             var headers = ["Authorization": KeychainHandler.shared.accessToken]
             headers["content-type"] = "application/json"
