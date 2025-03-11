@@ -115,10 +115,18 @@ final class SignUpViewController: UIViewController {
 extension SignUpViewController {
     @objc private func sendCode() {
         print("continue: 이메일 인증번호 보내기")
-        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { _ in
-            self.signUpView.isHidden = true
-            self.emailCodeView.isHidden = false
-            self.setPWView.isHidden = true
+        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { result in
+            DispatchQueue.main.async {
+                if result {
+                    self.signUpView.isHidden = true
+                    self.emailCodeView.isHidden = false
+                    self.setPWView.isHidden = true
+                } else {
+                    let alert = UIAlertController(title: "에러", message: "이메일 전송에 실패했습니다. 다시 시도해 주세요.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "확인", style: .default))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
         }
     }
     
@@ -173,6 +181,14 @@ extension SignUpViewController {
             switch response {
             case .success(let data):
                 completion(true)
+            case .failure(let error):
+                if let data = error.data,  // 여기가 문제: error가 EmptyResponse라서 data 없음
+                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
+                    print("에러 응답: \(errorResponse.message)")
+                } else {
+                    print("에러: \(error)")
+                }
+                completion(false)
             default:
                 completion(false)
                 print("error")

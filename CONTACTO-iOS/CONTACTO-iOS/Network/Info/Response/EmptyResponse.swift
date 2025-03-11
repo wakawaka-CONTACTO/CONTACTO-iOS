@@ -8,5 +8,5 @@
 import Foundation
 
 struct EmptyResponse: Decodable{
-    
+    let data: String
 }
