@@ -168,7 +168,7 @@ extension SignUpViewController {
     }
     
     // MARK: - Network
-    private func emailSend(bodyDTO: EmailSendRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+    private func emailSend(bodyDTO: EmailSendRequestBodyDTO,completion: @escaping (Bool) -> ()) {
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
