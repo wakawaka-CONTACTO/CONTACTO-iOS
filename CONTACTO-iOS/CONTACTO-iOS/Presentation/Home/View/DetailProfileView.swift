@@ -51,6 +51,9 @@ final class DetailProfileView: BaseView {
     let bottomGradientView = UIImageView()
     let popButton = UIButton()
     
+    let blockButton = UIButton()
+    let reportButton = UIButton()
+    
     override func setStyle() {
         
         scrollView.do {
@@ -159,6 +162,20 @@ final class DetailProfileView: BaseView {
         popButton.do {
             $0.setImage(.icExit, for: .normal)
         }
+        
+        blockButton.do {
+            $0.setTitle(StringLiterals.Home.Profile.block, for: .normal)
+            $0.setTitleColor(.ctblack, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.button1)
+            $0.setBackgroundColor(.ctgray8, for: .normal)
+        }
+
+        reportButton.do {
+            $0.setTitle(StringLiterals.Home.Profile.report, for: .normal)
+            $0.setTitleColor(.ctblack, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.button1)
+            $0.setBackgroundColor(.ctgray8, for: .normal)
+        }
     }
     
     override func setLayout() {
@@ -175,7 +192,9 @@ final class DetailProfileView: BaseView {
                                purposeLabel,
                                purposeCollectionView,
                                instaButton,
-                               webButton)
+                               webButton,
+                               blockButton,
+                               reportButton)
         
         contentsView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -237,7 +256,6 @@ final class DetailProfileView: BaseView {
         instaButton.snp.makeConstraints {
             $0.top.equalTo(purposeCollectionView.snp.bottom).offset(27)
             $0.leading.equalTo(nameLabel)
-            $0.bottom.equalToSuperview().inset(20)
         }
         
         webButton.snp.makeConstraints {
@@ -248,6 +266,21 @@ final class DetailProfileView: BaseView {
         popButton.snp.makeConstraints {
             $0.top.equalToSuperview().inset(72)
             $0.leading.equalToSuperview().inset(30)
+        }
+        
+        blockButton.snp.makeConstraints {
+            $0.top.equalTo(instaButton.snp.bottom).offset(87.adjustedWidth)
+            $0.leading.equalToSuperview().inset(13)
+            $0.height.equalTo(34.adjustedHeight)
+            $0.bottom.equalToSuperview().inset(20)
+        }
+
+        reportButton.snp.makeConstraints {
+            $0.top.equalTo(blockButton)
+            $0.leading.equalTo(blockButton.snp.trailing).offset(13)
+            $0.trailing.equalToSuperview().inset(13)
+            $0.height.equalTo(blockButton.snp.height)
+            $0.width.equalTo(blockButton)
         }
     }
 }
