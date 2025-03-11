@@ -346,17 +346,12 @@
 			isa = PBXGroup;
 			children = (
 				C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */,
-				C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */,
 				C33D73C22CDEEE1C00889B1B /* TargetType.swift */,
 				C33D73C92CDEEE6800889B1B /* KeychainHandler.swift */,
-				C33D73CE2CDEEE8700889B1B /* BaseResponse.swift */,
 				C33D73D02CDEEE9500889B1B /* APIEventLogger.swift */,
 				C33D73D22CDEEEA300889B1B /* APIRequestLoader.swift */,
 				C33D73D42CDEEEB300889B1B /* NetworkService.swift */,
 				C33D73D62CDEEEBE00889B1B /* ContactoRequestInterceptor.swift */,
-				C33B9A2C2CFCC3E7009A6B2D /* ErrorResponse.swift */,
-				33185B082D79A6A200B508A3 /* PageableResponse.swift */,
-				33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -581,6 +576,10 @@
 			isa = PBXGroup;
 			children = (
 				C33D74182CDEF25E00889B1B /* DeleteResponseDTO.swift */,
+				33185B082D79A6A200B508A3 /* PageableResponse.swift */,
+				C33B9A2C2CFCC3E7009A6B2D /* ErrorResponse.swift */,
+				C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */,
+				C33D73CE2CDEEE8700889B1B /* BaseResponse.swift */,
 			);
 			name = Response;
 			sourceTree = "<group>";
@@ -589,6 +588,7 @@
 			isa = PBXGroup;
 			children = (
 				C33D74162CDEF25600889B1B /* DeleteRequestBodyDTO.swift */,
+				33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
