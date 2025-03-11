@@ -106,6 +106,8 @@ enum StringLiterals {
             static let purpose = "-\nLooking for"
             static let insta = "-\ninstagram"
             static let website = "-\nwebsite"
+            static let block = "Block"
+            static let report = "Report"
         }
         
         enum Match {
