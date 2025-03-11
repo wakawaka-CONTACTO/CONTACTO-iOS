@@ -110,6 +110,36 @@ enum StringLiterals {
             static let report = "Report"
         }
         
+        enum Block {
+            static let title = "User Block"
+            static let message = "Are you sure you want to\nblock this user?"
+            static let result = "User blocked successfully. It may take some time for the block to be fully applied."
+        }
+        
+        enum Report {
+            static let title = "User Report"
+            static let result = "Your report has been submitted successfully. We will review it and take appropriate action."
+            enum ReportReasons {
+                static let spam = "Spam"
+                static let sexualOffense = "Sexual offense against children and youth"
+                static let profanity = "Profanity, violence, hatred"
+                static let illegalProducts = "Illegal products or services"
+                static let abnormalService = "Abnormal service use"
+                static let fraud = "Fraud, identity theft"
+                static let obsceneActs = "Obscene, sexual acts"
+                
+                static let allCases = [
+                    spam,
+                    sexualOffense,
+                    profanity,
+                    illegalProducts,
+                    abnormalService,
+                    fraud,
+                    obsceneActs
+                ]
+            }
+        }
+        
         enum Match {
             static let title = "Oh! You both like each ohter"
             static let description = "just say hello"

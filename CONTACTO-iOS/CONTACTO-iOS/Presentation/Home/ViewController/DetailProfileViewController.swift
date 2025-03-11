@@ -58,6 +58,8 @@ final class DetailProfileViewController: BaseViewController {
         detailProfileView.popButton.addTarget(self, action: #selector(popButtonTapped), for: .touchUpInside)
         detailProfileView.instaButton.addTarget(self, action: #selector(instaButtonTapped), for: .touchUpInside)
         detailProfileView.webButton.addTarget(self, action: #selector(webButtonTapped), for: .touchUpInside)
+        detailProfileView.blockButton.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
+        detailProfileView.reportButton.addTarget(self, action: #selector(reportButtonTapped), for: .touchUpInside)
     }
     
     override func setDelegate() {
@@ -175,6 +177,74 @@ final class DetailProfileViewController: BaseViewController {
     @objc private func popButtonTapped() {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    @objc private func blockButtonTapped() {
+        let alert = UIAlertController(
+            title: StringLiterals.Home.Block.title,
+            message: StringLiterals.Home.Block.message,
+            preferredStyle: .alert
+        )
+        
+        let cancelAction = UIAlertAction(title: "No", style: .default)
+        let confirmAction = UIAlertAction(title: "Yes", style: .default) { _ in
+            self.blockUser()
+        }
+        
+        alert.addAction(confirmAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func blockUser() {
+        // TODO: 실제 차단 로직
+        print("User blocked")
+        
+        let successAlert = UIAlertController(
+            title: nil,
+            message: StringLiterals.Home.Block.result,
+            preferredStyle: .alert
+        )
+
+        let okAction = UIAlertAction(title: "OK", style: .default)
+        successAlert.addAction(okAction)
+
+        present(successAlert, animated: true, completion: nil)
+    }
+    
+    @objc private func reportButtonTapped() {
+        let alert = UIAlertController(title: StringLiterals.Home.Report.title, message: nil, preferredStyle: .actionSheet)
+        
+        let reportReasons = StringLiterals.Home.Report.ReportReasons.allCases
+        
+        for reason in reportReasons {
+            let action = UIAlertAction(title: reason, style: .default) { _ in
+                self.reportUser(reason: reason)
+            }
+            alert.addAction(action)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func reportUser(reason: String) {
+        // TODO: 실제 신고 로직
+        print("User reported for: \(reason)")
+
+        let successAlert = UIAlertController(
+            title: nil,
+            message: StringLiterals.Home.Report.result,
+            preferredStyle: .alert
+        )
+
+        let okAction = UIAlertAction(title: "OK", style: .default)
+        successAlert.addAction(okAction)
+
+        present(successAlert, animated: true, completion: nil)
+    }
 }
 
 extension DetailProfileViewController: UICollectionViewDelegate { }
@@ -269,4 +339,6 @@ extension DetailProfileViewController: UIScrollViewDelegate {
             currentNum = currentPage
         }
     }
+    
+    
 }
