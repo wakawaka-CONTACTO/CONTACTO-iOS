@@ -66,9 +66,11 @@ class APIRequestLoader<T: TargetType> {
     }
     
     private func isValidData<M: Decodable>(data: Data, type: M.Type) -> NetworkResult<M> {
-        // 만약 응답 데이터가 비어있고, 기대하는 타입이 EmptyResponse라면
         if data.isEmpty, M.self == EmptyResponse.self {
-            return .success(EmptyResponse() as! M)
+            guard let emptyResponse = EmptyResponse() as? M else{
+                return .pathErr
+            }
+            return .success(emptyResponse)
         }
 
         let decoder = JSONDecoder()
