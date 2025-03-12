@@ -162,11 +162,11 @@ extension SignUpViewController {
     @objc private func codeVerifyButtonTapped() {
         emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
             if response {
-                self.emailCodeView.underLineView.image = .imgUnderLineRed
-            } else {
                 self.signUpView.isHidden = true
                 self.emailCodeView.isHidden = true
                 self.setPWView.isHidden = false
+            } else {
+                self.emailCodeView.underLineView.image = .imgUnderLineRed
             }
         }
     }
