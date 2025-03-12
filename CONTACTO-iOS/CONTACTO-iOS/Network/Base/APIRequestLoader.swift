@@ -59,14 +59,22 @@ class APIRequestLoader<T: TargetType> {
     private func judgeStatus<M: Decodable>(by statusCode: Int, _ data: Data, type: M.Type) -> NetworkResult<M> {
         switch statusCode {
         case 200...299: return isValidData(data: data, type: M.self)
-        case 400, 402...499: return isValidData(data: data, type: M.self)
-        case 500: return .serverErr
-        default: return .networkErr
+        default:
+            let error = NetworkError(data: data, statusCode: statusCode, underlyingError: nil)
+            return .failure(error)
         }
     }
     
     private func isValidData<M: Decodable>(data: Data, type: M.Type) -> NetworkResult<M> {
+        if data.isEmpty, M.self == EmptyResponse.self {
+            guard let emptyResponse = EmptyResponse() as? M else{
+                return .pathErr
+            }
+            return .success(emptyResponse)
+        }
+
         let decoder = JSONDecoder()
+
         do {
             let members = try decoder.decode(M.self, from: data)
         } catch let DecodingError.dataCorrupted(context) {
