@@ -300,15 +300,34 @@ final class EditViewController: UIViewController {
             return
         } // 원본 데이터가 없으면 변경된 것으로 간주
 
-        isDataChanged = (
-            portfolioData.username != originalData.username ||
+        var changeDetected = portfolioData.username != originalData.username ||
             portfolioData.description != originalData.description ||
             portfolioData.instagramId != originalData.instagramId ||
             portfolioData.webUrl != originalData.webUrl ||
-            selectedImages.map { $0.pngData() }.compactMap { $0 } != originalData.userPortfolio?.portfolioImageUrl.compactMap { URL(string: $0) }.compactMap { try? Data(contentsOf: $0) } ||
             portfolioData.userPurposes.sorted() != originalData.userPurposes.sorted() ||
             portfolioData.userTalents.map({ $0.talentType }).sorted() != originalData.userTalents.map({ $0.talentType }).sorted()
-        )
+        
+        // 비동기적으로 로드
+        let originalURLs = originalData.userPortfolio?.portfolioImageUrl.compactMap { URL(string: $0) } ?? []
+        var originalImageData = [Data]()
+        let group = DispatchGroup()
+        
+        for url in originalURLs {
+            group.enter()
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if let data = data {
+                    originalImageData.append(data)
+                }
+                group.leave()
+            }.resume()
+        }
+        
+        group.notify(queue: .main) {
+            let selectedImageData = self.selectedImages.compactMap { $0.pngData() }
+            // 이미지 데이터의 변경 여부도 포함하여 최종적으로 변경 여부를 결정
+            changeDetected = changeDetected || (selectedImageData != originalImageData)
+            self.isDataChanged = changeDetected
+        }
     }
     
     private func changeSaveButtonStatus() {
