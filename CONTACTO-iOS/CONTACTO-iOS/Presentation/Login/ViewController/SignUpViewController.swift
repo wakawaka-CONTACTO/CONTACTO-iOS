@@ -131,7 +131,6 @@ extension SignUpViewController {
                 let alert = UIAlertController(title: "에러", message: errorMessage, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "확인", style: .default))
                 self.present(alert, animated: true, completion: nil)
-                self.signUpView.mainTextField.text = ""
                 self.signUpView.mainTextField.isError = true
             default:
                 var errorMessage = "이메일 전송에 실패했습니다. 다시 시도해주세요."
