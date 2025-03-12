@@ -189,28 +189,6 @@ extension SignUpViewController {
         }
     }
     
-    // MARK: - Network
-    private func emailSend(bodyDTO: EmailSendRequestBodyDTO,completion: @escaping (Bool) -> ()) {
-        NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
-            switch response {
-            case .success(let data):
-                print("reponse success")
-                completion(true)
-            case .failure(let error):
-                if let data = error.data,
-                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
-                    print("에러 응답: \(errorResponse.message)")
-                } else {
-                    print("에러: \(error)")
-                }
-                completion(false)
-            default:
-                print("reponse error")
-                completion(false)
-            }
-        }
-    }
-    
     private func emailCheck(bodyDTO: EmailCheckRequestBodyDTO,completion: @escaping (Bool) -> Void) {
         NetworkService.shared.onboardingService.emailCheck(bodyDTO: bodyDTO) { response in
             switch response {
