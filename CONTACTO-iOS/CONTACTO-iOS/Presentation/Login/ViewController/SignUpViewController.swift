@@ -121,10 +121,12 @@ extension SignUpViewController {
                     self.signUpView.isHidden = true
                     self.emailCodeView.isHidden = false
                     self.setPWView.isHidden = true
-                } else {
+                }else{
                     let alert = UIAlertController(title: "에러", message: "이메일 전송에 실패했습니다. 다시 시도해 주세요.", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "확인", style: .default))
                     self.present(alert, animated: true, completion: nil)
+                    self.signUpView.mainTextField.text = ""
+                    self.signUpView.mainTextField.isError = true
                 }
             }
         }
@@ -147,11 +149,11 @@ extension SignUpViewController {
     @objc private func codeVerifyButtonTapped() {
         emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
             if response {
+                self.emailCodeView.underLineView.image = .imgUnderLineRed
+            } else {
                 self.signUpView.isHidden = true
                 self.emailCodeView.isHidden = true
                 self.setPWView.isHidden = false
-            } else {
-                self.emailCodeView.underLineView.image = .imgUnderLineRed
             }
         }
     }
@@ -180,9 +182,10 @@ extension SignUpViewController {
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
+                print("reponse success")
                 completion(true)
             case .failure(let error):
-                if let data = error.data,  // 여기가 문제: error가 EmptyResponse라서 data 없음
+                if let data = error.data,
                    let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
                     print("에러 응답: \(errorResponse.message)")
                 } else {
@@ -190,8 +193,8 @@ extension SignUpViewController {
                 }
                 completion(false)
             default:
+                print("reponse error")
                 completion(false)
-                print("error")
             }
         }
     }

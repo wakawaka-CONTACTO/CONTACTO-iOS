@@ -7,6 +7,4 @@
 
 import Foundation
 
-struct EmptyResponse: Decodable{
-    let data: String
-}
+struct EmptyResponse: Decodable{}
