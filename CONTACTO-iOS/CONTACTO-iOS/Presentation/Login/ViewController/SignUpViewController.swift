@@ -121,7 +121,7 @@ extension SignUpViewController {
                 self.signUpView.isHidden = true
                 self.emailCodeView.isHidden = false
                 self.setPWView.isHidden = true
-        
+                self.emailCodeView.startTimer()
             case .failure(let error):
                 var errorMessage = "이메일 전송에 실패했습니다. 다시 시도해주세요."
                 if let data = error.data,

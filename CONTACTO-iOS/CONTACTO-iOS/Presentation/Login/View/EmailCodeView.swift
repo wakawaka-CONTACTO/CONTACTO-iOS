@@ -19,6 +19,12 @@ final class EmailCodeView: BaseView {
     let continueButton = UIButton()
     let resendButton = UIButton()
     
+    
+    private let timerLabel = UILabel()
+    private var countdownTime: Int = 240  // 4분 = 240초
+    private var timer: Timer?
+    
+    
     override func setStyle() {
         logoImageView.do {
             $0.image = UIImage(resource: .loginLogo)
@@ -59,6 +65,13 @@ final class EmailCodeView: BaseView {
             $0.setTitleColor(.systemBlue, for: .normal)
             $0.titleLabel?.font = .fontContacto(.gothicButton)
         }
+        
+        timerLabel.do {
+            $0.font = .fontContacto(.caption2)
+            $0.textColor = .ctwhite
+            $0.textAlignment = .center
+            $0.text = formatTime(countdownTime) // 초기값 "04:00"
+        }
     }
     
     override func setLayout() {
@@ -67,7 +80,8 @@ final class EmailCodeView: BaseView {
                     mainTextField,
                     underLineView,
                     continueButton,
-                    resendButton)
+                    resendButton,
+                    timerLabel)
         
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(153.adjustedHeight)
@@ -101,6 +115,46 @@ final class EmailCodeView: BaseView {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(continueButton.snp.bottom).offset(18.adjustedHeight)
         }
+        
+        timerLabel.snp.makeConstraints {
+            $0.top.equalTo(resendButton.snp.bottom).offset(10.adjustedHeight)
+            $0.centerX.equalToSuperview()
+        }
+    }
+    
+    // 타이머 시작 함수
+    func startTimer() {
+        stopTimer() // 기존 타이머가 있다면 중지
+        countdownTime = 240  // 4분으로 초기화
+        timerLabel.text = formatTime(countdownTime)
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.updateTimer()
+        }
+    }
+    
+    // 타이머 업데이트 함수
+    private func updateTimer() {
+        if countdownTime > 0 {
+            countdownTime -= 1
+            timerLabel.text = formatTime(countdownTime)
+        } else {
+            stopTimer()
+            // 타이머 종료 시 추가 처리(예: 재전송 버튼 활성화 등)를 할 수 있음
+        }
+    }
+    
+    // 타이머 중지 함수
+    func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    // 남은 초를 "mm:ss" 형식 문자열로 변환하는 헬퍼 함수
+    private func formatTime(_ seconds: Int) -> String {
+        let minutes = seconds / 60
+        let sec = seconds % 60
+        return String(format: "%02d:%02d", minutes, sec)
     }
 }
     
