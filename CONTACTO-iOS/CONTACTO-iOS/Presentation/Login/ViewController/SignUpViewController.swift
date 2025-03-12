@@ -115,18 +115,31 @@ final class SignUpViewController: UIViewController {
 extension SignUpViewController {
     @objc private func sendCode() {
         print("continue: 이메일 인증번호 보내기")
-        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { result in
-            DispatchQueue.main.async {
-                if result {
-                    self.signUpView.isHidden = true
-                    self.emailCodeView.isHidden = false
-                    self.setPWView.isHidden = true
-                }else{
-                    let alert = UIAlertController(title: "에러", message: "이메일 전송에 실패했습니다. 다시 시도해 주세요.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "확인", style: .default))
-                    self.present(alert, animated: true, completion: nil)
-                    self.signUpView.mainTextField.text = ""
-                    self.signUpView.mainTextField.isError = true
+        NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { result in DispatchQueue.main.async {
+            switch result{
+            case .success:
+                self.signUpView.isHidden = true
+                self.emailCodeView.isHidden = false
+                self.setPWView.isHidden = true
+        
+            case .failure(let error):
+                var errorMessage = "이메일 전송에 실패했습니다. 다시 시도해주세요."
+                if let data = error.data,
+                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data){
+                    errorMessage = errorResponse.message
+                }
+                let alert = UIAlertController(title: "에러", message: errorMessage, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "확인", style: .default))
+                self.present(alert, animated: true, completion: nil)
+                self.signUpView.mainTextField.text = ""
+                self.signUpView.mainTextField.isError = true
+            default:
+                var errorMessage = "이메일 전송에 실패했습니다. 다시 시도해주세요."
+                let alert = UIAlertController(title: "에러", message: errorMessage, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "확인", style: .default))
+                self.present(alert, animated: true, completion: nil)
+                self.signUpView.mainTextField.text = ""
+                self.signUpView.mainTextField.isError = true
                 }
             }
         }
