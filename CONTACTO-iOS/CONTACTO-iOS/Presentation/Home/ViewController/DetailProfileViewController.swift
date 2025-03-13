@@ -115,6 +115,20 @@ final class DetailProfileViewController: BaseViewController {
         }
     }
     
+    private func reportUser(bodyDTO: ReportRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.homeService.reportUser(bodyDTO: bodyDTO) { response in
+            switch response {
+            case .success(let data):
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            
+            }
+        }
+    }
+    
     private func updatePortfolio() {
         self.talentData = self.portfolioData.userTalents.compactMap { userTalent in
             if self.isPreview {
@@ -241,10 +255,32 @@ final class DetailProfileViewController: BaseViewController {
         let alert = UIAlertController(title: StringLiterals.Home.Report.title, message: nil, preferredStyle: .actionSheet)
         
         let reportReasons = StringLiterals.Home.Report.ReportReasons.allCases
-        
-        for reason in reportReasons {
+        for (index, reason) in reportReasons.enumerated() {
             let action = UIAlertAction(title: reason, style: .default) { _ in
-                self.reportUser(reason: reason)
+                print("User reported for reason at index \(index): \(reason)")
+                self.reportUser(bodyDTO: ReportRequestBodyDTO(reportedId: self.portfolioData.id, reportReasonIdx: index)) { success in
+                    DispatchQueue.main.async {
+                        if success {
+                            let successAlert = UIAlertController(
+                                title: nil,
+                                message: StringLiterals.Home.Report.result,
+                                preferredStyle: .alert
+                            )
+                            let okAction = UIAlertAction(title: "OK", style: .default)
+                            successAlert.addAction(okAction)
+                            self.present(successAlert, animated: true, completion: nil)
+                        } else {
+                            let errorAlert = UIAlertController(
+                                title: "Error",
+                                message: "신고 처리에 실패했습니다.",
+                                preferredStyle: .alert
+                            )
+                            let okAction = UIAlertAction(title: "OK", style: .default)
+                            errorAlert.addAction(okAction)
+                            self.present(errorAlert, animated: true, completion: nil)
+                        }
+                    }
+                }
             }
             alert.addAction(action)
         }
@@ -253,22 +289,6 @@ final class DetailProfileViewController: BaseViewController {
         alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
-    }
-    
-    private func reportUser(reason: String) {
-        // TODO: 실제 신고 로직
-        print("User reported for: \(reason)")
-
-        let successAlert = UIAlertController(
-            title: nil,
-            message: StringLiterals.Home.Report.result,
-            preferredStyle: .alert
-        )
-
-        let okAction = UIAlertAction(title: "OK", style: .default)
-        successAlert.addAction(okAction)
-
-        present(successAlert, animated: true, completion: nil)
     }
 }
 

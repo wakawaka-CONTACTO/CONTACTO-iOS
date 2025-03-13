@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		26DEC0212D806D0B00667450 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEC0202D806D0B00667450 /* EmptyResponse.swift */; };
+		330688D32D82D7F400BD34EA /* ReportRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */; };
+		330688D52D82D98F00BD34EA /* ReportResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */; };
 		33185B092D79A6A200B508A3 /* PageableResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B082D79A6A200B508A3 /* PageableResponse.swift */; };
 		33185B0B2D7B1E6B00B508A3 /* PageableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */; };
 		333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */; };
@@ -161,6 +163,8 @@
 /* Begin PBXFileReference section */
 		0DEA1664F7C3DD88F43E1FDF /* Pods-CONTACTO-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.release.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		26DEC0202D806D0B00667450 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
+		330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportRequestBodyDTO.swift; sourceTree = "<group>"; };
+		330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportResponseDTO.swift; sourceTree = "<group>"; };
 		33185B082D79A6A200B508A3 /* PageableResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableResponse.swift; sourceTree = "<group>"; };
 		33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableRequest.swift; sourceTree = "<group>"; };
 		333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockResponseDTO.swift; sourceTree = "<group>"; };
@@ -451,6 +455,7 @@
 				C33D73F62CDEF19000889B1B /* PortfoliosResponseDTO.swift */,
 				C34C1F622CE3A02300F94BCD /* LikeResponseDTO.swift */,
 				333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */,
+				330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */,
 			);
 			name = Response;
 			sourceTree = "<group>";
@@ -629,6 +634,7 @@
 			isa = PBXGroup;
 			children = (
 				C34C1F602CE39F9100F94BCD /* LikeRequestBodyDTO.swift */,
+				330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */,
 			);
 			name = Request;
 			sourceTree = "<group>";
@@ -1316,10 +1322,12 @@
 				C3FD906E2C9154EC0021D2BA /* UIView+.swift in Sources */,
 				C3E88C7D2C92A95A005A19BE /* SNSOnboardingView.swift in Sources */,
 				C33D73D12CDEEE9500889B1B /* APIEventLogger.swift in Sources */,
+				330688D32D82D7F400BD34EA /* ReportRequestBodyDTO.swift in Sources */,
 				C3FD90782C9157FD0021D2BA /* UIViewController+.swift in Sources */,
 				C3F574F92CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift in Sources */,
 				C33D74172CDEF25600889B1B /* DeleteRequestBodyDTO.swift in Sources */,
 				C3E88C862C92C8B3005A19BE /* TalentHeaderView.swift in Sources */,
+				330688D52D82D98F00BD34EA /* ReportResponseDTO.swift in Sources */,
 				C393A61E2C9427F500ECF1B5 /* String+.swift in Sources */,
 				C33D74132CDEF23900889B1B /* ChatTarget.swift in Sources */,
 				C33DCF8A2CFDF483009072C4 /* ResetPasswordResponseDTO.swift in Sources */,
