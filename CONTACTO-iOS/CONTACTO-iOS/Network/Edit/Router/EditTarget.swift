@@ -75,12 +75,10 @@ extension EditRequestBodyDTO {
             }
             
             if let portfolioImageUrl = self.portfolioImageUrl, !portfolioImageUrl.isEmpty {
-                print("portfolioImageUrl is not empty. Count: \(portfolioImageUrl.count)")
                 
                 var keys: [Int] = [] // keys 배열 생성
                 
                 for (index, image) in portfolioImageUrl.enumerated() {
-                    print("Index: \(index), Photo Size: \(image.count) bytes")
                     keys.append(index+1)
                     formData.append(image, withName: "portfolioImages", fileName: "image\(index).jpg", mimeType: "image/jpeg")
                 }

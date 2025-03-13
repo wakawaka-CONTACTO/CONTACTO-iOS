@@ -251,11 +251,9 @@ extension HomeViewController {
             switch response {
             case .success(let data):
                 self?.portfolioData = data
-                print(data)
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -264,12 +262,10 @@ extension HomeViewController {
         NetworkService.shared.homeService.likeOrDislike(bodyDTO: bodyDTO) { [weak self] response in
             switch response {
             case .success(let data):
-                print(data)
                 self?.isMatch = data.matched
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -279,9 +275,13 @@ extension HomeViewController {
             switch response {
             case .success(let data):
                 self?.previewPortfolioData = data
+                #if DEBUG
                 print("내 포트폴리오 데이터: \(data)")
+                #endif
             default:
+                #if DEBUG
                 print("내 포트폴리오 데이터를 가져오지 못함")
+                #endif
             }
         }
     }
@@ -307,7 +307,7 @@ extension HomeViewController {
     }
     
     private func animateImage(status: Bool) {
-        guard !isAnimating else { return }  // 애니메이션 중이면 함수 실행 중단
+        guard !isAnimating else { return }
         isAnimating = true
         
         HapticService.impact(.heavy).run()
@@ -355,7 +355,6 @@ extension HomeViewController {
         }
     }
     
-    /// 새 포트폴리오(다음 사람)로 넘길 때
     private func setNewPortfolio() {
         if self.nowCount < self.portfolioData.count {
             self.homeView.isHidden = false

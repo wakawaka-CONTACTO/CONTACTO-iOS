@@ -48,11 +48,9 @@ final class InfoViewController: BaseViewController {
             switch response {
             case .success(let data):
                 self?.infoView.emailLabel.text = data.email
-                print(data)
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -95,7 +93,6 @@ extension InfoViewController {
         }
         
         let success = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ action in
-            print("로그아웃 버튼이 눌렸습니다.")
             KeychainHandler.shared.accessToken.removeAll()
             KeychainHandler.shared.refreshToken.removeAll()
             guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
@@ -118,7 +115,6 @@ extension InfoViewController {
         }
         
         let cancel = UIAlertAction(title: StringLiterals.Info.Alert.Delete.delete, style: .destructive){ cancel in
-            print("탈퇴 버튼이 눌렸습니다.")
             self.deleteMe { _ in
                 KeychainHandler.shared.accessToken.removeAll()
                 KeychainHandler.shared.refreshToken.removeAll()
@@ -139,7 +135,6 @@ extension InfoViewController {
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
         }
     }

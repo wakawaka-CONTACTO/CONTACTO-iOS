@@ -87,7 +87,6 @@ final class ChatListViewController: BaseViewController {
         chatRoomViewController.participants = chatRoomListData[indexPath.row].participants
         chatRoomViewController.chatRoomTitle = chatRoomListData[indexPath.row].title
         chatRoomViewController.chatRoomThumbnail = chatRoomListData[indexPath.row].chatRoomThumbnail ?? ""
-        print(chatRoomViewController.chatRoomId)
         self.navigationController?.pushViewController(chatRoomViewController, animated: true)
     }
 

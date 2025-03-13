@@ -345,7 +345,9 @@ extension LoginViewController: UITextFieldDelegate {
                         self.loginView.continueButton.isEnabled = true
                         self.name = text
                     case .findEmail:
+                        #if DEBUG
                         print("텍스트에 이메일 뜹니다..")
+                        #endif
                     }
                 } else {
                     self.loginView.continueButton.isEnabled = false
@@ -367,7 +369,9 @@ extension LoginViewController: UITextFieldDelegate {
                 changePWButton()
                 
             default:
+#if DEBUG
                 print("default")
+#endif
                 
             }
         }
