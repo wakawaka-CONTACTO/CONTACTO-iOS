@@ -14,6 +14,8 @@ protocol HomeServiceProtocol {
     func detailPort(userId: Int, completion: @escaping (NetworkResult<MyDetailResponseDTO>) -> Void)
     
     func likeOrDislike(bodyDTO: LikeRequestBodyDTO, completion: @escaping (NetworkResult<LikeResponseDTO>) -> Void)
+
+    func blockUser(blockedId: Int, completion: @escaping (NetworkResult<BlockResponseDTO>) -> Void)
 }
 
 final class HomeService: APIRequestLoader<HomeTarget>, HomeServiceProtocol {
@@ -27,5 +29,9 @@ final class HomeService: APIRequestLoader<HomeTarget>, HomeServiceProtocol {
     
     func likeOrDislike(bodyDTO: LikeRequestBodyDTO, completion: @escaping (NetworkResult<LikeResponseDTO>) -> Void) {
         fetchData(target: .likeOrDislike(bodyDTO), responseData: LikeResponseDTO.self, completion: completion)
+    }
+    
+    func blockUser(blockedId: Int, completion: @escaping (NetworkResult<BlockResponseDTO>) -> Void) {
+        fetchData(target: .blockUser(blockedId), responseData: BlockResponseDTO.self, completion: completion)
     }
 }

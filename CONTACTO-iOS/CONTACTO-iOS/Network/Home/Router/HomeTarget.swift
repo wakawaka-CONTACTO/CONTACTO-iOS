@@ -13,6 +13,7 @@ enum HomeTarget {
     case homeList
     case detailPort(_ userId: Int)
     case likeOrDislike(_ bodyDTO: LikeRequestBodyDTO)
+    case blockUser(_ blockedId: Int)
 }
 
 extension HomeTarget: TargetType {
@@ -23,6 +24,8 @@ extension HomeTarget: TargetType {
         case .detailPort(_):
             return .authorization
         case .likeOrDislike(_):
+            return .authorization
+        case .blockUser(_):
             return .authorization
         }
     }
@@ -35,6 +38,8 @@ extension HomeTarget: TargetType {
             return .hasToken
         case .likeOrDislike(_):
             return .hasToken
+        case .blockUser(_):
+            return .hasToken
         }
     }
     
@@ -45,6 +50,8 @@ extension HomeTarget: TargetType {
         case .detailPort(_):
             return .get
         case .likeOrDislike(_):
+            return .post
+        case .blockUser(_):
             return .post
         }
     }
@@ -57,6 +64,8 @@ extension HomeTarget: TargetType {
             return "/v1/users/portfolios/\(userId)"
         case .likeOrDislike(_):
             return "/v1/users/likes"
+        case .blockUser(let blockedId):
+            return "/v1/users/blocks/\(blockedId)"
         }
     }
     
@@ -68,6 +77,8 @@ extension HomeTarget: TargetType {
             return .requestPlain
         case .likeOrDislike(let bodyDTO):
             return .requestWithBody(bodyDTO)
+        case .blockUser(_):
+            return .requestPlain
         }
     }
 }
