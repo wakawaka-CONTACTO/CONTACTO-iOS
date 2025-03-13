@@ -16,7 +16,7 @@ import Then
 final class EditViewController: UIViewController {
     
     private var originalPortfolioData: MyDetailResponseDTO?
-    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
+    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: "Ko", webUrl: "", password: "",userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
     var isEditEnable = false
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {

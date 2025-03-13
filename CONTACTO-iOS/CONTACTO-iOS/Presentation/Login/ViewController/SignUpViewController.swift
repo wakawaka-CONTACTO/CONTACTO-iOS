@@ -20,6 +20,7 @@ final class SignUpViewController: UIViewController {
     var pw = ""
     var confirmPw = ""
     var authCode = ""
+    var nationality = ""
     
     var isPrivacyAgree = false {
         didSet {

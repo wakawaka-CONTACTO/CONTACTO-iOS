@@ -22,6 +22,12 @@ final class SNSOnboardingView: BaseView {
     
     private let websiteLabel = UILabel()
     let websiteTextField = BaseTextField()
+
+    private let nationalityLabel = UILabel()
+    let nationalityTextField = BaseTextField()
+    private let nationalityPicker = UIPickerView()
+    private let nationalities = ["영국", "중국", "일본", "미국", "대한민국", "프랑스", "독일", "네덜란드", "기타"]
+    
     
     let nextButton = OnboardingNextButton(count: 4)
     
@@ -93,6 +99,29 @@ final class SNSOnboardingView: BaseView {
             $0.autocapitalizationType = .none
             $0.addPadding(left: 10)
         }
+        
+        // 국적 선택 UI 스타일 설정
+        nationalityLabel.do {
+            $0.text = "국적 선택"
+            $0.textColor = .ctblack
+            $0.font = .fontContacto(.body1)
+        }
+        
+        nationalityTextField.do {
+            $0.placeholder = "국적을 선택하세요"
+            $0.font = .fontContacto(.button1)
+            $0.textAlignment = .left
+            $0.borderStyle = .line
+            $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            $0.backgroundColor = .ctwhite
+            $0.textColor = .ctblack
+            $0.inputView = nationalityPicker
+        }
+        
+        // UIPickerView의 delegate, dataSource 설정
+        nationalityPicker.delegate = self
+        nationalityPicker.dataSource = self
+        
     }
     
     override func setLayout() {
@@ -103,6 +132,8 @@ final class SNSOnboardingView: BaseView {
                     instaTextField,
                     websiteLabel,
                     websiteTextField,
+                    nationalityLabel,
+                    nationalityTextField,
                     nextButton)
         
         instaTextField.addSubviews(instaAtLabel)
@@ -153,5 +184,42 @@ final class SNSOnboardingView: BaseView {
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().inset(55.adjustedHeight)
         }
+
+        nationalityLabel.snp.makeConstraints {
+            $0.top.equalTo(websiteTextField.snp.bottom).offset(25.adjustedHeight)
+            $0.leading.equalTo(websiteLabel)
+        }
+        
+        nationalityTextField.snp.makeConstraints {
+            $0.leading.trailing.height.equalTo(websiteTextField)
+            $0.top.equalTo(nationalityLabel.snp.bottom).offset(10.adjustedHeight)
+            $0.height.equalTo(34.adjustedHeight)
+        }
+        
+        nextButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(55.adjustedHeight)
+        }
+    }
+}
+
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
+extension SNSOnboardingView: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+  
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return nationalities.count
+    }
+  
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return nationalities[row]
+    }
+  
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        // 선택된 국적을 텍스트필드에 표시
+        nationalityTextField.text = nationalities[row]
+        nationalityTextField.resignFirstResponder()
     }
 }
