@@ -100,15 +100,14 @@ final class SNSOnboardingView: BaseView {
             $0.addPadding(left: 10)
         }
         
-        // 국적 선택 UI 스타일 설정
         nationalityLabel.do {
-            $0.text = "국적 선택"
+            $0.text = "nationality"
             $0.textColor = .ctblack
             $0.font = .fontContacto(.body1)
         }
         
         nationalityTextField.do {
-            $0.placeholder = "국적을 선택하세요"
+            $0.placeholder = "Select your nationality"
             $0.font = .fontContacto(.button1)
             $0.textAlignment = .left
             $0.borderStyle = .line
@@ -118,10 +117,8 @@ final class SNSOnboardingView: BaseView {
             $0.inputView = nationalityPicker
         }
         
-        // UIPickerView의 delegate, dataSource 설정
         nationalityPicker.delegate = self
         nationalityPicker.dataSource = self
-        
     }
     
     override func setLayout() {
@@ -218,7 +215,6 @@ extension SNSOnboardingView: UIPickerViewDelegate, UIPickerViewDataSource {
     }
   
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        // 선택된 국적을 텍스트필드에 표시
         nationalityTextField.text = nationalities[row]
         nationalityTextField.resignFirstResponder()
     }
