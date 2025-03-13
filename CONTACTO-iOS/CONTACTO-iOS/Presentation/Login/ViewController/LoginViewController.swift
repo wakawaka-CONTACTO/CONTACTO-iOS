@@ -211,7 +211,6 @@ extension LoginViewController {
     }
     
     @objc private func sendCode() {
-        print("continue: 이메일 인증번호 보내기")
         emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { _ in
             self.loginView.isHidden = true
             self.emailCodeView.isHidden = false
@@ -254,7 +253,6 @@ extension LoginViewController {
             default:
                 self.loginView.setLoginState(state: .pwError)
                 completion(false)
-                print("error")
             }
         }
     }
@@ -267,7 +265,6 @@ extension LoginViewController {
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -279,7 +276,6 @@ extension LoginViewController {
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -291,7 +287,6 @@ extension LoginViewController {
                 completion(data.isSuccess)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -311,7 +306,6 @@ extension LoginViewController {
 //                }
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -323,7 +317,6 @@ extension LoginViewController {
                 completion(data.isSuccess)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -345,7 +338,6 @@ extension LoginViewController: UITextFieldDelegate {
                     case .email:
                         self.loginView.continueButton.isEnabled = text.isValidEmail()
                         self.email = text
-                        print(self.email)
                     case .pw:
                         self.loginView.continueButton.isEnabled = true
                         self.pw = text
@@ -361,10 +353,8 @@ extension LoginViewController: UITextFieldDelegate {
                 
             case emailCodeView.mainTextField:
                 self.authCode = text
-                print(text)
                 
             case setPWView.mainTextField:
-                print(text)
                 setPWView.conditionViewLetter.isSatisfied = text.isMinimumLength(textField.text ?? "")
                 setPWView.conditionViewSpecial.isSatisfied = text.containsSpecialCharacter(textField.text ?? "")
                 setPWView.conditionViewNum.isSatisfied = text.containsNumber(textField.text ?? "")
@@ -373,7 +363,6 @@ extension LoginViewController: UITextFieldDelegate {
                 changePWButton()
                 
             case setPWView.confirmTextField:
-                print(text)
                 self.confirmPw = textField.text ?? ""
                 changePWButton()
                 
