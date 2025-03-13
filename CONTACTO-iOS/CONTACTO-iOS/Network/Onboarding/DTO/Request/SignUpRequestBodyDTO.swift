@@ -16,6 +16,7 @@ struct SignUpRequestBodyDTO: Codable {
 
 struct UserSignUpRequest: Codable {
     let name, email, description, instagramId, password, loginType: String
+    let nationality: Nationality
     let webUrl: String?
 }
 
@@ -25,4 +26,8 @@ struct Purpose: Codable {
 
 struct TalentType: Codable {
     let talentType: String
+}
+
+struct Nationality: Codable{
+    let nationality: String
 }

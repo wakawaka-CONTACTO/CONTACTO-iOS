@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Nationality: String, CaseIterable {
+enum Nationalities: String, CaseIterable {
     case UK, CN, JP, US, KR, FR, DE, NL, OTHER
     
     var displayName: String {
