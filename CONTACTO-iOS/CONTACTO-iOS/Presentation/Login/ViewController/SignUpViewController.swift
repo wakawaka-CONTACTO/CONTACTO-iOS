@@ -121,7 +121,7 @@ extension SignUpViewController {
                 self.signUpView.isHidden = true
                 self.emailCodeView.isHidden = false
                 self.setPWView.isHidden = true
-        
+                self.emailCodeView.startTimer()
             case .failure(let error):
                 var errorMessage = "이메일 전송에 실패했습니다. 다시 시도해주세요."
                 if let data = error.data,
@@ -131,7 +131,6 @@ extension SignUpViewController {
                 let alert = UIAlertController(title: "에러", message: errorMessage, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "확인", style: .default))
                 self.present(alert, animated: true, completion: nil)
-                self.signUpView.mainTextField.text = ""
                 self.signUpView.mainTextField.isError = true
             default:
                 var errorMessage = "이메일 전송에 실패했습니다. 다시 시도해주세요."
@@ -187,28 +186,6 @@ extension SignUpViewController {
             setPWView.continueButton.isEnabled = true
         } else {
             setPWView.continueButton.isEnabled = false
-        }
-    }
-    
-    // MARK: - Network
-    private func emailSend(bodyDTO: EmailSendRequestBodyDTO,completion: @escaping (Bool) -> ()) {
-        NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
-            switch response {
-            case .success(let data):
-                print("reponse success")
-                completion(true)
-            case .failure(let error):
-                if let data = error.data,
-                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
-                    print("에러 응답: \(errorResponse.message)")
-                } else {
-                    print("에러: \(error)")
-                }
-                completion(false)
-            default:
-                print("reponse error")
-                completion(false)
-            }
         }
     }
     
