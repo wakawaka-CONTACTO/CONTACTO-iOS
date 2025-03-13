@@ -26,8 +26,8 @@ final class SNSOnboardingView: BaseView {
     private let nationalityLabel = UILabel()
     let nationalityTextField = BaseTextField()
     private let nationalityPicker = UIPickerView()
-    private let nationalities = ["영국", "중국", "일본", "미국", "대한민국", "프랑스", "독일", "네덜란드", "기타"]
-    
+    private let nationalities: [Nationalities] = Nationalities.allCases
+    private var selectedNationality: Nationalities = .KR
     
     let nextButton = OnboardingNextButton(count: 4)
     
@@ -211,11 +211,12 @@ extension SNSOnboardingView: UIPickerViewDelegate, UIPickerViewDataSource {
     }
   
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return nationalities[row]
+        return nationalities[row].displayName
     }
   
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        nationalityTextField.text = nationalities[row]
+        selectedNationality = nationalities[row]
+        nationalityTextField.text = nationalities[row].displayName
         nationalityTextField.resignFirstResponder()
     }
 }
