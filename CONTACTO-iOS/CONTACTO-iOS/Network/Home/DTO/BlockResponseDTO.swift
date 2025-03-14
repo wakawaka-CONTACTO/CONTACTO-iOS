@@ -9,5 +9,5 @@ import Foundation
 
 struct BlockResponseDTO: Codable {
     let userId: Int
-    let blockedId: Int
+    let blockedUserId: Int
 }

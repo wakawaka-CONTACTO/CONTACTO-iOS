@@ -9,7 +9,7 @@ import Foundation
 
 struct ReportResponseDTO: Codable {
     let userId: Int
-    let reportedId: Int
+    let reportedUserId: Int
     let reportReason: String
     let reportStatus: String
 }

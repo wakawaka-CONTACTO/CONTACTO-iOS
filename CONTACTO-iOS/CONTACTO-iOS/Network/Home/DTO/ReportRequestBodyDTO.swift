@@ -8,6 +8,6 @@
 import Foundation
 
 struct ReportRequestBodyDTO: Codable {
-    let reportedId: Int
+    let reportedUserId: Int
     let reportReasonIdx: Int
 }

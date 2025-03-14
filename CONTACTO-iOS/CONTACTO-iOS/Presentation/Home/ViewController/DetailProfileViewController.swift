@@ -101,8 +101,8 @@ final class DetailProfileViewController: BaseViewController {
         completion(true)
     }
     
-    private func blockUser(blockedId: Int, completion: @escaping (Bool) -> Void) {
-        NetworkService.shared.homeService.blockUser(blockedId: portfolioData.id) { response in
+    private func blockUser(blockedUserId: Int, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.homeService.blockUser(blockedUserId: portfolioData.id) { response in
             switch response {
             case .success(let data):
                 print(data)
@@ -217,7 +217,7 @@ final class DetailProfileViewController: BaseViewController {
         
         let cancelAction = UIAlertAction(title: "No", style: .default)
         let confirmAction = UIAlertAction(title: "Yes", style: .default) { _ in
-            self.blockUser(blockedId: self.portfolioData.id) { success in
+            self.blockUser(blockedUserId: self.portfolioData.id) { success in
                 DispatchQueue.main.async {
                     if success {
                         let successAlert = UIAlertController(
@@ -258,7 +258,7 @@ final class DetailProfileViewController: BaseViewController {
         for (index, reason) in reportReasons.enumerated() {
             let action = UIAlertAction(title: reason, style: .default) { _ in
                 print("User reported for reason at index \(index): \(reason)")
-                self.reportUser(bodyDTO: ReportRequestBodyDTO(reportedId: self.portfolioData.id, reportReasonIdx: index)) { success in
+                self.reportUser(bodyDTO: ReportRequestBodyDTO(reportedUserId: self.portfolioData.id, reportReasonIdx: index)) { success in
                     DispatchQueue.main.async {
                         if success {
                             let successAlert = UIAlertController(

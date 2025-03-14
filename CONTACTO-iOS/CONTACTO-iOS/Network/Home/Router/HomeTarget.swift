@@ -13,7 +13,7 @@ enum HomeTarget {
     case homeList
     case detailPort(_ userId: Int)
     case likeOrDislike(_ bodyDTO: LikeRequestBodyDTO)
-    case blockUser(_ blockedId: Int)
+    case blockUser(_ blockedUserId: Int)
     case reportUser(_ bodyDTO: ReportRequestBodyDTO)
 }
 
@@ -71,8 +71,8 @@ extension HomeTarget: TargetType {
             return "/v1/users/portfolios/\(userId)"
         case .likeOrDislike(_):
             return "/v1/users/likes"
-        case .blockUser(let blockedId):
-            return "/v1/users/blocks/\(blockedId)"
+        case .blockUser(let blockedUserId):
+            return "/v1/users/blocks/\(blockedUserId)"
         case .reportUser(_):
             return "/v1/users/reports"
         }
