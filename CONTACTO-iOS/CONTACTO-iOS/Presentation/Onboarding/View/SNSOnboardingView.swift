@@ -22,6 +22,12 @@ final class SNSOnboardingView: BaseView {
     
     private let websiteLabel = UILabel()
     let websiteTextField = BaseTextField()
+
+    private let nationalityLabel = UILabel()
+    let nationalityTextField = BaseTextField()
+    private let nationalityPicker = UIPickerView()
+    private let nationalities: [Nationalities] = Nationalities.allCases
+    var selectedNationality: Nationalities = .KR
     
     let nextButton = OnboardingNextButton(count: 4)
     
@@ -93,6 +99,26 @@ final class SNSOnboardingView: BaseView {
             $0.autocapitalizationType = .none
             $0.addPadding(left: 10)
         }
+        
+        nationalityLabel.do {
+            $0.text = "nationality"
+            $0.textColor = .ctblack
+            $0.font = .fontContacto(.body1)
+        }
+        
+        nationalityTextField.do {
+            $0.placeholder = "Select your nationality"
+            $0.font = .fontContacto(.button1)
+            $0.textAlignment = .left
+            $0.borderStyle = .line
+            $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            $0.backgroundColor = .ctwhite
+            $0.textColor = .ctblack
+            $0.inputView = nationalityPicker
+        }
+        
+        nationalityPicker.delegate = self
+        nationalityPicker.dataSource = self
     }
     
     override func setLayout() {
@@ -103,6 +129,8 @@ final class SNSOnboardingView: BaseView {
                     instaTextField,
                     websiteLabel,
                     websiteTextField,
+                    nationalityLabel,
+                    nationalityTextField,
                     nextButton)
         
         instaTextField.addSubviews(instaAtLabel)
@@ -153,5 +181,37 @@ final class SNSOnboardingView: BaseView {
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().inset(55.adjustedHeight)
         }
+
+        nationalityLabel.snp.makeConstraints {
+            $0.top.equalTo(websiteTextField.snp.bottom).offset(25.adjustedHeight)
+            $0.leading.equalTo(websiteLabel)
+        }
+        
+        nationalityTextField.snp.makeConstraints {
+            $0.leading.trailing.height.equalTo(websiteTextField)
+            $0.top.equalTo(nationalityLabel.snp.bottom).offset(10.adjustedHeight)
+            $0.height.equalTo(34.adjustedHeight)
+        }
+    }
+}
+
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
+extension SNSOnboardingView: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+  
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return nationalities.count
+    }
+  
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return nationalities[row].displayName
+    }
+  
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selectedNationality = nationalities[row]
+        nationalityTextField.text = nationalities[row].displayName
+        nationalityTextField.resignFirstResponder()
     }
 }

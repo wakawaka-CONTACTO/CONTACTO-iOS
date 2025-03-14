@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26434AC82D82D604000FB7AE /* Nationality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26434AC72D82D604000FB7AE /* Nationality.swift */; };
 		26DEC0212D806D0B00667450 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEC0202D806D0B00667450 /* EmptyResponse.swift */; };
 		33185B092D79A6A200B508A3 /* PageableResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B082D79A6A200B508A3 /* PageableResponse.swift */; };
 		33185B0B2D7B1E6B00B508A3 /* PageableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */; };
@@ -159,6 +160,7 @@
 
 /* Begin PBXFileReference section */
 		0DEA1664F7C3DD88F43E1FDF /* Pods-CONTACTO-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.release.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		26434AC72D82D604000FB7AE /* Nationality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nationality.swift; sourceTree = "<group>"; };
 		26DEC0202D806D0B00667450 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
 		33185B082D79A6A200B508A3 /* PageableResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableResponse.swift; sourceTree = "<group>"; };
 		33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableRequest.swift; sourceTree = "<group>"; };
@@ -778,6 +780,7 @@
 			isa = PBXGroup;
 			children = (
 				C3B95CEF2C9C03D8002A4681 /* Talent.swift */,
+				26434AC72D82D604000FB7AE /* Nationality.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1286,6 +1289,7 @@
 				335900B02D74704D0088E78B /* Match.swift in Sources */,
 				C33D74082CDEF1F100889B1B /* EditTarget.swift in Sources */,
 				C33B9A2D2CFCC3E7009A6B2D /* ErrorResponse.swift in Sources */,
+				26434AC82D82D604000FB7AE /* Nationality.swift in Sources */,
 				C3EF05EE2C9DC964001BF9EC /* ChatRoomViewController.swift in Sources */,
 				C393A60D2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift in Sources */,
 				C33D74022CDEF1D500889B1B /* EditRequestBodyDTO.swift in Sources */,
