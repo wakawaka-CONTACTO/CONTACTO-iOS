@@ -142,6 +142,7 @@ extension SignUpRequestBodyDTO {
             formData.append(self.userSignUpReq.description.data(using: .utf8) ?? Data(), withName: "description")
             formData.append(self.userSignUpReq.instagramId.data(using: .utf8) ?? Data(), withName: "instagramId")
             formData.append(self.userSignUpReq.password.data(using: .utf8) ?? Data(), withName: "password")
+            formData.append(self.userSignUpReq.nationality.data(using: .utf8) ?? Data(), withName: "nationality")
             if let webUrl = self.userSignUpReq.webUrl {
                 formData.append(webUrl.data(using: .utf8) ?? Data(), withName: "webUrl")
             }

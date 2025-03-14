@@ -192,11 +192,6 @@ final class SNSOnboardingView: BaseView {
             $0.top.equalTo(nationalityLabel.snp.bottom).offset(10.adjustedHeight)
             $0.height.equalTo(34.adjustedHeight)
         }
-        
-        nextButton.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(55.adjustedHeight)
-        }
     }
 }
 
