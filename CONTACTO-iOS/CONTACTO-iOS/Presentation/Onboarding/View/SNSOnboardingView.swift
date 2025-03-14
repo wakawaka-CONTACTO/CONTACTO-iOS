@@ -98,6 +98,7 @@ final class SNSOnboardingView: BaseView {
             $0.spellCheckingType = .no
             $0.autocapitalizationType = .none
             $0.addPadding(left: 10)
+            $0.text = "https://"
         }
         
         nationalityLabel.do {
