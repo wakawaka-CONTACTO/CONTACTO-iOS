@@ -559,6 +559,46 @@ extension EditViewController: UITextViewDelegate {
         
         hasChanges()
     }
+    
+    private func validateInputs() -> Bool {
+        // 이름 검증: 공백 제거 후, 2-20자 이내의 영문자, 숫자, 한글만 허용
+        guard let name = editView.nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !name.isEmpty else {
+            print("이름이 비어있습니다.")
+            return false
+        }
+        let nameRegex = "^[a-zA-Z0-9가-힣]{2,20}$"
+        let nameTest = NSPredicate(format: "SELF MATCHES %@", nameRegex)
+        if !nameTest.evaluate(with: name) {
+            print("이름은 2-20자의 영문자, 숫자, 한글만 가능합니다.")
+            return false
+        }
+        
+        if let website = editView.websiteTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !website.isEmpty {
+            if !(website.hasPrefix("http://") || website.hasPrefix("https://")) {
+                print("website URL은 http:// 또는 https:// 로 시작해야 합니다.")
+                return false
+            }
+        }
+        
+        if portfolioData.userPurposes.isEmpty {
+            print("Purpose 항목이 선택되지 않았습니다.")
+            return false
+        }
+        
+        if portfolioData.userTalents.isEmpty {
+            print("Talent 항목이 선택되지 않았습니다.")
+            return false
+        }
+        
+        if selectedImages.isEmpty {
+            print("Portfolio 이미지를 선택해야 합니다.")
+            return false
+        }
+        
+        return true
+    }
 }
 
 extension EditViewController: UITextFieldDelegate {
@@ -624,6 +664,11 @@ extension EditViewController: UITextFieldDelegate {
     @objc private func editButtonTapped() {
         isEditEnable.toggle()
         editView.toggleEditMode(isEditEnable)
+        
+        if validateInputs() == false {
+            editView.portfolioCollectionView.reloadData()
+            editView.purposeCollectionView.reloadData()
+        }
         
         if isEditEnable {
             editView.editButton.isEnabled = false
