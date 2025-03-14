@@ -25,13 +25,8 @@ final class HomeViewController: BaseViewController {
     }
     var maxNum = 0 /// 포트폴리오의 총 장 수 (0장부터)
     var isAnimating = false
-    
-    /// 현재 포폴이 리스트의 몇 번째인지
-    var nowCount = 0 {
-        didSet {
-            setData()
-        }
-    }
+    var hasCheckedMyPort = false
+   
     var portfolioData: [PortfoliosResponseDTO] = []
     
     /// preview의 내 포폴 데이터
@@ -63,7 +58,6 @@ final class HomeViewController: BaseViewController {
         super.viewWillAppear(animated)
         setNavigationBar()
         setData()
-        num = 0
     }
     
     override func setNavigationBar() {
@@ -226,7 +220,10 @@ extension HomeViewController {
             homeList { _ in
                 self.setNewPortfolio()
             }
-            checkMyPort()
+            if !hasCheckedMyPort {
+                checkMyPort()
+                hasCheckedMyPort = true
+            }
         } else {
             homeView.profileNameLabel.text = previewPortfolioData.username
             maxNum = imagePreviewDummy.count - 1
@@ -323,12 +320,12 @@ extension HomeViewController {
                 self.pushToMatch()
             }
             
+            self.setData()
             self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
             self.homeView.portView.transform = .identity
             self.num = 0
             self.isAnimating = false
             self.isMatch = false
-            self.nowCount += 1
         }
     }
     
@@ -346,9 +343,9 @@ extension HomeViewController {
                 myId: previewPortfolioData.id,
                 myLabel: previewPortfolioData.username,
                 myImageURL: previewPortfolioData.userPortfolio?.portfolioImageUrl.first ?? "",
-                yourId: portfolioData[nowCount].userId,
-                yourLabel: portfolioData[nowCount].username,
-                yourImageURL: portfolioData[nowCount].portfolioImageUrl.first ?? ""
+                yourId: portfolioData[0].userId,
+                yourLabel: portfolioData[0].username,
+                yourImageURL: portfolioData[0].portfolioImageUrl.first ?? ""
             )
             
             self.present(matchViewController, animated: true)
@@ -356,12 +353,12 @@ extension HomeViewController {
     }
     
     private func setNewPortfolio() {
-        if self.nowCount < self.portfolioData.count {
+        if 0 < self.portfolioData.count {
             self.homeView.isHidden = false
             self.homeEmptyView.isHidden = true
-            self.portUserId = Int(portfolioData[nowCount].userId)
-            self.homeView.profileNameLabel.text = portfolioData[nowCount].username
-            self.imageDummy = portfolioData[nowCount].portfolioImageUrl
+            self.portUserId = Int(portfolioData[0].userId)
+            self.homeView.profileNameLabel.text = portfolioData[0].username
+            self.imageDummy = portfolioData[0].portfolioImageUrl
             self.maxNum = self.imageDummy.count - 1
             self.setPortImage()
             self.homeView.pageCollectionView.reloadData()
