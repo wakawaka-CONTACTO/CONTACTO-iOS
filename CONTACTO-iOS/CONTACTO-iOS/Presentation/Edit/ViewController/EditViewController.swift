@@ -560,44 +560,44 @@ extension EditViewController: UITextViewDelegate {
         hasChanges()
     }
     
-    private func validateInputs() -> Bool {
-        // 이름 검증: 공백 제거 후, 2-20자 이내의 영문자, 숫자, 한글만 허용
+    // 입력값을 검증하고 결과를 ValidationResult로 반환
+    private func validateInputs() -> ValidationResult {
+        // 이름 검증: 공백 제거 후, 2-20자의 영문자, 숫자, 한글만 허용
         guard let name = editView.nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               !name.isEmpty else {
-            print("이름이 비어있습니다.")
-            return false
+            return ValidationResult(isValid: false, message: "이름이 비어있습니다.")
         }
         let nameRegex = "^[a-zA-Z0-9가-힣]{2,20}$"
         let nameTest = NSPredicate(format: "SELF MATCHES %@", nameRegex)
         if !nameTest.evaluate(with: name) {
-            print("이름은 2-20자의 영문자, 숫자, 한글만 가능합니다.")
-            return false
+            return ValidationResult(isValid: false, message: "이름은 2-20자의 영문자, 숫자, 한글만 가능합니다.")
         }
         
+        // website URL 검증: 값이 있다면 http:// 또는 https:// 로 시작해야 함
         if let website = editView.websiteTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
            !website.isEmpty {
             if !(website.hasPrefix("http://") || website.hasPrefix("https://")) {
-                print("website URL은 http:// 또는 https:// 로 시작해야 합니다.")
-                return false
+                return ValidationResult(isValid: false, message: "website URL은 http:// 또는 https:// 로 시작해야 합니다.")
             }
         }
         
+        // purpose 검증: portfolioData.userPurposes 배열은 비어있으면 안 됨
         if portfolioData.userPurposes.isEmpty {
-            print("Purpose 항목이 선택되지 않았습니다.")
-            return false
+            return ValidationResult(isValid: false, message: "Purpose 항목이 선택되지 않았습니다.")
         }
         
+        // talent 검증: portfolioData.userTalents 배열은 비어있으면 안 됨
         if portfolioData.userTalents.isEmpty {
-            print("Talent 항목이 선택되지 않았습니다.")
-            return false
+            return ValidationResult(isValid: false, message: "Talent 항목이 선택되지 않았습니다.")
         }
         
+        // portfolio 검증: 선택된 이미지 배열은 비어있으면 안 됨
         if selectedImages.isEmpty {
-            print("Portfolio 이미지를 선택해야 합니다.")
-            return false
+            return ValidationResult(isValid: false, message: "Portfolio 이미지를 선택해야 합니다.")
         }
         
-        return true
+        // 모든 검증 통과
+        return ValidationResult(isValid: true, message: nil)
     }
 }
 
@@ -661,18 +661,24 @@ extension EditViewController: UITextFieldDelegate {
         self.view.layoutIfNeeded()
     }
     
+    // 수정 버튼 액션
     @objc private func editButtonTapped() {
+        // 편집 모드 토글
         isEditEnable.toggle()
         editView.toggleEditMode(isEditEnable)
         
-        if validateInputs() == false {
-            editView.portfolioCollectionView.reloadData()
-            editView.purposeCollectionView.reloadData()
-        }
-        
-        if isEditEnable {
-            editView.editButton.isEnabled = false
-        } else {
+        if !isEditEnable {
+            let isValidProfile = validateInputs()
+            if isValidProfile.isValid == false {
+                AlertManager.showAlert(on: self,
+                                       message: isValidProfile.message ?? "입력값에 오류가 있습니다.") {
+                    self.isEditEnable = true
+                    self.editView.toggleEditMode(self.isEditEnable)
+                }
+                return
+            }
+            
+            // 검증이 통과된 경우 백엔드 요청 전송
             let imageDataArray = selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
             let body = EditRequestBodyDTO(
                 username: portfolioData.username.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -691,12 +697,14 @@ extension EditViewController: UITextFieldDelegate {
                 self.editView.purposeCollectionView.reloadData()
                 self.view.endEditing(true)
             }
-            
             self.isDataChanged = false
             self.editView.editButton.isEnabled = true
+        } else {
+            // 편집 모드 진입 시 저장 버튼 비활성화
+            editView.editButton.isEnabled = false
         }
         
         editView.portfolioCollectionView.reloadData()
         editView.purposeCollectionView.reloadData()
     }
-}
+} // <- 확장 종료를 위한 중괄호
