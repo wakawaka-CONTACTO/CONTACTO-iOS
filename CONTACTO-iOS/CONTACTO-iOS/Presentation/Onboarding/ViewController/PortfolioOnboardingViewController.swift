@@ -56,7 +56,6 @@ final class PortfolioOnboardingViewController: BaseViewController {
             talent: UserInfo.shared.userTalents.map { TalentType(talentType: $0) },
             images: UserInfo.shared.portfolioImageUrl)
         
-        print(bodyData)
         signup(bodyDTO: bodyData) { success in
             if success {
                 let mainTabBarViewController = MainTabBarViewController()
@@ -110,7 +109,6 @@ final class PortfolioOnboardingViewController: BaseViewController {
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -152,7 +150,6 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
             withReuseIdentifier: PortfolioCollectionViewCell.className,
             for: indexPath) as? PortfolioCollectionViewCell else { return UICollectionViewCell() }
         
-        print(selectedImages)
         if indexPath.row < selectedImages.count {
             cell.isFilled = true
             cell.backgroundImageView.image = selectedImages[indexPath.row]

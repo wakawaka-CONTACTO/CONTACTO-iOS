@@ -115,7 +115,6 @@ final class SignUpViewController: UIViewController {
 
 extension SignUpViewController {
     @objc private func sendCode() {
-        print("continue: 이메일 인증번호 보내기")
         NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { result in DispatchQueue.main.async {
             switch result{
             case .success:
@@ -124,7 +123,7 @@ extension SignUpViewController {
                 self.setPWView.isHidden = true
                 self.emailCodeView.startTimer()
             case .failure(let error):
-                var errorMessage = "이메일 전송에 실패했습니다. 다시 시도해주세요."
+                var errorMessage = "이메일 전송에 실패했습니다. 잠시후 다시 시도해주세요."
                 if let data = error.data,
                    let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data){
                     errorMessage = errorResponse.message
@@ -134,7 +133,7 @@ extension SignUpViewController {
                 self.present(alert, animated: true, completion: nil)
                 self.signUpView.mainTextField.isError = true
             default:
-                var errorMessage = "이메일 전송에 실패했습니다. 다시 시도해주세요."
+                var errorMessage = "이메일 전송에 실패했습니다. 관리자에게 문의해주세요."
                 let alert = UIAlertController(title: "에러", message: errorMessage, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "확인", style: .default))
                 self.present(alert, animated: true, completion: nil)
@@ -197,7 +196,6 @@ extension SignUpViewController {
                 completion(data.isSuccess)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -230,10 +228,8 @@ extension SignUpViewController: UITextFieldDelegate {
                 
             case emailCodeView.mainTextField:
                 self.authCode = text
-                print(text)
                 
             case setPWView.mainTextField:
-                print(text)
                 setPWView.conditionViewLetter.isSatisfied = text.isMinimumLength(textField.text ?? "")
                 setPWView.conditionViewSpecial.isSatisfied = text.containsSpecialCharacter(textField.text ?? "")
                 setPWView.conditionViewNum.isSatisfied = text.containsNumber(textField.text ?? "")
@@ -242,12 +238,13 @@ extension SignUpViewController: UITextFieldDelegate {
                 changePWButton()
                 
             case setPWView.confirmTextField:
-                print(text)
                 self.confirmPw = textField.text ?? ""
                 changePWButton()
                 
             default:
+                #if DEBUG
                 print("default")
+                #endif
             }
         }
     }

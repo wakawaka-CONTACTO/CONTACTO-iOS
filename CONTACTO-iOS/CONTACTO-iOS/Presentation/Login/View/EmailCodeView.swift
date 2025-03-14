@@ -70,7 +70,7 @@ final class EmailCodeView: BaseView {
             $0.font = .fontContacto(.caption2)
             $0.textColor = .ctwhite
             $0.textAlignment = .center
-            $0.text = formatTime(countdownTime) // 초기값 "04:00"
+            $0.text = formatTime(countdownTime)
         }
     }
     

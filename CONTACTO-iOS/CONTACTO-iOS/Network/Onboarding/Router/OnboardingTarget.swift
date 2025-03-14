@@ -148,9 +148,7 @@ extension SignUpRequestBodyDTO {
             }
             
             if let portfolioImageUrl = self.images, !portfolioImageUrl.isEmpty {
-                print("portfolioImageUrl is not empty. Count: \(portfolioImageUrl.count)")
                 for (index, image) in portfolioImageUrl.enumerated() {
-                    print("Index: \(index), Photo Size: \(image.count) bytes")
                     formData.append(image, withName: "portfolioImgs", fileName: "image\(index).jpg", mimeType: "image/jpeg")
                 }
             } else {

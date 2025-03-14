@@ -88,11 +88,9 @@ final class DetailProfileViewController: BaseViewController {
                 case .success(let data):
                     self?.portfolioData = data
                     self?.updatePortfolio()
-                    print(data)
                     completion(true)
                 default:
                     completion(false)
-                    print("error")
                 }
             }
         } else {
@@ -159,7 +157,9 @@ final class DetailProfileViewController: BaseViewController {
     
     @objc private func webButtonTapped() {
         guard let url = URL(string: portfolioData.webUrl ?? "google.com") else {
-            print("url error")
+            let alert = UIAlertController(title: "에러", message: "url error", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default))
+            self.present(alert, animated: true, completion: nil)
             return
         }
         
@@ -167,7 +167,9 @@ final class DetailProfileViewController: BaseViewController {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
             guard let chatURL = URL(string: "https://" + (portfolioData.webUrl ?? "google.com")) else {
-                print("url error")
+                let alert = UIAlertController(title: "에러", message: "url error", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "확인", style: .default))
+                self.present(alert, animated: true, completion: nil)
                 return
             }
             UIApplication.shared.open(chatURL, options: [:], completionHandler: nil)
@@ -339,6 +341,4 @@ extension DetailProfileViewController: UIScrollViewDelegate {
             currentNum = currentPage
         }
     }
-    
-    
 }
