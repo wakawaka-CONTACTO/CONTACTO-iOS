@@ -115,6 +115,7 @@ final class SNSOnboardingView: BaseView {
             $0.backgroundColor = .ctwhite
             $0.textColor = .ctblack
             $0.inputView = nationalityPicker
+            $0.delegate = self
         }
         
         nationalityPicker.delegate = self
@@ -213,5 +214,19 @@ extension SNSOnboardingView: UIPickerViewDelegate, UIPickerViewDataSource {
         selectedNationality = nationalities[row]
         nationalityTextField.text = nationalities[row].displayName
         nationalityTextField.resignFirstResponder()
+    }
+}
+
+extension SNSOnboardingView: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == nationalityTextField {
+            nextButton.isHidden = true
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == nationalityTextField {
+            nextButton.isHidden = false
+        }
     }
 }
