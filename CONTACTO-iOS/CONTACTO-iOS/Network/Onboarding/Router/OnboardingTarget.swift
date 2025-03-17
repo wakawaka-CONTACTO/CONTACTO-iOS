@@ -142,14 +142,13 @@ extension SignUpRequestBodyDTO {
             formData.append(self.userSignUpReq.description.data(using: .utf8) ?? Data(), withName: "description")
             formData.append(self.userSignUpReq.instagramId.data(using: .utf8) ?? Data(), withName: "instagramId")
             formData.append(self.userSignUpReq.password.data(using: .utf8) ?? Data(), withName: "password")
+            formData.append(self.userSignUpReq.nationality.data(using: .utf8) ?? Data(), withName: "nationality")
             if let webUrl = self.userSignUpReq.webUrl {
                 formData.append(webUrl.data(using: .utf8) ?? Data(), withName: "webUrl")
             }
             
             if let portfolioImageUrl = self.images, !portfolioImageUrl.isEmpty {
-                print("portfolioImageUrl is not empty. Count: \(portfolioImageUrl.count)")
                 for (index, image) in portfolioImageUrl.enumerated() {
-                    print("Index: \(index), Photo Size: \(image.count) bytes")
                     formData.append(image, withName: "portfolioImgs", fileName: "image\(index).jpg", mimeType: "image/jpeg")
                 }
             } else {

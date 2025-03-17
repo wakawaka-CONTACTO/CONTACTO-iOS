@@ -172,11 +172,15 @@ extension ChatRoomViewController: StompClientLibDelegate {
     }
     
     func serverDidSendReceipt(client: StompClientLib, withReceiptId receiptId: String) {
+        #if DEBUG
         print("Receipt : \(receiptId)")
+        #endif
     }
     
     func serverDidSendPing() {
+        #if DEBUG
         print("Server ping")
+        #endif
     }
     
     
@@ -185,18 +189,24 @@ extension ChatRoomViewController: StompClientLibDelegate {
                      akaStringBody stringBody: String?,
                      withHeader header: [String : String]?,
                      withDestination destination: String) {
+        #if DEBUG
         print("Destination : \(destination)")
         print("JSON Body : \(String(describing: jsonBody))")
+        #endif
         
         guard let messageString = stringBody,
               let data = messageString.data(using: .utf8),
               let message = try? JSONDecoder().decode(Message.self, from: data) else {
+            #if DEBUG
             print("No valid message string or data received.")
+            #endif
             return
         }
         
         if message.senderId == Int(KeychainHandler.shared.userID) {
+            #if DEBUG
             print("Received echo message from self, ignoring.")
+            #endif
             return
         }
         DispatchQueue.main.async {
@@ -207,12 +217,10 @@ extension ChatRoomViewController: StompClientLibDelegate {
     }
     
     func stompClientDidDisconnect(client: StompClientLib) {
-        print("Socket is Disconnected")
         isConnected = false
     }
     
     func stompClientDidConnect(client: StompClientLib) {
-        print("Socket is connected")
         isConnected = true
         
         // 연결 성공 시 구독 설정
@@ -222,7 +230,9 @@ extension ChatRoomViewController: StompClientLibDelegate {
     }
     
     func serverDidSendError(client: StompClientLib, withErrorMessage description: String, detailedErrorMessage message: String?) {
-        print("Error Send : \(String(describing: message))")
+        let alert = UIAlertController(title: "Error Send", message: "\(String(describing: message))", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -296,7 +306,6 @@ extension ChatRoomViewController {
     }
     
     @objc private func profileImageButtonTapped() {
-        print("프로필을 누름")
         let detailProfileViewController = DetailProfileViewController()
         detailProfileViewController.userId = self.participants[0]
         detailProfileViewController.isFromChat = true

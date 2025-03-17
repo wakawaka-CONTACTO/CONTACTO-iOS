@@ -3,12 +3,17 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26434AC82D82D604000FB7AE /* Nationality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26434AC72D82D604000FB7AE /* Nationality.swift */; };
+		26DEC0212D806D0B00667450 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEC0202D806D0B00667450 /* EmptyResponse.swift */; };
+		330688D32D82D7F400BD34EA /* ReportRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */; };
+		330688D52D82D98F00BD34EA /* ReportResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */; };
 		33185B092D79A6A200B508A3 /* PageableResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B082D79A6A200B508A3 /* PageableResponse.swift */; };
 		33185B0B2D7B1E6B00B508A3 /* PageableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */; };
+		333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */; };
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
 		8C6A7C97DD9DE3A79AFFCBC0 /* Pods_CONTACTO_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */; };
 		C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */; };
@@ -158,8 +163,13 @@
 
 /* Begin PBXFileReference section */
 		0DEA1664F7C3DD88F43E1FDF /* Pods-CONTACTO-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.release.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		26434AC72D82D604000FB7AE /* Nationality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nationality.swift; sourceTree = "<group>"; };
+		26DEC0202D806D0B00667450 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
+		330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportRequestBodyDTO.swift; sourceTree = "<group>"; };
+		330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportResponseDTO.swift; sourceTree = "<group>"; };
 		33185B082D79A6A200B508A3 /* PageableResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableResponse.swift; sourceTree = "<group>"; };
 		33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableRequest.swift; sourceTree = "<group>"; };
+		333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockResponseDTO.swift; sourceTree = "<group>"; };
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CONTACTO_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BE1A2D5A19E66A4ACF01783 /* Pods-CONTACTO-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -308,6 +318,10 @@
 		C3FD909C2C9189F30021D2BA /* ABCDiatype-BoldItalic-Trial.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ABCDiatype-BoldItalic-Trial.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		26BBF5E62D8432830089E60C /* Alert */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Alert; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		C3FD90322C9139D40021D2BA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -346,17 +360,12 @@
 			isa = PBXGroup;
 			children = (
 				C33D73BE2CDEEDFB00889B1B /* HTTPHeaderFieldKey.swift */,
-				C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */,
 				C33D73C22CDEEE1C00889B1B /* TargetType.swift */,
 				C33D73C92CDEEE6800889B1B /* KeychainHandler.swift */,
-				C33D73CE2CDEEE8700889B1B /* BaseResponse.swift */,
 				C33D73D02CDEEE9500889B1B /* APIEventLogger.swift */,
 				C33D73D22CDEEEA300889B1B /* APIRequestLoader.swift */,
 				C33D73D42CDEEEB300889B1B /* NetworkService.swift */,
 				C33D73D62CDEEEBE00889B1B /* ContactoRequestInterceptor.swift */,
-				C33B9A2C2CFCC3E7009A6B2D /* ErrorResponse.swift */,
-				33185B082D79A6A200B508A3 /* PageableResponse.swift */,
-				33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -451,6 +460,8 @@
 			children = (
 				C33D73F62CDEF19000889B1B /* PortfoliosResponseDTO.swift */,
 				C34C1F622CE3A02300F94BCD /* LikeResponseDTO.swift */,
+				333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */,
+				330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */,
 			);
 			name = Response;
 			sourceTree = "<group>";
@@ -581,6 +592,11 @@
 			isa = PBXGroup;
 			children = (
 				C33D74182CDEF25E00889B1B /* DeleteResponseDTO.swift */,
+				33185B082D79A6A200B508A3 /* PageableResponse.swift */,
+				C33B9A2C2CFCC3E7009A6B2D /* ErrorResponse.swift */,
+				C33D73C02CDEEE0B00889B1B /* NetworkResult.swift */,
+				C33D73CE2CDEEE8700889B1B /* BaseResponse.swift */,
+				26DEC0202D806D0B00667450 /* EmptyResponse.swift */,
 			);
 			name = Response;
 			sourceTree = "<group>";
@@ -589,6 +605,7 @@
 			isa = PBXGroup;
 			children = (
 				C33D74162CDEF25600889B1B /* DeleteRequestBodyDTO.swift */,
+				33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -623,6 +640,7 @@
 			isa = PBXGroup;
 			children = (
 				C34C1F602CE39F9100F94BCD /* LikeRequestBodyDTO.swift */,
+				330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */,
 			);
 			name = Request;
 			sourceTree = "<group>";
@@ -775,6 +793,7 @@
 			isa = PBXGroup;
 			children = (
 				C3B95CEF2C9C03D8002A4681 /* Talent.swift */,
+				26434AC72D82D604000FB7AE /* Nationality.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -959,6 +978,7 @@
 		C3FD905F2C9142DE0021D2BA /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				26BBF5E62D8432830089E60C /* Alert */,
 				C3FD90842C915EBE0021D2BA /* Base */,
 				C35744122CF8B60300FE691D /* Splash */,
 				C3FD90792C915E160021D2BA /* Login */,
@@ -1090,6 +1110,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				26BBF5E62D8432830089E60C /* Alert */,
+			);
 			name = "CONTACTO-iOS";
 			packageProductDependencies = (
 				C3FD904D2C913EC40021D2BA /* SnapKit */,
@@ -1219,6 +1242,7 @@
 				C3FD905B2C91429C0021D2BA /* StringLiterals.swift in Sources */,
 				C3FD90682C9154BA0021D2BA /* UILabel+.swift in Sources */,
 				C3E88C752C928C80005A19BE /* OnboardingPurposeButton.swift in Sources */,
+				26DEC0212D806D0B00667450 /* EmptyResponse.swift in Sources */,
 				C3FD907D2C915E550021D2BA /* LoginViewController.swift in Sources */,
 				C384B6DD2CFC785000F38ADB /* ChatResponseDTO.swift in Sources */,
 				C33D73CA2CDEEE6800889B1B /* KeychainHandler.swift in Sources */,
@@ -1282,6 +1306,7 @@
 				335900B02D74704D0088E78B /* Match.swift in Sources */,
 				C33D74082CDEF1F100889B1B /* EditTarget.swift in Sources */,
 				C33B9A2D2CFCC3E7009A6B2D /* ErrorResponse.swift in Sources */,
+				26434AC82D82D604000FB7AE /* Nationality.swift in Sources */,
 				C3EF05EE2C9DC964001BF9EC /* ChatRoomViewController.swift in Sources */,
 				C393A60D2C93E5AA00ECF1B5 /* PortfolioIndicatorView.swift in Sources */,
 				C33D74022CDEF1D500889B1B /* EditRequestBodyDTO.swift in Sources */,
@@ -1309,10 +1334,12 @@
 				C3FD906E2C9154EC0021D2BA /* UIView+.swift in Sources */,
 				C3E88C7D2C92A95A005A19BE /* SNSOnboardingView.swift in Sources */,
 				C33D73D12CDEEE9500889B1B /* APIEventLogger.swift in Sources */,
+				330688D32D82D7F400BD34EA /* ReportRequestBodyDTO.swift in Sources */,
 				C3FD90782C9157FD0021D2BA /* UIViewController+.swift in Sources */,
 				C3F574F92CC3953A00440D98 /* EditPortfolioCollectionViewCell.swift in Sources */,
 				C33D74172CDEF25600889B1B /* DeleteRequestBodyDTO.swift in Sources */,
 				C3E88C862C92C8B3005A19BE /* TalentHeaderView.swift in Sources */,
+				330688D52D82D98F00BD34EA /* ReportResponseDTO.swift in Sources */,
 				C393A61E2C9427F500ECF1B5 /* String+.swift in Sources */,
 				C33D74132CDEF23900889B1B /* ChatTarget.swift in Sources */,
 				C33DCF8A2CFDF483009072C4 /* ResetPasswordResponseDTO.swift in Sources */,
@@ -1335,6 +1362,7 @@
 				C33D74192CDEF25E00889B1B /* DeleteResponseDTO.swift in Sources */,
 				C35E26572C9D72B100B197CB /* ChatList.swift in Sources */,
 				C3E88C842C92BA2D005A19BE /* TalentCollectionViewCell.swift in Sources */,
+				333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */,
 				C34C1F5A2CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift in Sources */,
 				C34C1F632CE3A02300F94BCD /* LikeResponseDTO.swift in Sources */,
 				C3FD90642C91548D0021D2BA /* UITextField+.swift in Sources */,
@@ -1423,6 +1451,7 @@
 		};
 		C3FD90482C9139D70021D2BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC3389C32D67259100BE7518 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;

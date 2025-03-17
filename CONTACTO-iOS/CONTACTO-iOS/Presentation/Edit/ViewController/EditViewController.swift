@@ -12,11 +12,10 @@ import PhotosUI
 import SnapKit
 import Then
 
-// TODO: - put 확인 (500 확인)
 final class EditViewController: UIViewController {
     
     private var originalPortfolioData: MyDetailResponseDTO?
-    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
+    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: "Ko", webUrl: "", password: "",userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
     var isEditEnable = false
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
@@ -174,11 +173,9 @@ final class EditViewController: UIViewController {
             NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { [weak self] response in
                 switch response {
                 case .success(let data):
-                    print(data)
                     completion(true)
                 default:
                     completion(false)
-                    print("error")
                 }
             }
         } else {
@@ -198,11 +195,9 @@ final class EditViewController: UIViewController {
             case .success(let data):
                 self?.portfolioData = data
                 self?.updatePortfolio()
-                print(data)
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
             
 //            self?.editView.editButton.isUserInteractionEnabled = true
@@ -234,7 +229,7 @@ final class EditViewController: UIViewController {
         portfolioData.userPortfolio?.portfolioImageUrl.forEach { url in
             guard let imageUrl = URL(string: url) else { return }
             
-            dispatchGroup.enter() // 작업 시작
+            dispatchGroup.enter()
             KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { result in
                 switch result {
                 case .success(let value):
@@ -244,15 +239,15 @@ final class EditViewController: UIViewController {
                         }
                     }
                 case .failure(let error):
+                    #if DEBUG
                     print("Failed to load image: \(error.localizedDescription)")
+                    #endif
                 }
-                dispatchGroup.leave() // 작업 완료
+                dispatchGroup.leave()
             }
         }
         
-        // 모든 작업이 완료된 후 실행
         dispatchGroup.notify(queue: .main) {
-            print(self.selectedImages)
             self.editView.portfolioCollectionView.reloadData()
         }
         
@@ -268,8 +263,7 @@ final class EditViewController: UIViewController {
     
     private func setData() {
         self.checkMyPort { _ in
-            self.originalPortfolioData = self.portfolioData // 원본 데이터 저장
-            print("원본 데이터: \(String(describing: self.originalPortfolioData))")
+            self.originalPortfolioData = self.portfolioData
             self.checkTalentLayout()
         }
     }
@@ -298,7 +292,7 @@ final class EditViewController: UIViewController {
         guard let originalData = originalPortfolioData else { 
             isDataChanged = true
             return
-        } // 원본 데이터가 없으면 변경된 것으로 간주
+        }
 
         var changeDetected = portfolioData.username != originalData.username ||
             portfolioData.description != originalData.description ||
@@ -331,7 +325,6 @@ final class EditViewController: UIViewController {
     }
     
     private func changeSaveButtonStatus() {
-        print("textField:\(isTextFieldFilled)\ntextView:\(isTextViewFilled)\nportfolio:\(isPortfolioFilled)\npurpose:\(isPurposeFilled)\neditEnabled:\(isEditEnable)")
         if isTextFieldFilled,
            isTextViewFilled,
            isPortfolioFilled,
@@ -378,9 +371,7 @@ final class EditViewController: UIViewController {
             $0.leading.equalToSuperview().inset(16)
         }
         
-        // 현재 활성화된 텍스트 필드가 있는지 확인
         if let activeField = activeTextField {
-            print(activeField)
             if activeField.frame.minY > (view.frame.height - keyboardHeight) {
                 let yOffset = activeField.frame.maxY - (view.frame.height + tabBarHeight - keyboardHeight) + 45.adjustedHeight
                 editView.scrollView.setContentOffset(CGPoint(x: 0, y: keyboardHeight + yOffset), animated: false)
@@ -487,7 +478,6 @@ extension EditViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: EditPortfolioCollectionViewCell.className,
                 for: indexPath) as? EditPortfolioCollectionViewCell else { return UICollectionViewCell() }
-            print(selectedImages.count) 
             if indexPath.row < selectedImages.count {
                 cell.isFilled = true
                 cell.backgroundImageView.image = selectedImages[indexPath.row]
@@ -588,6 +578,46 @@ extension EditViewController: UITextViewDelegate {
         
         hasChanges()
     }
+    
+    // 입력값을 검증하고 결과를 ValidationResult로 반환
+    private func validateInputs() -> ValidationResult {
+        // 이름 검증: 공백 제거 후, 2-20자의 영문자, 숫자, 한글만 허용
+        guard let name = editView.nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !name.isEmpty else {
+            return ValidationResult(isValid: false, message: "이름이 비어있습니다.")
+        }
+        let nameRegex = "^[a-zA-Z0-9가-힣]{2,20}$"
+        let nameTest = NSPredicate(format: "SELF MATCHES %@", nameRegex)
+        if !nameTest.evaluate(with: name) {
+            return ValidationResult(isValid: false, message: "이름은 2-20자의 영문자, 숫자, 한글만 가능합니다.")
+        }
+        
+        // website URL 검증: 값이 있다면 http:// 또는 https:// 로 시작해야 함
+        if let website = editView.websiteTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !website.isEmpty {
+            if !(website.hasPrefix("http://") || website.hasPrefix("https://")) {
+                return ValidationResult(isValid: false, message: "website URL은 http:// 또는 https:// 로 시작해야 합니다.")
+            }
+        }
+        
+        // purpose 검증: portfolioData.userPurposes 배열은 비어있으면 안 됨
+        if portfolioData.userPurposes.isEmpty {
+            return ValidationResult(isValid: false, message: "Purpose 항목이 선택되지 않았습니다.")
+        }
+        
+        // talent 검증: portfolioData.userTalents 배열은 비어있으면 안 됨
+        if portfolioData.userTalents.isEmpty {
+            return ValidationResult(isValid: false, message: "Talent 항목이 선택되지 않았습니다.")
+        }
+        
+        // portfolio 검증: 선택된 이미지 배열은 비어있으면 안 됨
+        if selectedImages.isEmpty {
+            return ValidationResult(isValid: false, message: "Portfolio 이미지를 선택해야 합니다.")
+        }
+        
+        // 모든 검증 통과
+        return ValidationResult(isValid: true, message: nil)
+    }
 }
 
 extension EditViewController: UITextFieldDelegate {
@@ -650,13 +680,24 @@ extension EditViewController: UITextFieldDelegate {
         self.view.layoutIfNeeded()
     }
     
+    // 수정 버튼 액션
     @objc private func editButtonTapped() {
+        // 편집 모드 토글
         isEditEnable.toggle()
         editView.toggleEditMode(isEditEnable)
         
-        if isEditEnable {
-            editView.editButton.isEnabled = false
-        } else {
+        if !isEditEnable {
+            let isValidProfile = validateInputs()
+            if isValidProfile.isValid == false {
+                AlertManager.showAlert(on: self,
+                                       message: isValidProfile.message ?? "입력값에 오류가 있습니다.") {
+                    self.isEditEnable = true
+                    self.editView.toggleEditMode(self.isEditEnable)
+                }
+                return
+            }
+            
+            // 검증이 통과된 경우 백엔드 요청 전송
             let imageDataArray = selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
             let body = EditRequestBodyDTO(
                 username: portfolioData.username.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -675,9 +716,11 @@ extension EditViewController: UITextFieldDelegate {
                 self.editView.purposeCollectionView.reloadData()
                 self.view.endEditing(true)
             }
-            
             self.isDataChanged = false
             self.editView.editButton.isEnabled = true
+        } else {
+            // 편집 모드 진입 시 저장 버튼 비활성화
+            editView.editButton.isEnabled = false
         }
         
         editView.portfolioCollectionView.reloadData()

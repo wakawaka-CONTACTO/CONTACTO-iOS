@@ -19,6 +19,12 @@ final class EmailCodeView: BaseView {
     let continueButton = UIButton()
     let resendButton = UIButton()
     
+    
+    private let timerLabel = UILabel()
+    private var countdownTime: Int = 240
+    private var timer: Timer?
+    
+    
     override func setStyle() {
         logoImageView.do {
             $0.image = UIImage(resource: .loginLogo)
@@ -59,6 +65,13 @@ final class EmailCodeView: BaseView {
             $0.setTitleColor(.systemBlue, for: .normal)
             $0.titleLabel?.font = .fontContacto(.gothicButton)
         }
+        
+        timerLabel.do {
+            $0.font = .fontContacto(.caption2)
+            $0.textColor = .ctwhite
+            $0.textAlignment = .center
+            $0.text = formatTime(countdownTime)
+        }
     }
     
     override func setLayout() {
@@ -67,7 +80,8 @@ final class EmailCodeView: BaseView {
                     mainTextField,
                     underLineView,
                     continueButton,
-                    resendButton)
+                    resendButton,
+                    timerLabel)
         
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(153.adjustedHeight)
@@ -101,6 +115,41 @@ final class EmailCodeView: BaseView {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(continueButton.snp.bottom).offset(18.adjustedHeight)
         }
+        
+        timerLabel.snp.makeConstraints {
+            $0.top.equalTo(resendButton.snp.bottom).offset(10.adjustedHeight)
+            $0.centerX.equalToSuperview()
+        }
+    }
+    
+    func startTimer() {
+        stopTimer()
+        countdownTime = 240
+        timerLabel.text = formatTime(countdownTime)
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.updateTimer()
+        }
+    }
+    
+    private func updateTimer() {
+        if countdownTime > 0 {
+            countdownTime -= 1
+            timerLabel.text = formatTime(countdownTime)
+        } else {
+            stopTimer()
+        }
+    }
+    
+    func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    private func formatTime(_ seconds: Int) -> String {
+        let minutes = seconds / 60
+        let sec = seconds % 60
+        return String(format: "%02d:%02d", minutes, sec)
     }
 }
     

@@ -79,7 +79,7 @@ enum StringLiterals {
             static let instagram = "INSTAGRAM"
             static let required = "REQUIRED*"
             static let website = "WEBSITE"
-            static let example = "contactocreator.com"
+            static let example = "https://contactocreator.com"
         }
         
         enum Talent {
@@ -173,7 +173,7 @@ enum StringLiterals {
         static let instagram = "INSTAGRAM"
         static let required = "REQUIRED*"
         static let website = "WEBSITE"
-        static let example = "contactocreator.com"
+        static let example = "https://contactocreator.com"
         static let editButton = "EDIT START"
         static let saveButton = "SAVE"
         static let doneButton = "Done"

@@ -15,7 +15,7 @@ protocol OnboardingServiceProtocol {
     
     func emailCheck(bodyDTO: EmailCheckRequestBodyDTO, completion: @escaping (NetworkResult<ResetPasswordResponseDTO>) -> Void)
     
-    func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (NetworkResult<String>) -> Void)
+    func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
     
     func signHelp(bodyDTO: SignInHelpRequestBodyDTO, completion: @escaping (NetworkResult<SignInHelpResponseDTO>) -> Void)
     
@@ -40,8 +40,8 @@ final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingSer
         fetchData(target: .emailCheck(bodyDTO), responseData: ResetPasswordResponseDTO.self, completion: completion)
     }
     
-    func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (NetworkResult<String>) -> Void) {
-        fetchData(target: .emailSend(bodyDTO), responseData: String.self, completion: completion)
+    func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (NetworkResult<EmptyResponse>) -> Void) {
+        fetchData(target: .emailSend(bodyDTO), responseData: EmptyResponse.self, completion: completion)
     }
     
     func signHelp(bodyDTO: SignInHelpRequestBodyDTO, completion: @escaping (NetworkResult<SignInHelpResponseDTO>) -> Void) {
