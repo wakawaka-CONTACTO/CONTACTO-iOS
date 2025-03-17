@@ -707,4 +707,4 @@ extension EditViewController: UITextFieldDelegate {
         editView.portfolioCollectionView.reloadData()
         editView.purposeCollectionView.reloadData()
     }
-} // <- 확장 종료를 위한 중괄호
+}
