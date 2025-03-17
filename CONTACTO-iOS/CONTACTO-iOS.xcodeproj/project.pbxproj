@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -317,6 +317,10 @@
 		C3FD909A2C9189C70021D2BA /* ABCDiatype-Bold-Trial.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ABCDiatype-Bold-Trial.otf"; sourceTree = "<group>"; };
 		C3FD909C2C9189F30021D2BA /* ABCDiatype-BoldItalic-Trial.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ABCDiatype-BoldItalic-Trial.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		26BBF5E62D8432830089E60C /* Alert */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Alert; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C3FD90322C9139D40021D2BA /* Frameworks */ = {
@@ -974,6 +978,7 @@
 		C3FD905F2C9142DE0021D2BA /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				26BBF5E62D8432830089E60C /* Alert */,
 				C3FD90842C915EBE0021D2BA /* Base */,
 				C35744122CF8B60300FE691D /* Splash */,
 				C3FD90792C915E160021D2BA /* Login */,
@@ -1104,6 +1109,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				26BBF5E62D8432830089E60C /* Alert */,
 			);
 			name = "CONTACTO-iOS";
 			packageProductDependencies = (
