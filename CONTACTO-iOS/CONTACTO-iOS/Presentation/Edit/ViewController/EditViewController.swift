@@ -200,8 +200,8 @@ final class EditViewController: UIViewController {
                 completion(false)
             }
             
-//            self?.editView.editButton.isUserInteractionEnabled = true
-//            self?.editView.previewButton.isUserInteractionEnabled = true
+            self?.editView.editButton.isUserInteractionEnabled = true
+            self?.editView.previewButton.isUserInteractionEnabled = true
             self?.activityIndicator.stopAnimating()
             self?.activityIndicator.removeFromSuperview()
         }
