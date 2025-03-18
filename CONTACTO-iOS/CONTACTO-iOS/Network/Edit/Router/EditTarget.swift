@@ -74,22 +74,46 @@ extension EditRequestBodyDTO {
                 formData.append(webUrl.data(using: .utf8) ?? Data(), withName: "webUrl")
             }
             
-            if let portfolioImageUrl = self.portfolioImageUrl, !portfolioImageUrl.isEmpty {
-                
-                var keys: [Int] = [] // keys 배열 생성
-                
-                for (index, image) in portfolioImageUrl.enumerated() {
-                    keys.append(index+1)
-                    formData.append(image, withName: "portfolioImages", fileName: "image\(index).jpg", mimeType: "image/jpeg")
-                }
-                
-                // keys[] 배열을 폼 데이터에 추가
-                for (index, key) in keys.enumerated() {
-                    formData.append("\(key)".data(using: .utf8) ?? Data(), withName: "keys")
-                }
-            } else {
-                print("portfolioImageUrl is nil or empty")
-            }
+            if let newImages = self.newPortfolioImages,
+                          let newKeys = self.newImageKeys,
+                          !newImages.isEmpty {
+                           
+                           for (index, imageData) in newImages.enumerated() {
+                               formData.append(
+                                   imageData,
+                                   withName: "newPortfolioImages",
+                                   fileName: "image\(index).jpg",
+                                   mimeType: "image/jpeg"
+                               )
+                           }
+
+                           for key in newKeys {
+                               formData.append(
+                                   "\(key)".data(using: .utf8) ?? Data(),
+                                   withName: "newImageKeys"
+                               )
+                           }
+                       }
+
+            
+                       if let existedUrls = self.existedImageUrl,
+                          let existingKeys = self.existingImageKeys,
+                          !existedUrls.isEmpty {
+                           
+                           for url in existedUrls {
+                               formData.append(
+                                   url.data(using: .utf8) ?? Data(),
+                                   withName: "existedImageUrl"
+                               )
+                           }
+                           
+                           for key in existingKeys {
+                               formData.append(
+                                   "\(key)".data(using: .utf8) ?? Data(),
+                                   withName: "existingImageKeys"  
+                               )
+                           }
+                       }
             
             for (index, purpose) in self.userPurposes.enumerated() {
                 formData.append("\(purpose)".data(using: .utf8) ?? Data(), withName: "userPurposes")
