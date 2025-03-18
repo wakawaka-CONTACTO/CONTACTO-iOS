@@ -99,6 +99,34 @@ final class DetailProfileViewController: BaseViewController {
         completion(true)
     }
     
+    private func blockUser(blockedUserId: Int, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.homeService.blockUser(blockedUserId: portfolioData.id) { response in
+            switch response {
+            case .success(let data):
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            
+            }
+        }
+    }
+    
+    private func reportUser(bodyDTO: ReportRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.homeService.reportUser(bodyDTO: bodyDTO) { response in
+            switch response {
+            case .success(let data):
+                print(data)
+                completion(true)
+            default:
+                completion(false)
+                print("error")
+            
+            }
+        }
+    }
+    
     private func updatePortfolio() {
         self.talentData = self.portfolioData.userTalents.compactMap { userTalent in
             if self.isPreview {
@@ -181,6 +209,8 @@ final class DetailProfileViewController: BaseViewController {
     }
     
     @objc private func blockButtonTapped() {
+        guard !isPreview else { return }
+        
         let alert = UIAlertController(
             title: StringLiterals.Home.Block.title,
             message: StringLiterals.Home.Block.message,
@@ -189,8 +219,33 @@ final class DetailProfileViewController: BaseViewController {
         
         let cancelAction = UIAlertAction(title: "No", style: .default)
         let confirmAction = UIAlertAction(title: "Yes", style: .default) { _ in
-            self.blockUser()
-        }
+            self.blockUser(blockedUserId: self.portfolioData.id) { success in
+                DispatchQueue.main.async {
+                    if success {
+                        let successAlert = UIAlertController(
+                            title: nil,
+                            message: StringLiterals.Home.Block.result,
+                            preferredStyle: .alert
+                        )
+                        if let navigationController = self.navigationController {
+                            navigationController.popViewController(animated: true)
+                        }
+                        let okAction = UIAlertAction(title: "OK", style: .default)
+                        successAlert.addAction(okAction)
+                        self.present(successAlert, animated: true, completion: nil)
+                    } else {
+                        let errorAlert = UIAlertController(
+                            title: "Error",
+                            message: "사용자 차단에 실패했습니다.",
+                            preferredStyle: .alert
+                        )
+                        let okAction = UIAlertAction(title: "OK", style: .default)
+                        errorAlert.addAction(okAction)
+                        self.present(errorAlert, animated: true, completion: nil)
+                    }
+                }
+            }
+       }
         
         alert.addAction(confirmAction)
         alert.addAction(cancelAction)
@@ -198,30 +253,36 @@ final class DetailProfileViewController: BaseViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    private func blockUser() {
-        // TODO: 실제 차단 로직
-        print("User blocked")
-        
-        let successAlert = UIAlertController(
-            title: nil,
-            message: StringLiterals.Home.Block.result,
-            preferredStyle: .alert
-        )
-
-        let okAction = UIAlertAction(title: "OK", style: .default)
-        successAlert.addAction(okAction)
-
-        present(successAlert, animated: true, completion: nil)
-    }
-    
     @objc private func reportButtonTapped() {
         let alert = UIAlertController(title: StringLiterals.Home.Report.title, message: nil, preferredStyle: .actionSheet)
         
         let reportReasons = StringLiterals.Home.Report.ReportReasons.allCases
-        
-        for reason in reportReasons {
+        for (index, reason) in reportReasons.enumerated() {
             let action = UIAlertAction(title: reason, style: .default) { _ in
-                self.reportUser(reason: reason)
+                print("User reported for reason at index \(index): \(reason)")
+                self.reportUser(bodyDTO: ReportRequestBodyDTO(reportedUserId: self.portfolioData.id, reportReasonIdx: index)) { success in
+                    DispatchQueue.main.async {
+                        if success {
+                            let successAlert = UIAlertController(
+                                title: nil,
+                                message: StringLiterals.Home.Report.result,
+                                preferredStyle: .alert
+                            )
+                            let okAction = UIAlertAction(title: "OK", style: .default)
+                            successAlert.addAction(okAction)
+                            self.present(successAlert, animated: true, completion: nil)
+                        } else {
+                            let errorAlert = UIAlertController(
+                                title: "Error",
+                                message: "신고 처리에 실패했습니다.",
+                                preferredStyle: .alert
+                            )
+                            let okAction = UIAlertAction(title: "OK", style: .default)
+                            errorAlert.addAction(okAction)
+                            self.present(errorAlert, animated: true, completion: nil)
+                        }
+                    }
+                }
             }
             alert.addAction(action)
         }
@@ -230,22 +291,6 @@ final class DetailProfileViewController: BaseViewController {
         alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
-    }
-    
-    private func reportUser(reason: String) {
-        // TODO: 실제 신고 로직
-        print("User reported for: \(reason)")
-
-        let successAlert = UIAlertController(
-            title: nil,
-            message: StringLiterals.Home.Report.result,
-            preferredStyle: .alert
-        )
-
-        let okAction = UIAlertAction(title: "OK", style: .default)
-        successAlert.addAction(okAction)
-
-        present(successAlert, animated: true, completion: nil)
     }
 }
 

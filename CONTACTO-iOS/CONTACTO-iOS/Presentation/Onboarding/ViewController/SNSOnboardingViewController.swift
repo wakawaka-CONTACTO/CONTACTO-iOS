@@ -92,6 +92,16 @@ extension SNSOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
+        guard let website = self.snsOnboardingView.websiteTextField.text,
+              website.hasPrefix("http://") || website.hasPrefix("https://") else {
+            let alert = UIAlertController(title: "Notify", message: "Your website address should be started with http:// or https://", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            if let topVC = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController {
+                topVC.present(alert, animated: true, completion: nil)
+            }
+            return
+        }
+        
         UserInfo.shared.instagramId = self.snsOnboardingView.instaTextField.text ?? ""
         UserInfo.shared.webUrl = self.snsOnboardingView.websiteTextField.text ?? ""
         UserInfo.shared.nationality = self.snsOnboardingView.selectedNationality.rawValue
