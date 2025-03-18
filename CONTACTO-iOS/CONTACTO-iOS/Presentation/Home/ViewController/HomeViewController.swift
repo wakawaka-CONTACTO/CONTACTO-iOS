@@ -15,6 +15,7 @@ final class HomeViewController: BaseViewController {
     
     var isFirst = false /// 튜토리얼 필요 유무
     var isPreview = false /// edit의 preview인지
+    var isUndo = false /// 취소 버튼 유무
     var portUserId = 0 /// 현재 보고 있는 유저의 id
     var isMatch = false /// 지금 매칭이 되었는지 response
     var num = 0 { /// 현재 보고 있는 포트폴리오가 몇 번째 장인지 (0부터)
@@ -28,6 +29,7 @@ final class HomeViewController: BaseViewController {
     var hasCheckedMyPort = false
    
     var portfolioData: [PortfoliosResponseDTO] = []
+    var prePortfolioData = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
     
     /// preview의 내 포폴 데이터
     var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
@@ -109,6 +111,7 @@ final class HomeViewController: BaseViewController {
         homeView.noButton.addTarget(self, action: #selector(noButtonTapped), for: .touchUpInside)
         homeView.yesButton.addTarget(self, action: #selector(yesButtonTapped), for: .touchUpInside)
         homeView.profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
+        homeView.undoButton.addTarget(self, action: #selector(undoButtonTapped), for: .touchUpInside)
     }
     
     override func setDelegate() {
@@ -217,12 +220,17 @@ extension HomeViewController {
     
     private func setData() {
         if !isPreview {
-            homeList { _ in
+            if isUndo {
+                self.portfolioData.insert(self.prePortfolioData, at: 0) // 배열 맨 앞에 데이터 추가
                 self.setNewPortfolio()
-            }
-            if !hasCheckedMyPort {
-                checkMyPort()
-                hasCheckedMyPort = true
+            } else {
+                homeList { _ in
+                    self.setNewPortfolio()
+                }
+                if !hasCheckedMyPort {
+                    checkMyPort()
+                    hasCheckedMyPort = true
+                }
             }
         } else {
             homeView.profileNameLabel.text = previewPortfolioData.username
@@ -284,6 +292,7 @@ extension HomeViewController {
     }
     
     @objc private func yesButtonTapped() {
+        prePortfolioData = portfolioData[0]
         if !isPreview {
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: portUserId, status: LikeStatus.like.rawValue)) { _ in
                 self.animateImage(status: true)
@@ -294,11 +303,19 @@ extension HomeViewController {
     }
     
     @objc private func noButtonTapped() {
+        prePortfolioData = portfolioData[0]
         if !isPreview {
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: portUserId, status: LikeStatus.dislike.rawValue)) { _ in
                 self.animateImage(status: false)
             }
         } else {
+            self.animateImage(status: false)
+        }
+    }
+    
+    @objc private func undoButtonTapped() {
+        isUndo = true
+        if !isPreview, prePortfolioData.username != "" {
             self.animateImage(status: false)
         }
     }
@@ -326,6 +343,7 @@ extension HomeViewController {
             self.num = 0
             self.isAnimating = false
             self.isMatch = false
+            self.isUndo = false
         }
     }
     
