@@ -135,25 +135,49 @@ final class EditViewController: UIViewController {
         editView.editAction = {
             self.isEditEnable.toggle()
             let imageDataArray = self.portfolioItems.compactMap { $0.image?.jpegData(compressionQuality: 0.8) }
-            
-            let body = EditRequestBodyDTO(
-                username: self.portfolioData.username,
-                email: self.portfolioData.email,
-                description: self.portfolioData.description,
-                instagramId: self.portfolioData.instagramId,
-                password: "",
-                webUrl: self.portfolioData.webUrl,
-                userPurposes: self.portfolioData.userPurposes.map { $0 - 1 },
-                userTalents: self.convertToTalent(displayNames: self.portfolioData.userTalents.map { $0.talentType }),
-                newPortfolioImages: imageDataArray,
-                newImageKeys: nil,
-                existedImageUrl: nil,
-                existingImageKeys: nil
-            )
-            self.editMyPort(bodyDTO: body) { _ in
-                self.editView.portfolioCollectionView.reloadData()
-                self.editView.purposeCollectionView.reloadData()
-                self.view.endEditing(true)
+            if !self.isEditEnable {
+                
+                // (1) 이미지 관련 분류
+                var newPortfolioImages: [Data] = []
+                var existedImageUrl: [String] = []
+                var newImageKeys: [Int] = []
+                var existingImageKeys: [Int] = []
+                
+                for (index, item) in self.portfolioItems.enumerated() {
+                    if item.isExistedSource {
+                        if let urlString = item.url {
+                            existedImageUrl.append(urlString)
+                            existingImageKeys.append(index)
+                        }
+                    } else {
+                        if let imgData = item.image?.jpegData(compressionQuality: 0.8) {
+                            newPortfolioImages.append(imgData)
+                            newImageKeys.append(index)
+                        }
+                    }
+                }
+                
+                let body = EditRequestBodyDTO(
+                    username: self.portfolioData.username,
+                    email: self.portfolioData.email,
+                    description: self.portfolioData.description,
+                    instagramId: self.portfolioData.instagramId,
+                    password: "",
+                    webUrl: self.portfolioData.webUrl,
+                    userPurposes: self.portfolioData.userPurposes.map { $0 - 1 },
+                    userTalents: self.convertToTalent(displayNames: self.portfolioData.userTalents.map { $0.talentType }),
+                    newPortfolioImages: newPortfolioImages.isEmpty ? nil : newPortfolioImages,
+                    newImageKeys: newImageKeys.isEmpty ? nil : newImageKeys,
+                    existedImageUrl: existedImageUrl.isEmpty ? nil : existedImageUrl,
+                    existingImageKeys: existingImageKeys.isEmpty ? nil : existingImageKeys
+                )
+                self.editMyPort(bodyDTO: body) { _ in
+                    self.editView.portfolioCollectionView.reloadData()
+                    self.editView.purposeCollectionView.reloadData()
+                    self.view.endEditing(true)
+                }
+            } else{
+                self.editView.editButton.isEnabled = false
             }
         }
     }
@@ -491,7 +515,7 @@ extension EditViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
         case 0:
-            return min(portfolioItems.count, 10)
+            return 10
         case 1:
             return talentData.count
         case 2:
@@ -507,9 +531,8 @@ extension EditViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: EditPortfolioCollectionViewCell.className,
                 for: indexPath) as? EditPortfolioCollectionViewCell else { return UICollectionViewCell() }
-            let item = portfolioItems[indexPath.row]
-
             if indexPath.row < portfolioItems.count {
+                let item = portfolioItems[indexPath.row]
                 cell.isFilled = true
                 cell.backgroundImageView.image = item.image
             } else {
