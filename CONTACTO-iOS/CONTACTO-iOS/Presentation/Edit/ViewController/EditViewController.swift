@@ -738,9 +738,7 @@ extension EditViewController: UITextFieldDelegate {
         self.view.layoutIfNeeded()
     }
     
-    // 수정 버튼 액션
     @objc private func editButtonTapped() {
-        // 편집 모드 토글
         isEditEnable.toggle()
         editView.toggleEditMode(isEditEnable)
         
@@ -761,6 +759,7 @@ extension EditViewController: UITextFieldDelegate {
             var existingImageKeys: [Int] = []
             
             for (index, item) in portfolioItems.enumerated() {
+                print("[DEBUG] index=\(index), isExistedSource=\(item.isExistedSource), url=\(item.url ?? "nil")")
                 if item.isExistedSource {
                     if let url = item.url {
                         existedImageUrl.append(url)

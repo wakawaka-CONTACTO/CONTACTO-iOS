@@ -89,7 +89,7 @@ extension EditRequestBodyDTO {
 
                            for key in newKeys {
                                formData.append(
-                                   "\(key)".data(using: .utf8) ?? Data(),
+                                   "\(key+1)".data(using: .utf8) ?? Data(),
                                    withName: "newImageKeys"
                                )
                            }
@@ -103,14 +103,14 @@ extension EditRequestBodyDTO {
                            for url in existedUrls {
                                formData.append(
                                    url.data(using: .utf8) ?? Data(),
-                                   withName: "existedImageUrl"
+                                   withName: "existingPortfolioImageUrls"
                                )
                            }
                            
                            for key in existingKeys {
                                formData.append(
-                                   "\(key)".data(using: .utf8) ?? Data(),
-                                   withName: "existingImageKeys"  
+                                   "\(key+1)".data(using: .utf8) ?? Data(),
+                                   withName: "existingImageKeys"
                                )
                            }
                        }
