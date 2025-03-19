@@ -26,12 +26,27 @@ final class EditViewController: UIViewController {
     private var talentData: [TalentInfo] = []
     
     var isEditEnable = false
+    
+    private var changeDetectionTimer: Timer?
+    
+    private func scheduleChangeDetection() {
+        changeDetectionTimer?.invalidate()
+        changeDetectionTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
+            self?.portfolioManager?.hasChanges { changeDetected in
+                DispatchQueue.main.async {
+                    self?.isDataChanged = changeDetected
+                }
+            }
+        }
+    }
+    
+    
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
         didSet {
             self.portfolioManager?.currentData.userPurposes = tappedStates.enumerated().compactMap { index, state in
                 state ? index + 1 : nil
             }
-            self.checkForChanges()
+            scheduleChangeDetection()
         }
     }
     
@@ -524,42 +539,17 @@ extension EditViewController: UITextViewDelegate {
         if let text = textView.text {
             self.portfolioManager?.currentData.description = text
         }
-        checkForChanges()
+        scheduleChangeDetection()
     }
     
     private func validateInputs() -> ValidationResult {
-        guard let name = editView.nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
-              !name.isEmpty else {
-            return ValidationResult(isValid: false, message: "이름이 비어있습니다.")
-        }
-        let nameRegex = "^[a-zA-Z0-9가-힣]{2,20}$"
-        let nameTest = NSPredicate(format: "SELF MATCHES %@", nameRegex)
-        if !nameTest.evaluate(with: name) {
-            return ValidationResult(isValid: false, message: "이름은 2-20자의 영문자, 숫자, 한글만 가능합니다.")
-        }
-        
-        // website URL 검증: 값이 있으면 http:// 또는 https:// 로 시작해야 함
-        if let website = editView.websiteTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
-           !website.isEmpty, !(website.hasPrefix("http://") || website.hasPrefix("https://")) {
-            return ValidationResult(isValid: false, message: "website URL은 http:// 또는 https:// 로 시작해야 합니다.")
-        }
-        
-        // purpose 검증: PortfolioManager의 currentData의 userPurposes가 비어있으면 안 됨
-        if portfolioManager?.currentData.userPurposes.isEmpty ?? true {
-            return ValidationResult(isValid: false, message: "Purpose 항목이 선택되지 않았습니다.")
-        }
-        
-        // talent 검증: PortfolioManager의 currentData의 userTalents가 비어있으면 안 됨
-        if portfolioManager?.currentData.userTalents.isEmpty ?? true {
-            return ValidationResult(isValid: false, message: "Talent 항목이 선택되지 않았습니다.")
-        }
-        
-        // portfolio 검증: portfolioItems가 비어있으면 안 됨
-        if portfolioManager?.portfolioItems.isEmpty ?? true {
-            return ValidationResult(isValid: false, message: "Portfolio 이미지를 선택해야 합니다.")
-        }
-        
-        return ValidationResult(isValid: true, message: nil)
+        return ProfileValidator.validateProfile(
+            name: editView.nameTextField.text,
+            website: editView.websiteTextField.text,
+            purposes: portfolioManager?.currentData.userPurposes,
+            talents: portfolioManager?.currentData.userTalents,
+            portfolioItemsCount: portfolioManager?.portfolioItems.count ?? 0
+        )
     }
 }
 
