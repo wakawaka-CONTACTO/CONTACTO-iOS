@@ -30,7 +30,9 @@ final class EditViewController: UIViewController {
         userPurposes: [],
         userTalents: []
     )
-
+    
+    private var portfolioManager: PortfolioManager?
+    
     private var talentData: [TalentInfo] = []
     
     var isEditEnable = false
@@ -46,7 +48,7 @@ final class EditViewController: UIViewController {
     private var portfolioItems: [PortfolioItem] = []
     
     let activityIndicator = UIActivityIndicatorView(style: .large)
-
+    
     private var activeTextField: UIView?
     
     var isTextFieldFilled = true {
@@ -255,7 +257,7 @@ final class EditViewController: UIViewController {
     
     private func updatePortfolio() {
         self.portfolioItems.removeAll()
-
+        
         editView.nameTextField.text = portfolioData.username
         editView.descriptionTextView.text = portfolioData.description
         editView.instaTextField.text = portfolioData.instagramId
@@ -272,7 +274,7 @@ final class EditViewController: UIViewController {
         talentData = portfolioData.userTalents.compactMap { userTalent in
             Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType })?.info
         }
-
+        
         portfolioData.userTalents = talentData.map { talentInfo in
             UserTalent(id: 0, userId: portfolioData.id, talentType: talentInfo.displayName)
         }
@@ -292,9 +294,9 @@ final class EditViewController: UIViewController {
                         }
                     }
                 case .failure(let error):
-                    #if DEBUG
+#if DEBUG
                     print("Failed to load image: \(error.localizedDescription)")
-                    #endif
+#endif
                 }
                 dispatchGroup.leave()
             }
@@ -315,9 +317,15 @@ final class EditViewController: UIViewController {
     }
     
     private func setData() {
-        self.checkMyPort { _ in
-            self.originalPortfolioData = self.portfolioData
-            self.checkTalentLayout()
+        self.checkMyPort { success in
+            if success {
+                self.portfolioManager = PortfolioManager(portfolioData: self.portfolioData)
+                self.portfolioManager?.updatePortfolioItems {
+                    self.editView.portfolioCollectionView.reloadData()
+                }
+                self.originalPortfolioData = self.portfolioData
+                self.checkTalentLayout()
+            }
         }
     }
     
@@ -342,17 +350,17 @@ final class EditViewController: UIViewController {
     }
     
     private func hasChanges() {
-        guard let originalData = originalPortfolioData else { 
+        guard let originalData = originalPortfolioData else {
             isDataChanged = true
             return
         }
-
+        
         var changeDetected = portfolioData.username != originalData.username ||
-            portfolioData.description != originalData.description ||
-            portfolioData.instagramId != originalData.instagramId ||
-            portfolioData.webUrl != originalData.webUrl ||
-            portfolioData.userPurposes.sorted() != originalData.userPurposes.sorted() ||
-            portfolioData.userTalents.map({ $0.talentType }).sorted() != originalData.userTalents.map({ $0.talentType }).sorted()
+        portfolioData.description != originalData.description ||
+        portfolioData.instagramId != originalData.instagramId ||
+        portfolioData.webUrl != originalData.webUrl ||
+        portfolioData.userPurposes.sorted() != originalData.userPurposes.sorted() ||
+        portfolioData.userTalents.map({ $0.talentType }).sorted() != originalData.userTalents.map({ $0.talentType }).sorted()
         
         // 비동기적으로 로드
         let originalURLs = originalData.userPortfolio?.portfolioImageUrl.compactMap { URL(string: $0) } ?? []
@@ -371,7 +379,6 @@ final class EditViewController: UIViewController {
         
         group.notify(queue: .main) {
             let selectedImageData = self.portfolioItems.compactMap { $0.image?.pngData() }
-            // 이미지 데이터의 변경 여부도 포함하여 최종적으로 변경 여부를 결정
             changeDetected = changeDetected || (selectedImageData != originalImageData)
             self.isDataChanged = changeDetected
         }
@@ -406,7 +413,7 @@ final class EditViewController: UIViewController {
         let tabBarHeight = tabBarController?.tabBar.frame.height ?? 85
         
         let bottomInset = keyboardHeight - tabBarHeight - 35.adjustedHeight
-
+        
         editView.scrollView.contentInset.bottom = bottomInset
         editView.scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
         
@@ -531,8 +538,9 @@ extension EditViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: EditPortfolioCollectionViewCell.className,
                 for: indexPath) as? EditPortfolioCollectionViewCell else { return UICollectionViewCell() }
-            if indexPath.row < portfolioItems.count {
-                let item = portfolioItems[indexPath.row]
+            
+            if let manager = portfolioManager, indexPath.row < manager.portfolioItems.count {
+                let item = manager.portfolioItems[indexPath.row]
                 cell.isFilled = true
                 cell.backgroundImageView.image = item.image
             } else {
@@ -540,16 +548,15 @@ extension EditViewController: UICollectionViewDataSource {
                 cell.backgroundImageView.image = nil
             }
             
-            cell.uploadAction = {
-                self.setPortfolio()
+            cell.uploadAction = { [weak self] in
+                self?.setPortfolio()
             }
             
-            cell.cancelAction = {
-                guard indexPath.row < self.portfolioItems.count else { return }
-                self.portfolioItems.remove(at: indexPath.row)
-                self.isPortfolioFilled = !self.portfolioItems.isEmpty
+            cell.cancelAction = { [weak self] in
+                guard let self = self, let manager = self.portfolioManager, indexPath.row < manager.portfolioItems.count else { return }
+                manager.portfolioItems.remove(at: indexPath.row)
+                self.isPortfolioFilled = !manager.portfolioItems.isEmpty
                 collectionView.reloadData()
-                
                 self.hasChanges()
             }
             
@@ -637,9 +644,7 @@ extension EditViewController: UITextViewDelegate {
         hasChanges()
     }
     
-    // 입력값을 검증하고 결과를 ValidationResult로 반환
     private func validateInputs() -> ValidationResult {
-        // 이름 검증: 공백 제거 후, 2-20자의 영문자, 숫자, 한글만 허용
         guard let name = editView.nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               !name.isEmpty else {
             return ValidationResult(isValid: false, message: "이름이 비어있습니다.")
@@ -722,7 +727,6 @@ extension EditViewController: UITextFieldDelegate {
     @objc private func cancelButtonTapped() {
         isEditEnable.toggle()
         editView.toggleEditMode(isEditEnable)
-        // 데이터 초기화
         portfolioItems.removeAll()
         setData()
         DispatchQueue.main.async { [weak self] in
@@ -752,42 +756,8 @@ extension EditViewController: UITextFieldDelegate {
                 }
                 return
             }
-            
-            var newPortfolioImages: [Data] = []
-            var existedImageUrl: [String] = []
-            var newImageKeys: [Int] = []
-            var existingImageKeys: [Int] = []
-            
-            for (index, item) in portfolioItems.enumerated() {
-                print("[DEBUG] index=\(index), isExistedSource=\(item.isExistedSource), url=\(item.url ?? "nil")")
-                if item.isExistedSource {
-                    if let url = item.url {
-                        existedImageUrl.append(url)
-                        existingImageKeys.append(index)
-                    }
-                } else {
-                    if let imgData = item.image?.jpegData(compressionQuality: 0.8) {
-                        newPortfolioImages.append(imgData)
-                        newImageKeys.append(index)
-                    }
-                }
-            }
-            
-            // 검증이 통과된 경우 백엔드 요청 전송
-            let body = EditRequestBodyDTO(
-                username: portfolioData.username.trimmingCharacters(in: .whitespacesAndNewlines),
-                email: portfolioData.email,
-                description: portfolioData.description,
-                instagramId: portfolioData.instagramId,
-                password: "",
-                webUrl: portfolioData.webUrl,
-                userPurposes: portfolioData.userPurposes.map { $0 - 1 },
-                userTalents: convertToTalent(displayNames: portfolioData.userTalents.map { $0.talentType }),
-                newPortfolioImages: newPortfolioImages.isEmpty ? nil : newPortfolioImages,
-                newImageKeys: newImageKeys.isEmpty ? nil : newImageKeys,
-                existedImageUrl: existedImageUrl.isEmpty ? nil : existedImageUrl,
-                existingImageKeys: existingImageKeys.isEmpty ? nil : existingImageKeys
-            )
+            guard let manager = self.portfolioManager else { return }
+            let body = manager.prepareUpdateRequestBody()
             
             editMyPort(bodyDTO: body) { success in
                 if success {
@@ -799,7 +769,6 @@ extension EditViewController: UITextFieldDelegate {
                 }
             }
         } else {
-            // 편집 모드 진입 시 저장 버튼 비활성화
             editView.editButton.isEnabled = false
         }
         
