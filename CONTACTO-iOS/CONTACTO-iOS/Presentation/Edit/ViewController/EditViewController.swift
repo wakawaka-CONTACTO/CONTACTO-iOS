@@ -543,7 +543,7 @@ extension EditViewController: UITextViewDelegate {
     }
     
     private func validateInputs() -> ValidationResult {
-        return ProfileValidator.validateProfile(
+        return ProfileDataValidator.validateProfile(
             name: editView.nameTextField.text,
             website: editView.websiteTextField.text,
             purposes: portfolioManager?.currentData.userPurposes,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProfileValidator {
+struct ProfileDataValidator {
     static func validateName(_ name: String?) -> ValidationResult {
         guard let name = name?.trimmingCharacters(in: .whitespacesAndNewlines), !name.isEmpty else {
             return ValidationResult(isValid: false, message: "이름이 비어있습니다.")
