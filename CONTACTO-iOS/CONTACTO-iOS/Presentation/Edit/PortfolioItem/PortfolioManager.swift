@@ -88,7 +88,7 @@ final class PortfolioManager {
             instagramId: currentData.instagramId,
             password: "", // 비밀번호는 별도 처리
             webUrl: currentData.webUrl,
-            userPurposes: currentData.userPurposes.map { $0 - 1 },
+            userPurposes: currentData.userPurposes.map { $0 },
             userTalents: convertToTalent(displayNames: currentData.userTalents.map { $0.talentType }),
             newPortfolioImages: newPortfolioImages.isEmpty ? nil : newPortfolioImages,
             newImageKeys: newImageKeys.isEmpty ? nil : newImageKeys,
@@ -99,9 +99,12 @@ final class PortfolioManager {
     
     func convertToTalent(displayNames: [String]) -> [String] {
         return displayNames.compactMap { displayName in
-            if let talent = Talent.allCases.first(where: { $0.info.displayName == displayName }) {
+            if let talent = Talent.allCases.first(where: { $0.info.displayName == displayName || $0.info.koreanName == displayName }) {
                 return talent.rawValue
             } else {
+#if DEBUG
+                print("talent is not selected - displayName: \(displayName)")
+#endif
                 return nil
             }
         }

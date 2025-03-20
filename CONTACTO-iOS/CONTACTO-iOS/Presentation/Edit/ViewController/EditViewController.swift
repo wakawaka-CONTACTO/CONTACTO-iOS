@@ -44,7 +44,7 @@ final class EditViewController: UIViewController {
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
         didSet {
             self.portfolioManager?.currentData.userPurposes = tappedStates.enumerated().compactMap { index, state in
-                state ? index + 1 : nil
+                state ? index : nil
             }
             scheduleChangeDetection()
         }
@@ -178,6 +178,7 @@ final class EditViewController: UIViewController {
                 }
                 self.originalPortfolioData = data
                 self.checkTalentLayout()
+                self.updateUI()
                 completion(true)
             default:
                 completion(false)
@@ -192,8 +193,36 @@ final class EditViewController: UIViewController {
     
     // MARK: - Data Setup
     private func setData() {
-        checkMyPort { _ in }
+        self.checkMyPort { _ in
+            self.originalPortfolioData = self.portfolioManager!.currentData
+            self.checkTalentLayout()
+            self.updateUI()
+        }
     }
+    
+    private func updateUI() {
+        guard let manager = portfolioManager else { return }
+        editView.nameTextField.text = manager.currentData.username
+        editView.descriptionTextView.text = manager.currentData.description
+        editView.instaTextField.text = manager.currentData.instagramId
+        editView.websiteTextField.text = manager.currentData.webUrl
+
+        self.talentData = manager.currentData.userTalents.compactMap { userTalent in
+            return Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType || $0.info.displayName == userTalent.talentType })?.info
+        }
+        editView.talentCollectionView.reloadData()
+        
+        var newTappedStates = Array(repeating: false, count: 5)
+        for purpose in manager.currentData.userPurposes {
+            let index = purpose
+            if index >= 0 && index < newTappedStates.count {
+                newTappedStates[index] = true
+            }
+        }
+        self.tappedStates = newTappedStates
+        editView.purposeCollectionView.reloadData()
+    }
+
     
     private func checkTalentLayout() {
         editView.talentCollectionView.layoutIfNeeded()
@@ -225,8 +254,7 @@ final class EditViewController: UIViewController {
         if isTextFieldFilled,
            isTextViewFilled,
            isPortfolioFilled,
-           isPurposeFilled,
-           isDataChanged {
+           isPurposeFilled {
             editView.editButton.isEnabled = true
         } else {
             editView.editButton.isEnabled = false
@@ -357,7 +385,7 @@ final class EditViewController: UIViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.tappedStates = Array(repeating: false, count: 5)
-            self.originalPortfolioData?.userPurposes.forEach { index in
+            self.originalPortfolioData!.userPurposes.forEach { index in
                 if index < self.tappedStates.count {
                     self.tappedStates[index] = true
                 }
@@ -375,7 +403,7 @@ final class EditViewController: UIViewController {
             let isValidProfile = validateInputs()
             if !isValidProfile.isValid {
                 AlertManager.showAlert(on: self,
-                                       message: isValidProfile.message ?? "입력값에 오류가 있습니다.") {
+                                       message: isValidProfile.message ?? "허용되지 않는 값이 입력되었습니다.") {
                     self.isEditEnable = true
                     self.editView.toggleEditMode(self.isEditEnable)
                 }
@@ -391,6 +419,13 @@ final class EditViewController: UIViewController {
                     self.view.endEditing(true)
                     self.isDataChanged = false
                     self.editView.editButton.isEnabled = true
+                }
+                else {
+                    AlertManager.showAlert(on: self,
+                                            message: isValidProfile.message ?? "프로필 업데이트 중 오류가 발생했습니다.") {
+                        self.isEditEnable = true
+                        self.editView.toggleEditMode(self.isEditEnable)
+                    }
                 }
             }
         } else {
@@ -567,11 +602,11 @@ extension EditViewController: UITextFieldDelegate {
         if let text = textField.text {
             switch textField {
             case editView.nameTextField:
-                portfolioManager?.currentData.username = text
+                portfolioManager!.currentData.username = text
             case editView.instaTextField:
-                portfolioManager?.currentData.instagramId = text
+                portfolioManager!.currentData.instagramId = text
             case editView.websiteTextField:
-                portfolioManager?.currentData.webUrl = text
+                portfolioManager!.currentData.webUrl = text
             default:
                 break
             }
