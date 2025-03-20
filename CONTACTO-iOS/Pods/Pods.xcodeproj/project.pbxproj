@@ -45,6 +45,11 @@
 		A3585531EE4D8466B74A5A6F7958EC79 /* SocketRocket-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B665BCE0FBB8F73FA0DD9B8421752CA7 /* SocketRocket-dummy.m */; };
 		A564D0B0EE8AED950D943A75C2B3092E /* SRMutex.m in Sources */ = {isa = PBXBuildFile; fileRef = 5197815947C1D130A29A590D5F67B32E /* SRMutex.m */; };
 		AB12501C57FFF722131F674ACB425944 /* SRError.m in Sources */ = {isa = PBXBuildFile; fileRef = 935501BE7F0467F10654D43ED4507A69 /* SRError.m */; };
+		ACAC3E102D83FE280001B069 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E0F2D83FE280001B069 /* FirebaseAnalytics */; };
+		ACAC3E122D83FE280001B069 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E112D83FE280001B069 /* FirebaseAnalyticsOnDeviceConversion */; };
+		ACAC3E142D83FE280001B069 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E132D83FE280001B069 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		ACAC3E162D83FE280001B069 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E152D83FE280001B069 /* FirebaseInAppMessaging-Beta */; };
+		ACAC3E182D83FE280001B069 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E172D83FE280001B069 /* FirebaseMessaging */; };
 		B4C82668A78939FE910FEA0D314F06C1 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74C5F737A1EBAC18257D3F8209A71C4A /* Security.framework */; };
 		B543A1E1882CAEA19589891FCE2D17EA /* NSRunLoop+SRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 27366BC0F2293FF2F5FBAF3AA38B7125 /* NSRunLoop+SRWebSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B893C0DD5BE32FAE1D6895E1ED392B7A /* SRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF011CB91CFE34559B9D9E0821515C0 /* SRConstants.m */; };
@@ -97,7 +102,7 @@
 		35528C1F28F5D7476E5329F97C9E6CA1 /* Pods-CONTACTO-iOS-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CONTACTO-iOS-acknowledgements.plist"; sourceTree = "<group>"; };
 		357CA906D10FF1DE1B1ECEA925FA2047 /* StompClientLib-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "StompClientLib-prefix.pch"; sourceTree = "<group>"; };
 		3582DD0412F20164BADE17B610648917 /* SRWebSocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SRWebSocket.h; path = SocketRocket/SRWebSocket.h; sourceTree = "<group>"; };
-		38C59ADED07962C73869AEE77E82DD87 /* StompClientLib */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = StompClientLib; path = StompClientLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		38C59ADED07962C73869AEE77E82DD87 /* StompClientLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StompClientLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B70F1E4FC53B2E15A9011492D89DA85 /* NSRunLoop+SRWebSocket.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSRunLoop+SRWebSocket.m"; path = "SocketRocket/NSRunLoop+SRWebSocket.m"; sourceTree = "<group>"; };
 		41ACAAC876EF7F0E867591D2662CCC04 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		432FBCBA6818446DB96D0C998840A4D5 /* StompClientLib-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "StompClientLib-dummy.m"; sourceTree = "<group>"; };
@@ -116,13 +121,13 @@
 		7122B8EFA96EECA6A8AF8B68793E5320 /* SRIOConsumer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SRIOConsumer.h; path = SocketRocket/Internal/IOConsumer/SRIOConsumer.h; sourceTree = "<group>"; };
 		74C5F737A1EBAC18257D3F8209A71C4A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		7524B2D3F747D34A52046CDF34E54619 /* SocketRocket-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SocketRocket-prefix.pch"; sourceTree = "<group>"; };
-		75994CB35C2EF581028F1FC013103762 /* Pods-CONTACTO-iOS */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-CONTACTO-iOS"; path = Pods_CONTACTO_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		75994CB35C2EF581028F1FC013103762 /* Pods_CONTACTO_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CONTACTO_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		79D21A0041E6FA0123A5C053161D691D /* SRConstants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SRConstants.h; path = SocketRocket/Internal/SRConstants.h; sourceTree = "<group>"; };
 		7E1DCB9F1AF845C14AE740512083BFFB /* StompClientLib.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = StompClientLib.modulemap; sourceTree = "<group>"; };
 		7F9187248F6E7ABB165ACE49934FFDA3 /* Pods-CONTACTO-iOS-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CONTACTO-iOS-acknowledgements.markdown"; sourceTree = "<group>"; };
 		805BD540C1B374D25F7600D9219D65C0 /* SRSIMDHelpers.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SRSIMDHelpers.m; path = SocketRocket/Internal/Utilities/SRSIMDHelpers.m; sourceTree = "<group>"; };
 		81A2C0F7E56C0D1EBAE1D2FDD0301AFE /* SRHash.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SRHash.m; path = SocketRocket/Internal/Utilities/SRHash.m; sourceTree = "<group>"; };
-		85A01882ED06DFEA2E0CE78BCDB204A7 /* SocketRocket */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SocketRocket; path = SocketRocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		85A01882ED06DFEA2E0CE78BCDB204A7 /* SocketRocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SocketRocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		872F0571478D7BFDAAD15767E4EDFC23 /* SRProxyConnect.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SRProxyConnect.h; path = SocketRocket/Internal/Proxy/SRProxyConnect.h; sourceTree = "<group>"; };
 		89CD9DBEA04B50A11C055D1A282500ED /* NSURLRequest+SRWebSocketPrivate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSURLRequest+SRWebSocketPrivate.h"; path = "SocketRocket/Internal/NSURLRequest+SRWebSocketPrivate.h"; sourceTree = "<group>"; };
 		8E67DD929E9978F217777DA88A09227F /* SRWebSocket.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SRWebSocket.m; path = SocketRocket/SRWebSocket.m; sourceTree = "<group>"; };
@@ -132,7 +137,7 @@
 		95596015C7B28E941024E91D5EEE4809 /* SRPinningSecurityPolicy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SRPinningSecurityPolicy.m; path = SocketRocket/Internal/Security/SRPinningSecurityPolicy.m; sourceTree = "<group>"; };
 		9675BAFBC2653F686E536DE8AB7B9F73 /* SRHash.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SRHash.h; path = SocketRocket/Internal/Utilities/SRHash.h; sourceTree = "<group>"; };
 		9CFB9CD7273F3F7F2732C0D213885E30 /* SRURLUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SRURLUtilities.h; path = SocketRocket/Internal/Utilities/SRURLUtilities.h; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A818250AF635A0738081C432A319AFB5 /* SocketRocket.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SocketRocket.debug.xcconfig; sourceTree = "<group>"; };
 		AAB987CCDB58839BE53B0ADB4D4E152F /* SRLog.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SRLog.m; path = SocketRocket/Internal/Utilities/SRLog.m; sourceTree = "<group>"; };
 		AAF011CB91CFE34559B9D9E0821515C0 /* SRConstants.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SRConstants.m; path = SocketRocket/Internal/SRConstants.m; sourceTree = "<group>"; };
@@ -176,7 +181,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACAC3E182D83FE280001B069 /* FirebaseMessaging in Frameworks */,
+				ACAC3E102D83FE280001B069 /* FirebaseAnalytics in Frameworks */,
+				ACAC3E122D83FE280001B069 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				2780248E6E4006DF8D209B05086E9287 /* Foundation.framework in Frameworks */,
+				ACAC3E142D83FE280001B069 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				ACAC3E162D83FE280001B069 /* FirebaseInAppMessaging-Beta in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,9 +229,9 @@
 		1A43A3DD5E3FD7B0A42C80C2C58F7AD5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				75994CB35C2EF581028F1FC013103762 /* Pods-CONTACTO-iOS */,
-				85A01882ED06DFEA2E0CE78BCDB204A7 /* SocketRocket */,
-				38C59ADED07962C73869AEE77E82DD87 /* StompClientLib */,
+				75994CB35C2EF581028F1FC013103762 /* Pods_CONTACTO_iOS.framework */,
+				85A01882ED06DFEA2E0CE78BCDB204A7 /* SocketRocket.framework */,
+				38C59ADED07962C73869AEE77E82DD87 /* StompClientLib.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -247,7 +257,6 @@
 				5FA3DE23C0F5C9F5259207AAECD1A9F9 /* StompClientLib.swift */,
 				5AEAE29C70C072716C9B2668F3835C78 /* Support Files */,
 			);
-			name = StompClientLib;
 			path = StompClientLib;
 			sourceTree = "<group>";
 		};
@@ -312,7 +321,6 @@
 				8E67DD929E9978F217777DA88A09227F /* SRWebSocket.m */,
 				85F7A8C90A42419A650F035D03FE3E22 /* Support Files */,
 			);
-			name = SocketRocket;
 			path = SocketRocket;
 			sourceTree = "<group>";
 		};
@@ -423,7 +431,7 @@
 			);
 			name = "Pods-CONTACTO-iOS";
 			productName = Pods_CONTACTO_iOS;
-			productReference = 75994CB35C2EF581028F1FC013103762 /* Pods-CONTACTO-iOS */;
+			productReference = 75994CB35C2EF581028F1FC013103762 /* Pods_CONTACTO_iOS.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		1948D0B63D2CF6A48E18B0B292BC6091 /* SocketRocket */ = {
@@ -441,7 +449,7 @@
 			);
 			name = SocketRocket;
 			productName = SocketRocket;
-			productReference = 85A01882ED06DFEA2E0CE78BCDB204A7 /* SocketRocket */;
+			productReference = 85A01882ED06DFEA2E0CE78BCDB204A7 /* SocketRocket.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		BD357877094CC6561657F2D15837D659 /* StompClientLib */ = {
@@ -460,7 +468,7 @@
 			);
 			name = StompClientLib;
 			productName = StompClientLib;
-			productReference = 38C59ADED07962C73869AEE77E82DD87 /* StompClientLib */;
+			productReference = 38C59ADED07962C73869AEE77E82DD87 /* StompClientLib.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -481,8 +489,9 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			minimizedProjectReferenceProxies = 0;
-			preferredProjectObjectVersion = 77;
+			packageReferences = (
+				ACAC3E0E2D83FE280001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 1A43A3DD5E3FD7B0A42C80C2C58F7AD5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -990,6 +999,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		ACAC3E0E2D83FE280001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		ACAC3E0F2D83FE280001B069 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E0E2D83FE280001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		ACAC3E112D83FE280001B069 /* FirebaseAnalyticsOnDeviceConversion */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E0E2D83FE280001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsOnDeviceConversion;
+		};
+		ACAC3E132D83FE280001B069 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E0E2D83FE280001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		ACAC3E152D83FE280001B069 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E0E2D83FE280001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		ACAC3E172D83FE280001B069 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E0E2D83FE280001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 }

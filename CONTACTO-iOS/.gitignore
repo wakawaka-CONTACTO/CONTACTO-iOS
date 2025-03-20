@@ -52,3 +52,6 @@ playground.xcworkspace/
 
 # Xcode 11+ Cache
 .swiftpm/xcode
+
+# 알림 관련
+GoogleService-Info.plist
