@@ -15,6 +15,7 @@ final class UserInfo {
     var name: String = ""
     var description: String = ""
     var instagramId: String = ""
+    var nationality: String = ""
     var loginType: String = ""
     var webUrl: String?
     var userPurposes: [Int] = []
@@ -29,14 +30,12 @@ func updateUserInfo(_ data: MyDetailResponseDTO) {
     var userType = ""
     
     UserInfo.shared.email = data.email
-//    UserInfo.shared.password = data.password
     UserInfo.shared.name = data.username
     UserInfo.shared.description = data.description
     UserInfo.shared.instagramId = data.instagramId
-//    UserInfo.shared.loginType = data.loginType
+    UserInfo.shared.nationality = data.nationality
     UserInfo.shared.webUrl = data.webUrl
     UserInfo.shared.userPurposes = data.userPurposes
     UserInfo.shared.userTalents = data.userTalents.map { $0.talentType }
-//    UserInfo.shared.portfolioImageUrl = data.portfolioImageUrl
 }
 

@@ -12,11 +12,10 @@ import PhotosUI
 import SnapKit
 import Then
 
-// TODO: - put 확인 (500 확인)
 final class EditViewController: UIViewController {
     
     private var originalPortfolioData: MyDetailResponseDTO?
-    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
+    private var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: "Ko", webUrl: "", password: "",userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
     var isEditEnable = false
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
@@ -174,11 +173,9 @@ final class EditViewController: UIViewController {
             NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { [weak self] response in
                 switch response {
                 case .success(let data):
-                    print(data)
                     completion(true)
                 default:
                     completion(false)
-                    print("error")
                 }
             }
         } else {
@@ -198,11 +195,9 @@ final class EditViewController: UIViewController {
             case .success(let data):
                 self?.portfolioData = data
                 self?.updatePortfolio()
-                print(data)
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
             
             self?.editView.editButton.isUserInteractionEnabled = true
@@ -234,7 +229,7 @@ final class EditViewController: UIViewController {
         portfolioData.userPortfolio?.portfolioImageUrl.forEach { url in
             guard let imageUrl = URL(string: url) else { return }
             
-            dispatchGroup.enter() // 작업 시작
+            dispatchGroup.enter()
             KingfisherManager.shared.downloader.downloadImage(with: imageUrl) { result in
                 switch result {
                 case .success(let value):
@@ -244,15 +239,15 @@ final class EditViewController: UIViewController {
                         }
                     }
                 case .failure(let error):
+                    #if DEBUG
                     print("Failed to load image: \(error.localizedDescription)")
+                    #endif
                 }
-                dispatchGroup.leave() // 작업 완료
+                dispatchGroup.leave()
             }
         }
         
-        // 모든 작업이 완료된 후 실행
         dispatchGroup.notify(queue: .main) {
-            print(self.selectedImages)
             self.editView.portfolioCollectionView.reloadData()
         }
         
@@ -268,8 +263,7 @@ final class EditViewController: UIViewController {
     
     private func setData() {
         self.checkMyPort { _ in
-            self.originalPortfolioData = self.portfolioData // 원본 데이터 저장
-            print("원본 데이터: \(String(describing: self.originalPortfolioData))")
+            self.originalPortfolioData = self.portfolioData
             self.checkTalentLayout()
         }
     }
@@ -298,7 +292,7 @@ final class EditViewController: UIViewController {
         guard let originalData = originalPortfolioData else { 
             isDataChanged = true
             return
-        } // 원본 데이터가 없으면 변경된 것으로 간주
+        }
 
         isDataChanged = (
             portfolioData.username != originalData.username ||
@@ -312,7 +306,6 @@ final class EditViewController: UIViewController {
     }
     
     private func changeSaveButtonStatus() {
-        print("textField:\(isTextFieldFilled)\ntextView:\(isTextViewFilled)\nportfolio:\(isPortfolioFilled)\npurpose:\(isPurposeFilled)\neditEnabled:\(isEditEnable)")
         if isTextFieldFilled,
            isTextViewFilled,
            isPortfolioFilled,
@@ -359,9 +352,7 @@ final class EditViewController: UIViewController {
             $0.leading.equalToSuperview().inset(16)
         }
         
-        // 현재 활성화된 텍스트 필드가 있는지 확인
         if let activeField = activeTextField {
-            print(activeField)
             if activeField.frame.minY > (view.frame.height - keyboardHeight) {
                 let yOffset = activeField.frame.maxY - (view.frame.height + tabBarHeight - keyboardHeight) + 45.adjustedHeight
                 editView.scrollView.setContentOffset(CGPoint(x: 0, y: keyboardHeight + yOffset), animated: false)
@@ -468,7 +459,6 @@ extension EditViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: EditPortfolioCollectionViewCell.className,
                 for: indexPath) as? EditPortfolioCollectionViewCell else { return UICollectionViewCell() }
-            print(selectedImages.count) 
             if indexPath.row < selectedImages.count {
                 cell.isFilled = true
                 cell.backgroundImageView.image = selectedImages[indexPath.row]

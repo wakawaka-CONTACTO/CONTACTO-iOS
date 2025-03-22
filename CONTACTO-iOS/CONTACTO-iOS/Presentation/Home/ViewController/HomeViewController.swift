@@ -25,17 +25,12 @@ final class HomeViewController: BaseViewController {
     }
     var maxNum = 0 /// 포트폴리오의 총 장 수 (0장부터)
     var isAnimating = false
-    
-    /// 현재 포폴이 리스트의 몇 번째인지
-    var nowCount = 0 {
-        didSet {
-            setData()
-        }
-    }
+    var hasCheckedMyPort = false
+   
     var portfolioData: [PortfoliosResponseDTO] = []
     
     /// preview의 내 포폴 데이터
-    var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
+    var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
 
     let oldAnchorPoint = CGPoint(x: 0.5, y: 0.5)
     let newAnchorPoint = CGPoint(x: 0.5, y: -0.5)
@@ -63,7 +58,6 @@ final class HomeViewController: BaseViewController {
         super.viewWillAppear(animated)
         setNavigationBar()
         setData()
-        num = 0
     }
     
     override func setNavigationBar() {
@@ -226,7 +220,10 @@ extension HomeViewController {
             homeList { _ in
                 self.setNewPortfolio()
             }
-            checkMyPort()
+            if !hasCheckedMyPort {
+                checkMyPort()
+                hasCheckedMyPort = true
+            }
         } else {
             homeView.profileNameLabel.text = previewPortfolioData.username
             maxNum = imagePreviewDummy.count - 1
@@ -251,11 +248,9 @@ extension HomeViewController {
             switch response {
             case .success(let data):
                 self?.portfolioData = data
-                print(data)
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -264,12 +259,10 @@ extension HomeViewController {
         NetworkService.shared.homeService.likeOrDislike(bodyDTO: bodyDTO) { [weak self] response in
             switch response {
             case .success(let data):
-                print(data)
                 self?.isMatch = data.matched
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -279,9 +272,13 @@ extension HomeViewController {
             switch response {
             case .success(let data):
                 self?.previewPortfolioData = data
+                #if DEBUG
                 print("내 포트폴리오 데이터: \(data)")
+                #endif
             default:
+                #if DEBUG
                 print("내 포트폴리오 데이터를 가져오지 못함")
+                #endif
             }
         }
     }
@@ -307,7 +304,7 @@ extension HomeViewController {
     }
     
     private func animateImage(status: Bool) {
-        guard !isAnimating else { return }  // 애니메이션 중이면 함수 실행 중단
+        guard !isAnimating else { return }
         isAnimating = true
         
         HapticService.impact(.heavy).run()
@@ -323,12 +320,12 @@ extension HomeViewController {
                 self.pushToMatch()
             }
             
+            self.setData()
             self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
             self.homeView.portView.transform = .identity
             self.num = 0
             self.isAnimating = false
             self.isMatch = false
-            self.nowCount += 1
         }
     }
     
@@ -346,23 +343,22 @@ extension HomeViewController {
                 myId: previewPortfolioData.id,
                 myLabel: previewPortfolioData.username,
                 myImageURL: previewPortfolioData.userPortfolio?.portfolioImageUrl.first ?? "",
-                yourId: portfolioData[nowCount].userId,
-                yourLabel: portfolioData[nowCount].username,
-                yourImageURL: portfolioData[nowCount].portfolioImageUrl.first ?? ""
+                yourId: portfolioData[0].userId,
+                yourLabel: portfolioData[0].username,
+                yourImageURL: portfolioData[0].portfolioImageUrl.first ?? ""
             )
             
             self.present(matchViewController, animated: true)
         }
     }
     
-    /// 새 포트폴리오(다음 사람)로 넘길 때
     private func setNewPortfolio() {
-        if self.nowCount < self.portfolioData.count {
+        if 0 < self.portfolioData.count {
             self.homeView.isHidden = false
             self.homeEmptyView.isHidden = true
-            self.portUserId = Int(portfolioData[nowCount].userId)
-            self.homeView.profileNameLabel.text = portfolioData[nowCount].username
-            self.imageDummy = portfolioData[nowCount].portfolioImageUrl
+            self.portUserId = Int(portfolioData[0].userId)
+            self.homeView.profileNameLabel.text = portfolioData[0].username
+            self.imageDummy = portfolioData[0].portfolioImageUrl
             self.maxNum = self.imageDummy.count - 1
             self.setPortImage()
             self.homeView.pageCollectionView.reloadData()

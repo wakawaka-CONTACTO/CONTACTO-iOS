@@ -86,7 +86,6 @@ extension MatchViewController {
     }
     
     private func setData() {
-        print("matchData: \(String(describing: matchData))")
         if let matchData = matchData {
             matchView.myImageView.kf.setImage(with: URL(string: matchData.myImageURL))
             matchView.myLabel.text = matchData.myLabel

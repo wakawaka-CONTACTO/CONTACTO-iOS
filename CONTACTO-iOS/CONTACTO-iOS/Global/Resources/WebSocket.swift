@@ -59,10 +59,11 @@ final class WebSocket: NSObject {
             return
         }
         
-        print("Send message \(taskMessage)")
         self.webSocketTask?.send(taskMessage, completionHandler: { error in
             guard let error = error else { return }
+            #if DEBUG
             print("WebSocket sending error: \(error)")
+            #endif
         })
     }
     
@@ -87,7 +88,9 @@ final class WebSocket: NSObject {
                     onReceive(nil, nil)
                 }
             case let .failure(error):
+                #if DEBUG
                 print("Received error \(error)")
+                #endif
             }
         })
     }
@@ -103,7 +106,9 @@ final class WebSocket: NSObject {
     private func ping() {
         self.webSocketTask?.sendPing(pongReceiveHandler: { [weak self] error in
             guard let error = error else { return }
+            #if DEBUG
             print("Ping failed \(error)")
+            #endif
             self?.startPing()
         })
     }

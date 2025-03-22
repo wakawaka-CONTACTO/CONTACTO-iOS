@@ -50,12 +50,12 @@ final class PortfolioOnboardingViewController: BaseViewController {
                 instagramId: UserInfo.shared.instagramId,
                 password: UserInfo.shared.password,
                 loginType: "LOCAL",
+                nationality: UserInfo.shared.nationality,
                 webUrl: UserInfo.shared.webUrl),
             purpose: UserInfo.shared.userPurposes.map { Purpose(purposeType: $0) },
             talent: UserInfo.shared.userTalents.map { TalentType(talentType: $0) },
             images: UserInfo.shared.portfolioImageUrl)
         
-        print(bodyData)
         signup(bodyDTO: bodyData) { success in
             if success {
                 let mainTabBarViewController = MainTabBarViewController()
@@ -109,7 +109,6 @@ final class PortfolioOnboardingViewController: BaseViewController {
                 completion(true)
             default:
                 completion(false)
-                print("error")
             }
         }
     }
@@ -151,7 +150,6 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
             withReuseIdentifier: PortfolioCollectionViewCell.className,
             for: indexPath) as? PortfolioCollectionViewCell else { return UICollectionViewCell() }
         
-        print(selectedImages)
         if indexPath.row < selectedImages.count {
             cell.isFilled = true
             cell.backgroundImageView.image = selectedImages[indexPath.row]

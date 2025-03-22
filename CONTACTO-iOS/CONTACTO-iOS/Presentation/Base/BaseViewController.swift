@@ -27,7 +27,9 @@ class BaseViewController: UIViewController {
     }
     
     deinit {
+        #if DEBUG
         print("DEINIT: \(className)")
+        #endif
     }
     
     // MARK: Life Cycle

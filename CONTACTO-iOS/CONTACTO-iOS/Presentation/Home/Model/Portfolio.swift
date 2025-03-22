@@ -26,7 +26,7 @@ extension Portfolio {
             description:"We’re graphic design crew. 그래픽 공동체 @pacay.pacay의 첫 번째 전시 [ARCHIVE: *860 FELL STREET]을 위한 플레이리스트를 공유합니다.",
             purpose: [0, 2, 3],
             insta: "contacto.creator",
-            web: "contactocreator.com")
+            web: "https://contactocreator.com")
         return port
     }
 }

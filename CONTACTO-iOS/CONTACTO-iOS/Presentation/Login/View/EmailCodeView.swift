@@ -21,7 +21,7 @@ final class EmailCodeView: BaseView {
     
     
     private let timerLabel = UILabel()
-    private var countdownTime: Int = 240  // 4분 = 240초
+    private var countdownTime: Int = 240
     private var timer: Timer?
     
     
@@ -70,7 +70,7 @@ final class EmailCodeView: BaseView {
             $0.font = .fontContacto(.caption2)
             $0.textColor = .ctwhite
             $0.textAlignment = .center
-            $0.text = formatTime(countdownTime) // 초기값 "04:00"
+            $0.text = formatTime(countdownTime)
         }
     }
     
@@ -122,10 +122,9 @@ final class EmailCodeView: BaseView {
         }
     }
     
-    // 타이머 시작 함수
     func startTimer() {
-        stopTimer() // 기존 타이머가 있다면 중지
-        countdownTime = 240  // 4분으로 초기화
+        stopTimer()
+        countdownTime = 240
         timerLabel.text = formatTime(countdownTime)
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
@@ -133,24 +132,20 @@ final class EmailCodeView: BaseView {
         }
     }
     
-    // 타이머 업데이트 함수
     private func updateTimer() {
         if countdownTime > 0 {
             countdownTime -= 1
             timerLabel.text = formatTime(countdownTime)
         } else {
             stopTimer()
-            // 타이머 종료 시 추가 처리(예: 재전송 버튼 활성화 등)를 할 수 있음
         }
     }
     
-    // 타이머 중지 함수
     func stopTimer() {
         timer?.invalidate()
         timer = nil
     }
     
-    // 남은 초를 "mm:ss" 형식 문자열로 변환하는 헬퍼 함수
     private func formatTime(_ seconds: Int) -> String {
         let minutes = seconds / 60
         let sec = seconds % 60
