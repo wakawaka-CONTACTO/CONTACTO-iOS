@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		26434AC82D82D604000FB7AE /* Nationality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26434AC72D82D604000FB7AE /* Nationality.swift */; };
+		26D551E92D91977600D62C4E /* AmplitudeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 26D551E82D91977600D62C4E /* AmplitudeSwift */; };
 		26DEC0212D806D0B00667450 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEC0202D806D0B00667450 /* EmptyResponse.swift */; };
 		330688D32D82D7F400BD34EA /* ReportRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */; };
 		330688D52D82D98F00BD34EA /* ReportResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */; };
@@ -333,6 +334,7 @@
 				C3FD904E2C913EC40021D2BA /* SnapKit in Frameworks */,
 				C3FD90512C913ECD0021D2BA /* Then in Frameworks */,
 				C32D06F52CE633260016F497 /* Kingfisher in Frameworks */,
+				26D551E92D91977600D62C4E /* AmplitudeSwift in Frameworks */,
 				8C6A7C97DD9DE3A79AFFCBC0 /* Pods_CONTACTO_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1123,6 +1125,7 @@
 				C33D73CC2CDEEE7E00889B1B /* SwiftKeychainWrapper */,
 				C34C1F552CE38E2800F94BCD /* Alamofire */,
 				C32D06F42CE633260016F497 /* Kingfisher */,
+				26D551E82D91977600D62C4E /* AmplitudeSwift */,
 			);
 			productName = "CONTACTO-iOS";
 			productReference = C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */;
@@ -1158,6 +1161,7 @@
 				C33D73CB2CDEEE7E00889B1B /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 				C34C1F542CE38E2800F94BCD /* XCRemoteSwiftPackageReference "Alamofire" */,
 				C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				26D551E72D91977600D62C4E /* XCRemoteSwiftPackageReference "Amplitude-Swift" */,
 			);
 			productRefGroup = C3FD90362C9139D40021D2BA /* Products */;
 			projectDirPath = "";
@@ -1597,6 +1601,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		26D551E72D91977600D62C4E /* XCRemoteSwiftPackageReference "Amplitude-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amplitude/Amplitude-Swift";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -1640,6 +1652,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		26D551E82D91977600D62C4E /* AmplitudeSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 26D551E72D91977600D62C4E /* XCRemoteSwiftPackageReference "Amplitude-Swift" */;
+			productName = AmplitudeSwift;
+		};
 		C32D06F42CE633260016F497 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */;
