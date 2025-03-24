@@ -12,6 +12,8 @@ enum Config {
         enum Plist {
             static let baseURL = "BASE_URL"
             static let chatBaseURL = "CHAT_BASE_URL"
+            static let amplitudeApiKey = "API_KEY"
+            static let amplitudeSecretKey = "SECRET_KEY"
         }
     }
     
@@ -34,6 +36,20 @@ extension Config {
     static let chatBaseURL: String = {
         guard let key = Config.infoDictionary[Keys.Plist.chatBaseURL] as? String else {
             fatalError("CHAT BASE URL is not set in plist for this configuration.")
+        }
+        return key
+    }()
+    
+    static let amplitudeApiKey: String = {
+        guard let key = Config.infoDictionary[Keys.Plist.amplitudeApiKey] as? String else {
+            fatalError("amplitudeApiKey is not set in plist for this configuration.")
+        }
+        return key
+    }()
+    
+    static let amplitudeSecretKey: String = {
+        guard let key = Config.infoDictionary[Keys.Plist.amplitudeSecretKey] as? String else {
+            fatalError("amplitudeSecretKey is not set in plist for this configuration.")
         }
         return key
     }()
