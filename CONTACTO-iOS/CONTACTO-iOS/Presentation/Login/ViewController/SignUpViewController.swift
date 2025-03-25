@@ -141,7 +141,7 @@ extension SignUpViewController {
                 self.present(alert, animated: true, completion: nil)
                 self.signUpView.mainTextField.text = ""
                 self.signUpView.mainTextField.isError = true
-                self.signUpView.continueButton.isEnabled = true // 실패 시 다시 활성화
+                self.signUpView.continueButton.isEnabled = true
                 }
             }
         }

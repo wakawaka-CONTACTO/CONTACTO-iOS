@@ -41,6 +41,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
+        portfolioOnboardingView.nextButton.isEnabled = false
         UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
         let bodyData = SignUpRequestBodyDTO(
             userSignUpReq: UserSignUpRequest(
@@ -73,6 +74,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
                 DispatchQueue.main.async {
                     self.present(alertController, animated: true, completion: nil)
                 }
+                self.portfolioOnboardingView.nextButton.isEnabled = true
             }
         }
     }
