@@ -413,7 +413,9 @@ final class EditView: BaseView {
     }
     
     var editAction: (() -> Void) = {}
-    
+}
+
+extension EditView {
     func toggleEditMode(_ isEditEnabled: Bool) {
         nameTextField.isEnabled = isEditEnabled
         nameTextField.backgroundColor = isEditEnabled ? .ctwhite : .ctmainblue
