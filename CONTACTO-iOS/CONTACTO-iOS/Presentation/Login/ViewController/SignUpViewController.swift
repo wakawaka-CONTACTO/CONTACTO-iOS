@@ -115,6 +115,7 @@ final class SignUpViewController: UIViewController {
 
 extension SignUpViewController {
     @objc private func sendCode() {
+        signUpView.continueButton.isEnabled = false
         NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { result in DispatchQueue.main.async {
             switch result{
             case .success:
@@ -132,6 +133,7 @@ extension SignUpViewController {
                 alert.addAction(UIAlertAction(title: "확인", style: .default))
                 self.present(alert, animated: true, completion: nil)
                 self.signUpView.mainTextField.isError = true
+                self.signUpView.continueButton.isEnabled = true
             default:
                 var errorMessage = "이메일 전송에 실패했습니다. 관리자에게 문의해주세요."
                 let alert = UIAlertController(title: "에러", message: errorMessage, preferredStyle: .alert)
@@ -139,6 +141,7 @@ extension SignUpViewController {
                 self.present(alert, animated: true, completion: nil)
                 self.signUpView.mainTextField.text = ""
                 self.signUpView.mainTextField.isError = true
+                self.signUpView.continueButton.isEnabled = true // 실패 시 다시 활성화
                 }
             }
         }
