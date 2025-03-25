@@ -20,7 +20,7 @@ public struct AmplitudeManager{
 }
 
 public extension Amplitude {
-    func track(eventType: AmplitudeEventType, eventProperties: [String: Any]? = nil) {
+    func track(eventType: AmplitudeEventEnum, eventProperties: [String: Any]? = nil) {
         let eventType: String = eventType.rawValue
         
         AmplitudeManager.amplitude.track(eventType: eventType, eventProperties: eventProperties, options: nil)

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum AmplitudeEventType: String {
+public enum AmplitudeEventEnum: String {
     case signupContacto = "signup_contacto"
     case editMyProfile = "edit_my_profile"
     case editMyPortfolio = "edit_my_portfolio"
