@@ -63,7 +63,9 @@ final class EmailCodeView: BaseView {
         resendButton.do {
             $0.setTitle(StringLiterals.Login.resendButton, for: .normal)
             $0.setTitleColor(.systemBlue, for: .normal)
+            $0.setTitleColor(.ctgray3, for: .disabled)
             $0.titleLabel?.font = .fontContacto(.gothicButton)
+            $0.isEnabled = true
         }
         
         timerLabel.do {
@@ -126,7 +128,7 @@ final class EmailCodeView: BaseView {
         stopTimer()
         countdownTime = 240
         timerLabel.text = formatTime(countdownTime)
-        
+        resendButton.isEnabled = false
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.updateTimer()
         }
@@ -136,6 +138,9 @@ final class EmailCodeView: BaseView {
         if countdownTime > 0 {
             countdownTime -= 1
             timerLabel.text = formatTime(countdownTime)
+            if countdownTime <= 240{
+                resendButton.isEnabled = true
+            }
         } else {
             stopTimer()
         }
