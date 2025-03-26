@@ -7,7 +7,10 @@
 
 import Foundation
 
-public protocol LoginAmplitudeSender {}
+public protocol LoginAmplitudeSender {
+    func sendAmpliLog(eventName: EventName)
+    func sendAmpliLog(eventName: EventName, properties: [String: Any])
+}
 
 public extension LoginAmplitudeSender {
     func sendAmpliLog(eventName: EventName){
