@@ -22,6 +22,7 @@ final class PurposeOnboardingViewController: BaseViewController {
     
     override func setLayout() {
         view.addSubviews(purposeOnboardingView)
+        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING2)
         
         purposeOnboardingView.snp.makeConstraints {
             $0.edges.equalToSuperview()

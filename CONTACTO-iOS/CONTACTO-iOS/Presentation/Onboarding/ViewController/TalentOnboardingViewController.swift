@@ -32,6 +32,7 @@ final class TalentOnboardingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING5)
     }
     
     override func setNavigationBar() {

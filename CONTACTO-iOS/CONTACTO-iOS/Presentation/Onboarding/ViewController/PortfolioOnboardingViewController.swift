@@ -24,6 +24,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING6)
     }
     
     override func setNavigationBar() {
