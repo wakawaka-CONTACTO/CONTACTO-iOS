@@ -33,24 +33,24 @@ public enum EventView: String {
 public enum EventName: String {
     // Onboading
     case VIEW_ONBOARDING1
-    case VIEW_ONBOARDING1_NEXT
+    case CLICK_ONBOARDING1_NEXT
     case VIEW_ONBOARDING2
-    case VIEW_ONBOARDING2_NEXT
+    case CLICK_ONBOARDING2_NEXT
     case VIEW_ONBOARDING3
-    case VIEW_ONBOARDING3_NEXT
+    case CLICK_ONBOARDING3_NEXT
     case VIEW_ONBOARDING4
-    case VIEW_ONBOARDING4_NEXT
+    case CLICK_ONBOARDING4_NEXT
     case VIEW_ONBOARDING5
-    case VIEW_ONBOARDING5_NEXT
+    case CLICK_ONBOARDING5_NEXT
     case VIEW_ONBOARDING6
-    case VIEW_ONBOARDING6_NEXT
-    
+    case CLICK_ONBOARDING6_NEXT
+        
     // Login
     case VIEW_LOGIN
     case VIEW_NOACCOUNT
     case VIEW_INCORRECT
     case VIEW_SIGNUP
-    case VIEW_EMAI_LCODE
+    case VIEW_EMAIL_CODE
     case VIEW_SET_PASSWORD
     case VIEW_SEND_CODE
     case VIEW_RESET_PASSWORD
@@ -105,17 +105,17 @@ extension EventName {
         case .VIEW_ONBOARDING6:
             return "포트폴리오 입력 온보딩 뷰"
         
-        case .VIEW_ONBOARDING1_NEXT:
+        case .CLICK_ONBOARDING1_NEXT:
             return "이름 입력 뷰에서 다음 버튼 클릭 시"
-        case .VIEW_ONBOARDING2_NEXT:
+        case .CLICK_ONBOARDING2_NEXT:
             return "목적 선택 뷰에서 다음 버튼 클릭 시"
-        case .VIEW_ONBOARDING3_NEXT:
+        case .CLICK_ONBOARDING3_NEXT:
             return "설명 입력 뷰에서 다음 버튼 클릭 시"
-        case .VIEW_ONBOARDING4_NEXT:
+        case .CLICK_ONBOARDING4_NEXT:
             return "인스타 / 웹사이트 뷰에서 다음 버튼 클릭 시"
-        case .VIEW_ONBOARDING5_NEXT:
+        case .CLICK_ONBOARDING5_NEXT:
             return "탤런트 입력 뷰에서 다음 버튼 클릭 시"
-        case .VIEW_ONBOARDING6_NEXT:
+        case .CLICK_ONBOARDING6_NEXT:
             return "포트폴리오 입력 뷰에서 다음 버튼 클릭 시"
         
             
@@ -127,7 +127,7 @@ extension EventName {
             return "incorrect password 화면"
         case .VIEW_SIGNUP:
             return "signup 화면"
-        case .VIEW_EMAI_LCODE:
+        case .VIEW_EMAIL_CODE:
             return "이메일 코드 입력 뷰"
         case .VIEW_SET_PASSWORD:
             return "Set password 뷰"

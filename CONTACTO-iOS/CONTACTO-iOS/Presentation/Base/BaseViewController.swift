@@ -71,6 +71,10 @@ class BaseViewController: UIViewController {
     func setAddTarget() {
         
     }
+    
+    func sendAmpliLog(eventName: EventName){
+
+    }
 }
 
 extension BaseViewController: UITextFieldDelegate {

@@ -117,6 +117,13 @@ final class LoginViewController: UIViewController {
         setPWView.mainTextField.delegate = self
         setPWView.confirmTextField.delegate = self
     }
+    
+    
+    func sendAmpliLog(eventName: EventName){
+        let info = EventInfo(event: EventView.LOGIN, eventName: eventName)
+        
+        AmplitudeManager.amplitude.track(eventInfo: info)
+    }
 }
 
 extension LoginViewController {
@@ -135,6 +142,7 @@ extension LoginViewController {
     @objc func continueButtonTapped() {
         switch loginView.state {
         case .email, .emailError:
+            sendAmpliLog(eventName: EventName.VIEW_LOGIN)
             showLoadingIndicator()
             emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
                 if self.isExistEmail {
@@ -143,10 +151,12 @@ extension LoginViewController {
                 } else {
                     self.loginView.mainTextField.text = ""
                     self.loginView.setLoginState(state: .emailError)
+                    self.sendAmpliLog(eventName: EventName.VIEW_NOACCOUNT)
                 }
             }
             hideLoadingIndicator()
         case .pw, .pwError:
+            sendAmpliLog(eventName: EventName.CLICK_LOGIN_BUTTON)
             showLoadingIndicator()
             login(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { result in
                 if result {
@@ -154,19 +164,24 @@ extension LoginViewController {
                     mainTabBarViewController.homeViewController.isFirst = false
                     self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
                 }
+                else{
+                    self.sendAmpliLog(eventName: EventName.VIEW_INCORRECT)
+                }
                 self.hideLoadingIndicator()
             }
                 
         case .emailForget:
+            sendAmpliLog(eventName: EventName.CLICK_LOGIN_NEEDHELP)
             helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
                 self.loginView.mainTextField.text = ""
                 self.loginView.setLoginState(state: .findEmail)
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
         }
-        case .pwForget:
+        case .pwForget: // eventType?
             sendCode()
             
         case .findEmail:
+            sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE)
             loginView.mainTextField.text = ""
             loginView.setLoginState(state: .email)
         }
@@ -199,6 +214,7 @@ extension LoginViewController {
     }
     
     @objc private func codeVerifyButtonTapped() {
+        sendAmpliLog(eventName: EventName.CLICK_SEND_CODE_CONTINUE)
         emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
             if response {
                 self.loginView.isHidden = true
@@ -243,13 +259,6 @@ extension LoginViewController {
     
     // MARK: - Network
     private func login(bodyDTO: LoginRequestBodyDTO, completion: @escaping (Bool) -> Void) {
-        let info = EventInfo(event: .LOGIN, eventName: .VIEW_EMAI_LCODE)
-        let props: [String: Any] = [
-            "sendcode_view": "signup"  // 또는 "forgetpassword"
-        ]
-        AmplitudeManager.amplitude.track(eventInfo: info, properties: props)
-        AmplitudeManager.amplitude.testLog()
-
         NetworkService.shared.onboardingService.login(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
@@ -277,6 +286,7 @@ extension LoginViewController {
     }
     
     private func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        sendAmpliLog(eventName: EventName.CLICK_LOGIN_CONTINUE)
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(_):

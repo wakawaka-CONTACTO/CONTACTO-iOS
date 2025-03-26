@@ -17,6 +17,7 @@ final class NameOnboardingViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.addKeyboardNotifications()
+        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING1)
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.removeKeyboardNotifications()
@@ -42,6 +43,12 @@ final class NameOnboardingViewController: BaseViewController {
     
     override func setDelegate() {
         nameOnboardingView.nameTextField.delegate = self
+    }
+    
+    override func sendAmpliLog(eventName: EventName){
+        let info = EventInfo(event: EventView.ONBOARDING, eventName: eventName)
+        
+        AmplitudeManager.amplitude.track(eventInfo: info)
     }
 }
 
@@ -100,7 +107,7 @@ extension NameOnboardingViewController {
             showInvalidNameAlert()
             return
         }
-        
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING1_NEXT)
         UserInfo.shared.name = name
         let purposeOnboardingViewController = PurposeOnboardingViewController()
         self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)

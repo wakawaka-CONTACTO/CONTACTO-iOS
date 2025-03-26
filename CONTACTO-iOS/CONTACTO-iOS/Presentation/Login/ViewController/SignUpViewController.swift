@@ -111,10 +111,17 @@ final class SignUpViewController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
+    
+    func sendAmpliLog(eventName: EventName){
+        let info = EventInfo(event: EventView.LOGIN, eventName: eventName)
+        
+        AmplitudeManager.amplitude.track(eventInfo: info)
+    }
 }
 
 extension SignUpViewController {
     @objc private func sendCode() {
+        sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_RESEND)
         NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { result in DispatchQueue.main.async {
             switch result{
             case .success:
@@ -145,15 +152,18 @@ extension SignUpViewController {
     }
     
     @objc private func backButtonTapped() {
+        sendAmpliLog(eventName: EventName.CLICK_SIGNUP_BACK)
         self.navigationController?.popViewController(animated: false)
     }
     
     @objc private func privacyAgreeButtonTapped() {
+        sendAmpliLog(eventName: EventName.CLICK_SIGNUP_AGREE)
         isPrivacyAgree.toggle()
     }
     
     @objc private func privacyAgreeDetailButtonTapped() {
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
+        sendAmpliLog(eventName: EventName.CLICK_SIGNUP_AGREE_DETAIL)
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
     }
@@ -173,7 +183,7 @@ extension SignUpViewController {
     @objc private func pwContinueButton() {
         UserInfo.shared.email = self.email
         UserInfo.shared.password = self.pw
-        
+        sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
         let nameOnboardingViewController = NameOnboardingViewController()
         view.window?.rootViewController = UINavigationController(rootViewController: nameOnboardingViewController)
     }
@@ -190,6 +200,7 @@ extension SignUpViewController {
     }
     
     private func emailCheck(bodyDTO: EmailCheckRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT)
         NetworkService.shared.onboardingService.emailCheck(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
