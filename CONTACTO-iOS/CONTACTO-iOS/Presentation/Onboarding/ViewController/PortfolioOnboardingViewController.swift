@@ -42,7 +42,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
-        UserInfo.shared.portfolioImageUrl = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+        UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
         let deviceType = UIDevice.current.model
         
