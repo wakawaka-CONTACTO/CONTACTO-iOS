@@ -21,7 +21,6 @@ final class AmplitudeUserPropertySender {
         identify.set(property: "user_web", value: user.webUrl)
 
         // Int
-        identify.set(property: "user_id", value: user.userId)
         identify.set(property: "user_portfolio_count", value: user.portfolioCount)
         identify.set(property: "user_home_yes", value: user.homeYesCount)
         identify.set(property: "user_home_no", value: user.homeNoCount)

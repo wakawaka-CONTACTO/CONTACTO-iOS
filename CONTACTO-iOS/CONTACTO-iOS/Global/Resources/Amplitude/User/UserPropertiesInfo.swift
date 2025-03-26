@@ -8,8 +8,6 @@
 import Foundation
 
 struct UserPropertiesInfo {
-
-    let userId: Int
     let name: String
     let email: String
     let portfolioCount: Int
@@ -26,7 +24,6 @@ struct UserPropertiesInfo {
 }
 
 struct UserPropertyMetadata {
-    let userId: Int
     let lastUseDate: Date
     let homeYesCount: Int
     let homeNoCount: Int
@@ -37,7 +34,6 @@ struct UserPropertyMetadata {
 extension UserPropertiesInfo {
     static func from(_ userInfo: UserInfo, metadata: UserPropertyMetadata) -> UserPropertiesInfo {
         return UserPropertiesInfo(
-            userId: metadata.userId,
             name: userInfo.name,
             email: userInfo.email,
             portfolioCount: userInfo.portfolioImageUrl.count,
