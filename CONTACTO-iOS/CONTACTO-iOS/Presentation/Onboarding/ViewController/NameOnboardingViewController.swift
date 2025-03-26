@@ -101,13 +101,13 @@ extension NameOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING1_NEXT)
         let name = nameOnboardingView.nameTextField.text ?? ""
             
         if !isValidName(name) {
             showInvalidNameAlert()
             return
         }
-        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING1_NEXT)
         UserInfo.shared.name = name
         let purposeOnboardingViewController = PurposeOnboardingViewController()
         self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)

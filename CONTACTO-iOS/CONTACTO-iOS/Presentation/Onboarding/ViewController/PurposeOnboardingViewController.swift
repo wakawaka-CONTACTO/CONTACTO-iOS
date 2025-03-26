@@ -33,6 +33,7 @@ final class PurposeOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING2_NEXT)
         UserInfo.shared.userPurposes = purposeOnboardingView.selectedPurpose
         let explainOnboardingViewController = ExplainOnboardingViewController()
         self.navigationController?.pushViewController(explainOnboardingViewController, animated: true)

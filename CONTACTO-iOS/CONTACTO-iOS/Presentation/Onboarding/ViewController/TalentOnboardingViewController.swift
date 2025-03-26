@@ -62,6 +62,7 @@ final class TalentOnboardingViewController: BaseViewController {
     }
     
     @objc func nextButtonTapped() {
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING5_NEXT)
         if isEdit {
             self.navigationController?.popViewController(animated: true)
             self.editTalent.sort { (first, second) -> Bool in

@@ -87,6 +87,7 @@ extension ExplainOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING3_NEXT)
         UserInfo.shared.description = explainOnboardingView.explainTextView.text ?? ""
         let SNSOnboardingViewController = SNSOnboardingViewController()
         self.navigationController?.pushViewController(SNSOnboardingViewController, animated: true)

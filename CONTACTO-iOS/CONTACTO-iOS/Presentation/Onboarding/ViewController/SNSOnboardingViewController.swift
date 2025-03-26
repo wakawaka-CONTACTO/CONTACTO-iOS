@@ -92,6 +92,7 @@ extension SNSOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING4_NEXT)
         guard let website = self.snsOnboardingView.websiteTextField.text,
               website.hasPrefix("http://") || website.hasPrefix("https://") else {
             let alert = UIAlertController(title: "Notify", message: "Your website address should be started with http:// or https://", preferredStyle: .alert)
