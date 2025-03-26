@@ -11,7 +11,7 @@ import SnapKit
 import Then
 import SafariServices
 
-final class SignUpViewController: UIViewController {
+final class SignUpViewController: UIViewController, LoginAmplitudeSender {
     
     let signUpView = SignUpView()
     let emailCodeView = EmailCodeView()
@@ -110,12 +110,6 @@ final class SignUpViewController: UIViewController {
     private func setNavigationBar() {
         self.navigationController?.navigationBar.isHidden = true
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-    }
-    
-    func sendAmpliLog(eventName: EventName){
-        let info = EventInfo(event: EventView.LOGIN, eventName: eventName)
-        
-        AmplitudeManager.amplitude.track(eventInfo: info)
     }
 }
 

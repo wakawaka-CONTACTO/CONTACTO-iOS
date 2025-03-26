@@ -11,7 +11,7 @@ import SnapKit
 import Then
 import SafariServices
 
-final class LoginViewController: UIViewController {
+final class LoginViewController: UIViewController, LoginAmplitudeSender {
     
     private let loginView = LoginView(state: .email)
     private let emailCodeView = EmailCodeView()
@@ -116,13 +116,6 @@ final class LoginViewController: UIViewController {
         emailCodeView.mainTextField.delegate = self
         setPWView.mainTextField.delegate = self
         setPWView.confirmTextField.delegate = self
-    }
-    
-    
-    func sendAmpliLog(eventName: EventName){
-        let info = EventInfo(event: EventView.LOGIN, eventName: eventName)
-        
-        AmplitudeManager.amplitude.track(eventInfo: info)
     }
 }
 
