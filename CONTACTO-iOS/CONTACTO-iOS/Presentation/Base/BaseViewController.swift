@@ -74,6 +74,9 @@ class BaseViewController: UIViewController {
     
     func sendAmpliLog(eventName: EventName){
 
+    }    
+    func sendAmpliLog(eventName: EventName, properties: [String: Any]){
+
     }
 }
 

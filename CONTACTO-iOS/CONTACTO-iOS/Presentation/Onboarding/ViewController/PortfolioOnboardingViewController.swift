@@ -42,7 +42,8 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
-        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING6_NEXT)
+        let portfolio_count = UserInfo.shared.portfolioImageUrl.count
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING6_NEXT, properties: ["portfolio_count" : portfolio_count])
         UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
         let bodyData = SignUpRequestBodyDTO(
             userSignUpReq: UserSignUpRequest(

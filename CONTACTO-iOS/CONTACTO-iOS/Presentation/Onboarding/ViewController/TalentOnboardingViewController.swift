@@ -63,7 +63,6 @@ final class TalentOnboardingViewController: BaseViewController {
     }
     
     @objc func nextButtonTapped() {
-        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING5_NEXT)
         if isEdit {
             self.navigationController?.popViewController(animated: true)
             self.editTalent.sort { (first, second) -> Bool in
@@ -79,7 +78,8 @@ final class TalentOnboardingViewController: BaseViewController {
                 Talent.allCases.first(where: { $0.info.koreanName == talentInfo.koreanName })?.rawValue
             }
             UserInfo.shared.userTalents = selectedTalents
-            
+            let talent_count = selectedTalents.count
+            sendAmpliLog(eventName: EventName.CLICK_ONBOARDING5_NEXT, properties: ["talent_count":  talent_count])
             let portfolioOnboardingViewController = PortfolioOnboardingViewController()
             self.navigationController?.pushViewController(portfolioOnboardingViewController, animated: true)
         }
