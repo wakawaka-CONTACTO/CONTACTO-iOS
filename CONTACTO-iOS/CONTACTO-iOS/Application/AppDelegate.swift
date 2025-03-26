@@ -17,7 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let userId = KeychainHandler.shared.userID
         AmplitudeManager.amplitude.setUserId(userId: userId)
-        AmplitudeManager.amplitude.setDeviceId(deviceId: UUID.init(uuidString: userId)?.uuidString);
 
         return true
     }

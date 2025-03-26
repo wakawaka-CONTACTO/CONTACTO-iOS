@@ -34,12 +34,8 @@ final class AmplitudeUserPropertySender {
         // Bool
         identify.set(property: "user_pushnotification", value: user.pushNotificationConsent)
 
-        // Timestamp
-        let dateFormatter = DateFormatter() // 인스턴스 생성
-
-        dateFormatter.locale = Locale(identifier: "ko_KR")
-        
-        let lastUsed = dateFormatter.string(from: user.lastUseDate)
+        let isoFormatter = ISO8601DateFormatter()
+        let lastUsed = isoFormatter.string(from: user.lastUseDate)
         identify.set(property: "user_last_use_date", value: lastUsed)
 
         // Amplitude에 전송
