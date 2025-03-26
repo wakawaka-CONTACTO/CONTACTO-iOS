@@ -243,6 +243,13 @@ extension LoginViewController {
     
     // MARK: - Network
     private func login(bodyDTO: LoginRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        let info = EventInfo(event: .LOGIN, eventName: .VIEW_EMAI_LCODE)
+        let props: [String: Any] = [
+            "sendcode_view": "signup"  // 또는 "forgetpassword"
+        ]
+        AmplitudeManager.amplitude.track(eventInfo: info, properties: props)
+        AmplitudeManager.amplitude.testLog()
+
         NetworkService.shared.onboardingService.login(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):

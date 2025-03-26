@@ -85,6 +85,7 @@ public enum EventName: String {
     case CLICK_INPUT_NAME_CONTINUE
     case CLICK_INPUT_NAME_FORGET
     case CLICK_INPUT_NAME_GO_TO_LOGIN
+    case TEST
     
 }
 
