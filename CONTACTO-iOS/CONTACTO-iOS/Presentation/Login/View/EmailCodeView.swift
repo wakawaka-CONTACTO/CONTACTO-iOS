@@ -138,7 +138,7 @@ final class EmailCodeView: BaseView {
         if countdownTime > 0 {
             countdownTime -= 1
             timerLabel.text = formatTime(countdownTime)
-            if countdownTime <= 240{
+            if countdownTime <= 200{
                 resendButton.isEnabled = true
             }
         } else {
