@@ -345,7 +345,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
             cell.isTapped = true
-            cell.config(num: isPreview ? portfolioData.userPurposes[indexPath.row] - 1 : portfolioData.userPurposes[indexPath.row])
+            cell.config(num: isPreview ? portfolioData.userPurposes[indexPath.row] : portfolioData.userPurposes[indexPath.row])
             return cell
         default:
             return UICollectionViewCell()

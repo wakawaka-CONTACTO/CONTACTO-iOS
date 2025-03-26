@@ -15,9 +15,9 @@ final class PortfolioOnboardingViewController: BaseViewController {
     
     private let portfolioOnboardingView = PortfolioOnboardingView()
     
-    var selectedImages: [UIImage] = [] {
+    var portfolioItems: [UIImage] = [] {
         didSet {
-            portfolioOnboardingView.nextButton.isEnabled = (!selectedImages.isEmpty)
+            portfolioOnboardingView.nextButton.isEnabled = (!portfolioItems.isEmpty)
         }
     }
     
@@ -41,7 +41,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
-        UserInfo.shared.portfolioImageUrl = self.selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+        UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
         let bodyData = SignUpRequestBodyDTO(
             userSignUpReq: UserSignUpRequest(
                 name: UserInfo.shared.name,
@@ -92,7 +92,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     func setPortfolio() {
         var configuration = PHPickerConfiguration()
         lazy var picker = PHPickerViewController(configuration: configuration)
-        configuration.selectionLimit = 10 - selectedImages.count
+        configuration.selectionLimit = 10 - portfolioItems.count
         configuration.filter = .any(of: [.images])
         configuration.selection = .ordered
         self.present(picker, animated: true, completion: nil)
@@ -150,9 +150,9 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
             withReuseIdentifier: PortfolioCollectionViewCell.className,
             for: indexPath) as? PortfolioCollectionViewCell else { return UICollectionViewCell() }
         
-        if indexPath.row < selectedImages.count {
+        if indexPath.row < portfolioItems.count {
             cell.isFilled = true
-            cell.backgroundImageView.image = selectedImages[indexPath.row]
+            cell.backgroundImageView.image = portfolioItems[indexPath.row]
         } else {
             cell.isFilled = false
             cell.backgroundImageView.image = nil
@@ -163,7 +163,7 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
         }
         
         cell.cancelAction = {
-            self.selectedImages.remove(at: indexPath.row)
+            self.portfolioItems.remove(at: indexPath.row)
             collectionView.reloadData()
         }
         return cell
@@ -181,7 +181,7 @@ extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
             result.itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
                     if let image = image as? UIImage {
-                        if !self.selectedImages.contains(where: { $0.isEqualTo(image) }), self.selectedImages.count < 10  {
+                        if !self.portfolioItems.contains(where: { $0.isEqualTo(image) }), self.portfolioItems.count < 10  {
                             addedImages[index] = image
                         }
                     }
@@ -192,7 +192,7 @@ extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
         
         group.notify(queue: .main) {
             let newImages = addedImages.compactMap { $0 }
-            self.selectedImages.append(contentsOf: newImages)
+            self.portfolioItems.append(contentsOf: newImages)
             self.portfolioOnboardingView.portfolioCollectionView.reloadData()
         }
     }

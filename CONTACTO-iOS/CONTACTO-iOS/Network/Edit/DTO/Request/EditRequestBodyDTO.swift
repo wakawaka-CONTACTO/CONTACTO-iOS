@@ -13,5 +13,10 @@ struct EditRequestBodyDTO: Codable {
     let webUrl: String?
     let userPurposes: [Int]
     let userTalents: [String]
-    let portfolioImageUrl: [Data]?
+
+    let newPortfolioImages: [Data]?
+    let newImageKeys: [Int]?
+
+    let existedImageUrl: [String]?
+    let existingImageKeys: [Int]?
 }
