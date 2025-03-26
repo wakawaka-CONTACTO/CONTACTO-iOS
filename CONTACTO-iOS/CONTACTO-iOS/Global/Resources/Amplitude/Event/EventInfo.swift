@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct EventInfo {
+public struct EventInfo {
     let eventView: EventView
     let eventName: EventName
     let trigger: String
@@ -19,7 +19,7 @@ struct EventInfo {
     }
 }
 
-enum EventView: String {
+public enum EventView: String {
     case ONBOARDING = "회원가입"
     case LOGIN = "로그인"
     case HOME = "홈"
@@ -30,7 +30,7 @@ enum EventView: String {
     case PUSH = "푸시 알림"
 }
 
-enum EventName: String {
+public enum EventName: String {
     // Onboading
     case VIEW_ONBOARDING1
     case VIEW_ONBOARDING1_NEXT

@@ -50,17 +50,3 @@ extension UIView {
         })
     }
 }
-
-extension UIView {
-    public func track(eventName: AmplitudeEventEnum, eventProperties: [String: Any]? = nil) {
-        AmplitudeManager.amplitude.track(eventType: eventName, eventProperties: eventProperties)
-    }
-    
-    public func trackScreenDuration(eventName: AmplitudeEventEnum, duration: TimeInterval) {
-        let durationInSeconds = Int(duration)
-        
-        AmplitudeManager.amplitude.track(eventType: eventName, eventProperties: [
-            "duration": durationInSeconds
-        ])
-    }
-}
