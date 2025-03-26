@@ -15,6 +15,7 @@
 		33185B0B2D7B1E6B00B508A3 /* PageableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */; };
 		333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */; };
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
+		335E72CE2D93CE9E00BD9C11 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 335E72CD2D93CE9E00BD9C11 /* GoogleService-Info.plist */; };
 		8C6A7C97DD9DE3A79AFFCBC0 /* Pods_CONTACTO_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */; };
 		C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */; };
 		C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */; };
@@ -171,6 +172,7 @@
 		33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableRequest.swift; sourceTree = "<group>"; };
 		333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockResponseDTO.swift; sourceTree = "<group>"; };
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		335E72CD2D93CE9E00BD9C11 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CONTACTO_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BE1A2D5A19E66A4ACF01783 /* Pods-CONTACTO-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		AC0EAA8E2D68451C00757EBD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -869,6 +871,7 @@
 		C3FD902C2C9139D40021D2BA = {
 			isa = PBXGroup;
 			children = (
+				335E72CD2D93CE9E00BD9C11 /* GoogleService-Info.plist */,
 				AC0EAA8E2D68451C00757EBD /* .gitignore */,
 				AC3389C32D67259100BE7518 /* Config.xcconfig */,
 				C3FD90372C9139D40021D2BA /* CONTACTO-iOS */,
@@ -1173,6 +1176,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				335E72CE2D93CE9E00BD9C11 /* GoogleService-Info.plist in Resources */,
 				C3FD90992C9189850021D2BA /* FKRasterRomanCompactTrial-Blended.otf in Resources */,
 				C3E6D9122CFAD76900D6ABDC /* Pretendard-Bold.otf in Resources */,
 				C3FD90422C9139D70021D2BA /* Assets.xcassets in Resources */,
