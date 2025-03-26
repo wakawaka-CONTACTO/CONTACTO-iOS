@@ -24,7 +24,10 @@ final class HomeViewController: BaseViewController {
     var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: []) /// preview의 내 포폴 데이터
     var previewImages: [UIImage] = []
 
-//    var isUndo = false /// 재선택 동작 여부
+    var isUndo = false /// 재선택 동작 여부
+    var lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
+    
+    
     var isMatch = false /// 매칭 여부
     
     /// 사용자 추천 목록
@@ -308,6 +311,7 @@ extension HomeViewController {
     
     @objc private func yesButtonTapped() {
         if !isPreview {
+            lastPortfolioUser = recommendedPortfolios[portfolioImageIdx]
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
                 self.animateImage(status: true)
             }
@@ -318,6 +322,7 @@ extension HomeViewController {
     
     @objc private func noButtonTapped() {
         if !isPreview {
+            lastPortfolioUser = recommendedPortfolios[portfolioImageIdx]
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
                 self.animateImage(status: false)
             }
@@ -327,7 +332,8 @@ extension HomeViewController {
     }
     
     @objc private func undoButtonTapped() {
-        /// isUndo = true
+        isUndo = true
+        self.animateImage(status: false)
     }
     
     private func animateImage(status: Bool) {
