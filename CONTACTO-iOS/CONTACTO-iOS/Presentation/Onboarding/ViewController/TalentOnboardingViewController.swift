@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class TalentOnboardingViewController: BaseViewController {
+final class TalentOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     let talentOnboardingView = TalentOnboardingView()
     

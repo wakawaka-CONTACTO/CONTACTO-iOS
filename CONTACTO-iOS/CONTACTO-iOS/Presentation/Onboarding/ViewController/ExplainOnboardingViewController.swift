@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class ExplainOnboardingViewController: BaseViewController {
+final class ExplainOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     let explainOnboardingView = ExplainOnboardingView()
     var explain = ""

@@ -9,7 +9,7 @@ import UIKit
 
 import SnapKit
 
-final class SNSOnboardingViewController: BaseViewController {
+final class SNSOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     private let snsOnboardingView = SNSOnboardingView()
     

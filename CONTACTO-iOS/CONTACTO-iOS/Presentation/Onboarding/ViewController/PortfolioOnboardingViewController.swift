@@ -11,7 +11,7 @@ import PhotosUI
 import SnapKit
 import Then
 
-final class PortfolioOnboardingViewController: BaseViewController {
+final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     private let portfolioOnboardingView = PortfolioOnboardingView()
     

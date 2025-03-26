@@ -71,13 +71,6 @@ class BaseViewController: UIViewController {
     func setAddTarget() {
         
     }
-    
-    func sendAmpliLog(eventName: EventName){
-
-    }    
-    func sendAmpliLog(eventName: EventName, properties: [String: Any]){
-
-    }
 }
 
 extension BaseViewController: UITextFieldDelegate {

@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class NameOnboardingViewController: BaseViewController {
+final class NameOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     private let nameOnboardingView = NameOnboardingView()
     
@@ -43,12 +43,6 @@ final class NameOnboardingViewController: BaseViewController {
     
     override func setDelegate() {
         nameOnboardingView.nameTextField.delegate = self
-    }
-    
-    override func sendAmpliLog(eventName: EventName){
-        let info = EventInfo(event: EventView.ONBOARDING, eventName: eventName)
-        
-        AmplitudeManager.amplitude.track(eventInfo: info)
     }
 }
 
