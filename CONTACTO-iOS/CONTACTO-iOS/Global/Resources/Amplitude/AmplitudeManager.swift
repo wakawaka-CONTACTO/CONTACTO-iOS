@@ -9,12 +9,13 @@ import Foundation
 import AmplitudeSwift
 
 public struct AmplitudeManager{
-    static public let amplitude = Amplitude(configuration: Configuration(
-        apiKey: Config.amplitudeApiKey,
-        defaultTracking: DefaultTrackingOptions(
-            sessions: true
-        )
-    ))
+//    static public let amplitude = Amplitude(configuration: Configuration(
+//        apiKey: Config.amplitudeApiKey,
+//        defaultTracking: DefaultTrackingOptions(
+//            sessions: true
+//        )
+//    ))
+    static public var amplitude: Amplitude!
     
     private init(){}
 }

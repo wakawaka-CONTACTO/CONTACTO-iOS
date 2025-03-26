@@ -98,6 +98,7 @@ extension InfoViewController {
             guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
             sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
         }
+        AmplitudeManager.amplitude.reset()
         
         alert.addAction(cancel)
         alert.addAction(success)
