@@ -24,7 +24,7 @@ struct MyDetailResponseDTO: Codable {
 
 // MARK: - UserPortfolio
 struct UserPortfolio: Codable {
-    let portfolioId, userId: Int
+    let portfolioId, userId: Int?
     var portfolioImageUrl: [String]
 }
 

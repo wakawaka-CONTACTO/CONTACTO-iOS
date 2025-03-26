@@ -319,6 +319,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		261111FB2D895D8000D481E2 /* PortfolioItem */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = PortfolioItem; sourceTree = "<group>"; };
 		26BBF5E62D8432830089E60C /* Alert */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Alert; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -705,6 +706,7 @@
 		C37A28DB2CB417A0004BC6AE /* Edit */ = {
 			isa = PBXGroup;
 			children = (
+				261111FB2D895D8000D481E2 /* PortfolioItem */,
 				C3F574F72CC3952500440D98 /* Cell */,
 				C37A28DF2CB417C2004BC6AE /* View */,
 				C37A28DC2CB417AE004BC6AE /* ViewController */,
@@ -1111,6 +1113,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				261111FB2D895D8000D481E2 /* PortfolioItem */,
 				26BBF5E62D8432830089E60C /* Alert */,
 			);
 			name = "CONTACTO-iOS";
