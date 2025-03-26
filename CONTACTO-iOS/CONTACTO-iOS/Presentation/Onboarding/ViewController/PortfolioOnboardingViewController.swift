@@ -14,6 +14,7 @@ import Then
 final class PortfolioOnboardingViewController: BaseViewController {
     
     private let portfolioOnboardingView = PortfolioOnboardingView()
+    private var isLoading = false
     
     var portfolioItems: [UIImage] = [] {
         didSet {
@@ -41,6 +42,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
+        isLoading = true
         portfolioOnboardingView.nextButton.isEnabled = false
         UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
         let bodyData = SignUpRequestBodyDTO(
@@ -58,6 +60,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
             images: UserInfo.shared.portfolioImageUrl)
         
         signup(bodyDTO: bodyData) { success in
+            self.isLoading = false
             if success {
                 let mainTabBarViewController = MainTabBarViewController()
                 mainTabBarViewController.homeViewController.isFirst = true
@@ -92,6 +95,8 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     func setPortfolio() {
+        guard !isLoading else { return }
+        
         var configuration = PHPickerConfiguration()
         lazy var picker = PHPickerViewController(configuration: configuration)
         configuration.selectionLimit = 10 - portfolioItems.count
