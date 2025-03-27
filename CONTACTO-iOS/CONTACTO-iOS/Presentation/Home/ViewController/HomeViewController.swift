@@ -11,7 +11,7 @@ import Kingfisher
 import SnapKit
 import Then
 
-final class HomeViewController: BaseViewController {
+final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     var isFirst = false /// 튜토리얼 필요 유무
     var isPreview = false /// edit의 preview인지
@@ -229,6 +229,16 @@ extension HomeViewController {
             maxNum = imagePreviewDummy.count - 1
             homeEmptyView.isHidden = true
         }
+        
+        setAmplitudeUserProperties()
+        sendAmpliLog(eventName: EventName.VIEW_HOME)
+    }
+    
+    private func setAmplitudeUserProperties(){
+        var metaProperties = UserPropertyMetadata(homeYesCount: 0, homeNoCount: 0, chatroomCount: 0, pushNotificationConsent: true) // todo 추후 값 수정하고 반영
+        let userProperty = UserPropertiesInfo.from(previewPortfolioData, metadata:
+                                                    metaProperties)
+        AmplitudeUserPropertySender.setUserProperties(user: userProperty)
     }
     
     private func setPortImage() {

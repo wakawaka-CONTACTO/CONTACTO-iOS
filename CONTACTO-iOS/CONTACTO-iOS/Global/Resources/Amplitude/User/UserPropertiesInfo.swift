@@ -24,7 +24,6 @@ struct UserPropertiesInfo {
 }
 
 struct UserPropertyMetadata {
-    let lastUseDate: Date
     let homeYesCount: Int
     let homeNoCount: Int
     let chatroomCount: Int
@@ -32,17 +31,17 @@ struct UserPropertyMetadata {
 }
 
 extension UserPropertiesInfo {
-    static func from(_ userInfo: UserInfo, metadata: UserPropertyMetadata) -> UserPropertiesInfo {
+    static func from(_ dto: MyDetailResponseDTO, metadata: UserPropertyMetadata) -> UserPropertiesInfo {
         return UserPropertiesInfo(
-            name: userInfo.name,
-            email: userInfo.email,
-            portfolioCount: userInfo.portfolioImageUrl.count,
-            talents: userInfo.userTalents,
-            description: userInfo.description,
-            purposes: userInfo.userPurposes.map { "\($0)" },
-            instagramId: userInfo.instagramId,
-            webUrl: userInfo.webUrl ?? "",
-            lastUseDate: metadata.lastUseDate,
+            name: dto.username,
+            email: dto.email,
+            portfolioCount: dto.userPortfolio?.portfolioImageUrl.count ?? 0,
+            talents: dto.userTalents.map { $0.talentType },
+            description: dto.description ?? "",
+            purposes: dto.userPurposes.map { "\($0)" },
+            instagramId: dto.instagramId,
+            webUrl: dto.webUrl ?? "",
+            lastUseDate: Date(),
             homeYesCount: metadata.homeYesCount,
             homeNoCount: metadata.homeNoCount,
             chatroomCount: metadata.chatroomCount,

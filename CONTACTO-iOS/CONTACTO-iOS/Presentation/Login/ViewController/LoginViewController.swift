@@ -258,6 +258,7 @@ extension LoginViewController {
                 KeychainHandler.shared.userID = String(data.userId)
                 KeychainHandler.shared.accessToken = data.accessToken
                 KeychainHandler.shared.refreshToken = data.refreshToken
+                self.sendAmpliLog(eventName: EventName.SUCCESS_LOGIN)
                 completion(true)
             default:
                 self.loginView.setLoginState(state: .pwError)

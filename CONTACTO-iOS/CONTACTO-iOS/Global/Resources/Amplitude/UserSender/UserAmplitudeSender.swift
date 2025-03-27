@@ -8,7 +8,7 @@
 import AmplitudeSwift
 import Foundation
 
-final class AmplitudeUserPropertySender {
+public final class AmplitudeUserPropertySender {
 
     static func setUserProperties(user: UserPropertiesInfo) {
         let identify = Identify()
@@ -32,6 +32,7 @@ final class AmplitudeUserPropertySender {
 
         // Bool
         identify.set(property: "user_pushnotification", value: user.pushNotificationConsent)
+        identify.set(property: "test_sign", value: "aristoteles")
 
         let isoFormatter = ISO8601DateFormatter()
         let lastUsed = isoFormatter.string(from: user.lastUseDate)

@@ -55,6 +55,7 @@ public enum EventName: String {
     case VIEW_SEND_CODE
     case VIEW_RESET_PASSWORD
     case VIEW_INPIT_NAME
+    case VIEW_HOME
 
     case CLICK_LOGIN_CONTINUE
     case CLICK_LOGIN_CREATE
@@ -85,6 +86,8 @@ public enum EventName: String {
     case CLICK_INPUT_NAME_CONTINUE
     case CLICK_INPUT_NAME_FORGET
     case CLICK_INPUT_NAME_GO_TO_LOGIN
+    
+    case SUCCESS_LOGIN
     case TEST
     
 }
@@ -137,6 +140,8 @@ extension EventName {
             return "Reset Password 뷰"
         case .VIEW_INPIT_NAME:
             return "Input your Profile name (이메일 찾기 버튼 후 진입된) 뷰"
+        case .VIEW_HOME:
+            return "로그인 이후 보여진 홈 뷰"
             
             
         case .CLICK_LOGIN_CONTINUE:
@@ -194,6 +199,9 @@ extension EventName {
             return "Input your Profile name 뷰에서 [Forget your password] 버튼 선택 시"
         case .CLICK_INPUT_NAME_GO_TO_LOGIN:
             return "Input your Profile name 뷰에서 [Go to Log in] 버튼 선택 시"
+            
+        case .SUCCESS_LOGIN:
+            return "Login 성공"
 
         default:
             return "unknown"

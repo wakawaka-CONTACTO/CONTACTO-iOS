@@ -88,6 +88,7 @@ final class DetailProfileViewController: BaseViewController {
                 case .success(let data):
                     self?.portfolioData = data
                     self?.updatePortfolio()
+//                    self?.updateUserInfo(from: data)
                     completion(true)
                 default:
                     completion(false)
@@ -98,6 +99,17 @@ final class DetailProfileViewController: BaseViewController {
         }
         completion(true)
     }
+
+//    func updateUserInfo(from data: MyDetailResponseDTO) {
+//        UserInfo.shared.name = data.username
+//        UserInfo.shared.email = data.email
+//        UserInfo.shared.description = data.description
+//        UserInfo.shared.instagramId = data.instagramId
+//        UserInfo.shared.webUrl = data.webUrl
+//        UserInfo.shared.userPurposes = data.userPurposes
+//        UserInfo.shared.userTalents = data.userTalents.map { $0.talentType }
+//        UserInfo.shared.portfolioImageUrl = [] // or fetch & convert from URL
+//    }
     
     private func blockUser(blockedUserId: Int, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.homeService.blockUser(blockedUserId: portfolioData.id) { response in
