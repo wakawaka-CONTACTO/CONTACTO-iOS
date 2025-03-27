@@ -232,6 +232,7 @@ extension HomeViewController {
                     return
                 }
                 self.recommendedPortfolioIdx = 0
+                self.portfolioImageIdx = 0
                 self.setProfile()
             }
         } else {
