@@ -344,7 +344,9 @@ final class EditViewController: UIViewController {
         previewVC.isPreview = true
         if let manager = portfolioManager {
             previewVC.previewPortfolioData = manager.currentData
-            previewVC.imagePreviewDummy = manager.portfolioItems.compactMap { $0.image }
+            previewVC.previewImages = manager.portfolioItems.compactMap { $0.image }
+            previewVC.portfolioImageIdx = 0
+            previewVC.homeView.portImageView.image = previewVC.previewImages[previewVC.portfolioImageIdx]
             previewVC.previewPortfolioData.userTalents = []
             self.talentData.forEach {
                 previewVC.previewPortfolioData.userTalents.append(

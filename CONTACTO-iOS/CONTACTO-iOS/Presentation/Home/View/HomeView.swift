@@ -28,6 +28,7 @@ final class HomeView: BaseView {
     
     let noButton = UIButton()
     let yesButton = UIButton()
+    let undoButton = UIButton()
     
     override func setStyle() {
         self.backgroundColor = .ctblack
@@ -79,6 +80,10 @@ final class HomeView: BaseView {
         yesButton.do {
             $0.setImage(.icO, for: .normal)
         }
+        
+        undoButton.do {
+            $0.setImage(.icUndo2, for: .normal)
+        }
     }
     
     override func setLayout() {
@@ -87,7 +92,8 @@ final class HomeView: BaseView {
                          pageCollectionView,
                          portView,
                          noButton,
-                         yesButton)
+                         yesButton,
+                         undoButton)
         
         portView.addSubviews(portImageView,
                              backView,
@@ -148,6 +154,11 @@ final class HomeView: BaseView {
         yesButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(10)
             $0.bottom.equalTo(noButton)
+        }
+        
+        undoButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalTo(noButton).inset(20)
         }
     }
 }

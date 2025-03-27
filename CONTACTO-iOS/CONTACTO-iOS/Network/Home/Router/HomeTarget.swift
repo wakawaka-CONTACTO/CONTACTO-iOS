@@ -81,7 +81,7 @@ extension HomeTarget: TargetType {
     var parameters: RequestParams {
         switch self {
         case .homeList:
-            return .requestPlain
+            return .requestQuery(["page": 0, "size": 10])
         case .detailPort(_):
             return .requestPlain
         case .likeOrDislike(let bodyDTO):
