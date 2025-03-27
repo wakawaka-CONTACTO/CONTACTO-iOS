@@ -174,12 +174,12 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = true
             backButton.isHidden = true
             mainTextField.setTextFieldState(state: .email)
-            mainTextField.isError = false
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.login
             mainTextField.isError = false
             forgetEmailButton.isHidden = true
+            mainTextField.eyeButton.isHidden = true
             
         case .emailError:
             newAccountButton.isHidden = true
@@ -188,12 +188,12 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = true
             backButton.isHidden = true
             mainTextField.setTextFieldState(state: .email)
-            mainTextField.isError = true
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.noAccountTitle
             mainTextField.isError = true
             forgetEmailButton.isHidden = false
+            mainTextField.eyeButton.isHidden = true
 
         case .pw:
             newAccountButton.isHidden = true
@@ -202,7 +202,6 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = false
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .pw)
-            mainTextField.isError = false
             self.bringSubviewToFront(mainTextField.eyeButton)
             continueButton.setTitle(StringLiterals.Login.login, for: .normal)
             continueButton.isEnabled = false
@@ -217,7 +216,6 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = false
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .pw)
-            mainTextField.isError = true
             self.bringSubviewToFront(mainTextField.eyeButton)
             continueButton.setTitle(StringLiterals.Login.login, for: .normal)
             continueButton.isEnabled = false
@@ -232,12 +230,12 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = false
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .name)
-            mainTextField.isError = false
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.inputName
             mainTextField.isError = false
             forgetEmailButton.isHidden = true
+            mainTextField.eyeButton.isHidden = true
             
         case .pwForget:
             newAccountButton.isHidden = true
@@ -246,12 +244,11 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = true
             backButton.isHidden = false
             mainTextField.setTextFieldState(state: .email)
-            mainTextField.isError = false
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.sendCode
             mainTextField.isError = false
-            forgetEmailButton.isHidden = false
+            forgetEmailButton.isHidden = true
             
         case .findEmail:
             newAccountButton.isHidden = true
@@ -260,17 +257,17 @@ final class LoginView: BaseView {
             forgetPwButton.isHidden = false
             backButton.isHidden = true
             mainTextField.setTextFieldState(state: .findEmail)
-            mainTextField.isError = false
             continueButton.setTitle(StringLiterals.Login.goToLogin, for: .normal)
             continueButton.isEnabled = true
             descriptionLabel.text = StringLiterals.Login.yourEmail
             mainTextField.isError = false
             forgetEmailButton.isHidden = true
+            mainTextField.eyeButton.isHidden = true
         }
     }
     
     @objc func eyeButtonTapped() {
-        guard state == .pw || state == .pwError || state == .pwForget else { return }
+        guard state == .pw || state == .pwError else { return }
         
         mainTextField.isButtonTapped.toggle()
         mainTextField.isSecureTextEntry = !mainTextField.isButtonTapped
