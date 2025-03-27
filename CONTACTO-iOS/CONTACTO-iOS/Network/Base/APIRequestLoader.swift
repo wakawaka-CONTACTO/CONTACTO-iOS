@@ -58,7 +58,23 @@ class APIRequestLoader<T: TargetType> {
     
     private func judgeStatus<M: Decodable>(by statusCode: Int, _ data: Data, type: M.Type) -> NetworkResult<M> {
         switch statusCode {
-        case 200...299: return isValidData(data: data, type: M.self)
+        case 200...299:
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+               let status = json["status"] as? String,
+               status == "NOT_FOUND" {
+                let error = NetworkError(data: data, statusCode: 404, underlyingError: nil)
+                return .failure(error)
+            }
+            return isValidData(data: data, type: M.self)
+            
+        case 400...499: 
+            let error = NetworkError(data: data, statusCode: statusCode, underlyingError: nil)
+            return .failure(error)
+            
+        case 500...599: 
+            let error = NetworkError(data: data, statusCode: statusCode, underlyingError: nil)
+            return .failure(error)
+            
         default:
             let error = NetworkError(data: data, statusCode: statusCode, underlyingError: nil)
             return .failure(error)

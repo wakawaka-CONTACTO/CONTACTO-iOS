@@ -293,6 +293,15 @@ extension LoginViewController {
                 KeychainHandler.shared.accessToken = data.accessToken
                 KeychainHandler.shared.refreshToken = data.refreshToken
                 completion(true)
+            case .failure(let error):
+                if let data = error.data,
+                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
+                    DispatchQueue.main.async {
+                        self.view.showToast(message: errorResponse.message)
+                    }
+                }
+                self.loginView.setLoginState(state: .pwError)
+                completion(false)
             default:
                 self.loginView.setLoginState(state: .pwError)
                 completion(false)
@@ -335,18 +344,34 @@ extension LoginViewController {
     }
     
     private func emailExist(queryDTO: EmailExistRequestQueryDTO, completion: @escaping (Bool) -> Void) {
-        self.isExistEmail = true
+        self.isExistEmail = false 
         NetworkService.shared.onboardingService.emailExist(queryDTO: queryDTO) { response in
             switch response {
             case .success(let data):
-                if data?.status == "NOT_FOUND" {
-                    self.isExistEmail = false
-                    completion(true)
+                if let status = data?.status {
+                    switch status {
+                    case "NOT_FOUND":
+                        self.isExistEmail = false
+                        completion(true)
+                    case "OK": 
+                        self.isExistEmail = true
+                        completion(true)
+                    default:
+                        completion(false)
+                    }
+                } else {
+                    completion(false)
                 }
-//                if status == 200 {
-//                    self.isExistEmail = true
-//                    completion(true)
-//                }
+                
+            case .failure(let error):
+                if let data = error.data,
+                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
+                    DispatchQueue.main.async {
+                        self.view.showToast(message: errorResponse.message)
+                    }
+                }
+                completion(false)
+                
             default:
                 completion(false)
             }
