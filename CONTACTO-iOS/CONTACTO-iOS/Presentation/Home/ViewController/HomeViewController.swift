@@ -85,6 +85,10 @@ final class HomeViewController: BaseViewController {
         homeView.do {
             $0.isHidden = true
         }
+        
+        homeEmptyView.do {
+            $0.isHidden = true
+        }
     }
     
     override func setLayout() {
