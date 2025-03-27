@@ -17,6 +17,10 @@
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
 		335E72CE2D93CE9E00BD9C11 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 335E72CD2D93CE9E00BD9C11 /* GoogleService-Info.plist */; };
 		8C6A7C97DD9DE3A79AFFCBC0 /* Pods_CONTACTO_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */; };
+		ACAC3E0D2D83FD490001B069 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ACAC3E0C2D83FD490001B069 /* GoogleService-Info.plist */; };
+		ACAC3E1B2D8413640001B069 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */; };
+		ACAC3E1D2D8413640001B069 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */; };
+		ACAC3E1F2D8413640001B069 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1E2D8413640001B069 /* FirebaseMessaging */; };
 		C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */; };
 		C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */; };
 		C30C2E462CF2F79600FAE056 /* SignUpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */; };
@@ -165,6 +169,7 @@
 /* Begin PBXFileReference section */
 		0DEA1664F7C3DD88F43E1FDF /* Pods-CONTACTO-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.release.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		26434AC72D82D604000FB7AE /* Nationality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nationality.swift; sourceTree = "<group>"; };
+		269622932D9527D600BC9C7A /* GoogleService-info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-info.plist"; sourceTree = "<group>"; };
 		26DEC0202D806D0B00667450 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
 		330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportRequestBodyDTO.swift; sourceTree = "<group>"; };
 		330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportResponseDTO.swift; sourceTree = "<group>"; };
@@ -177,6 +182,7 @@
 		7BE1A2D5A19E66A4ACF01783 /* Pods-CONTACTO-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		AC0EAA8E2D68451C00757EBD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AC3389C32D67259100BE7518 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		ACAC3E0C2D83FD490001B069 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpResponseDTO.swift; sourceTree = "<group>"; };
 		C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRequestBodyDTO.swift; sourceTree = "<group>"; };
@@ -330,8 +336,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACAC3E1F2D8413640001B069 /* FirebaseMessaging in Frameworks */,
+				ACAC3E1B2D8413640001B069 /* FirebaseAnalytics in Frameworks */,
 				C33D73CD2CDEEE7E00889B1B /* SwiftKeychainWrapper in Frameworks */,
 				C34C1F562CE38E2800F94BCD /* Alamofire in Frameworks */,
+				ACAC3E1D2D8413640001B069 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				C3FD904E2C913EC40021D2BA /* SnapKit in Frameworks */,
 				C3FD90512C913ECD0021D2BA /* Then in Frameworks */,
 				C32D06F52CE633260016F497 /* Kingfisher in Frameworks */,
@@ -871,13 +880,14 @@
 		C3FD902C2C9139D40021D2BA = {
 			isa = PBXGroup;
 			children = (
-				335E72CD2D93CE9E00BD9C11 /* GoogleService-Info.plist */,
+				269622932D9527D600BC9C7A /* GoogleService-info.plist */,
 				AC0EAA8E2D68451C00757EBD /* .gitignore */,
 				AC3389C32D67259100BE7518 /* Config.xcconfig */,
 				C3FD90372C9139D40021D2BA /* CONTACTO-iOS */,
 				C3FD90362C9139D40021D2BA /* Products */,
 				4409E7E3BA55A92D581A48CE /* Pods */,
 				7A31FA26A707F91E52E2DDB3 /* Frameworks */,
+				ACAC3E0C2D83FD490001B069 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1126,6 +1136,9 @@
 				C33D73CC2CDEEE7E00889B1B /* SwiftKeychainWrapper */,
 				C34C1F552CE38E2800F94BCD /* Alamofire */,
 				C32D06F42CE633260016F497 /* Kingfisher */,
+				ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */,
+				ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */,
+				ACAC3E1E2D8413640001B069 /* FirebaseMessaging */,
 			);
 			productName = "CONTACTO-iOS";
 			productReference = C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */;
@@ -1161,6 +1174,7 @@
 				C33D73CB2CDEEE7E00889B1B /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 				C34C1F542CE38E2800F94BCD /* XCRemoteSwiftPackageReference "Alamofire" */,
 				C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = C3FD90362C9139D40021D2BA /* Products */;
 			projectDirPath = "";
@@ -1176,7 +1190,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				335E72CE2D93CE9E00BD9C11 /* GoogleService-Info.plist in Resources */,
+				ACAC3E0D2D83FD490001B069 /* GoogleService-Info.plist in Resources */,
 				C3FD90992C9189850021D2BA /* FKRasterRomanCompactTrial-Blended.otf in Resources */,
 				C3E6D9122CFAD76900D6ABDC /* Pretendard-Bold.otf in Resources */,
 				C3FD90422C9139D70021D2BA /* Assets.xcassets in Resources */,
@@ -1601,6 +1615,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.9.0;
+			};
+		};
 		C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -1644,6 +1666,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		ACAC3E1E2D8413640001B069 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		C32D06F42CE633260016F497 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */;

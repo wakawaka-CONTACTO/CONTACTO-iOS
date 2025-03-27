@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import Then
 import SafariServices
+import FirebaseMessaging
 
 final class LoginViewController: UIViewController {
     
@@ -148,11 +149,33 @@ extension LoginViewController {
             hideLoadingIndicator()
         case .pw, .pwError:
             showLoadingIndicator()
-            login(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { result in
-                if result {
-                    let mainTabBarViewController = MainTabBarViewController()
-                    mainTabBarViewController.homeViewController.isFirst = false
-                    self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+            let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+            let deviceType = UIDevice.current.model
+            
+            // FCM 토큰 비동기 처리
+            Messaging.messaging().token { firebaseToken, error in
+                guard let firebaseToken = firebaseToken else {
+                    self.view.showToast(message: "FCM 토큰을 가져올 수 없습니다")
+                    return
+                }
+                
+                // 로그인 요청에 디바이스 정보 포함
+                let bodyDTO = LoginRequestBodyDTO(
+                    email: self.email,
+                    password: self.pw,
+                    firebaseToken: firebaseToken,
+                    deviceId: deviceId,
+                    deviceType: deviceType
+                )
+                
+                self.login(bodyDTO: bodyDTO) { response in
+                    if response {
+                        let mainTabBarViewController = MainTabBarViewController()
+                        mainTabBarViewController.homeViewController.isFirst = false
+                        self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+                    } else {
+                        self.view.showToast(message: "Something went wrong. Try Again")
+                    }
                 }
                 self.hideLoadingIndicator()
             }
@@ -196,6 +219,11 @@ extension LoginViewController {
     @objc func backButtonTapped() {
         loginView.mainTextField.text = self.email
         loginView.setLoginState(state: .email)
+        if !self.email.isEmpty && self.email.isValidEmail() {
+            self.loginView.continueButton.isEnabled = true
+        } else {
+            self.loginView.continueButton.isEnabled = false
+        }
     }
     
     @objc private func codeVerifyButtonTapped() {
@@ -219,13 +247,33 @@ extension LoginViewController {
     }
     
     @objc private func pwContinueButton() {
-        updatePwd(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { response in
-            if response {
-                let mainTabBarViewController = MainTabBarViewController()
-                mainTabBarViewController.homeViewController.isFirst = false
-                self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
-            } else {
-                self.view.showToast(message: "Something went wrong. Try Again")
+        let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+        let deviceType = UIDevice.current.model
+        
+        // FCM 토큰 비동기 처리
+        Messaging.messaging().token { firebaseToken, error in
+            guard let firebaseToken = firebaseToken else {
+                self.view.showToast(message: "FCM 토큰을 가져올 수 없습니다")
+                return
+            }
+            
+            // 로그인 요청에 디바이스 정보 포함
+            let bodyDTO = LoginRequestBodyDTO(
+                email: self.email,
+                password: self.pw,
+                firebaseToken: firebaseToken,
+                deviceId: deviceId,
+                deviceType: deviceType
+            )
+            
+            self.updatePwd(bodyDTO: bodyDTO) { response in
+                if response {
+                    let mainTabBarViewController = MainTabBarViewController()
+                    mainTabBarViewController.homeViewController.isFirst = false
+                    self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+                } else {
+                    self.view.showToast(message: "Something went wrong. Try Again")
+                }
             }
         }
     }
@@ -250,6 +298,15 @@ extension LoginViewController {
                 KeychainHandler.shared.accessToken = data.accessToken
                 KeychainHandler.shared.refreshToken = data.refreshToken
                 completion(true)
+            case .failure(let error):
+                if let data = error.data,
+                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
+                    DispatchQueue.main.async {
+                        self.view.showToast(message: errorResponse.message)
+                    }
+                }
+                self.loginView.setLoginState(state: .pwError)
+                completion(false)
             default:
                 self.loginView.setLoginState(state: .pwError)
                 completion(false)
@@ -292,18 +349,34 @@ extension LoginViewController {
     }
     
     private func emailExist(queryDTO: EmailExistRequestQueryDTO, completion: @escaping (Bool) -> Void) {
-        self.isExistEmail = true
+        self.isExistEmail = false 
         NetworkService.shared.onboardingService.emailExist(queryDTO: queryDTO) { response in
             switch response {
             case .success(let data):
-                if data?.status == "NOT_FOUND" {
-                    self.isExistEmail = false
-                    completion(true)
+                if let status = data?.status {
+                    switch status {
+                    case "NOT_FOUND":
+                        self.isExistEmail = false
+                        completion(true)
+                    case "OK": 
+                        self.isExistEmail = true
+                        completion(true)
+                    default:
+                        completion(false)
+                    }
+                } else {
+                    completion(false)
                 }
-//                if status == 200 {
-//                    self.isExistEmail = true
-//                    completion(true)
-//                }
+                
+            case .failure(let error):
+                if let data = error.data,
+                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
+                    DispatchQueue.main.async {
+                        self.view.showToast(message: errorResponse.message)
+                    }
+                }
+                completion(false)
+                
             default:
                 completion(false)
             }

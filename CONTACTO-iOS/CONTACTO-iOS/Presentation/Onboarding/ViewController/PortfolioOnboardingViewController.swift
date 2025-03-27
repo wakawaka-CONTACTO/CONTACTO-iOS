@@ -10,10 +10,12 @@ import UIKit
 import PhotosUI
 import SnapKit
 import Then
+import FirebaseMessaging
 
 final class PortfolioOnboardingViewController: BaseViewController {
     
     private let portfolioOnboardingView = PortfolioOnboardingView()
+    private var isLoading = false
     
     var portfolioItems: [UIImage] = [] {
         didSet {
@@ -41,38 +43,57 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
+        isLoading = true
+        portfolioOnboardingView.nextButton.isEnabled = false
         UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
-        let bodyData = SignUpRequestBodyDTO(
-            userSignUpReq: UserSignUpRequest(
-                name: UserInfo.shared.name,
-                email: UserInfo.shared.email,
-                description: UserInfo.shared.description,
-                instagramId: UserInfo.shared.instagramId,
-                password: UserInfo.shared.password,
-                loginType: "LOCAL",
-                nationality: UserInfo.shared.nationality,
-                webUrl: UserInfo.shared.webUrl),
-            purpose: UserInfo.shared.userPurposes.map { Purpose(purposeType: $0) },
-            talent: UserInfo.shared.userTalents.map { TalentType(talentType: $0) },
-            images: UserInfo.shared.portfolioImageUrl)
+        let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+        let deviceType = UIDevice.current.model
         
-        signup(bodyDTO: bodyData) { success in
-            if success {
-                let mainTabBarViewController = MainTabBarViewController()
-                mainTabBarViewController.homeViewController.isFirst = true
-                self.navigationController?.pushViewController(mainTabBarViewController, animated: true)
-            } else {
-                let alertController = UIAlertController(title: "Error",
-                                                        message: "회원가입에 실패했습니다. 잠시 후 다시 시도해 주세요.",
-                                                        preferredStyle: .alert)
-                let retryAction = UIAlertAction(title: "OK", style: .default) { _ in
-                    self.navigationController?.popToRootViewController(animated: true)
+        Messaging.messaging().token { firebaseToken, error in
+            guard let firebaseToken = firebaseToken else {
+                print("❌ FCM 토큰 가져오기 실패")
+                return
+            }
+
+            let bodyData = SignUpRequestBodyDTO(
+                userSignUpReq: UserSignUpRequest(
+                    name: UserInfo.shared.name,
+                    email: UserInfo.shared.email,
+                    description: UserInfo.shared.description,
+                    instagramId: UserInfo.shared.instagramId,
+                    password: UserInfo.shared.password,
+                    loginType: "LOCAL",
+                    nationality: UserInfo.shared.nationality,
+                    webUrl: UserInfo.shared.webUrl,
+                    firebaseToken: firebaseToken,
+                    deviceId: deviceId,
+                    deviceType: deviceType),
+                purpose: UserInfo.shared.userPurposes.map { Purpose(purposeType: $0) },
+                talent: UserInfo.shared.userTalents.map { TalentType(talentType: $0) },
+                images: UserInfo.shared.portfolioImageUrl)
+
+            self.signup(bodyDTO: bodyData) { success in
+                self.isLoading = false
+                if success {
+                    let mainTabBarViewController = MainTabBarViewController()
+                    mainTabBarViewController.homeViewController.isFirst = true
+                    self.navigationController?.pushViewController(mainTabBarViewController, animated: true)
+                } else {
+                    let alertController = UIAlertController(
+                        title: "Error",
+                        message: "회원가입에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+                        preferredStyle: .alert)
+
+                    let retryAction = UIAlertAction(title: "OK", style: .default) { _ in
+                        self.navigationController?.popToRootViewController(animated: true)
+                    }
+
+                    alertController.addAction(retryAction)
+                    DispatchQueue.main.async {
+                        self.present(alertController, animated: true, completion: nil)
+                    }
                 }
-                alertController.addAction(retryAction)
-                
-                DispatchQueue.main.async {
-                    self.present(alertController, animated: true, completion: nil)
-                }
+                self.portfolioOnboardingView.nextButton.isEnabled = true
             }
         }
     }
@@ -90,6 +111,8 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     func setPortfolio() {
+        guard !isLoading else { return }
+        
         var configuration = PHPickerConfiguration()
         lazy var picker = PHPickerViewController(configuration: configuration)
         configuration.selectionLimit = 10 - portfolioItems.count

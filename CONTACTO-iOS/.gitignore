@@ -3,6 +3,9 @@ CONTACTO-iOS/Config.xcconfig
 CONTACTO-iOS/build/*
 **/build/*
 
+CONTACTO-iOS/GoogleService-info.plist
+**/GoogleService-info.plist
+
 # Xcode 관련
 DerivedData/
 *.xcworkspace/
@@ -52,3 +55,7 @@ playground.xcworkspace/
 
 # Xcode 11+ Cache
 .swiftpm/xcode
+
+# 알림 관련
+GoogleService-Info.plist
+GoogleService-Info
