@@ -168,7 +168,7 @@ extension LoginViewController {
                     deviceType: deviceType
                 )
                 
-                self.updatePwd(bodyDTO: bodyDTO) { response in
+                self.login(bodyDTO: bodyDTO) { response in
                     if response {
                         let mainTabBarViewController = MainTabBarViewController()
                         mainTabBarViewController.homeViewController.isFirst = false

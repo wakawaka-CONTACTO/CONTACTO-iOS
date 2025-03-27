@@ -73,6 +73,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
                 images: UserInfo.shared.portfolioImageUrl)
 
             self.signup(bodyDTO: bodyData) { success in
+                self.isLoading = false
                 if success {
                     let mainTabBarViewController = MainTabBarViewController()
                     mainTabBarViewController.homeViewController.isFirst = true
