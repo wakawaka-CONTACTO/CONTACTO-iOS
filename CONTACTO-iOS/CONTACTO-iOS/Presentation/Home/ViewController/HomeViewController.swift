@@ -23,21 +23,20 @@ final class HomeViewController: BaseViewController {
     var isPreview = false /// edit의 preview 여부
     var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: []) /// preview의 내 포폴 데이터
     var previewImages: [UIImage] = []
-
-    var isUndo = false /// 재선택 동작 여부
-    var lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
     
+    var isUndo = false /// 재선택 동작 여부
+    var lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: []) {
+        didSet {
+            self.homeView.undoButton.isEnabled = lastPortfolioUser.userId != 0
+        }
+    }
     
     var isMatch = false /// 매칭 여부
     
     /// 사용자 추천 목록
     let size = 10 /// 받아올 개수
     var recommendedPortfolios: [PortfoliosResponseDTO] = []
-    var recommendedPortfolioIdx = 0 { /// 현재 보고 있는 유저 위치
-        didSet {
-            setProfile()
-        }
-    }
+    var recommendedPortfolioIdx = 0 /// 현재 보고 있는 유저 위치
     var currentUserId = 0 /// 현재 보고 있는 유저 아이디
     
     var portfolioImages: [String] = []
@@ -216,6 +215,7 @@ extension HomeViewController {
     }
     
     private func setData() {
+        homeView.undoButton.isEnabled = false
         if !isPreview {
             if !hasCheckedMyPort {
                 checkMyPort()
@@ -225,6 +225,7 @@ extension HomeViewController {
                 if self.recommendedPortfolios.count == 0 {
                     self.homeView.isHidden = true
                     self.homeEmptyView.isHidden = false
+                    return
                 }
                 self.recommendedPortfolioIdx = 0
                 self.setProfile()
@@ -237,23 +238,29 @@ extension HomeViewController {
     }
     
     private func setProfile() {
-        if recommendedPortfolioIdx >= size {
-            homeList { _ in
-                if self.recommendedPortfolios.count == 0 {
-                    self.homeView.isHidden = true
-                    self.homeEmptyView.isHidden = false
-                }
-            }
-            self.recommendedPortfolioIdx = 0
-        }
         self.homeView.isHidden = false
         self.homeEmptyView.isHidden = true
-        self.currentUserId = Int(recommendedPortfolios[recommendedPortfolioIdx].userId)
-        self.homeView.profileNameLabel.text = recommendedPortfolios[recommendedPortfolioIdx].username
-        self.portfolioImages = recommendedPortfolios[recommendedPortfolioIdx].portfolioImageUrl
-        self.portfolioImageIdx = 0
+        if !isUndo {
+            if recommendedPortfolioIdx >= size {
+                homeList { _ in
+                    if self.recommendedPortfolios.count == 0 {
+                        self.homeView.isHidden = true
+                        self.homeEmptyView.isHidden = false
+                        return
+                    }
+                }
+                self.recommendedPortfolioIdx = 0
+            }
+            self.currentUserId = Int(recommendedPortfolios[recommendedPortfolioIdx].userId)
+            self.homeView.profileNameLabel.text = recommendedPortfolios[recommendedPortfolioIdx].username
+            self.portfolioImages = recommendedPortfolios[recommendedPortfolioIdx].portfolioImageUrl
+        } else {
+            self.currentUserId = Int(lastPortfolioUser.userId)
+            self.homeView.profileNameLabel.text = lastPortfolioUser.username
+            self.portfolioImages = lastPortfolioUser.portfolioImageUrl
+        }
         self.portfolioImageCount = portfolioImages.count
-        self.setPortImage()
+        self.portfolioImageIdx = 0
         self.homeView.pageCollectionView.reloadData()
     }
     
@@ -310,8 +317,12 @@ extension HomeViewController {
     }
     
     @objc private func yesButtonTapped() {
+        guard !isAnimating else { return }
+        
         if !isPreview {
-            lastPortfolioUser = recommendedPortfolios[portfolioImageIdx]
+            if !isUndo {
+                lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
+            }
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
                 self.animateImage(status: true)
             }
@@ -321,8 +332,12 @@ extension HomeViewController {
     }
     
     @objc private func noButtonTapped() {
+        guard !isAnimating else { return }
+        
         if !isPreview {
-            lastPortfolioUser = recommendedPortfolios[portfolioImageIdx]
+            if !isUndo {
+                lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
+            }
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
                 self.animateImage(status: false)
             }
@@ -332,7 +347,10 @@ extension HomeViewController {
     }
     
     @objc private func undoButtonTapped() {
+        guard !isAnimating else { return }
+        
         isUndo = true
+        self.recommendedPortfolioIdx -= 1
         self.animateImage(status: false)
     }
     
@@ -353,13 +371,19 @@ extension HomeViewController {
                 self.pushToMatch()
             }
             
-            self.recommendedPortfolioIdx += 1
             self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
             self.homeView.portView.transform = .identity
+            if !self.isUndo {
+                self.recommendedPortfolioIdx += 1
+            }
+            self.setProfile()
             self.portfolioImageIdx = 0
             self.isAnimating = false
             self.isMatch = false
-//            self.isUndo = false
+            if self.isUndo {
+                self.lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
+            }
+            self.isUndo = false
         }
     }
     
