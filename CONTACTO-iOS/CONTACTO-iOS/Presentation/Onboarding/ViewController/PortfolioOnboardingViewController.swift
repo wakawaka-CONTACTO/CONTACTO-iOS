@@ -15,6 +15,7 @@ import FirebaseMessaging
 final class PortfolioOnboardingViewController: BaseViewController {
     
     private let portfolioOnboardingView = PortfolioOnboardingView()
+    private var isLoading = false
     
     var portfolioItems: [UIImage] = [] {
         didSet {
@@ -42,6 +43,8 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
+        isLoading = true
+        portfolioOnboardingView.nextButton.isEnabled = false
         UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
         let deviceType = UIDevice.current.model
@@ -89,6 +92,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
                         self.present(alertController, animated: true, completion: nil)
                     }
                 }
+                self.portfolioOnboardingView.nextButton.isEnabled = true
             }
         }
     }
@@ -106,6 +110,8 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     func setPortfolio() {
+        guard !isLoading else { return }
+        
         var configuration = PHPickerConfiguration()
         lazy var picker = PHPickerViewController(configuration: configuration)
         configuration.selectionLimit = 10 - portfolioItems.count
