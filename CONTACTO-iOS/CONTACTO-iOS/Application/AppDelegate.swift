@@ -14,9 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let configuration = Configuration(apiKey: Config.amplitudeApiKey)
         AmplitudeManager.amplitude = Amplitude(configuration: configuration)
-        
-        let userId = KeychainHandler.shared.userID
-        AmplitudeManager.amplitude.setUserId(userId: userId)
 
         return true
     }
