@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import Then
 import SafariServices
+import FirebaseMessaging
 
 final class LoginViewController: UIViewController {
     
@@ -148,11 +149,33 @@ extension LoginViewController {
             hideLoadingIndicator()
         case .pw, .pwError:
             showLoadingIndicator()
-            login(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { result in
-                if result {
-                    let mainTabBarViewController = MainTabBarViewController()
-                    mainTabBarViewController.homeViewController.isFirst = false
-                    self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+            let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+            let deviceType = UIDevice.current.model
+            
+            // FCM 토큰 비동기 처리
+            Messaging.messaging().token { firebaseToken, error in
+                guard let firebaseToken = firebaseToken else {
+                    self.view.showToast(message: "FCM 토큰을 가져올 수 없습니다")
+                    return
+                }
+                
+                // 로그인 요청에 디바이스 정보 포함
+                let bodyDTO = LoginRequestBodyDTO(
+                    email: self.email,
+                    password: self.pw,
+                    firebaseToken: firebaseToken,
+                    deviceId: deviceId,
+                    deviceType: deviceType
+                )
+                
+                self.updatePwd(bodyDTO: bodyDTO) { response in
+                    if response {
+                        let mainTabBarViewController = MainTabBarViewController()
+                        mainTabBarViewController.homeViewController.isFirst = false
+                        self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+                    } else {
+                        self.view.showToast(message: "Something went wrong. Try Again")
+                    }
                 }
                 self.hideLoadingIndicator()
             }
@@ -219,13 +242,33 @@ extension LoginViewController {
     }
     
     @objc private func pwContinueButton() {
-        updatePwd(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { response in
-            if response {
-                let mainTabBarViewController = MainTabBarViewController()
-                mainTabBarViewController.homeViewController.isFirst = false
-                self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
-            } else {
-                self.view.showToast(message: "Something went wrong. Try Again")
+        let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+        let deviceType = UIDevice.current.model
+        
+        // FCM 토큰 비동기 처리
+        Messaging.messaging().token { firebaseToken, error in
+            guard let firebaseToken = firebaseToken else {
+                self.view.showToast(message: "FCM 토큰을 가져올 수 없습니다")
+                return
+            }
+            
+            // 로그인 요청에 디바이스 정보 포함
+            let bodyDTO = LoginRequestBodyDTO(
+                email: self.email,
+                password: self.pw,
+                firebaseToken: firebaseToken,
+                deviceId: deviceId,
+                deviceType: deviceType
+            )
+            
+            self.updatePwd(bodyDTO: bodyDTO) { response in
+                if response {
+                    let mainTabBarViewController = MainTabBarViewController()
+                    mainTabBarViewController.homeViewController.isFirst = false
+                    self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+                } else {
+                    self.view.showToast(message: "Something went wrong. Try Again")
+                }
             }
         }
     }
