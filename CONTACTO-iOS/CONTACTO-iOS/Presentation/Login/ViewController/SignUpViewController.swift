@@ -220,13 +220,18 @@ extension SignUpViewController: UITextFieldDelegate {
         if let text = textField.text {
             switch textField {
             case signUpView.mainTextField:
-                if (!text.isEmpty || !text.isOnlyWhitespace()) {
-                    if text.isValidEmail() {
-                        self.email = text
-                        self.isTextFilled = true
-                    } else {
-                        self.isTextFilled = false
-                    }
+                if text.isEmpty || text.isOnlyWhitespace() {
+                    self.email = ""
+                    self.isTextFilled = false
+                    return
+                }
+                
+                if text.isValidEmail() {
+                    self.email = text
+                    self.isTextFilled = true
+                } else {
+                    self.email = text
+                    self.isTextFilled = false
                 }
                 
             case emailCodeView.mainTextField:
