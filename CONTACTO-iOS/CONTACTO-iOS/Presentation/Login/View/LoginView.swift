@@ -270,6 +270,8 @@ final class LoginView: BaseView {
     }
     
     @objc func eyeButtonTapped() {
+        guard state == .pw || state == .pwError || state == .pwForget else { return }
+        
         mainTextField.isButtonTapped.toggle()
         mainTextField.isSecureTextEntry = !mainTextField.isButtonTapped
         mainTextField.eyeButton.setImage(mainTextField.isButtonTapped ? .icEyeHide : .icEye, for: .normal)
