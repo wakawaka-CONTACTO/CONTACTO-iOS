@@ -219,6 +219,11 @@ extension LoginViewController {
     @objc func backButtonTapped() {
         loginView.mainTextField.text = self.email
         loginView.setLoginState(state: .email)
+        if !self.email.isEmpty && self.email.isValidEmail() {
+            self.loginView.continueButton.isEnabled = true
+        } else {
+            self.loginView.continueButton.isEnabled = false
+        }
     }
     
     @objc private func codeVerifyButtonTapped() {
