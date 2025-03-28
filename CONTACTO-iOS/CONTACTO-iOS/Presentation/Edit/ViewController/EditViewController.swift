@@ -40,7 +40,6 @@ final class EditViewController: UIViewController {
         }
     }
     
-    
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
         didSet {
             self.portfolioManager?.currentData.userPurposes = tappedStates.enumerated().compactMap { index, state in
@@ -623,6 +622,15 @@ extension EditViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         activeTextField = nil
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // 한글 입력 방지
+        let pattern = "^[a-zA-Z0-9\\s]*$"
+        let regex = try? NSRegularExpression(pattern: pattern)
+        let range = NSRange(location: 0, length: string.utf16.count)
+        let isMatch = regex?.firstMatch(in: string, options: [], range: range) != nil
+        return isMatch
     }
 }
 
