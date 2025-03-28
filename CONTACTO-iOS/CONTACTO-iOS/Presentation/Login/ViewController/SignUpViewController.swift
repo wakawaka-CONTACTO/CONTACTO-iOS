@@ -266,7 +266,7 @@ extension SignUpViewController: UITextFieldDelegate {
             let textLength = updatedText.count
             
             if textLength > 1 {
-                attributedString.addAttribute(.kern, value: 36, range: NSRange(location: 0, length: textLength - 1))
+                attributedString.addAttribute(.kern, value: 34, range: NSRange(location: 0, length: textLength - 1))
             }
             
             attributedString.addAttribute(.font, value: UIFont.fontContacto(.number), range: NSRange(location: 0, length: textLength))
