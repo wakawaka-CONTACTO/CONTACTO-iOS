@@ -156,6 +156,10 @@ final class DetailProfileViewController: BaseViewController {
     }
     
     private func setData() {
+        if isPreview {
+            self.detailProfileView.blockButton.isEnabled = false
+            self.detailProfileView.reportButton.isEnabled = false
+        }
         detailPort(userId: userId) { _ in }
     }
     
