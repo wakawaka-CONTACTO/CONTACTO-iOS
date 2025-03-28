@@ -105,12 +105,14 @@ final class EmailCodeView: BaseView {
             $0.leading.trailing.equalTo(underLineView).inset(15)
             $0.centerX.equalToSuperview()
             $0.height.equalTo(34.adjustedHeight)
+            $0.width.equalTo(6*46.adjustedWidth)
         }
         
         continueButton.snp.makeConstraints {
             $0.top.equalTo(underLineView.snp.bottom).offset(13.adjustedHeight)
             $0.leading.trailing.equalToSuperview().inset(37.adjustedWidth)
             $0.height.equalTo(34.adjustedHeight)
+            $0.width.equalTo(6*30.adjustedWidth)
         }
         
         resendButton.snp.makeConstraints {

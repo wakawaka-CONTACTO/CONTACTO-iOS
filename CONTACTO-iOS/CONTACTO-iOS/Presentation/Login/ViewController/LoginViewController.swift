@@ -462,7 +462,7 @@ extension LoginViewController: UITextFieldDelegate {
             let textLength = updatedText.count
             
             if textLength > 1 {
-                attributedString.addAttribute(.kern, value: 36, range: NSRange(location: 0, length: textLength - 1))
+                attributedString.addAttribute(.kern, value: adjustedValueForiPhone16Pro(), range: NSRange(location: 0, length: textLength - 1))
             }
             
             attributedString.addAttribute(.font, value: UIFont.fontContacto(.number), range: NSRange(location: 0, length: textLength))
@@ -472,6 +472,17 @@ extension LoginViewController: UITextFieldDelegate {
             
         default:
             return true
+        }
+    }
+    
+    func adjustedValueForiPhone16Pro() -> CGFloat {
+        let screenWidth = UIScreen.main.bounds.width
+        let iPhone16ProWidth: CGFloat = 393
+
+        if screenWidth >= iPhone16ProWidth {
+            return 40.adjustedWidth
+        } else {
+            return 42.adjustedWidth
         }
     }
 }
