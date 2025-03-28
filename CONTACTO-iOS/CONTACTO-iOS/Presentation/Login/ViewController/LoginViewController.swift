@@ -352,23 +352,18 @@ extension LoginViewController {
         self.isExistEmail = false 
         NetworkService.shared.onboardingService.emailExist(queryDTO: queryDTO) { response in
             switch response {
-            case .success(let data):
-                if let status = data?.status {
-                    switch status {
-                    case "NOT_FOUND":
-                        self.isExistEmail = false
-                        completion(true)
-                    case "OK": 
-                        self.isExistEmail = true
-                        completion(true)
-                    default:
-                        completion(false)
-                    }
-                } else {
-                    completion(false)
-                }
+            case .success(_):
+                self.isExistEmail = true
+                completion(true)
                 
             case .failure(let error):
+                if error.statusCode == 404 {
+                    self.isExistEmail = false
+                    completion(true)
+                    return
+                }
+                
+                // 그 외 에러
                 if let data = error.data,
                    let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
                     DispatchQueue.main.async {
