@@ -40,7 +40,7 @@ extension InfoTarget: TargetType {
     var path: String {
         switch self {
         case .deleteMe:
-            return "/api/v1/users/me"
+            return "/v1/users/me"
         }
     }
     

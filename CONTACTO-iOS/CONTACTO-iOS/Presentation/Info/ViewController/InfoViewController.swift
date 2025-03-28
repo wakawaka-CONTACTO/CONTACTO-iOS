@@ -58,7 +58,7 @@ final class InfoViewController: BaseViewController {
 
 extension InfoViewController {
     @objc private func helpButtonTapped() {
-        guard let url = URL(string: "https://naver.com") else { return }
+        guard let url = URL(string: StringLiterals.URL.insta) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
