@@ -243,6 +243,9 @@ final class DetailProfileViewController: BaseViewController {
                             message: "사용자 차단에 실패했습니다.",
                             preferredStyle: .alert
                         )
+                        if let navigationController = self.navigationController {
+                            navigationController.popViewController(animated: true)
+                        }
                         let okAction = UIAlertAction(title: "OK", style: .default)
                         errorAlert.addAction(okAction)
                         self.present(errorAlert, animated: true, completion: nil)
