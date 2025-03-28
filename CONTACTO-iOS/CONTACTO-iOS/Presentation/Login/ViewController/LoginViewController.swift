@@ -333,6 +333,7 @@ extension LoginViewController {
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(_):
+                self.emailCodeView.startTimer()
                 completion(true)
             default:
                 completion(false)
