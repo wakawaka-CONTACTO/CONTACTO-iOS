@@ -20,7 +20,7 @@ final class DetailProfileViewController: BaseViewController {
             detailProfileView.pageCollectionView.reloadData()
         }
     }
-    var userId: Int = 3
+    var userId = 0
     var isPreview = false
     var isFromChat = false
     

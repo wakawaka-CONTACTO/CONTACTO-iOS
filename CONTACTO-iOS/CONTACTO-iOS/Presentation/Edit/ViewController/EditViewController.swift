@@ -343,6 +343,7 @@ final class EditViewController: UIViewController {
         let previewVC = HomeViewController()
         previewVC.isPreview = true
         if let manager = portfolioManager {
+            previewVC.currentUserId = manager.currentData.id
             previewVC.previewPortfolioData = manager.currentData
             previewVC.previewImages = manager.portfolioItems.compactMap { $0.image }
             previewVC.portfolioImageIdx = 0
