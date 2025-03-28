@@ -226,12 +226,12 @@ final class InfoView: BaseView {
         
         logoImageView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(1203)
+            $0.bottom.equalToSuperview().inset(117)
         }
         
         versionLabel.snp.makeConstraints {
             $0.trailing.equalTo(logoImageView.snp.trailing)
-            $0.bottom.equalTo(logoImageView.snp.bottom).offset(17)
+            $0.bottom.equalTo(logoImageView.snp.bottom).offset(20)
         }
         
         logoutButton.snp.makeConstraints {
