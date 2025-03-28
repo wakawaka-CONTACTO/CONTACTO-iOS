@@ -116,7 +116,7 @@ final class SignUpViewController: UIViewController {
 extension SignUpViewController {
     @objc private func sendCode() {
         signUpView.continueButton.isEnabled = false
-        NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { result in DispatchQueue.main.async {
+        NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: EmailSendPurpose.signup)) { result in DispatchQueue.main.async {
             switch result{
             case .success:
                 self.signUpView.isHidden = true

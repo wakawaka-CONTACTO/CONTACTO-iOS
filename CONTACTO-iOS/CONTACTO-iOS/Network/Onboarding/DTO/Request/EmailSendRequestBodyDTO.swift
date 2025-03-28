@@ -7,6 +7,12 @@
 
 import Foundation
 
+enum EmailSendPurpose: String, Codable {
+    case signup = "SIGNUP"
+    case reset = "RESET"
+}
+
 struct EmailSendRequestBodyDTO: Codable {
     let email: String
+    let purpose: EmailSendPurpose
 }
