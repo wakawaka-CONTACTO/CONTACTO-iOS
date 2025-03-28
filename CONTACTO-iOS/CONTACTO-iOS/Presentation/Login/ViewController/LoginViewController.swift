@@ -25,6 +25,7 @@ final class LoginViewController: UIViewController {
     var authCode = ""
     
     var isExistEmail = false
+    var purpose =  EmailSendPurpose.signup
     
     
     // 로딩 인디케이터: 전체 화면 오버레이
@@ -187,7 +188,9 @@ extension LoginViewController {
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
         }
         case .pwForget:
+            self.purpose = EmailSendPurpose.reset
             sendCode()
+            self.purpose =  EmailSendPurpose.signup
             
         case .findEmail:
             loginView.mainTextField.text = ""
@@ -239,7 +242,7 @@ extension LoginViewController {
     }
     
     @objc private func sendCode() {
-        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { _ in
+        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: self.purpose)) { _ in
             self.loginView.isHidden = true
             self.emailCodeView.isHidden = false
             self.setPWView.isHidden = true
