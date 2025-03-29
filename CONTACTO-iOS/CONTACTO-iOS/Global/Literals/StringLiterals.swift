@@ -93,6 +93,10 @@ enum StringLiterals {
             static let title = "SHOW YOUR\nBEST PORTFOLIO"
             static let upload = "Upload"
         }
+        
+        enum Nationality {
+            static let title = "NATIONALITY"
+        }
     }
     
     enum Home {
