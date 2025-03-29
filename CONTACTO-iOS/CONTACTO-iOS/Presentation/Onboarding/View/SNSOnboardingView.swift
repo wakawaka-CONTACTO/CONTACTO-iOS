@@ -215,6 +215,9 @@ extension SNSOnboardingView: UIPickerViewDelegate, UIPickerViewDataSource {
         selectedNationality = nationalities[row]
         nationalityTextField.text = nationalities[row].displayName
         nationalityTextField.resignFirstResponder()
+        
+        let isInstaFilled = !(instaTextField.text?.isEmpty ?? true)
+        nextButton.isEnabled = selectedNationality != .NONE && isInstaFilled
     }
 }
 
