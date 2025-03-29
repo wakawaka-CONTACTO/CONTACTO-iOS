@@ -83,13 +83,13 @@ extension SNSOnboardingViewController {
     
     @objc func textFieldDidChange(_ sender: Any?) {
         if let textField = sender as? UITextField {
-            if let currentText = textField.text, !currentText.isEmpty, !currentText.isOnlyWhitespace() {
-                snsOnboardingView.nextButton.isEnabled = true
-            } else {
-                snsOnboardingView.nextButton.isEnabled = false
-            }
+            let hasText = !(textField.text?.isEmpty ?? true) && !(textField.text?.isOnlyWhitespace() ?? true)
+            let isNationalitySelected = snsOnboardingView.selectedNationality != .NONE
+            
+            snsOnboardingView.nextButton.isEnabled = hasText && isNationalitySelected
         }
     }
+
     
     @objc private func nextButtonTapped() {
         guard let website = self.snsOnboardingView.websiteTextField.text,

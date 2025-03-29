@@ -8,10 +8,12 @@
 import Foundation
 
 enum Nationalities: String, CaseIterable {
+    case NONE
     case UK, CN, JP, US, KR, FR, DE, NL, OTHER
     
     var displayName: String {
         switch self {
+        case .NONE:  return "SELECT YOUR NATIONALITY"
         case .UK:    return "UNITED KINGDOM"
         case .CN:    return "CHINA"
         case .JP:    return "JAPAN"

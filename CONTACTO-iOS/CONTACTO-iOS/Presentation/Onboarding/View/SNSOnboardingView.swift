@@ -27,8 +27,8 @@ final class SNSOnboardingView: BaseView {
     let nationalityTextField = BaseTextField()
     private let nationalityPicker = UIPickerView()
     private let nationalities: [Nationalities] = Nationalities.allCases
-    var selectedNationality: Nationalities = .KR
-    
+    var selectedNationality: Nationalities = .NONE
+
     let nextButton = OnboardingNextButton(count: 4)
     
     override func setStyle() {
