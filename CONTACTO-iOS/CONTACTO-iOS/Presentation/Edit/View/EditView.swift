@@ -91,6 +91,7 @@ final class EditView: BaseView {
             $0.font = .fontContacto(.button4)
             $0.textColor = .ctblack
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            $0.keyboardType = .asciiCapable
             $0.isEnabled = false
             $0.textAlignment = .center
         }

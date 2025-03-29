@@ -20,7 +20,7 @@ final class DetailProfileViewController: BaseViewController {
             detailProfileView.pageCollectionView.reloadData()
         }
     }
-    var userId: Int = 3
+    var userId = 0
     var isPreview = false
     var isFromChat = false
     
@@ -156,6 +156,10 @@ final class DetailProfileViewController: BaseViewController {
     }
     
     private func setData() {
+        if isPreview {
+            self.detailProfileView.blockButton.isEnabled = false
+            self.detailProfileView.reportButton.isEnabled = false
+        }
         detailPort(userId: userId) { _ in }
     }
     
@@ -239,6 +243,9 @@ final class DetailProfileViewController: BaseViewController {
                             message: "사용자 차단에 실패했습니다.",
                             preferredStyle: .alert
                         )
+                        if let navigationController = self.navigationController {
+                            navigationController.popViewController(animated: true)
+                        }
                         let okAction = UIAlertAction(title: "OK", style: .default)
                         errorAlert.addAction(okAction)
                         self.present(errorAlert, animated: true, completion: nil)

@@ -156,7 +156,10 @@ final class HomeViewController: BaseViewController {
 extension HomeViewController {
     @objc private func profileButtonTapped() {
         let detailProfileViewController = DetailProfileViewController()
-        detailProfileViewController.portfolioData = self.previewPortfolioData
+        if isPreview {
+            detailProfileViewController.portfolioData = self.previewPortfolioData
+            detailProfileViewController.imagePreviewDummy = previewImages
+        }
         detailProfileViewController.isPreview = self.isPreview
         detailProfileViewController.userId = self.currentUserId
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
@@ -245,24 +248,26 @@ extension HomeViewController {
     private func setProfile() {
         self.homeView.isHidden = false
         self.homeEmptyView.isHidden = true
-        if !isUndo {
-            if recommendedPortfolioIdx >= size {
-                homeList { _ in
-                    if self.recommendedPortfolios.count == 0 {
-                        self.homeView.isHidden = true
-                        self.homeEmptyView.isHidden = false
-                        return
+        if !isPreview {
+            if !isUndo {
+                if recommendedPortfolioIdx >= size {
+                    homeList { _ in
+                        if self.recommendedPortfolios.count == 0 {
+                            self.homeView.isHidden = true
+                            self.homeEmptyView.isHidden = false
+                            return
+                        }
                     }
+                    self.recommendedPortfolioIdx = 0
                 }
-                self.recommendedPortfolioIdx = 0
+                self.currentUserId = Int(recommendedPortfolios[recommendedPortfolioIdx].userId)
+                self.homeView.profileNameLabel.text = recommendedPortfolios[recommendedPortfolioIdx].username
+                self.portfolioImages = recommendedPortfolios[recommendedPortfolioIdx].portfolioImageUrl
+            } else {
+                self.currentUserId = Int(lastPortfolioUser.userId)
+                self.homeView.profileNameLabel.text = lastPortfolioUser.username
+                self.portfolioImages = lastPortfolioUser.portfolioImageUrl
             }
-            self.currentUserId = Int(recommendedPortfolios[recommendedPortfolioIdx].userId)
-            self.homeView.profileNameLabel.text = recommendedPortfolios[recommendedPortfolioIdx].username
-            self.portfolioImages = recommendedPortfolios[recommendedPortfolioIdx].portfolioImageUrl
-        } else {
-            self.currentUserId = Int(lastPortfolioUser.userId)
-            self.homeView.profileNameLabel.text = lastPortfolioUser.username
-            self.portfolioImages = lastPortfolioUser.portfolioImageUrl
         }
         self.portfolioImageCount = portfolioImages.count
         self.portfolioImageIdx = 0
@@ -382,13 +387,15 @@ extension HomeViewController {
                 self.recommendedPortfolioIdx += 1
             }
             self.setProfile()
-            self.portfolioImageIdx = 0
-            self.isAnimating = false
-            self.isMatch = false
-            if self.isUndo {
-                self.lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
+            if !self.isPreview{
+                self.portfolioImageIdx = 0
+                self.isAnimating = false
+                self.isMatch = false
+                if self.isUndo {
+                    self.lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
+                }
+                self.isUndo = false
             }
-            self.isUndo = false
         }
     }
     
