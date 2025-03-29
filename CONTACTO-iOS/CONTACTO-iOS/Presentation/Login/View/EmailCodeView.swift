@@ -132,7 +132,7 @@ final class EmailCodeView: BaseView {
     
     func startTimer() {
         stopTimer()
-        countdownTime = 30
+        countdownTime = 240
         timerLabel.text = formatTime(countdownTime)
         resendButton.isEnabled = false
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
@@ -144,7 +144,7 @@ final class EmailCodeView: BaseView {
         if countdownTime > 0 {
             countdownTime -= 1
             timerLabel.text = formatTime(countdownTime)
-            if countdownTime <= 5{
+            if countdownTime <= 200{
                 resendButton.isEnabled = true
             }
         } else {
