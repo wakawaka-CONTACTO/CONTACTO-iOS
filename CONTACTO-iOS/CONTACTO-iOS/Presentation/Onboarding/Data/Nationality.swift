@@ -13,7 +13,7 @@ enum Nationalities: String, CaseIterable {
     
     var displayName: String {
         switch self {
-        case .NONE:  return "SELECT YOUR NATIONALITY"
+        case .NONE:  return "Select your nationality"
         case .UK:    return "UNITED KINGDOM"
         case .CN:    return "CHINA"
         case .JP:    return "JAPAN"

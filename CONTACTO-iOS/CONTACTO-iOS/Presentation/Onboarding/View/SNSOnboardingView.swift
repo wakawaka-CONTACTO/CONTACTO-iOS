@@ -102,15 +102,16 @@ final class SNSOnboardingView: BaseView {
         }
         
         nationalityLabel.do {
-            $0.text = "nationality"
+            $0.text = StringLiterals.Onboarding.Nationality.title
             $0.textColor = .ctblack
             $0.font = .fontContacto(.body1)
         }
         
         nationalityTextField.do {
-            $0.placeholder = "Select your nationality"
+            $0.placeholder = Nationalities.NONE.displayName
             $0.font = .fontContacto(.button1)
             $0.textAlignment = .left
+            $0.addPadding(left: 10)
             $0.borderStyle = .line
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.backgroundColor = .ctwhite
@@ -179,20 +180,22 @@ final class SNSOnboardingView: BaseView {
             $0.height.equalTo(34.adjustedHeight)
         }
         
-        nextButton.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(55.adjustedHeight)
-        }
-
         nationalityLabel.snp.makeConstraints {
             $0.top.equalTo(websiteTextField.snp.bottom).offset(25.adjustedHeight)
             $0.leading.equalTo(websiteLabel)
+            $0.left.equalToSuperview().inset(4)
         }
         
         nationalityTextField.snp.makeConstraints {
             $0.leading.trailing.height.equalTo(websiteTextField)
             $0.top.equalTo(nationalityLabel.snp.bottom).offset(10.adjustedHeight)
             $0.height.equalTo(34.adjustedHeight)
+        }
+        
+        
+        nextButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(55.adjustedHeight)
         }
     }
 }
