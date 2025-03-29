@@ -22,6 +22,8 @@ final class SignUpViewController: UIViewController {
     var authCode = ""
     var nationality = ""
     
+    weak var delegate: EmailCodeViewDelegate?
+    
     var isPrivacyAgree = false {
         didSet {
             signUpView.privacyAgreeButton.setImage(isPrivacyAgree ? .icChecked : .icNotChecked, for: .normal)
@@ -103,6 +105,7 @@ final class SignUpViewController: UIViewController {
     private func setDelegate() {
         signUpView.mainTextField.delegate = self
         emailCodeView.mainTextField.delegate = self
+        emailCodeView.delegate = self
         setPWView.mainTextField.delegate = self
         setPWView.confirmTextField.delegate = self
     }
@@ -115,7 +118,7 @@ final class SignUpViewController: UIViewController {
 
 extension SignUpViewController {
     @objc private func sendCode() {
-        signUpView.continueButton.isEnabled = false
+        self.signUpView.continueButton.isEnabled = false
         NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: EmailSendPurpose.signup)) { result in DispatchQueue.main.async {
             switch result{
             case .success:
@@ -294,5 +297,11 @@ extension SignUpViewController: UITextFieldDelegate {
         } else {
             return 42.adjustedWidth
         }
+    }
+}
+
+extension SignUpViewController: EmailCodeViewDelegate {
+    @objc func timerDidFinish(_ view: EmailCodeView) {
+        sendCode()
     }
 }

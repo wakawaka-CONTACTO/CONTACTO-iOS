@@ -10,6 +10,10 @@ import UIKit
 import SnapKit
 import Then
 
+protocol EmailCodeViewDelegate: AnyObject {
+    func timerDidFinish(_ view: EmailCodeView)
+}
+
 final class EmailCodeView: BaseView {
     
     private let logoImageView = UIImageView()
@@ -23,7 +27,7 @@ final class EmailCodeView: BaseView {
     private let timerLabel = UILabel()
     private var countdownTime: Int = 240
     private var timer: Timer?
-    
+    weak var delegate: EmailCodeViewDelegate?    
     
     override func setStyle() {
         logoImageView.do {
@@ -145,6 +149,7 @@ final class EmailCodeView: BaseView {
             }
         } else {
             stopTimer()
+            delegate?.timerDidFinish(self)
         }
     }
     

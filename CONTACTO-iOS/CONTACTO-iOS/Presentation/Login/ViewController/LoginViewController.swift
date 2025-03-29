@@ -26,7 +26,7 @@ final class LoginViewController: UIViewController {
     
     var isExistEmail = false
     var purpose =  EmailSendPurpose.signup
-    
+    weak var delegate: EmailCodeViewDelegate?
     
     // 로딩 인디케이터: 전체 화면 오버레이
     private var activityIndicator: UIActivityIndicatorView = {
@@ -116,6 +116,7 @@ final class LoginViewController: UIViewController {
     private func setDelegate() {
         loginView.mainTextField.delegate = self
         emailCodeView.mainTextField.delegate = self
+        emailCodeView.delegate = self
         setPWView.mainTextField.delegate = self
         setPWView.confirmTextField.delegate = self
     }
@@ -188,9 +189,7 @@ extension LoginViewController {
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
         }
         case .pwForget:
-            self.purpose = EmailSendPurpose.reset
             sendCode()
-            self.purpose =  EmailSendPurpose.signup
             
         case .findEmail:
             loginView.mainTextField.text = ""
@@ -242,10 +241,13 @@ extension LoginViewController {
     }
     
     @objc private func sendCode() {
+        self.purpose = EmailSendPurpose.reset
+        self.emailCodeView.startTimer()
         emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: self.purpose)) { _ in            self.loginView.isHidden = true
             self.emailCodeView.isHidden = false
             self.setPWView.isHidden = true
         }
+        self.purpose = EmailSendPurpose.signup
     }
     
     @objc private func pwContinueButton() {
@@ -484,5 +486,11 @@ extension LoginViewController: UITextFieldDelegate {
         } else {
             return 42.adjustedWidth
         }
+    }
+}
+
+extension LoginViewController: EmailCodeViewDelegate {
+    @objc func timerDidFinish(_ view: EmailCodeView) {
+        sendCode()
     }
 }
