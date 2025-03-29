@@ -26,6 +26,7 @@ final class LoginView: BaseView {
     
     private let logoImageView = UIImageView()
     private let descriptionLabel = UILabel()
+    private let explain = UILabel()
     let mainTextField = LoginBaseTextField(state: .email)
     let continueButton = UIButton()
     let newAccountButton = UIButton()
@@ -52,6 +53,12 @@ final class LoginView: BaseView {
         descriptionLabel.do {
             $0.text = StringLiterals.Login.login
             $0.font = .fontContacto(.caption1)
+            $0.textColor = .ctwhite
+        }
+        
+        explain.do {
+            $0.text = ""
+            $0.font = .fontContacto(.body2)
             $0.textColor = .ctwhite
         }
         
@@ -103,6 +110,7 @@ final class LoginView: BaseView {
     override func setLayout() {
         addSubviews(logoImageView,
                     descriptionLabel,
+                    explain,
                     mainTextField,
                     continueButton,
                     forgetPwButton,
@@ -119,6 +127,11 @@ final class LoginView: BaseView {
         
         descriptionLabel.snp.makeConstraints {
             $0.top.equalTo(logoImageView.snp.bottom).offset(23.adjustedHeight)
+            $0.centerX.equalToSuperview()
+        }
+        
+        explain.snp.makeConstraints {
+            $0.top.equalTo(descriptionLabel.snp.bottom).offset(1.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
         
@@ -191,9 +204,14 @@ final class LoginView: BaseView {
             continueButton.setTitle(StringLiterals.Login.continueButton, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.noAccountTitle
+            explain.text = """
+            There’s no CONTACTO account with the info you provided.
+            please input correct e-mail or click below help button. 
+"""
             mainTextField.isError = true
             forgetEmailButton.isHidden = false
             mainTextField.eyeButton.isHidden = true
+
 
         case .pw:
             newAccountButton.isHidden = true
@@ -220,6 +238,7 @@ final class LoginView: BaseView {
             continueButton.setTitle(StringLiterals.Login.login, for: .normal)
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.incorrectPWTitle
+            explain.text = "please input correct password or click below help button."
             mainTextField.isError = true
             forgetEmailButton.isHidden = true
             
