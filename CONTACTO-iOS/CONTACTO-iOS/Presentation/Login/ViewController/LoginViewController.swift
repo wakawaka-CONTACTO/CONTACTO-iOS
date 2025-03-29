@@ -242,6 +242,7 @@ extension LoginViewController {
     }
     
     @objc private func sendCode() {
+        self.emailCodeView.startTimer()
         emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: self.purpose)) { _ in            self.loginView.isHidden = true
             self.emailCodeView.isHidden = false
             self.setPWView.isHidden = true
@@ -484,5 +485,11 @@ extension LoginViewController: UITextFieldDelegate {
         } else {
             return 42.adjustedWidth
         }
+    }
+}
+
+extension LoginViewController: EmailCodeViewDelegate {
+    @objc func timerDidFinish(_ view: EmailCodeView) {
+        sendCode()
     }
 }

@@ -10,6 +10,10 @@ import UIKit
 import SnapKit
 import Then
 
+protocol EmailCodeViewDelegate: AnyObject {
+    func timerDidFinish(_ view: EmailCodeView)
+}
+
 final class EmailCodeView: BaseView {
     
     private let logoImageView = UIImageView()
@@ -23,7 +27,7 @@ final class EmailCodeView: BaseView {
     private let timerLabel = UILabel()
     private var countdownTime: Int = 240
     private var timer: Timer?
-    
+    weak var delegate: EmailCodeViewDelegate?    
     
     override func setStyle() {
         logoImageView.do {
@@ -128,7 +132,7 @@ final class EmailCodeView: BaseView {
     
     func startTimer() {
         stopTimer()
-        countdownTime = 240
+        countdownTime = 30
         timerLabel.text = formatTime(countdownTime)
         resendButton.isEnabled = false
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
@@ -140,11 +144,12 @@ final class EmailCodeView: BaseView {
         if countdownTime > 0 {
             countdownTime -= 1
             timerLabel.text = formatTime(countdownTime)
-            if countdownTime <= 200{
+            if countdownTime <= 5{
                 resendButton.isEnabled = true
             }
         } else {
             stopTimer()
+            delegate?.timerDidFinish(self)
         }
     }
     
