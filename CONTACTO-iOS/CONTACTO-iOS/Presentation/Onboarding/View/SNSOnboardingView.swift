@@ -183,7 +183,6 @@ final class SNSOnboardingView: BaseView {
         nationalityLabel.snp.makeConstraints {
             $0.top.equalTo(websiteTextField.snp.bottom).offset(25.adjustedHeight)
             $0.leading.equalTo(websiteLabel)
-            $0.left.equalToSuperview().inset(4)
         }
         
         nationalityTextField.snp.makeConstraints {
