@@ -12,15 +12,15 @@ enum Nationalities: String, CaseIterable {
     
     var displayName: String {
         switch self {
-        case .UK:    return "United Kingdom"
-        case .CN:    return "China"
-        case .JP:    return "Japan"
-        case .US:    return "United States"
-        case .KR:    return "Korea"
-        case .FR:    return "France"
-        case .DE:    return "Germany"
-        case .NL:    return "Netherlands"
-        case .OTHER: return "Other"
+        case .UK:    return "UNITED KINGDOM"
+        case .CN:    return "CHINA"
+        case .JP:    return "JAPAN"
+        case .US:    return "UNITED STATES"
+        case .KR:    return "KOREA"
+        case .FR:    return "FRANCE"
+        case .DE:    return "GERMANY"
+        case .NL:    return "NETHERLANDS"
+        case .OTHER: return "OTHER"
         }
     }
 }
