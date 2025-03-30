@@ -568,7 +568,7 @@ extension EditViewController: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        if !textView.text.isEmpty || !textView.text.isOnlyWhitespace() {
+        if !textView.text.isEmpty && !textView.text.isOnlyWhitespace() {
             isTextViewFilled = true
         } else {
             isTextViewFilled = false
