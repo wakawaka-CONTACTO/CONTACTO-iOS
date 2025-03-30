@@ -339,11 +339,6 @@
 			path = Alert;
 			sourceTree = "<group>";
 		};
-		26CF64E22D98136D0047EF71 /* New Folder */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "New Folder";
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -916,7 +911,6 @@
 		C3FD90372C9139D40021D2BA /* CONTACTO-iOS */ = {
 			isa = PBXGroup;
 			children = (
-				26CF64E22D98136D0047EF71 /* New Folder */,
 				C37FC4BC2CCCC6EB005B7BDF /* CONTACTO-iOS.entitlements */,
 				C3FD90602C9142FE0021D2BA /* Storyboard */,
 				C3FD90522C913F7E0021D2BA /* Application */,
@@ -1145,7 +1139,6 @@
 				261111FB2D895D8000D481E2 /* PortfolioItem */,
 				26B59E7E2D96408A00B4E01B /* DTO */,
 				26BBF5E62D8432830089E60C /* Alert */,
-				26CF64E22D98136D0047EF71 /* New Folder */,
 			);
 			name = "CONTACTO-iOS";
 			packageProductDependencies = (
