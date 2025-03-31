@@ -185,7 +185,6 @@ extension LoginViewController {
         case .emailForget:
             helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
                 self.loginView.mainTextField.text = ""
-                self.loginView.setLoginState(state: .findEmail)
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
         }
         case .pwForget:
@@ -323,7 +322,19 @@ extension LoginViewController {
             switch response {
             case .success(let data):
                 self?.decodeEmail = data.decodeEmail
+                DispatchQueue.main.async {
+                    self?.loginView.setLoginState(state: .findEmail)
+                }
                 completion(true)
+            case .failure(let error):
+                if error.statusCode == 404 {
+                    DispatchQueue.main.async {
+                        //self?.loginView.setLoginState(state: .emailForget)
+                        self?.view.showToast(message: "The user name does not exist.")
+                        self?.loginView.mainTextField.isError = true
+                    }
+                }
+                completion(false)
             default:
                 completion(false)
             }
