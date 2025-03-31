@@ -74,6 +74,8 @@ final class EditViewController: UIViewController {
     
     let editView = EditView()
     
+    private let countries = Nationalities.allCases
+    
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,6 +85,7 @@ final class EditViewController: UIViewController {
         setAddTarget()
         hideKeyboardWhenTappedAround()
         setCollectionView()
+        setPickerDelegate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -139,12 +142,18 @@ final class EditViewController: UIViewController {
         editView.nameTextField.delegate = self
         editView.instaTextField.delegate = self
         editView.websiteTextField.delegate = self
+        editView.nationalityTextField.delegate = self
     }
     
     private func setCollectionView() {
         editView.portfolioCollectionView.register(EditPortfolioCollectionViewCell.self, forCellWithReuseIdentifier: EditPortfolioCollectionViewCell.className)
         editView.talentCollectionView.register(ProfileTalentCollectionViewCell.self, forCellWithReuseIdentifier: ProfileTalentCollectionViewCell.className)
         editView.purposeCollectionView.register(ProfilePurposeCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePurposeCollectionViewCell.className)
+    }
+    
+    private func setPickerDelegate() {
+        editView.nationalityPicker.delegate = self
+        editView.nationalityPicker.dataSource = self
     }
     
     // MARK: - Server Functionality
@@ -208,8 +217,16 @@ final class EditViewController: UIViewController {
         editView.descriptionTextView.text = manager.currentData.description
         editView.instaTextField.text = manager.currentData.instagramId
         editView.websiteTextField.text = manager.currentData.webUrl
-        editView.nationalityTextField.text = Nationalities(rawValue: manager.currentData.nationality ?? "")?.displayName ?? Nationalities.NONE.displayName
-
+        
+        // nationality 설정
+        let currentNationality = Nationalities(rawValue: manager.currentData.nationality ?? "") ?? .NONE
+        editView.nationalityTextField.text = currentNationality.displayName
+        
+        // picker의 초기 선택값 설정
+        if let index = countries.firstIndex(of: currentNationality) {
+            editView.nationalityPicker.selectRow(index, inComponent: 0, animated: false)
+        }
+        
         self.talentData = manager.currentData.userTalents.compactMap { userTalent in
             return Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType || $0.info.displayName == userTalent.talentType })?.info
         }
@@ -625,6 +642,30 @@ extension EditViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         activeTextField = nil
+    }
+}
+
+extension EditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return countries.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return countries[row].displayName
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let selectedNationality = countries[row]
+        editView.nationalityTextField.text = selectedNationality.displayName
+        if var updatedData = portfolioManager?.currentData {
+            updatedData.nationality = selectedNationality.rawValue
+            portfolioManager?.currentData = updatedData
+            checkForChanges()
+        }
     }
 }
 
