@@ -23,6 +23,8 @@ final class EditView: BaseView {
     
     let nameTextField = UITextField()
     
+    let nationalityTextField = UITextField()
+    
     lazy var portfolioCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: portfolioFlowLayout
@@ -93,6 +95,16 @@ final class EditView: BaseView {
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.isEnabled = false
             $0.textAlignment = .center
+        }
+        
+        nationalityTextField.do {
+            $0.backgroundColor = .ctmainblue
+            $0.font = .fontContacto(.button1)
+            $0.textColor = .ctblack
+            $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            $0.isEnabled = false
+            $0.textAlignment = .left
+            $0.addPadding(left: 10)
         }
         
         portfolioCollectionView.do {
@@ -263,6 +275,7 @@ final class EditView: BaseView {
                                  editLineView,
                                  previewButton,
                                  nameTextField,
+                                 nationalityTextField,
                                  portfolioCollectionView,
                                  talentLabel,
                                  talentEditButton,
@@ -321,8 +334,14 @@ final class EditView: BaseView {
             $0.height.equalTo(32)
         }
         
+        nationalityTextField.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.top.equalTo(nameTextField.snp.bottom).offset(8)
+            $0.height.equalTo(34.adjustedHeight)
+        }
+        
         portfolioCollectionView.snp.makeConstraints {
-            $0.top.equalTo(nameTextField.snp.bottom).offset(13)
+            $0.top.equalTo(nationalityTextField.snp.bottom).offset(13)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(260)
         }
@@ -424,6 +443,8 @@ final class EditView: BaseView {
         websiteTextField.isEnabled = isEditEnabled
         instaTextField.backgroundColor = isEditEnabled ? .ctwhite : .clear
         websiteTextField.backgroundColor = isEditEnabled ? .ctwhite : .clear
+        nationalityTextField.isEnabled = isEditEnabled
+        nationalityTextField.backgroundColor = isEditEnabled ? .ctwhite : .ctmainblue
 
         editButton.setTitle(isEditEnabled ? StringLiterals.Edit.saveButton : StringLiterals.Edit.editButton, for: .normal)
         editButton.setBackgroundColor(isEditEnabled ? .ctsubgreen3 : .ctsubyellow1, for: .normal)

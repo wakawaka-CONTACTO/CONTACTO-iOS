@@ -17,6 +17,8 @@ import PhotosUI
 import SnapKit
 import Then
 
+// editView.nationalityTextField.text = userInfo.nationality
+
 final class EditViewController: UIViewController {
     
     private var portfolioManager: PortfolioManager?
@@ -206,6 +208,7 @@ final class EditViewController: UIViewController {
         editView.descriptionTextView.text = manager.currentData.description
         editView.instaTextField.text = manager.currentData.instagramId
         editView.websiteTextField.text = manager.currentData.webUrl
+        editView.nationalityTextField.text = manager.currentData.nationality
 
         self.talentData = manager.currentData.userTalents.compactMap { userTalent in
             return Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType || $0.info.displayName == userTalent.talentType })?.info
