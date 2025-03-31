@@ -73,6 +73,9 @@ extension EditRequestBodyDTO {
             if let webUrl = self.webUrl {
                 formData.append(webUrl.data(using: .utf8) ?? Data(), withName: "webUrl")
             }
+//            formData.append(nationality.rawValue ?? Data(), withName: "nationality")
+            formData.append(self.nationality.rawValue.data(using: .utf8) ?? Data(), withName: "nationality")
+
             
             if let newImages = self.newPortfolioImages,
                           let newKeys = self.newImageKeys,

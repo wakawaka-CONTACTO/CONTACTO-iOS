@@ -17,6 +17,8 @@ import PhotosUI
 import SnapKit
 import Then
 
+// editView.nationalityTextField.text = userInfo.nationality
+
 final class EditViewController: UIViewController {
     
     private var portfolioManager: PortfolioManager?
@@ -71,7 +73,13 @@ final class EditViewController: UIViewController {
         didSet { changeSaveButtonStatus() }
     }
     
+    var isNationalitySelected = true {
+        didSet { changeSaveButtonStatus() }
+    }
+    
     let editView = EditView()
+    
+    private let countries = Nationalities.allCases
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -81,6 +89,7 @@ final class EditViewController: UIViewController {
         setAddTarget()
         hideKeyboardWhenTappedAround()
         setCollectionView()
+        setPickerDelegate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -142,12 +151,18 @@ final class EditViewController: UIViewController {
         editView.nameTextField.delegate = self
         editView.instaTextField.delegate = self
         editView.websiteTextField.delegate = self
+        editView.nationalityTextField.delegate = self
     }
     
     private func setCollectionView() {
         editView.portfolioCollectionView.register(EditPortfolioCollectionViewCell.self, forCellWithReuseIdentifier: EditPortfolioCollectionViewCell.className)
         editView.talentCollectionView.register(ProfileTalentCollectionViewCell.self, forCellWithReuseIdentifier: ProfileTalentCollectionViewCell.className)
         editView.purposeCollectionView.register(ProfilePurposeCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePurposeCollectionViewCell.className)
+    }
+    
+    private func setPickerDelegate() {
+        editView.nationalityPicker.delegate = self
+        editView.nationalityPicker.dataSource = self
     }
     
     // MARK: - Server Functionality
@@ -211,7 +226,15 @@ final class EditViewController: UIViewController {
         editView.descriptionTextView.text = manager.currentData.description
         editView.instaTextField.text = manager.currentData.instagramId
         editView.websiteTextField.text = manager.currentData.webUrl
-
+        
+        let currentNationality = Nationalities(rawValue: (manager.currentData.nationality ?? Nationalities.NONE).rawValue) ?? .NONE
+        editView.nationalityTextField.text = currentNationality.displayName
+        isNationalitySelected = currentNationality != Nationalities.NONE
+        
+        if let index = countries.firstIndex(of: currentNationality) {
+            editView.nationalityPicker.selectRow(index, inComponent: 0, animated: false)
+        }
+        
         self.talentData = manager.currentData.userTalents.compactMap { userTalent in
             return Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType || $0.info.displayName == userTalent.talentType })?.info
         }
@@ -259,7 +282,8 @@ final class EditViewController: UIViewController {
         if isTextFieldFilled,
            isTextViewFilled,
            isPortfolioFilled,
-           isPurposeFilled {
+           isPurposeFilled,
+           isNationalitySelected {
             editView.editButton.isEnabled = true
         } else {
             editView.editButton.isEnabled = false
@@ -592,6 +616,7 @@ extension EditViewController: UITextViewDelegate {
             website: editView.websiteTextField.text,
             purposes: portfolioManager?.currentData.userPurposes,
             talents: portfolioManager?.currentData.userTalents,
+            nationality: portfolioManager?.currentData.nationality ?? Nationalities.NONE,
             portfolioItemsCount: portfolioManager?.portfolioItems.count ?? 0
         )
     }
@@ -625,10 +650,45 @@ extension EditViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
+        
+        if textField == editView.nationalityTextField {
+            editView.toggleSaveButtonVisibility(false)
+        }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         activeTextField = nil
+        
+        if textField == editView.nationalityTextField {
+            editView.toggleSaveButtonVisibility(true)
+        }
+    }
+}
+
+extension EditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return countries.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return countries[row].displayName
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let selectedNationality = countries[row]
+        editView.nationalityTextField.text = selectedNationality.displayName
+        
+        if var updatedData = portfolioManager?.currentData {
+            updatedData.nationality = selectedNationality
+            portfolioManager?.currentData = updatedData
+            checkForChanges()
+        }
+        
+        editView.nationalityTextField.resignFirstResponder()
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

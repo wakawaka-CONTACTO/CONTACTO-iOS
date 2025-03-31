@@ -21,7 +21,7 @@ final class HomeViewController: BaseViewController {
     var hasCheckedMyPort = false /// 로그인한 사용자 프로필 조회 여부
     
     var isPreview = false /// edit의 preview 여부
-    var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: "", webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: []) /// preview의 내 포폴 데이터
+    var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: Nationalities.NONE, webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: []) /// preview의 내 포폴 데이터
     var previewImages: [UIImage] = []
     
     var isUndo = false /// 재선택 동작 여부

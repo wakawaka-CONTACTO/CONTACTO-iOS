@@ -23,6 +23,10 @@ final class EditView: BaseView {
     
     let nameTextField = UITextField()
     
+    private let nationalityLabel = UILabel()
+    let nationalityTextField = UITextField()
+    let nationalityPicker = UIPickerView()
+    
     lazy var portfolioCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: portfolioFlowLayout
@@ -94,6 +98,23 @@ final class EditView: BaseView {
             $0.keyboardType = .asciiCapable
             $0.isEnabled = false
             $0.textAlignment = .center
+        }
+        
+        nationalityLabel.do {
+            $0.text = "Nationality"
+            $0.textColor = .ctblack
+            $0.font = .fontContacto(.body1)
+        }
+        
+        nationalityTextField.do {
+            $0.backgroundColor = .clear
+            $0.font = .fontContacto(.button1)
+            $0.textColor = .ctblack
+            $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
+            $0.isEnabled = false
+            $0.textAlignment = .left
+            $0.addPadding(left: 10)
+            $0.inputView = nationalityPicker
         }
         
         portfolioCollectionView.do {
@@ -264,6 +285,8 @@ final class EditView: BaseView {
                                  editLineView,
                                  previewButton,
                                  nameTextField,
+                                 nationalityLabel,
+                                 nationalityTextField,
                                  portfolioCollectionView,
                                  talentLabel,
                                  talentEditButton,
@@ -320,6 +343,17 @@ final class EditView: BaseView {
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.top.equalTo(previewButton.snp.bottom).offset(21)
             $0.height.equalTo(32)
+        }
+        
+        nationalityLabel.snp.makeConstraints {
+            $0.top.equalTo(websiteTextField.snp.bottom).offset(8)
+            $0.leading.equalToSuperview().inset(16)
+        }
+        
+        nationalityTextField.snp.makeConstraints {
+            $0.leading.trailing.height.equalTo(nameTextField)
+            $0.top.equalTo(nationalityLabel.snp.bottom).offset(10.adjustedHeight)
+            $0.height.equalTo(34.adjustedHeight)
         }
         
         portfolioCollectionView.snp.makeConstraints {
@@ -396,6 +430,17 @@ final class EditView: BaseView {
             $0.leading.trailing.height.equalTo(instaTextField)
             $0.top.equalTo(websiteLabel.snp.bottom).offset(10.adjustedHeight)
             $0.height.equalTo(34.adjustedHeight)
+        }
+        
+        nationalityLabel.snp.makeConstraints {
+            $0.top.equalTo(websiteTextField.snp.bottom).offset(11)
+            $0.leading.equalTo(websiteLabel)
+        }
+        
+        nationalityTextField.snp.makeConstraints {
+            $0.leading.trailing.height.equalTo(websiteTextField)
+            $0.top.equalTo(nationalityLabel.snp.bottom).offset(10.adjustedHeight)
+            $0.height.equalTo(34.adjustedHeight)
             $0.bottom.equalToSuperview().inset(100)
         }
 
@@ -425,6 +470,8 @@ final class EditView: BaseView {
         websiteTextField.isEnabled = isEditEnabled
         instaTextField.backgroundColor = isEditEnabled ? .ctwhite : .clear
         websiteTextField.backgroundColor = isEditEnabled ? .ctwhite : .clear
+        nationalityTextField.isEnabled = isEditEnabled
+        nationalityTextField.backgroundColor = isEditEnabled ? .ctwhite : .clear
 
         editButton.setTitle(isEditEnabled ? StringLiterals.Edit.saveButton : StringLiterals.Edit.editButton, for: .normal)
         editButton.setBackgroundColor(isEditEnabled ? .ctsubgreen3 : .ctsubyellow1, for: .normal)
@@ -443,5 +490,9 @@ final class EditView: BaseView {
                 $0.leading.trailing.equalToSuperview().inset(16)
             }
         }
+    }
+    
+    public func toggleSaveButtonVisibility(_ isVisible: Bool) {
+        editButton.isHidden = !isVisible
     }
 }
