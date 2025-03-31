@@ -22,6 +22,8 @@ final class SignUpViewController: UIViewController {
     var authCode = ""
     var nationality = ""
     
+    weak var delegate: EmailCodeViewDelegate?
+    
     var isPrivacyAgree = false {
         didSet {
             signUpView.privacyAgreeButton.setImage(isPrivacyAgree ? .icChecked : .icNotChecked, for: .normal)
@@ -103,6 +105,7 @@ final class SignUpViewController: UIViewController {
     private func setDelegate() {
         signUpView.mainTextField.delegate = self
         emailCodeView.mainTextField.delegate = self
+        emailCodeView.delegate = self
         setPWView.mainTextField.delegate = self
         setPWView.confirmTextField.delegate = self
     }
@@ -115,8 +118,8 @@ final class SignUpViewController: UIViewController {
 
 extension SignUpViewController {
     @objc private func sendCode() {
-        signUpView.continueButton.isEnabled = false
-        NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { result in DispatchQueue.main.async {
+        self.signUpView.continueButton.isEnabled = false
+        NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: EmailSendPurpose.signup)) { result in DispatchQueue.main.async {
             switch result{
             case .success:
                 self.signUpView.isHidden = true
@@ -271,7 +274,7 @@ extension SignUpViewController: UITextFieldDelegate {
             let textLength = updatedText.count
             
             if textLength > 1 {
-                attributedString.addAttribute(.kern, value: 36, range: NSRange(location: 0, length: textLength - 1))
+                attributedString.addAttribute(.kern, value: adjustedValueForiPhone16Pro(), range: NSRange(location: 0, length: textLength - 1))
             }
             
             attributedString.addAttribute(.font, value: UIFont.fontContacto(.number), range: NSRange(location: 0, length: textLength))
@@ -282,5 +285,23 @@ extension SignUpViewController: UITextFieldDelegate {
         default:
             return true
         }
+    }
+    
+    
+    func adjustedValueForiPhone16Pro() -> CGFloat {
+        let screenWidth = UIScreen.main.bounds.width
+        let iPhone16ProWidth: CGFloat = 393
+
+        if screenWidth >= iPhone16ProWidth {
+            return 40.adjustedWidth
+        } else {
+            return 42.adjustedWidth
+        }
+    }
+}
+
+extension SignUpViewController: EmailCodeViewDelegate {
+    @objc func timerDidFinish(_ view: EmailCodeView) {
+        sendCode()
     }
 }

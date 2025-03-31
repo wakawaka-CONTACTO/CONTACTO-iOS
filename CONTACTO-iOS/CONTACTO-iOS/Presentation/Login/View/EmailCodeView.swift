@@ -10,6 +10,10 @@ import UIKit
 import SnapKit
 import Then
 
+protocol EmailCodeViewDelegate: AnyObject {
+    func timerDidFinish(_ view: EmailCodeView)
+}
+
 final class EmailCodeView: BaseView {
     
     private let logoImageView = UIImageView()
@@ -23,7 +27,7 @@ final class EmailCodeView: BaseView {
     private let timerLabel = UILabel()
     private var countdownTime: Int = 240
     private var timer: Timer?
-    
+    weak var delegate: EmailCodeViewDelegate?    
     
     override func setStyle() {
         logoImageView.do {
@@ -105,12 +109,14 @@ final class EmailCodeView: BaseView {
             $0.leading.trailing.equalTo(underLineView).inset(15)
             $0.centerX.equalToSuperview()
             $0.height.equalTo(34.adjustedHeight)
+            $0.width.equalTo(6*46.adjustedWidth)
         }
         
         continueButton.snp.makeConstraints {
             $0.top.equalTo(underLineView.snp.bottom).offset(13.adjustedHeight)
             $0.leading.trailing.equalToSuperview().inset(37.adjustedWidth)
             $0.height.equalTo(34.adjustedHeight)
+            $0.width.equalTo(6*30.adjustedWidth)
         }
         
         resendButton.snp.makeConstraints {
@@ -143,6 +149,7 @@ final class EmailCodeView: BaseView {
             }
         } else {
             stopTimer()
+            delegate?.timerDidFinish(self)
         }
     }
     

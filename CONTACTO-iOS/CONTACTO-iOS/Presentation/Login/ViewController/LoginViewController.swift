@@ -25,7 +25,8 @@ final class LoginViewController: UIViewController {
     var authCode = ""
     
     var isExistEmail = false
-    
+    var purpose =  EmailSendPurpose.signup
+    weak var delegate: EmailCodeViewDelegate?
     
     // 로딩 인디케이터: 전체 화면 오버레이
     private var activityIndicator: UIActivityIndicatorView = {
@@ -115,6 +116,7 @@ final class LoginViewController: UIViewController {
     private func setDelegate() {
         loginView.mainTextField.delegate = self
         emailCodeView.mainTextField.delegate = self
+        emailCodeView.delegate = self
         setPWView.mainTextField.delegate = self
         setPWView.confirmTextField.delegate = self
     }
@@ -183,7 +185,6 @@ extension LoginViewController {
         case .emailForget:
             helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
                 self.loginView.mainTextField.text = ""
-                self.loginView.setLoginState(state: .findEmail)
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
         }
         case .pwForget:
@@ -239,11 +240,13 @@ extension LoginViewController {
     }
     
     @objc private func sendCode() {
-        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { _ in
-            self.loginView.isHidden = true
+        self.purpose = EmailSendPurpose.reset
+        self.emailCodeView.startTimer()
+        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: self.purpose)) { _ in            self.loginView.isHidden = true
             self.emailCodeView.isHidden = false
             self.setPWView.isHidden = true
         }
+        self.purpose = EmailSendPurpose.signup
     }
     
     @objc private func pwContinueButton() {
@@ -319,7 +322,19 @@ extension LoginViewController {
             switch response {
             case .success(let data):
                 self?.decodeEmail = data.decodeEmail
+                DispatchQueue.main.async {
+                    self?.loginView.setLoginState(state: .findEmail)
+                }
                 completion(true)
+            case .failure(let error):
+                if error.statusCode == 404 {
+                    DispatchQueue.main.async {
+                        //self?.loginView.setLoginState(state: .emailForget)
+                        self?.view.showToast(message: "The user name does not exist.")
+                        self?.loginView.mainTextField.isError = true
+                    }
+                }
+                completion(false)
             default:
                 completion(false)
             }
@@ -330,6 +345,7 @@ extension LoginViewController {
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(_):
+                self.emailCodeView.startTimer()
                 completion(true)
             default:
                 completion(false)
@@ -459,7 +475,7 @@ extension LoginViewController: UITextFieldDelegate {
             let textLength = updatedText.count
             
             if textLength > 1 {
-                attributedString.addAttribute(.kern, value: 36, range: NSRange(location: 0, length: textLength - 1))
+                attributedString.addAttribute(.kern, value: adjustedValueForiPhone16Pro(), range: NSRange(location: 0, length: textLength - 1))
             }
             
             attributedString.addAttribute(.font, value: UIFont.fontContacto(.number), range: NSRange(location: 0, length: textLength))
@@ -470,5 +486,22 @@ extension LoginViewController: UITextFieldDelegate {
         default:
             return true
         }
+    }
+    
+    func adjustedValueForiPhone16Pro() -> CGFloat {
+        let screenWidth = UIScreen.main.bounds.width
+        let iPhone16ProWidth: CGFloat = 393
+
+        if screenWidth >= iPhone16ProWidth {
+            return 40.adjustedWidth
+        } else {
+            return 42.adjustedWidth
+        }
+    }
+}
+
+extension LoginViewController: EmailCodeViewDelegate {
+    @objc func timerDidFinish(_ view: EmailCodeView) {
+        sendCode()
     }
 }
