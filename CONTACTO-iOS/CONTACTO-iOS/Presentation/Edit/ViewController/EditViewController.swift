@@ -208,7 +208,7 @@ final class EditViewController: UIViewController {
         editView.descriptionTextView.text = manager.currentData.description
         editView.instaTextField.text = manager.currentData.instagramId
         editView.websiteTextField.text = manager.currentData.webUrl
-        editView.nationalityTextField.text = manager.currentData.nationality
+        editView.nationalityTextField.text = Nationalities(rawValue: manager.currentData.nationality ?? "")?.displayName ?? Nationalities.NONE.displayName
 
         self.talentData = manager.currentData.userTalents.compactMap { userTalent in
             return Talent.allCases.first(where: { $0.info.koreanName == userTalent.talentType || $0.info.displayName == userTalent.talentType })?.info
