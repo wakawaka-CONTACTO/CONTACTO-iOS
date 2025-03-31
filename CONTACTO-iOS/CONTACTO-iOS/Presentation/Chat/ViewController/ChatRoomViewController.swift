@@ -43,8 +43,18 @@ final class ChatRoomViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        //        self.closeSocket()
-        self.socketClient.disconnect()
+        
+        // 정상적인 종료를 위한 과정 추가
+        if isConnected {
+            // 먼저 구독 해제
+            socketClient.unsubscribe(destination: "/topic/\(chatRoomId)")
+            
+            // 약간의 지연 후 연결 종료
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.socketClient.disconnect()
+            }
+        }
+        
         self.removeKeyboardNotifications()
     }
     
@@ -217,10 +227,17 @@ extension ChatRoomViewController: StompClientLibDelegate {
     }
     
     func stompClientDidDisconnect(client: StompClientLib) {
+        #if DEBUG
+        print("STOMP 연결 종료됨")
+        #endif
         isConnected = false
     }
     
     func stompClientDidConnect(client: StompClientLib) {
+        #if DEBUG
+        print("STOMP 연결 성공: 채팅방 ID \(chatRoomId)")
+        #endif
+        
         isConnected = true
         
         // 연결 성공 시 구독 설정
@@ -230,9 +247,16 @@ extension ChatRoomViewController: StompClientLibDelegate {
     }
     
     func serverDidSendError(client: StompClientLib, withErrorMessage description: String, detailedErrorMessage message: String?) {
-        let alert = UIAlertController(title: "Error Send", message: "\(String(describing: message))", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "확인", style: .default))
-        self.present(alert, animated: true, completion: nil)
+        #if DEBUG
+        print("WebSocket 에러: \(description), 상세: \(message ?? "없음")")
+        #endif
+        
+        // 다른 실제 에러의 경우에만 알림 표시
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error Send", message: "\(String(describing: message))", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }
 
