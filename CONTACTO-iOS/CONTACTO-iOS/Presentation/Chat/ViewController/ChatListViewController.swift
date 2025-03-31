@@ -24,11 +24,12 @@ final class ChatListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
-        setData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        currentPage = 0
+        setData()
     }
     
     override func setNavigationBar() {

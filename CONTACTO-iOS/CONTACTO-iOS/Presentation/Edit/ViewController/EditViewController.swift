@@ -29,6 +29,8 @@ final class EditViewController: UIViewController {
     
     private var changeDetectionTimer: Timer?
     
+    private var isFromTalentVC = false
+    
     private func scheduleChangeDetection() {
         changeDetectionTimer?.invalidate()
         changeDetectionTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
@@ -39,7 +41,6 @@ final class EditViewController: UIViewController {
             }
         }
     }
-    
     
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
         didSet {
@@ -76,7 +77,6 @@ final class EditViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
-        setData()
         setDelegate()
         setAddTarget()
         hideKeyboardWhenTappedAround()
@@ -87,7 +87,12 @@ final class EditViewController: UIViewController {
         super.viewWillAppear(animated)
         setNavigationBar()
         addKeyboardNotifications()
-        if !isEditEnable { setData() }
+        if !isFromTalentVC {
+            isEditEnable = false
+            editView.toggleEditMode(false)
+            setData()
+        }
+        isFromTalentVC = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -343,6 +348,7 @@ final class EditViewController: UIViewController {
         let previewVC = HomeViewController()
         previewVC.isPreview = true
         if let manager = portfolioManager {
+            previewVC.currentUserId = manager.currentData.id
             previewVC.previewPortfolioData = manager.currentData
             previewVC.previewImages = manager.portfolioItems.compactMap { $0.image }
             previewVC.portfolioImageIdx = 0
@@ -376,6 +382,7 @@ final class EditViewController: UIViewController {
             self.checkTalentLayout()
             self.checkForChanges()
         }
+        isFromTalentVC = true
         navigationController?.pushViewController(talentVC, animated: true)
     }
     
@@ -568,7 +575,7 @@ extension EditViewController: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        if !textView.text.isEmpty || !textView.text.isOnlyWhitespace() {
+        if !textView.text.isEmpty && !textView.text.isOnlyWhitespace() {
             isTextViewFilled = true
         } else {
             isTextViewFilled = false
@@ -623,5 +630,22 @@ extension EditViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         activeTextField = nil
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == editView.websiteTextField {
+            // URL에 필요한 특수문자 허용
+            let pattern = "^[a-zA-Z0-9\\s:/?=&._-]*$"
+            let regex = try? NSRegularExpression(pattern: pattern)
+            let range = NSRange(location: 0, length: string.utf16.count)
+            let isMatch = regex?.firstMatch(in: string, options: [], range: range) != nil
+            return isMatch
+        } else {
+            // 영문자, 숫자, 공백만 허용
+            let pattern = "^[a-zA-Z0-9\\s]*$"
+            let regex = try? NSRegularExpression(pattern: pattern)
+            let range = NSRange(location: 0, length: string.utf16.count)
+            let isMatch = regex?.firstMatch(in: string, options: [], range: range) != nil
+            return isMatch
+        }
+    }
 }
-

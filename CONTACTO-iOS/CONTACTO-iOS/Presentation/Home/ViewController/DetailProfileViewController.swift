@@ -20,7 +20,7 @@ final class DetailProfileViewController: BaseViewController {
             detailProfileView.pageCollectionView.reloadData()
         }
     }
-    var userId: Int = 3
+    var userId = 0
     var isPreview = false
     var isFromChat = false
     
@@ -30,8 +30,12 @@ final class DetailProfileViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setData()
         setCollectionView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setData()
     }
     
     override func setNavigationBar() {
@@ -144,7 +148,7 @@ final class DetailProfileViewController: BaseViewController {
         
         self.detailProfileView.nameLabel.text = self.portfolioData.username
         self.detailProfileView.descriptionLabel.text = self.portfolioData.description
-        if self.portfolioData.webUrl != nil {
+        if let webUrl = self.portfolioData.webUrl, !webUrl.isEmpty {
             self.detailProfileView.webButton.isHidden = false
         } else {
             self.detailProfileView.webButton.isHidden = true
@@ -152,10 +156,18 @@ final class DetailProfileViewController: BaseViewController {
         
         self.detailProfileView.talentCollectionView.reloadData()
         self.detailProfileView.purposeCollectionView.reloadData()
-        self.resetCollectionViewLayout()
+        
+        // 레이아웃이 완료된 후에 높이 계산
+        DispatchQueue.main.async {
+            self.resetCollectionViewLayout()
+        }
     }
     
     private func setData() {
+        if isPreview {
+            self.detailProfileView.blockButton.isEnabled = false
+            self.detailProfileView.reportButton.isEnabled = false
+        }
         detailPort(userId: userId) { _ in }
     }
     
@@ -163,11 +175,12 @@ final class DetailProfileViewController: BaseViewController {
         self.detailProfileView.talentCollectionView.layoutIfNeeded()
         self.detailProfileView.purposeCollectionView.layoutIfNeeded()
         
+        let talentHeight = self.detailProfileView.talentCollectionView.collectionViewLayout.collectionViewContentSize.height
         self.detailProfileView.talentCollectionView.snp.remakeConstraints {
             $0.top.equalTo(self.detailProfileView.nameLabel.snp.bottom).offset(17)
             $0.leading.equalToSuperview().inset(13)
-            $0.trailing.equalToSuperview().inset(46)
-            $0.height.equalTo(self.detailProfileView.talentCollectionView.contentSize.height + 10)
+            $0.trailing.equalToSuperview().inset(13)
+            $0.height.equalTo(talentHeight + 10)
         }
         
         self.detailProfileView.purposeCollectionView.snp.remakeConstraints {
@@ -239,6 +252,9 @@ final class DetailProfileViewController: BaseViewController {
                             message: "사용자 차단에 실패했습니다.",
                             preferredStyle: .alert
                         )
+                        if let navigationController = self.navigationController {
+                            navigationController.popViewController(animated: true)
+                        }
                         let okAction = UIAlertAction(title: "OK", style: .default)
                         errorAlert.addAction(okAction)
                         self.present(errorAlert, animated: true, completion: nil)
@@ -368,7 +384,11 @@ extension DetailProfileViewController: UICollectionViewDelegateFlowLayout {
             let cellWidth = (collectionViewWidth - CGFloat(totalItems - 1) * spacing) / CGFloat(totalItems)
             return CGSize(width: cellWidth, height: collectionView.frame.height)
         case 2:
-           return CGSize(width: .bitWidth, height: 19)
+            let talent = talentData[indexPath.row].displayName.uppercased()
+            let font = UIFont.systemFont(ofSize: 12, weight: .medium)
+            let attributes = [NSAttributedString.Key.font: font]
+            let textSize = (talent as NSString).size(withAttributes: attributes)
+            return CGSize(width: textSize.width + 16, height: 19)
         case 3:
             return CGSize(width: 168.adjustedWidth, height: 28)
         default:
