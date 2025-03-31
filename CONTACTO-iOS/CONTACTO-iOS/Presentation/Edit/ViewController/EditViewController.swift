@@ -29,6 +29,8 @@ final class EditViewController: UIViewController {
     
     private var changeDetectionTimer: Timer?
     
+    private var isFromTalentVC = false
+    
     private func scheduleChangeDetection() {
         changeDetectionTimer?.invalidate()
         changeDetectionTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
@@ -85,9 +87,12 @@ final class EditViewController: UIViewController {
         super.viewWillAppear(animated)
         setNavigationBar()
         addKeyboardNotifications()
-        isEditEnable = false
-        editView.toggleEditMode(false)
-        setData()
+        if !isFromTalentVC {
+            isEditEnable = false
+            editView.toggleEditMode(false)
+            setData()
+        }
+        isFromTalentVC = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -377,6 +382,7 @@ final class EditViewController: UIViewController {
             self.checkTalentLayout()
             self.checkForChanges()
         }
+        isFromTalentVC = true
         navigationController?.pushViewController(talentVC, animated: true)
     }
     
