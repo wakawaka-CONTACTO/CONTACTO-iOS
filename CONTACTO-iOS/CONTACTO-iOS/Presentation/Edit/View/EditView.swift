@@ -101,9 +101,10 @@ final class EditView: BaseView {
         }
         
         nationalityLabel.do {
-            $0.text = "Nationality"
+            $0.text = "\(StringLiterals.Onboarding.Nationality.title)  \(StringLiterals.Onboarding.SNS.required)"
             $0.textColor = .ctblack
             $0.font = .fontContacto(.body1)
+            $0.asFont(targetString: "  \(StringLiterals.Onboarding.SNS.required)", font: .fontContacto(.caption3))
         }
         
         nationalityTextField.do {

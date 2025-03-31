@@ -10,12 +10,12 @@ import Foundation
 struct ProfileDataValidator {
     static func validateName(_ name: String?) -> ValidationResult {
         guard let name = name?.trimmingCharacters(in: .whitespacesAndNewlines), !name.isEmpty else {
-            return ValidationResult(isValid: false, message: "이름이 비어있습니다.")
+            return ValidationResult(isValid: false, message: "Your name field is empty.")
         }
         let nameRegex = "^[a-zA-Z0-9가-힣]{2,20}$"
         let predicate = NSPredicate(format: "SELF MATCHES %@", nameRegex)
         if !predicate.evaluate(with: name) {
-            return ValidationResult(isValid: false, message: "이름은 2-20자의 영문자, 숫자, 한글만 가능합니다.")
+            return ValidationResult(isValid: false, message: "The name can only be 2 to 20 characters in English, numbers, and Korean.")
         }
         return ValidationResult(isValid: true, message: nil)
     }
@@ -26,28 +26,28 @@ struct ProfileDataValidator {
             return ValidationResult(isValid: true, message: nil)
         }
         if !(website.hasPrefix("http://") || website.hasPrefix("https://")) {
-            return ValidationResult(isValid: false, message: "website URL은 http:// 또는 https:// 로 시작해야 합니다.")
+            return ValidationResult(isValid: false, message: "website URL should start with http:// or https://")
         }
         return ValidationResult(isValid: true, message: nil)
     }
     
     static func validatePurpose(_ purposes: [Int]?) -> ValidationResult {
         if purposes?.isEmpty ?? true {
-            return ValidationResult(isValid: false, message: "Purpose 항목이 선택되지 않았습니다.")
+            return ValidationResult(isValid: false, message: "You should select Purpose.")
         }
         return ValidationResult(isValid: true, message: nil)
     }
     
     static func validateTalent(_ talents: [UserTalent]?) -> ValidationResult {
         if talents?.isEmpty ?? true {
-            return ValidationResult(isValid: false, message: "Talent 항목이 선택되지 않았습니다.")
+            return ValidationResult(isValid: false, message: "You should select Talent.")
         }
         return ValidationResult(isValid: true, message: nil)
     }
     
     static func validatePortfolio(_ portfolioItemsCount: Int) -> ValidationResult {
         if portfolioItemsCount <= 0 {
-            return ValidationResult(isValid: false, message: "Portfolio 이미지를 선택해야 합니다.")
+            return ValidationResult(isValid: false, message: "You should select Portfolio.")
         }
         return ValidationResult(isValid: true, message: nil)
     }
