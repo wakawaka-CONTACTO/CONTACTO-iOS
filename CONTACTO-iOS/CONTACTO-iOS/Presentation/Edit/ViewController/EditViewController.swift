@@ -75,7 +75,6 @@ final class EditViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
-        setData()
         setDelegate()
         setAddTarget()
         hideKeyboardWhenTappedAround()
@@ -86,7 +85,9 @@ final class EditViewController: UIViewController {
         super.viewWillAppear(animated)
         setNavigationBar()
         addKeyboardNotifications()
-        if !isEditEnable { setData() }
+        isEditEnable = false
+        editView.toggleEditMode(false)
+        setData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -633,4 +634,3 @@ extension EditViewController: UITextFieldDelegate {
         return isMatch
     }
 }
-

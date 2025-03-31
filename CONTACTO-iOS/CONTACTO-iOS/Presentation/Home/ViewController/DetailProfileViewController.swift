@@ -30,8 +30,12 @@ final class DetailProfileViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setData()
         setCollectionView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setData()
     }
     
     override func setNavigationBar() {
