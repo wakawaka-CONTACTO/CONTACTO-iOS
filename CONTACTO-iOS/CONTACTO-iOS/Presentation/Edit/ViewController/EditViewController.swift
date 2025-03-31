@@ -72,6 +72,10 @@ final class EditViewController: UIViewController {
         didSet { changeSaveButtonStatus() }
     }
     
+    var isNationalitySelected = true {
+        didSet { changeSaveButtonStatus() }
+    }
+    
     let editView = EditView()
     
     private let countries = Nationalities.allCases
@@ -221,6 +225,7 @@ final class EditViewController: UIViewController {
         // nationality 설정
         let currentNationality = Nationalities(rawValue: manager.currentData.nationality ?? "") ?? .NONE
         editView.nationalityTextField.text = currentNationality.displayName
+        isNationalitySelected = currentNationality != .NONE
         
         // picker의 초기 선택값 설정
         if let index = countries.firstIndex(of: currentNationality) {
@@ -274,7 +279,8 @@ final class EditViewController: UIViewController {
         if isTextFieldFilled,
            isTextViewFilled,
            isPortfolioFilled,
-           isPurposeFilled {
+           isPurposeFilled,
+           isNationalitySelected {
             editView.editButton.isEnabled = true
         } else {
             editView.editButton.isEnabled = false
@@ -661,6 +667,8 @@ extension EditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedNationality = countries[row]
         editView.nationalityTextField.text = selectedNationality.displayName
+        isNationalitySelected = selectedNationality != .NONE
+        
         if var updatedData = portfolioManager?.currentData {
             updatedData.nationality = selectedNationality.rawValue
             portfolioManager?.currentData = updatedData
