@@ -115,7 +115,7 @@ enum StringLiterals {
         }
         
         enum Block {
-            static let title = "User Block"
+            static let title = "Block User"
             static let message = "Are you sure you want to\nblock this user?"
             static let result = "User blocked successfully. It may take some time for the block to be fully applied."
         }
