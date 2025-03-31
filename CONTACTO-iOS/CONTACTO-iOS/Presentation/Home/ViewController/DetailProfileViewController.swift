@@ -230,8 +230,8 @@ final class DetailProfileViewController: BaseViewController {
             preferredStyle: .alert
         )
         
-        let cancelAction = UIAlertAction(title: "No", style: .default)
-        let confirmAction = UIAlertAction(title: "Yes", style: .default) { _ in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let blockAction = UIAlertAction(title: "Block", style: .destructive) { _ in
             self.blockUser(blockedUserId: self.portfolioData.id) { success in
                 DispatchQueue.main.async {
                     if success {
@@ -261,9 +261,8 @@ final class DetailProfileViewController: BaseViewController {
                     }
                 }
             }
-       }
-        
-        alert.addAction(confirmAction)
+        }
+        alert.addAction(blockAction)
         alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
