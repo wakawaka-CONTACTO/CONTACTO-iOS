@@ -644,10 +644,18 @@ extension EditViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
+        
+        if textField == editView.nationalityTextField {
+            editView.toggleSaveButtonVisibility(false)
+        }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         activeTextField = nil
+        
+        if textField == editView.nationalityTextField {
+            editView.toggleSaveButtonVisibility(true)
+        }
     }
 }
 
@@ -667,13 +675,14 @@ extension EditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedNationality = countries[row]
         editView.nationalityTextField.text = selectedNationality.displayName
-        isNationalitySelected = selectedNationality != .NONE
-        
         if var updatedData = portfolioManager?.currentData {
             updatedData.nationality = selectedNationality.rawValue
             portfolioManager?.currentData = updatedData
             checkForChanges()
         }
+        
+        // 선택 완료 후 키보드(picker) 닫기
+        editView.nationalityTextField.resignFirstResponder()
     }
 }
 

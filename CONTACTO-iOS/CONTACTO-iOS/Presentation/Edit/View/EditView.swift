@@ -490,4 +490,8 @@ final class EditView: BaseView {
             }
         }
     }
+    
+    public func toggleSaveButtonVisibility(_ isVisible: Bool) {
+        editButton.isHidden = !isVisible
+    }
 }
