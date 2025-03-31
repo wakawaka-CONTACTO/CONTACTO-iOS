@@ -34,7 +34,7 @@ final class DetailProfileView: BaseView {
         frame: .zero,
         collectionViewLayout: talentFlowLayout
     )
-    private let talentFlowLayout = LeftAlignedCollectionViewFlowLayout()
+    let talentFlowLayout = LeftAlignedCollectionViewFlowLayout()
     
     let descriptionLabel = UILabel()
     let purposeLabel = UILabel()
@@ -232,18 +232,18 @@ final class DetailProfileView: BaseView {
         talentCollectionView.snp.makeConstraints {
             $0.top.equalTo(nameLabel.snp.bottom).offset(17)
             $0.leading.equalToSuperview().inset(13)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(talentCollectionView.contentSize.height)
+            $0.trailing.equalToSuperview().inset(13)
+            $0.height.equalTo(0)
         }
         
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(talentCollectionView.snp.bottom).offset(15)
+            $0.top.equalTo(talentCollectionView.snp.bottom).offset(10)
             $0.leading.equalTo(nameLabel)
-            $0.trailing.equalToSuperview().inset(17)
+            $0.trailing.equalToSuperview().inset(13)
         }
         
         purposeLabel.snp.makeConstraints {
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(4)
+            $0.top.equalTo(descriptionLabel.snp.bottom).offset(10)
             $0.leading.equalTo(nameLabel)
         }
         

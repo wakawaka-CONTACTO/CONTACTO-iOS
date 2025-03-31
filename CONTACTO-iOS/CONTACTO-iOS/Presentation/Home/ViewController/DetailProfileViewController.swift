@@ -156,7 +156,11 @@ final class DetailProfileViewController: BaseViewController {
         
         self.detailProfileView.talentCollectionView.reloadData()
         self.detailProfileView.purposeCollectionView.reloadData()
-        self.resetCollectionViewLayout()
+        
+        // 레이아웃이 완료된 후에 높이 계산
+        DispatchQueue.main.async {
+            self.resetCollectionViewLayout()
+        }
     }
     
     private func setData() {
@@ -171,11 +175,12 @@ final class DetailProfileViewController: BaseViewController {
         self.detailProfileView.talentCollectionView.layoutIfNeeded()
         self.detailProfileView.purposeCollectionView.layoutIfNeeded()
         
+        let talentHeight = self.detailProfileView.talentCollectionView.collectionViewLayout.collectionViewContentSize.height
         self.detailProfileView.talentCollectionView.snp.remakeConstraints {
             $0.top.equalTo(self.detailProfileView.nameLabel.snp.bottom).offset(17)
             $0.leading.equalToSuperview().inset(13)
-            $0.trailing.equalToSuperview().inset(46)
-            $0.height.equalTo(self.detailProfileView.talentCollectionView.contentSize.height + 10)
+            $0.trailing.equalToSuperview().inset(13)
+            $0.height.equalTo(talentHeight + 10)
         }
         
         self.detailProfileView.purposeCollectionView.snp.remakeConstraints {
@@ -379,7 +384,11 @@ extension DetailProfileViewController: UICollectionViewDelegateFlowLayout {
             let cellWidth = (collectionViewWidth - CGFloat(totalItems - 1) * spacing) / CGFloat(totalItems)
             return CGSize(width: cellWidth, height: collectionView.frame.height)
         case 2:
-           return CGSize(width: .bitWidth, height: 19)
+            let talent = talentData[indexPath.row].displayName.uppercased()
+            let font = UIFont.systemFont(ofSize: 12, weight: .medium)
+            let attributes = [NSAttributedString.Key.font: font]
+            let textSize = (talent as NSString).size(withAttributes: attributes)
+            return CGSize(width: textSize.width + 16, height: 19)
         case 3:
             return CGSize(width: 168.adjustedWidth, height: 28)
         default:
