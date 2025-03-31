@@ -626,11 +626,20 @@ extension EditViewController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // 한글 입력 방지
-        let pattern = "^[a-zA-Z0-9\\s]*$"
-        let regex = try? NSRegularExpression(pattern: pattern)
-        let range = NSRange(location: 0, length: string.utf16.count)
-        let isMatch = regex?.firstMatch(in: string, options: [], range: range) != nil
-        return isMatch
+        if textField == editView.websiteTextField {
+            // URL에 필요한 특수문자 허용
+            let pattern = "^[a-zA-Z0-9\\s:/?=&._-]*$"
+            let regex = try? NSRegularExpression(pattern: pattern)
+            let range = NSRange(location: 0, length: string.utf16.count)
+            let isMatch = regex?.firstMatch(in: string, options: [], range: range) != nil
+            return isMatch
+        } else {
+            // 영문자, 숫자, 공백만 허용
+            let pattern = "^[a-zA-Z0-9\\s]*$"
+            let regex = try? NSRegularExpression(pattern: pattern)
+            let range = NSRange(location: 0, length: string.utf16.count)
+            let isMatch = regex?.firstMatch(in: string, options: [], range: range) != nil
+            return isMatch
+        }
     }
 }
