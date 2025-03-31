@@ -148,7 +148,7 @@ final class DetailProfileViewController: BaseViewController {
         
         self.detailProfileView.nameLabel.text = self.portfolioData.username
         self.detailProfileView.descriptionLabel.text = self.portfolioData.description
-        if self.portfolioData.webUrl != nil {
+        if let webUrl = self.portfolioData.webUrl, !webUrl.isEmpty {
             self.detailProfileView.webButton.isHidden = false
         } else {
             self.detailProfileView.webButton.isHidden = true
