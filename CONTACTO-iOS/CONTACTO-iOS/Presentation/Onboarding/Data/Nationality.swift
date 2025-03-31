@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Nationalities: String, CaseIterable {
+enum Nationalities: String, CaseIterable, Codable {
     case NONE
     case UK, CN, JP, US, KR, FR, DE, NL, OTHER
     

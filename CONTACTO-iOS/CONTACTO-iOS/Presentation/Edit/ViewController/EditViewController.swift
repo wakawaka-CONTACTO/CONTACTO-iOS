@@ -222,12 +222,10 @@ final class EditViewController: UIViewController {
         editView.instaTextField.text = manager.currentData.instagramId
         editView.websiteTextField.text = manager.currentData.webUrl
         
-        // nationality 설정
-        let currentNationality = Nationalities(rawValue: manager.currentData.nationality ?? "") ?? .NONE
+        let currentNationality = Nationalities(rawValue: (manager.currentData.nationality ?? Nationalities.NONE).rawValue) ?? .NONE
         editView.nationalityTextField.text = currentNationality.displayName
-        isNationalitySelected = currentNationality != .NONE
+        isNationalitySelected = currentNationality != Nationalities.NONE
         
-        // picker의 초기 선택값 설정
         if let index = countries.firstIndex(of: currentNationality) {
             editView.nationalityPicker.selectRow(index, inComponent: 0, animated: false)
         }
@@ -611,6 +609,7 @@ extension EditViewController: UITextViewDelegate {
             website: editView.websiteTextField.text,
             purposes: portfolioManager?.currentData.userPurposes,
             talents: portfolioManager?.currentData.userTalents,
+            nationality: portfolioManager?.currentData.nationality ?? Nationalities.NONE,
             portfolioItemsCount: portfolioManager?.portfolioItems.count ?? 0
         )
     }
@@ -675,13 +674,13 @@ extension EditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedNationality = countries[row]
         editView.nationalityTextField.text = selectedNationality.displayName
+        
         if var updatedData = portfolioManager?.currentData {
-            updatedData.nationality = selectedNationality.rawValue
+            updatedData.nationality = selectedNationality
             portfolioManager?.currentData = updatedData
             checkForChanges()
         }
         
-        // 선택 완료 후 키보드(picker) 닫기
         editView.nationalityTextField.resignFirstResponder()
     }
 }

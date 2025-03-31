@@ -33,7 +33,7 @@ func updateUserInfo(_ data: MyDetailResponseDTO) {
     UserInfo.shared.name = data.username
     UserInfo.shared.description = data.description
     UserInfo.shared.instagramId = data.instagramId
-    UserInfo.shared.nationality = data.nationality
+    UserInfo.shared.nationality = data.nationality.displayName
     UserInfo.shared.webUrl = data.webUrl
     UserInfo.shared.userPurposes = data.userPurposes
     UserInfo.shared.userTalents = data.userTalents.map { $0.talentType }

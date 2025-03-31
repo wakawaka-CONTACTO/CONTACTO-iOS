@@ -52,7 +52,15 @@ struct ProfileDataValidator {
         return ValidationResult(isValid: true, message: nil)
     }
     
-    static func validateProfile(name: String?, website: String?, purposes: [Int]?, talents: [UserTalent]?, portfolioItemsCount: Int) -> ValidationResult {
+    static func validateNationality(_ nationality: Nationalities) -> ValidationResult{
+        if nationality == Nationalities.NONE {
+            return ValidationResult(isValid: false, message: "You should select Natioinality.")
+        }
+        return ValidationResult(isValid: true, message: nil)
+    }
+    
+    static func validateProfile(name: String?, website: String?, purposes: [Int]?, talents: [UserTalent]?,
+                                nationality: Nationalities, portfolioItemsCount: Int) -> ValidationResult {
         let nameValidation = validateName(name)
         if !nameValidation.isValid { return nameValidation }
         
@@ -67,6 +75,9 @@ struct ProfileDataValidator {
         
         let portfolioValidation = validatePortfolio(portfolioItemsCount)
         if !portfolioValidation.isValid { return portfolioValidation }
+        
+        let nationalityValidation = validateNationality(nationality)
+        if !nationalityValidation.isValid { return nationalityValidation }
         
         return ValidationResult(isValid: true, message: nil)
     }

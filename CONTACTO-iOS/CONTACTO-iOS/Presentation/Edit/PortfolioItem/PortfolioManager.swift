@@ -80,6 +80,7 @@ final class PortfolioManager {
                 }
             }
         }
+        print("Nationality info for request: \(currentData.nationality)")
         
         return EditRequestBodyDTO(
             username: currentData.username.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -88,6 +89,7 @@ final class PortfolioManager {
             instagramId: currentData.instagramId,
             password: "", // 비밀번호는 별도 처리
             webUrl: currentData.webUrl,
+            nationality: currentData.nationality,
             userPurposes: currentData.userPurposes.map { $0 },
             userTalents: convertToTalent(displayNames: currentData.userTalents.map { $0.talentType }),
             newPortfolioImages: newPortfolioImages.isEmpty ? nil : newPortfolioImages,
