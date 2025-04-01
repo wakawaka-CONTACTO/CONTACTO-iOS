@@ -29,6 +29,7 @@ final class EmailCodeView: BaseView {
     private var countdownTime: Int = 240
     private var timer: Timer?
     weak var delegate: EmailCodeViewDelegate?
+    let backButton = UIButton()
     
     public func setFail(){
         explainContents = "THIS CODE IS INVALID. ENTER CORRECT CODE."
@@ -98,6 +99,12 @@ final class EmailCodeView: BaseView {
             $0.text = explainContents
             $0.textAlignment = .center
         }
+        
+        backButton.do {
+            $0.setTitle(StringLiterals.Login.backToLogin, for: .normal)
+            $0.setTitleColor(.systemBlue, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.gothicButton)
+        }
     }
     
     override func setLayout() {
@@ -108,7 +115,8 @@ final class EmailCodeView: BaseView {
                     underLineView,
                     continueButton,
                     resendButton,
-                    timerLabel)
+                    timerLabel,
+                    backButton)
         
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(153.adjustedHeight)
@@ -153,6 +161,11 @@ final class EmailCodeView: BaseView {
         timerLabel.snp.makeConstraints {
             $0.top.equalTo(resendButton.snp.bottom).offset(10.adjustedHeight)
             $0.centerX.equalToSuperview()
+        }
+        
+        backButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(logoImageView.snp.bottom).offset(560.adjustedHeight)
         }
     }
     
