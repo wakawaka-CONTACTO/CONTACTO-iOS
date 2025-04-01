@@ -175,8 +175,6 @@ extension LoginViewController {
                         let mainTabBarViewController = MainTabBarViewController()
                         mainTabBarViewController.homeViewController.isFirst = false
                         self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
-                    } else {
-                        self.view.showToast(message: "Something went wrong. Try Again")
                     }
                 }
                 self.hideLoadingIndicator()
