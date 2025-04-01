@@ -250,7 +250,7 @@ extension HomeViewController {
         self.homeEmptyView.isHidden = true
         if !isPreview {
             if !isUndo {
-                if recommendedPortfolioIdx >= size {
+                if recommendedPortfolioIdx >= recommendedPortfolios.count {
                     homeList { _ in
                         if self.recommendedPortfolios.count == 0 {
                             self.homeView.isHidden = true
