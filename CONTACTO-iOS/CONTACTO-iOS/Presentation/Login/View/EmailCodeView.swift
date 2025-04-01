@@ -12,6 +12,7 @@ import Then
 
 protocol EmailCodeViewDelegate: AnyObject {
     func timerDidFinish(_ view: EmailCodeView)
+    func backButtonTapped()
 }
 
 final class EmailCodeView: BaseView {
@@ -22,12 +23,24 @@ final class EmailCodeView: BaseView {
     let underLineView = UIImageView()
     let continueButton = UIButton()
     let resendButton = UIButton()
-    
+    private let explain = UILabel()
+    private var explainContents = ""
     
     private let timerLabel = UILabel()
     private var countdownTime: Int = 240
     private var timer: Timer?
-    weak var delegate: EmailCodeViewDelegate?    
+    weak var delegate: EmailCodeViewDelegate?
+    let backButton = UIButton()
+    
+    public func setFail(){
+        explainContents = "THIS CODE IS INVALID. ENTER CORRECT CODE."
+        explain.text = explainContents
+    }
+        
+    public func setStatus(){
+        explainContents = ""
+        explain.text = explainContents
+    }
     
     override func setStyle() {
         logoImageView.do {
@@ -78,16 +91,33 @@ final class EmailCodeView: BaseView {
             $0.textAlignment = .center
             $0.text = formatTime(countdownTime)
         }
+        
+        explain.do {
+            $0.numberOfLines = 0
+            $0.lineBreakMode = .byWordWrapping
+            $0.font = .fontContacto(.caption9)
+            $0.textColor = .ctwhite
+            $0.text = explainContents
+            $0.textAlignment = .center
+        }
+        
+        backButton.do {
+            $0.setTitle(StringLiterals.Login.backToLogin, for: .normal)
+            $0.setTitleColor(.systemBlue, for: .normal)
+            $0.titleLabel?.font = .fontContacto(.gothicButton)
+        }
     }
     
     override func setLayout() {
         addSubviews(logoImageView,
                     descriptionLabel,
+                    explain,
                     mainTextField,
                     underLineView,
                     continueButton,
                     resendButton,
-                    timerLabel)
+                    timerLabel,
+                    backButton)
         
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(153.adjustedHeight)
@@ -104,8 +134,13 @@ final class EmailCodeView: BaseView {
             $0.bottom.equalTo(mainTextField)
         }
         
+        explain.snp.makeConstraints {
+            $0.top.equalTo(descriptionLabel.snp.bottom).offset(2.adjustedHeight)
+            $0.centerX.equalToSuperview()
+        }
+        
         mainTextField.snp.makeConstraints {
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(25.adjustedHeight)
+            $0.top.equalTo(explain.snp.bottom).offset(25.adjustedHeight)
             $0.leading.trailing.equalTo(underLineView).inset(15)
             $0.centerX.equalToSuperview()
             $0.height.equalTo(34.adjustedHeight)
@@ -128,6 +163,19 @@ final class EmailCodeView: BaseView {
             $0.top.equalTo(resendButton.snp.bottom).offset(10.adjustedHeight)
             $0.centerX.equalToSuperview()
         }
+        
+        backButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(logoImageView.snp.bottom).offset(360.adjustedHeight)
+        }
+    }
+    
+    override func setAddTarget() {
+        backButton.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
+    }
+    
+    @objc private func backButtonDidTap() {
+        delegate?.backButtonTapped()
     }
     
     func startTimer() {

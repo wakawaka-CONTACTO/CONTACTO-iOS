@@ -14,7 +14,7 @@ import FirebaseMessaging
 
 final class LoginViewController: UIViewController {
     
-    private let loginView = LoginView(state: .email)
+    var loginView: LoginView
     private let emailCodeView = EmailCodeView()
     private let setPWView = SetPassWordView()
     var email = ""
@@ -36,6 +36,15 @@ final class LoginViewController: UIViewController {
         indicator.hidesWhenStopped = true
         return indicator
     }()
+    
+    init() {
+        self.loginView = LoginView(state: .email)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -175,8 +184,6 @@ extension LoginViewController {
                         let mainTabBarViewController = MainTabBarViewController()
                         mainTabBarViewController.homeViewController.isFirst = false
                         self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
-                    } else {
-                        self.view.showToast(message: "Something went wrong. Try Again")
                     }
                 }
                 self.hideLoadingIndicator()
@@ -345,6 +352,7 @@ extension LoginViewController {
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(_):
+                self.emailCodeView.setStatus()
                 self.emailCodeView.startTimer()
                 completion(true)
             default:
@@ -359,6 +367,7 @@ extension LoginViewController {
             case .success(let data):
                 completion(data.isSuccess)
             default:
+                self.emailCodeView.setFail()
                 completion(false)
             }
         }
