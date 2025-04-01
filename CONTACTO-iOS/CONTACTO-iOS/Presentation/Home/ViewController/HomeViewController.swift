@@ -230,15 +230,11 @@ extension HomeViewController {
     }
 
     @objc private func handleMatchChatRoom(_ notification: Notification) {
-        print("HomeViewController에서 노티피케이션 받음") // 디버깅용 로그 추가
-        
         if let message = notification.userInfo?["message"] as? String,
            let chatRoomId = notification.userInfo?["chatRoomId"] as? Int,
            let yourId = notification.userInfo?["yourId"] as? Int,
            let yourImageURL = notification.userInfo?["yourImageURL"] as? String,
            let yourLabel = notification.userInfo?["yourLabel"] as? String {
-            
-            print("채팅방 정보: \(chatRoomId), \(yourLabel)")
             
             let chatRoomViewController = ChatRoomViewController()
             chatRoomViewController.chatRoomId = chatRoomId

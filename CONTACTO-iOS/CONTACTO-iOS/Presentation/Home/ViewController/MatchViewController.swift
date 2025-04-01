@@ -77,9 +77,6 @@ extension MatchViewController {
     @objc private func sendButtonTapped() {
         if !greet.isEmpty {
             let selectedGreetings = greet.map { greetMessage[$0] }.joined(separator: " ")
-            print("chatroomId: \(matchData?.chatRoomId ?? 0)로 메시지 전송: \(selectedGreetings)")
-            
-            // HomeViewController로 정보 전달
             NotificationCenter.default.post(
                 name: Notification.Name("moveToChatRoomFromMatch"),
                 object: nil,
@@ -91,7 +88,6 @@ extension MatchViewController {
                     "yourLabel": matchData?.yourLabel ?? ""
                 ]
             )
-            // 현재 모달 닫기
             self.dismiss(animated: true)
         }
     }

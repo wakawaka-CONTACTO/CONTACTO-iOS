@@ -110,7 +110,6 @@ final class ChatRoomViewController: BaseViewController {
             self.isFirstLoad = false
             
             if self.isFirstMatch {
-                print("매치 직후 메시지 전송: \(self.content)")
                 self.sendMessage(self.content)
                 self.isFirstMatch = false
             }
@@ -311,7 +310,6 @@ extension ChatRoomViewController {
     
     @objc private func handleGreetings(_ notification: Notification) {
         if let message = notification.userInfo?["message"] as? String {
-            print("메시지 전송: \(message)")
             sendMessage(message)
         }
     }

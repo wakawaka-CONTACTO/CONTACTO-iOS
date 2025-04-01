@@ -117,7 +117,6 @@ final class MainTabBarViewController: UITabBarController {
         if let chatRoomViewController = notification.userInfo?["chatRoomViewController"] as? ChatRoomViewController,
         let navigationController = self.viewControllers?[1] as? UINavigationController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                print("chatRoomViewController push: \(chatRoomViewController)")
                 navigationController.pushViewController(chatRoomViewController, animated: true)
             }
         }
