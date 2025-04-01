@@ -308,12 +308,6 @@ extension ChatRoomViewController: StompClientLibDelegate {
 
 extension ChatRoomViewController {
     
-    @objc private func handleGreetings(_ notification: Notification) {
-        if let message = notification.userInfo?["message"] as? String {
-            sendMessage(message)
-        }
-    }
-    
     /// 노티피케이션 추가
     func addKeyboardNotifications(){
         // 키보드가 나타날 때 앱에게 알리는 메서드 추가
