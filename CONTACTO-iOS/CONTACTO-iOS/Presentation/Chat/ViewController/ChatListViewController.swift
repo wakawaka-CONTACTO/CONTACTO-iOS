@@ -85,6 +85,7 @@ final class ChatListViewController: BaseViewController {
         let chatRoomViewController = ChatRoomViewController()
         chatRoomViewController.hidesBottomBarWhenPushed = true
         chatRoomViewController.chatRoomId = id
+        chatRoomViewController.otherUserId = chatRoomListData[indexPath.row].participants[0]
         chatRoomViewController.participants = chatRoomListData[indexPath.row].participants
         chatRoomViewController.chatRoomTitle = chatRoomListData[indexPath.row].title
         chatRoomViewController.chatRoomThumbnail = chatRoomListData[indexPath.row].chatRoomThumbnail ?? ""

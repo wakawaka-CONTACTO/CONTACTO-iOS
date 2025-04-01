@@ -112,6 +112,14 @@ final class MainTabBarViewController: UITabBarController {
     
     @objc private func moveToChat(_ notification: Notification) {
         self.selectedIndex = 1
+
+        // 채팅방 뷰컨트롤러가 있다면 채팅방으로 이동
+        if let chatRoomViewController = notification.userInfo?["chatRoomViewController"] as? ChatRoomViewController,
+        let navigationController = self.viewControllers?[1] as? UINavigationController {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                navigationController.pushViewController(chatRoomViewController, animated: true)
+            }
+        }
     }
     
     @objc private func handleChatNotification(_ notification: Notification) {

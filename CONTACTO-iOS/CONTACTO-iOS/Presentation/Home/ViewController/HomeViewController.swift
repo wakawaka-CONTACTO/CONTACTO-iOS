@@ -32,6 +32,7 @@ final class HomeViewController: BaseViewController {
     }
     
     var isMatch = false /// 매칭 여부
+    var chatRoomId = 0
     
     /// 사용자 추천 목록
     let size = 10 /// 받아올 개수
@@ -62,6 +63,13 @@ final class HomeViewController: BaseViewController {
         setPanAction()
         setTapGesture()
         setCollectionView()
+         // 노티피케이션 옵저버 등록
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMatchChatRoom(_:)),
+            name: Notification.Name("moveToChatRoomFromMatch"),
+            object: nil
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -220,6 +228,31 @@ extension HomeViewController {
             }
         }
     }
+
+    @objc private func handleMatchChatRoom(_ notification: Notification) {
+        if let message = notification.userInfo?["message"] as? String,
+           let chatRoomId = notification.userInfo?["chatRoomId"] as? Int,
+           let yourId = notification.userInfo?["yourId"] as? Int,
+           let yourImageURL = notification.userInfo?["yourImageURL"] as? String,
+           let yourLabel = notification.userInfo?["yourLabel"] as? String {
+            
+            let chatRoomViewController = ChatRoomViewController()
+            chatRoomViewController.chatRoomId = chatRoomId
+            chatRoomViewController.otherUserId = yourId
+            chatRoomViewController.chatRoomThumbnail = yourImageURL
+            chatRoomViewController.chatRoomTitle = yourLabel
+            chatRoomViewController.content = message
+            chatRoomViewController.isFirstMatch = true
+            chatRoomViewController.hidesBottomBarWhenPushed = true
+            
+            // 채팅방 뷰컨트롤러를 userInfo에 포함시켜 전달
+            NotificationCenter.default.post(
+                name: Notification.Name("moveToChat"),
+                object: nil,
+                userInfo: ["chatRoomViewController": chatRoomViewController]
+            )
+        }
+    }
     
     private func setData() {
         homeView.undoButton.isEnabled = false
@@ -303,6 +336,7 @@ extension HomeViewController {
             switch response {
             case .success(let data):
                 self?.isMatch = data.matched
+                self?.chatRoomId = data.chatRoomId ?? 0
                 completion(true)
             default:
                 completion(false)
@@ -415,7 +449,8 @@ extension HomeViewController {
                 myImageURL: previewPortfolioData.userPortfolio?.portfolioImageUrl.first ?? "",
                 yourId: recommendedPortfolios[recommendedPortfolioIdx].userId,
                 yourLabel: recommendedPortfolios[recommendedPortfolioIdx].username,
-                yourImageURL: recommendedPortfolios[recommendedPortfolioIdx].portfolioImageUrl.first ?? ""
+                yourImageURL: recommendedPortfolios[recommendedPortfolioIdx].portfolioImageUrl.first ?? "",
+                chatRoomId: chatRoomId
             )
             
             self.present(matchViewController, animated: true)

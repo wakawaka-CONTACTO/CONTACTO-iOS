@@ -16,6 +16,7 @@ final class ChatRoomViewController: BaseViewController {
     
     var content = ""
     var senderId = KeychainHandler.shared.userID
+    var otherUserId = 0
     var createdAt = ""
     var isConnected = false
     var socketClient = StompClientLib()
@@ -28,11 +29,17 @@ final class ChatRoomViewController: BaseViewController {
     var isKeyboardShow = false
     let chatRoomView = ChatRoomView()
     
+    var isFirstMatch = false
     private var hasNext = true
     private var currentPage = 0
     private let pageSize = 30
     private var isFetching = false
     private var isFirstLoad = true
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setCollectionView()
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -56,12 +63,6 @@ final class ChatRoomViewController: BaseViewController {
         }
         
         self.removeKeyboardNotifications()
-    }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setCollectionView()
     }
     
     override func setNavigationBar() {
@@ -107,6 +108,11 @@ final class ChatRoomViewController: BaseViewController {
             self.chatRoomView.chatRoomCollectionView.reloadData()
             self.scrollToBottom()
             self.isFirstLoad = false
+            
+            if self.isFirstMatch {
+                self.sendMessage(self.content)
+                self.isFirstMatch = false
+            }
         }
     }
     
@@ -122,7 +128,11 @@ final class ChatRoomViewController: BaseViewController {
                 let sortedMessages = data.content.sorted { $0.createdAt < $1.createdAt }
                 
                 if isFirstLoad {
-                    self.chatRoomView.isFirstChat = data.content.isEmpty
+                    if !isFirstMatch {
+                        self.chatRoomView.isFirstChat = data.content.isEmpty
+                    } else {
+                        self.chatRoomView.isFirstChat = false
+                    }
                     self.chatList = sortedMessages
                     self.chatRoomView.chatRoomCollectionView.reloadData()
                 
@@ -167,6 +177,42 @@ final class ChatRoomViewController: BaseViewController {
             request: NSURLRequest(url: url),
             delegate: self
         )
+    }
+
+    private func sendMessage(_ messageText: String) {
+        self.content = messageText
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+        
+        let currentDate = Date()
+        self.createdAt = formatter.string(from: currentDate)
+        
+        if let plusRange = createdAt.range(of: "+09:00") {
+            self.createdAt.removeSubrange(plusRange)
+        }
+        
+        let newMessage = Message(
+            content: content,
+            senderId: Int(senderId) ?? 0,
+            sendedId: otherUserId,
+            createdAt: createdAt,
+            readStatus: false)
+        chatList.append(newMessage)
+          
+        if let messageData = try? JSONEncoder().encode(newMessage) {
+            var headers = ["Authorization": KeychainHandler.shared.accessToken]
+            headers["content-type"] = "application/json"
+            socketClient.sendMessage(
+                message: String(data: messageData, encoding: .utf8) ?? "",
+                toDestination: "/app/chat.send/\(chatRoomId)",
+                withHeaders: headers,
+                withReceipt: nil
+            )
+        }
+        chatRoomView.chatRoomCollectionView.reloadData()
+        chatRoomView.messageTextView.text = ""
+        scrollToBottom()
     }
 }
 
@@ -331,7 +377,7 @@ extension ChatRoomViewController {
     
     @objc private func profileImageButtonTapped() {
         let detailProfileViewController = DetailProfileViewController()
-        detailProfileViewController.userId = self.participants[0]
+        detailProfileViewController.userId = otherUserId
         detailProfileViewController.isFromChat = true
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
@@ -348,40 +394,7 @@ extension ChatRoomViewController {
     
     @objc private func sendButtonTapped() {
         guard let messageText = chatRoomView.messageTextView.text, !messageText.isEmpty else { return }
-        
-        self.content = messageText
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        formatter.timeZone = TimeZone(identifier: "Asia/Seoul") // KST 설정
-        
-        let currentDate = Date()
-        self.createdAt = formatter.string(from: currentDate)
-        
-        if let plusRange = createdAt.range(of: "+09:00") { // "+09:00" 오프셋 제거
-            self.createdAt.removeSubrange(plusRange)
-        }
-        
-        let newMessage = Message(
-            content: content,
-            senderId: Int(senderId) ?? 0,
-            sendedId: Int(participants[0]),
-            createdAt: createdAt,
-            readStatus: false)
-        chatList.append(newMessage)
-          
-        if let messageData = try? JSONEncoder().encode(newMessage) {
-            var headers = ["Authorization": KeychainHandler.shared.accessToken]
-            headers["content-type"] = "application/json"
-            socketClient.sendMessage(
-                message: String(data: messageData, encoding: .utf8) ?? "",
-                toDestination: "/app/chat.send/\(chatRoomId)",
-                withHeaders: headers,
-                withReceipt: nil
-            )
-        }
-        chatRoomView.chatRoomCollectionView.reloadData()
-        chatRoomView.messageTextView.text = ""
-        scrollToBottom()
+        sendMessage(messageText)
     }
     
     private func scrollToBottom() {
