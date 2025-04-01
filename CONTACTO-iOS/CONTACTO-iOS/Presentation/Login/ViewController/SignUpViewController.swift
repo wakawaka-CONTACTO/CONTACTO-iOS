@@ -126,6 +126,7 @@ extension SignUpViewController {
                 self.emailCodeView.isHidden = false
                 self.setPWView.isHidden = true
                 self.emailCodeView.startTimer()
+                self.emailCodeView.setStatus()
             case .failure(let error):
                 var errorMessage = "이메일 전송에 실패했습니다. 잠시후 다시 시도해주세요."
                 if let data = error.data,
@@ -137,6 +138,7 @@ extension SignUpViewController {
                 self.present(alert, animated: true, completion: nil)
                 self.signUpView.mainTextField.isError = true
                 self.signUpView.continueButton.isEnabled = true
+                self.emailCodeView.setFail()
             default:
                 var errorMessage = "이메일 전송에 실패했습니다. 관리자에게 문의해주세요."
                 let alert = UIAlertController(title: "에러", message: errorMessage, preferredStyle: .alert)
@@ -172,6 +174,7 @@ extension SignUpViewController {
                 self.setPWView.isHidden = false
             } else {
                 self.emailCodeView.underLineView.image = .imgUnderLineRed
+                self.emailCodeView.setFail()
             }
         }
     }

@@ -343,6 +343,7 @@ extension LoginViewController {
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(_):
+                self.emailCodeView.setStatus()
                 self.emailCodeView.startTimer()
                 completion(true)
             default:
@@ -357,6 +358,7 @@ extension LoginViewController {
             case .success(let data):
                 completion(data.isSuccess)
             default:
+                self.emailCodeView.setFail()
                 completion(false)
             }
         }
