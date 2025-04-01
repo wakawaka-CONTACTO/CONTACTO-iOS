@@ -12,6 +12,7 @@ import Then
 
 protocol EmailCodeViewDelegate: AnyObject {
     func timerDidFinish(_ view: EmailCodeView)
+    func backButtonTapped()
 }
 
 final class EmailCodeView: BaseView {
@@ -165,8 +166,16 @@ final class EmailCodeView: BaseView {
         
         backButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(logoImageView.snp.bottom).offset(560.adjustedHeight)
+            $0.top.equalTo(logoImageView.snp.bottom).offset(360.adjustedHeight)
         }
+    }
+    
+    override func setAddTarget() {
+        backButton.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
+    }
+    
+    @objc private func backButtonDidTap() {
+        delegate?.backButtonTapped()
     }
     
     func startTimer() {

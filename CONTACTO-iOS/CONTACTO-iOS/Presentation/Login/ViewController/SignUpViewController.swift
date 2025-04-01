@@ -152,10 +152,6 @@ extension SignUpViewController {
         }
     }
     
-    @objc private func backButtonTapped() {
-        self.navigationController?.popViewController(animated: false)
-    }
-    
     @objc private func privacyAgreeButtonTapped() {
         isPrivacyAgree.toggle()
     }
@@ -304,7 +300,13 @@ extension SignUpViewController: UITextFieldDelegate {
 }
 
 extension SignUpViewController: EmailCodeViewDelegate {
-    @objc func timerDidFinish(_ view: EmailCodeView) {
+    func timerDidFinish(_ view: EmailCodeView) {
         sendCode()
+    }
+    
+    @objc internal func backButtonTapped() {
+        // 로그인 화면으로 이동
+        let loginVC = LoginViewController()
+        self.navigationController?.setViewControllers([loginVC], animated: false)
     }
 }
