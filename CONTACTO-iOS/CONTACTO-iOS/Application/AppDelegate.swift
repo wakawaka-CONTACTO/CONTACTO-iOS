@@ -9,6 +9,7 @@ import UIKit
 import FirebaseCore
 import FirebaseMessaging
 import FirebaseAnalytics
+import AmplitudeSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

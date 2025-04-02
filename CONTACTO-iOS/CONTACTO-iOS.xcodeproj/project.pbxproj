@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26334F852D9D0A7200818CB9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 26334F842D9D07EF00818CB9 /* GoogleService-Info.plist */; };
 		26434AC82D82D604000FB7AE /* Nationality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26434AC72D82D604000FB7AE /* Nationality.swift */; };
 		26DEC0212D806D0B00667450 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEC0202D806D0B00667450 /* EmptyResponse.swift */; };
 		330688D32D82D7F400BD34EA /* ReportRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */; };
@@ -15,7 +16,6 @@
 		33185B0B2D7B1E6B00B508A3 /* PageableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */; };
 		333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */; };
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
-		33EC0F822D9684B300E3832B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 33EC0F812D9684B300E3832B /* GoogleService-Info.plist */; };
 		52259755595FA388540C3A24 /* Pods_CONTACTO_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0F5297BC8F72493DC49B4B2 /* Pods_CONTACTO_iOS.framework */; };
 		ACAC3E1B2D8413640001B069 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */; };
 		ACAC3E1D2D8413640001B069 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */; };
@@ -166,6 +166,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		26334F842D9D07EF00818CB9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		26434AC72D82D604000FB7AE /* Nationality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nationality.swift; sourceTree = "<group>"; };
 		26DEC0202D806D0B00667450 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
 		26ED0BECEC61DA9C9552DA6E /* Pods-CONTACTO-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -176,7 +177,6 @@
 		33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableRequest.swift; sourceTree = "<group>"; };
 		333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockResponseDTO.swift; sourceTree = "<group>"; };
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
-		33EC0F812D9684B300E3832B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AC0EAA8E2D68451C00757EBD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AC3389C32D67259100BE7518 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		C0F5297BC8F72493DC49B4B2 /* Pods_CONTACTO_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CONTACTO_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -890,7 +890,7 @@
 		C3FD902C2C9139D40021D2BA = {
 			isa = PBXGroup;
 			children = (
-				33EC0F812D9684B300E3832B /* GoogleService-Info.plist */,
+				26334F842D9D07EF00818CB9 /* GoogleService-Info.plist */,
 				AC0EAA8E2D68451C00757EBD /* .gitignore */,
 				AC3389C32D67259100BE7518 /* Config.xcconfig */,
 				C3FD90372C9139D40021D2BA /* CONTACTO-iOS */,
@@ -1201,7 +1201,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33EC0F822D9684B300E3832B /* GoogleService-Info.plist in Resources */,
+				26334F852D9D0A7200818CB9 /* GoogleService-Info.plist in Resources */,
 				C3FD90992C9189850021D2BA /* FKRasterRomanCompactTrial-Blended.otf in Resources */,
 				C3E6D9122CFAD76900D6ABDC /* Pretendard-Bold.otf in Resources */,
 				C3FD90422C9139D70021D2BA /* Assets.xcassets in Resources */,

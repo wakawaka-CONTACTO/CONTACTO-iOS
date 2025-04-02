@@ -210,6 +210,7 @@ extension LoginViewController {
     
     @objc func helpEmailButtonTapped() {
         loginView.mainTextField.text = ""
+        self.decodeEmail = ""
         loginView.setLoginState(state: .emailForget)
     }
     
@@ -223,17 +224,7 @@ extension LoginViewController {
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
     }
-    
-    @objc func backButtonTapped() {
-        loginView.mainTextField.text = self.email
-        loginView.setLoginState(state: .email)
-        if !self.email.isEmpty && self.email.isValidEmail() {
-            self.loginView.continueButton.isEnabled = true
-        } else {
-            self.loginView.continueButton.isEnabled = false
-        }
-    }
-    
+
     @objc private func codeVerifyButtonTapped() {
         emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
             if response {
@@ -278,9 +269,9 @@ extension LoginViewController {
             
             self.updatePwd(bodyDTO: bodyDTO) { response in
                 if response {
-                    let mainTabBarViewController = MainTabBarViewController()
-                    mainTabBarViewController.homeViewController.isFirst = false
-                    self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+                    self.view.showToast(message: "Your Password is updated successfully!")
+                    let loginVC = LoginViewController()
+                    self.navigationController?.setViewControllers([loginVC], animated: false)
                 } else {
                     self.view.showToast(message: "Something went wrong. Try Again")
                 }
@@ -331,6 +322,7 @@ extension LoginViewController {
                 self?.decodeEmail = data.decodeEmail
                 DispatchQueue.main.async {
                     self?.loginView.setLoginState(state: .findEmail)
+                    self?.loginView.mainTextField.text = data.decodeEmail
                 }
                 completion(true)
             case .failure(let error):
@@ -512,5 +504,10 @@ extension LoginViewController: UITextFieldDelegate {
 extension LoginViewController: EmailCodeViewDelegate {
     @objc func timerDidFinish(_ view: EmailCodeView) {
         sendCode()
+    }
+    
+    @objc internal func backButtonTapped() {
+        let loginVC = LoginViewController()
+        self.navigationController?.setViewControllers([loginVC], animated: false)
     }
 }
