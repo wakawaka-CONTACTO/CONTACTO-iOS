@@ -287,6 +287,10 @@ final class LoginView: BaseView {
         }
     }
     
+    public func setExplain(description: String){
+        explain.text = description
+    }
+    
     @objc func eyeButtonTapped() {
         guard state == .pw || state == .pwError else { return }
         
