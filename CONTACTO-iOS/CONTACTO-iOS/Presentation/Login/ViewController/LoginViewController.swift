@@ -269,9 +269,9 @@ extension LoginViewController {
             
             self.updatePwd(bodyDTO: bodyDTO) { response in
                 if response {
-                    let mainTabBarViewController = MainTabBarViewController()
-                    mainTabBarViewController.homeViewController.isFirst = false
-                    self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+                    self.view.showToast(message: "Your Password is updated successfully!")
+                    let loginVC = LoginViewController()
+                    self.navigationController?.setViewControllers([loginVC], animated: false)
                 } else {
                     self.view.showToast(message: "Something went wrong. Try Again")
                 }
