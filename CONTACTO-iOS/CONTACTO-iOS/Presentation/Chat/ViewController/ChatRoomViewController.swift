@@ -479,10 +479,13 @@ extension ChatRoomViewController {
     
     
     func calculateCellCount() -> Int {
+        // 빈 배열 확인
+        guard !chatList.isEmpty else { return 0 }
+        
         var cellCount = 0
         
         for i in 0..<chatList.count {
-            if i == 0 || (chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
+            if i == 0 || (i > 0 && chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
                 cellCount += 1
             }
             cellCount += 1
@@ -496,16 +499,19 @@ extension ChatRoomViewController: UICollectionViewDelegate { }
 
 extension ChatRoomViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(calculateCellCount())
-        return calculateCellCount()
+        let count = calculateCellCount()
+        return count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // 빈 배열 확인
+        guard !chatList.isEmpty else { return UICollectionViewCell() }
+        
         var messageIndex = 0
         var cellCount = 0
         
         for i in 0..<chatList.count {
-            if i == 0 || (chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
+            if i == 0 || (i > 0 && chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
                 if cellCount == indexPath.row {
                     guard let dateCell = collectionView.dequeueReusableCell(
                         withReuseIdentifier: ChatRoomDateCollectionViewCell.className,
@@ -522,7 +528,10 @@ extension ChatRoomViewController: UICollectionViewDataSource {
             cellCount += 1
         }
         
-        if participants.contains(chatList[messageIndex].senderId) {
+        // 범위 확인
+        guard messageIndex < chatList.count else { return UICollectionViewCell() }
+        
+        if let senderId = chatList[messageIndex].senderId as? Int, participants.contains(senderId) {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ChatRoomYourCollectionViewCell.className,
                 for: indexPath) as? ChatRoomYourCollectionViewCell else { return UICollectionViewCell() }
@@ -540,11 +549,14 @@ extension ChatRoomViewController: UICollectionViewDataSource {
 
 extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        // 빈 배열 확인
+        guard !chatList.isEmpty else { return CGSize(width: SizeLiterals.Screen.screenWidth, height: 27) }
+        
         var messageIndex = 0
         var cellCount = 0
         
         for i in 0..<chatList.count {
-            if i == 0 || (chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
+            if i == 0 || (i > 0 && chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
                 if cellCount == indexPath.row {
                     return CGSize(width: SizeLiterals.Screen.screenWidth, height: 28.adjustedHeight)
                 }
