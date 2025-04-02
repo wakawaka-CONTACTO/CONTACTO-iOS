@@ -36,7 +36,7 @@ extension TargetType {
         case .refreshToken:
             return [
                 HTTPHeaderFieldKey.contentType.rawValue: HTTPHeaderFieldValue.json.rawValue,
-                HTTPHeaderFieldKey.authentication.rawValue: KeychainHandler.shared.refreshToken,
+                HTTPHeaderFieldKey.refreshtoken.rawValue: KeychainHandler.shared.refreshToken,
             ]
         }}
 }
@@ -64,9 +64,9 @@ extension TargetType {
         case .hasToken:
             urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
             urlRequest.setValue(KeychainHandler.shared.accessToken, forHTTPHeaderField: HTTPHeaderFieldKey.authentication.rawValue)
-        case.refreshToken:
+        case .refreshToken:
             urlRequest.setValue(HTTPHeaderFieldValue.json.rawValue, forHTTPHeaderField: HTTPHeaderFieldKey.contentType.rawValue)
-            urlRequest.setValue(KeychainHandler.shared.refreshToken, forHTTPHeaderField: HTTPHeaderFieldKey.authentication.rawValue)
+            urlRequest.setValue(KeychainHandler.shared.refreshToken, forHTTPHeaderField: HTTPHeaderFieldKey.refreshtoken.rawValue)
         }
         
         switch parameters {
