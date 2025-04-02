@@ -4,12 +4,6 @@
 //
 //  Created by 정채은 on 10/7/24.
 //
-//
-//  EditViewController.swift
-//  CONTACTO-iOS
-//
-//  Created by 정채은 on 10/7/24.
-//
 
 import UIKit
 import Kingfisher
@@ -214,7 +208,6 @@ final class EditViewController: UIViewController {
     // MARK: - Data Setup
     private func setData() {
         self.checkMyPort { _ in
-            self.originalPortfolioData = self.portfolioManager!.currentData
             self.checkTalentLayout()
             self.updateUI()
         }
@@ -249,6 +242,13 @@ final class EditViewController: UIViewController {
         }
         self.tappedStates = newTappedStates
         editView.purposeCollectionView.reloadData()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            self.editView.purposeCollectionView.layoutIfNeeded()
+            self.editView.purposeCollectionView.snp.updateConstraints {
+                $0.height.equalTo(self.editView.purposeCollectionView.contentSize.height)
+            }
+        }
     }
 
     
