@@ -153,7 +153,6 @@ extension LoginViewController {
                     self.loginView.mainTextField.text = ""
                     self.loginView.setLoginState(state: .pw)
                 } else {
-                    self.loginView.mainTextField.text = ""
                     self.loginView.setLoginState(state: .emailError)
                 }
             }
