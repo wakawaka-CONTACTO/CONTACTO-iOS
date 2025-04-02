@@ -126,7 +126,7 @@ final class HomeView: BaseView {
         }
         
         portView.snp.makeConstraints {
-            $0.height.equalTo(492.adjustedHeight)
+            $0.height.equalTo(SizeLiterals.Screen.screenWidth * 4/3)
             $0.top.equalTo(pageCollectionView.snp.bottom).offset(10.adjustedHeight)
             $0.leading.trailing.equalToSuperview()
             $0.width.equalToSuperview()

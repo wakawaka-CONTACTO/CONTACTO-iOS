@@ -214,7 +214,6 @@ final class EditViewController: UIViewController {
     // MARK: - Data Setup
     private func setData() {
         self.checkMyPort { _ in
-            self.originalPortfolioData = self.portfolioManager!.currentData
             self.checkTalentLayout()
             self.updateUI()
         }

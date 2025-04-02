@@ -156,6 +156,7 @@ final class InfoView: BaseView {
         
         topImageView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(10)
         }
         
         accountLabel.snp.makeConstraints {
