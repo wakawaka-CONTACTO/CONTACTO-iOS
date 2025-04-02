@@ -34,7 +34,7 @@ extension OnboardingTarget: TargetType {
         case .signHelp(_):
             return .unauthorization
         case .reissue:
-            return .authorization
+            return .reAuthorization
         case .emailExist(_):
             return .unauthorization
         case .updatePwd(_):
@@ -55,7 +55,7 @@ extension OnboardingTarget: TargetType {
         case .signHelp(_):
             return .plain
         case .reissue:
-            return .hasToken
+            return .refreshToken
         case .emailExist(_):
             return .plain
         case .updatePwd(_):
