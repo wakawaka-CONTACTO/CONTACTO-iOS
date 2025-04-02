@@ -24,12 +24,28 @@ final class ChatListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        
+        // 채팅방에서 돌아올 때 업데이트를 위한 옵저버 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshChatList), name: NSNotification.Name("RefreshChatList"), object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         currentPage = 0
+        chatRoomListData = []
+        hasNext = true
         setData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("ChatList: viewDidAppear - 채팅 리스트 화면 표시됨")
+        // 화면이 나타날 때마다 데이터 새로 로드
+        refreshChatList()
     }
     
     override func setNavigationBar() {
@@ -64,12 +80,28 @@ final class ChatListViewController: BaseViewController {
     }
     
     private func setData() {
-        self.chatRoomList(isFirstLoad: true) { _ in
+        self.chatRoomList(isFirstLoad: true) { [weak self] _ in
+            guard let self = self else { return }
             self.chatListView.chatListCollectionView.reloadData()
             self.chatListView.isHidden = self.chatRoomListData.isEmpty
             self.chatEmptyView.isHidden = !self.chatRoomListData.isEmpty
             self.isFirstLoad = false
+            
+            // 읽지 않은 메시지가 있는지 확인하고 탭바 아이콘 업데이트
+            self.updateTabBarIcon()
         }
+    }
+    
+    private func updateTabBarIcon() {
+        // 모든 채팅방에서 읽지 않은 메시지가 있는지 확인
+        let hasUnreadMessages = chatRoomListData.contains { $0.unreadMessageCount > 0 }
+        
+        // 상태 변경을 메인 탭바에 알림
+        NotificationCenter.default.post(
+            name: NSNotification.Name("newChatNotification"),
+            object: nil,
+            userInfo: ["hasUnreadMessages": hasUnreadMessages]
+        )
     }
     
     @objc private func pushToChatRoom() {
@@ -91,11 +123,23 @@ final class ChatListViewController: BaseViewController {
         chatRoomViewController.chatRoomThumbnail = chatRoomListData[indexPath.row].chatRoomThumbnail ?? ""
         self.navigationController?.pushViewController(chatRoomViewController, animated: true)
     }
+    
+    @objc private func refreshChatList() {
+        print("ChatList: refreshChatList 호출됨")
+        currentPage = 0
+        chatRoomListData = []
+        hasNext = true
+        setData()
+    }
 
     private func chatRoomList(isFirstLoad: Bool = false, completion: @escaping (Bool) -> Void) {
-        guard !isFetching, hasNext else { return }
+        guard !isFetching, hasNext else { 
+            completion(false)
+            return 
+        }
         isFetching = true
 
+        print("ChatList: API 호출 시작 - page: \(currentPage)")
         NetworkService.shared.chatService.chatRoomList(page: currentPage, size: pageSize) { [weak self] response in
             guard let self = self else { return }
 
@@ -103,16 +147,18 @@ final class ChatListViewController: BaseViewController {
             case .success(let data):
                 if isFirstLoad {
                     self.chatRoomListData = data.content
-                    self.isFetching = false
+                    print("ChatList: 첫 로드 데이터 개수 - \(data.content.count)")
                 } else {
                     self.chatRoomListData.append(contentsOf: data.content)
-                    self.isFetching = false
+                    print("ChatList: 추가 로드 데이터 개수 - \(data.content.count)")
                 }
 
                 self.hasNext = data.hasNext
                 self.currentPage += 1
+                self.isFetching = false
                 completion(true)
             default:
+                print("ChatList: API 호출 실패")
                 self.isFetching = false
                 completion(false)
             }

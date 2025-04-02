@@ -51,19 +51,25 @@ final class ChatRoomViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        print("ChatRoom: viewWillDisappear - 채팅방 나가기")
+        
         // 정상적인 종료를 위한 과정 추가
         if isConnected {
             // 먼저 구독 해제
             socketClient.unsubscribe(destination: "/topic/\(chatRoomId)")
+            print("ChatRoom: 소켓 구독 해제 - roomId: \(chatRoomId)")
             
             // 약간의 지연 후 연결 종료
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                self?.socketClient.disconnect()
+                guard let self = self else { return }
+                self.socketClient.disconnect()
+                print("ChatRoom: 소켓 연결 종료")
             }
         }
         
         // 채팅 목록 업데이트를 위한 알림 전송
         NotificationCenter.default.post(name: NSNotification.Name("RefreshChatList"), object: nil)
+        print("ChatRoom: RefreshChatList 알림 전송됨")
         
         self.removeKeyboardNotifications()
     }
@@ -397,6 +403,7 @@ extension ChatRoomViewController {
     }
     
     @objc private func backButtonTapped() {
+        print("ChatRoom: 뒤로가기 버튼 클릭")
         self.navigationController?.popViewController(animated: true)
     }
     
