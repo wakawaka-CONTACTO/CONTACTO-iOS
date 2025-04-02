@@ -331,6 +331,7 @@ extension LoginViewController {
                 self?.decodeEmail = data.decodeEmail
                 DispatchQueue.main.async {
                     self?.loginView.setLoginState(state: .findEmail)
+                    self?.loginView.mainTextField.text = data.decodeEmail
                 }
                 completion(true)
             case .failure(let error):
