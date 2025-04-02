@@ -51,18 +51,41 @@ final class ChatRoomViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        print("ChatRoom: viewWillDisappear - 채팅방 나가기")
+        
         // 정상적인 종료를 위한 과정 추가
         if isConnected {
             // 먼저 구독 해제
             socketClient.unsubscribe(destination: "/topic/\(chatRoomId)")
+            print("ChatRoom: 소켓 구독 해제 - roomId: \(chatRoomId)")
             
             // 약간의 지연 후 연결 종료
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                self?.socketClient.disconnect()
+                guard let self = self else { return }
+                self.socketClient.disconnect()
+                print("ChatRoom: 소켓 연결 종료")
             }
         }
         
+        // 채팅 목록 업데이트를 위한 알림 전송
+        NotificationCenter.default.post(name: NSNotification.Name("RefreshChatList"), object: nil)
+        print("ChatRoom: RefreshChatList 알림 전송됨")
+        
         self.removeKeyboardNotifications()
+    }
+    
+    deinit {
+        print("ChatRoomViewController deinit called")
+        // 소켓 연결 상태 확인 및 정리
+        if isConnected {
+            // 연결이 아직 남아있는 경우 정리 작업
+            socketClient.disconnect()
+            isConnected = false
+        }
+        
+        // 메모리에서 해제되기 전에 참조 정리
+        chatList.removeAll()
+        participants.removeAll()
     }
     
     override func setNavigationBar() {
@@ -170,6 +193,11 @@ final class ChatRoomViewController: BaseViewController {
     }
     
     func registerSocket() {
+        // 이미 연결된 상태라면 연결 시도하지 않음
+        if isConnected {
+            return
+        }
+        
         guard let url = URL(string: "\(Config.chatBaseURL)?userId=\(KeychainHandler.shared.userID)&accessToken=\(KeychainHandler.shared.accessToken)") else { return }
         let request = NSMutableURLRequest(url: url)
         request.setValue(KeychainHandler.shared.accessToken, forHTTPHeaderField: "Authorization")
@@ -195,7 +223,7 @@ final class ChatRoomViewController: BaseViewController {
         let newMessage = Message(
             content: content,
             senderId: Int(senderId) ?? 0,
-            sendedId: otherUserId,
+            sendedId: Int(participants.first ?? 0),
             createdAt: createdAt,
             readStatus: false)
         chatList.append(newMessage)
@@ -265,7 +293,10 @@ extension ChatRoomViewController: StompClientLibDelegate {
             #endif
             return
         }
-        DispatchQueue.main.async {
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, self.isConnected else { return }
+            
             self.chatList.append(message)
             self.chatRoomView.chatRoomCollectionView.reloadData()
             self.scrollToBottom()
@@ -372,6 +403,7 @@ extension ChatRoomViewController {
     }
     
     @objc private func backButtonTapped() {
+        print("ChatRoom: 뒤로가기 버튼 클릭")
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -394,14 +426,53 @@ extension ChatRoomViewController {
     
     @objc private func sendButtonTapped() {
         guard let messageText = chatRoomView.messageTextView.text, !messageText.isEmpty else { return }
-        sendMessage(messageText)
+        guard isConnected else { return }  // 연결 상태 확인
+        
+        self.content = messageText
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        formatter.timeZone = TimeZone(identifier: "Asia/Seoul") // KST 설정
+        
+        let currentDate = Date()
+        self.createdAt = formatter.string(from: currentDate)
+        
+        if let plusRange = createdAt.range(of: "+09:00") { // "+09:00" 오프셋 제거
+            self.createdAt.removeSubrange(plusRange)
+        }
+        
+        let newMessage = Message(
+            content: content,
+            senderId: Int(senderId) ?? 0,
+            sendedId: Int(participants.first ?? 0),  // 안전하게 접근
+            createdAt: createdAt,
+            readStatus: false)
+        
+        // 로컬 UI 업데이트
+        chatList.append(newMessage)
+        chatRoomView.chatRoomCollectionView.reloadData()
+        chatRoomView.messageTextView.text = ""
+        scrollToBottom()
+          
+        // 메시지 전송
+        if let messageData = try? JSONEncoder().encode(newMessage) {
+            var headers = ["Authorization": KeychainHandler.shared.accessToken]
+            headers["content-type"] = "application/json"
+            socketClient.sendMessage(
+                message: String(data: messageData, encoding: .utf8) ?? "",
+                toDestination: "/app/chat.send/\(chatRoomId)",
+                withHeaders: headers,
+                withReceipt: nil
+            )
+        }
     }
     
     private func scrollToBottom() {
         let itemCount = chatRoomView.chatRoomCollectionView.numberOfItems(inSection: 0)
         if itemCount > 0 {
             let indexPath = IndexPath(item: itemCount - 1, section: 0)
-            chatRoomView.chatRoomCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+            if indexPath.item < itemCount {
+                chatRoomView.chatRoomCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+            }
         }
     }
     
@@ -415,10 +486,13 @@ extension ChatRoomViewController {
     
     
     func calculateCellCount() -> Int {
+        // 빈 배열 확인
+        guard !chatList.isEmpty else { return 0 }
+        
         var cellCount = 0
         
         for i in 0..<chatList.count {
-            if i == 0 || (chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
+            if i == 0 || (i > 0 && chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
                 cellCount += 1
             }
             cellCount += 1
@@ -432,16 +506,19 @@ extension ChatRoomViewController: UICollectionViewDelegate { }
 
 extension ChatRoomViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(calculateCellCount())
-        return calculateCellCount()
+        let count = calculateCellCount()
+        return count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // 빈 배열 확인
+        guard !chatList.isEmpty else { return UICollectionViewCell() }
+        
         var messageIndex = 0
         var cellCount = 0
         
         for i in 0..<chatList.count {
-            if i == 0 || (chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
+            if i == 0 || (i > 0 && chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
                 if cellCount == indexPath.row {
                     guard let dateCell = collectionView.dequeueReusableCell(
                         withReuseIdentifier: ChatRoomDateCollectionViewCell.className,
@@ -458,7 +535,10 @@ extension ChatRoomViewController: UICollectionViewDataSource {
             cellCount += 1
         }
         
-        if participants.contains(chatList[messageIndex].senderId) {
+        // 범위 확인
+        guard messageIndex < chatList.count else { return UICollectionViewCell() }
+        
+        if let senderId = chatList[messageIndex].senderId as? Int, participants.contains(senderId) {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ChatRoomYourCollectionViewCell.className,
                 for: indexPath) as? ChatRoomYourCollectionViewCell else { return UICollectionViewCell() }
@@ -476,11 +556,14 @@ extension ChatRoomViewController: UICollectionViewDataSource {
 
 extension ChatRoomViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        // 빈 배열 확인
+        guard !chatList.isEmpty else { return CGSize(width: SizeLiterals.Screen.screenWidth, height: 27) }
+        
         var messageIndex = 0
         var cellCount = 0
         
         for i in 0..<chatList.count {
-            if i == 0 || (chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
+            if i == 0 || (i > 0 && chatList[i].createdAt.isDateDifferent(from: chatList[i - 1].createdAt) == true) {
                 if cellCount == indexPath.row {
                     return CGSize(width: SizeLiterals.Screen.screenWidth, height: 28.adjustedHeight)
                 }

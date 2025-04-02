@@ -67,9 +67,11 @@ final class MainTabBarViewController: UITabBarController {
         guard let chatTab = tabsList[1].tabBarItem else { return }
         
         if hasChatNotification {
+            print("TabBar: 채팅 아이콘 변경 - 읽지 않은 메시지 있음 (chatnew)")
             chatTab.image = UIImage(resource: .chatnew)
             chatTab.selectedImage = UIImage(resource: .chatnewSelected).withRenderingMode(.alwaysOriginal)
         } else {
+            print("TabBar: 채팅 아이콘 변경 - 읽지 않은 메시지 없음 (chat)")
             chatTab.image = UIImage(resource: .chat)
             chatTab.selectedImage = UIImage(resource: .chatSelected).withRenderingMode(.alwaysOriginal)
         }
@@ -124,11 +126,21 @@ final class MainTabBarViewController: UITabBarController {
     
     @objc private func handleChatNotification(_ notification: Notification) {
         if let unreadCount = notification.userInfo?["hasUnreadMessages"] as? Bool {
+            print("TabBar: 채팅 알림 상태 업데이트 - 읽지 않은 메시지: \(unreadCount)")
             hasChatNotification = unreadCount
         }
     }
 }
 
 extension MainTabBarViewController: UITabBarControllerDelegate {
-    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        print("TabBar: 탭 선택됨 - 인덱스: \(tabBarController.selectedIndex)")
+        
+        // 채팅 탭(인덱스 1)이 선택되었을 때 데이터 새로고침
+        if tabBarController.selectedIndex == 1, let navController = viewController as? UINavigationController,
+           let chatListVC = navController.topViewController as? ChatListViewController {
+            print("TabBar: 채팅 탭 선택됨 - 새로고침 요청")
+            NotificationCenter.default.post(name: NSNotification.Name("RefreshChatList"), object: nil)
+        }
+    }
 }
