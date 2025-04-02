@@ -257,6 +257,7 @@ final class LoginView: BaseView {
             mainTextField.isError = false
             forgetEmailButton.isHidden = true
             mainTextField.eyeButton.isHidden = true
+            explain.text = ""
             
         case .pwForget:
             newAccountButton.isHidden = true
@@ -270,6 +271,7 @@ final class LoginView: BaseView {
             descriptionLabel.text = StringLiterals.Login.sendCode
             mainTextField.isError = false
             forgetEmailButton.isHidden = true
+            explain.text = ""
             
         case .findEmail:
             newAccountButton.isHidden = true
@@ -284,6 +286,7 @@ final class LoginView: BaseView {
             mainTextField.isError = false
             forgetEmailButton.isHidden = true
             mainTextField.eyeButton.isHidden = true
+            explain.text = ""
         }
     }
     
