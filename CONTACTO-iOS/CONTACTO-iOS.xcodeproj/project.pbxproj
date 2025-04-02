@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		26334F852D9D0A7200818CB9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 26334F842D9D07EF00818CB9 /* GoogleService-Info.plist */; };
+		2633502D2D9D390300818CB9 /* AmplitudeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2633502C2D9D390300818CB9 /* AmplitudeSwift */; };
 		26434AC82D82D604000FB7AE /* Nationality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26434AC72D82D604000FB7AE /* Nationality.swift */; };
 		26DEC0212D806D0B00667450 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEC0202D806D0B00667450 /* EmptyResponse.swift */; };
 		330688D32D82D7F400BD34EA /* ReportRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */; };
@@ -329,6 +330,11 @@
 			path = PortfolioItem;
 			sourceTree = "<group>";
 		};
+		263350202D9D352E00818CB9 /* Amplitude */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Amplitude;
+			sourceTree = "<group>";
+		};
 		26B59E7E2D96408A00B4E01B /* DTO */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = DTO;
@@ -354,6 +360,7 @@
 				C3FD904E2C913EC40021D2BA /* SnapKit in Frameworks */,
 				C3FD90512C913ECD0021D2BA /* Then in Frameworks */,
 				C32D06F52CE633260016F497 /* Kingfisher in Frameworks */,
+				2633502D2D9D390300818CB9 /* AmplitudeSwift in Frameworks */,
 				52259755595FA388540C3A24 /* Pods_CONTACTO_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -975,6 +982,7 @@
 		C3FD90572C913FC10021D2BA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				263350202D9D352E00818CB9 /* Amplitude */,
 				C3FD90872C9160F30021D2BA /* Font */,
 				C33D73D92CDEEF4900889B1B /* Config.swift */,
 				C3FD90412C9139D70021D2BA /* Assets.xcassets */,
@@ -1137,6 +1145,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				261111FB2D895D8000D481E2 /* PortfolioItem */,
+				263350202D9D352E00818CB9 /* Amplitude */,
 				26B59E7E2D96408A00B4E01B /* DTO */,
 				26BBF5E62D8432830089E60C /* Alert */,
 			);
@@ -1150,6 +1159,7 @@
 				ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */,
 				ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */,
 				ACAC3E1E2D8413640001B069 /* FirebaseMessaging */,
+				2633502C2D9D390300818CB9 /* AmplitudeSwift */,
 			);
 			productName = "CONTACTO-iOS";
 			productReference = C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */;
@@ -1185,6 +1195,7 @@
 				C34C1F542CE38E2800F94BCD /* XCRemoteSwiftPackageReference "Alamofire" */,
 				C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				2633502B2D9D390300818CB9 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C3FD90362C9139D40021D2BA /* Products */;
@@ -1628,6 +1639,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2633502B2D9D390300818CB9 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amplitude/Amplitude-Swift";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -1679,6 +1698,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2633502C2D9D390300818CB9 /* AmplitudeSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2633502B2D9D390300818CB9 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */;
+			productName = AmplitudeSwift;
+		};
 		ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
