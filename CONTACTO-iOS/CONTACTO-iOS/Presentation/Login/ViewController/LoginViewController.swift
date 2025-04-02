@@ -195,7 +195,15 @@ extension LoginViewController {
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
         }
         case .pwForget:
-            sendCode()
+            emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
+                if self.isExistEmail {
+                    self.sendCode()
+                } else {
+                    self.loginView.setExplain(description: "Cannot find your email.")
+                    self.loginView.mainTextField.text = ""
+                    self.loginView.setLoginState(state: .pwForget)
+                }
+            }
             
         case .findEmail:
             loginView.mainTextField.text = ""
