@@ -210,6 +210,7 @@ extension LoginViewController {
     
     @objc func helpEmailButtonTapped() {
         loginView.mainTextField.text = ""
+        self.decodeEmail = ""
         loginView.setLoginState(state: .emailForget)
     }
     
