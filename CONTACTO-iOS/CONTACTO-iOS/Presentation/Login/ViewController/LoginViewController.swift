@@ -224,17 +224,7 @@ extension LoginViewController {
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
     }
-    
-    @objc func backButtonTapped() {
-        loginView.mainTextField.text = self.email
-        loginView.setLoginState(state: .email)
-        if !self.email.isEmpty && self.email.isValidEmail() {
-            self.loginView.continueButton.isEnabled = true
-        } else {
-            self.loginView.continueButton.isEnabled = false
-        }
-    }
-    
+
     @objc private func codeVerifyButtonTapped() {
         emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
             if response {
@@ -514,5 +504,10 @@ extension LoginViewController: UITextFieldDelegate {
 extension LoginViewController: EmailCodeViewDelegate {
     @objc func timerDidFinish(_ view: EmailCodeView) {
         sendCode()
+    }
+    
+    @objc internal func backButtonTapped() {
+        let loginVC = LoginViewController()
+        self.navigationController?.setViewControllers([loginVC], animated: false)
     }
 }
