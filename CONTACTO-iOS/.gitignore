@@ -59,3 +59,5 @@ playground.xcworkspace/
 # 알림 관련
 GoogleService-Info.plist
 GoogleService-Info
+
+**/Resources/Assets.xcassets/**

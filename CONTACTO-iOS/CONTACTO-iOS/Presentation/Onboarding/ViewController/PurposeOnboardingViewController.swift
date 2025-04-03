@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class PurposeOnboardingViewController: BaseViewController {
+final class PurposeOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     private let purposeOnboardingView = PurposeOnboardingView()
     
@@ -22,6 +22,7 @@ final class PurposeOnboardingViewController: BaseViewController {
     
     override func setLayout() {
         view.addSubviews(purposeOnboardingView)
+        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING2)
         
         purposeOnboardingView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -34,6 +35,8 @@ final class PurposeOnboardingViewController: BaseViewController {
     
     @objc private func nextButtonTapped() {
         UserInfo.shared.userPurposes = purposeOnboardingView.selectedPurpose
+        var purpose_count =  purposeOnboardingView.selectedPurpose.count
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING2_NEXT, properties: ["purpose_count": purpose_count])
         let explainOnboardingViewController = ExplainOnboardingViewController()
         self.navigationController?.pushViewController(explainOnboardingViewController, animated: true)
     }
