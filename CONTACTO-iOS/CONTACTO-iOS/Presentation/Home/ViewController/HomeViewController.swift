@@ -430,16 +430,16 @@ extension HomeViewController {
             if !self.isUndo {
                 self.recommendedPortfolioIdx += 1
             }
-            self.setProfile()
             if !self.isPreview{
-                self.portfolioImageIdx = 0
-                self.isAnimating = false
+                self.setProfile()
                 self.isMatch = false
                 if self.isUndo {
                     self.lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
                 }
                 self.isUndo = false
             }
+            self.isAnimating = false
+            self.portfolioImageIdx = 0
         }
     }
     
