@@ -132,10 +132,7 @@ final class ChatRoomViewController: BaseViewController {
             self.scrollToBottom()
             self.isFirstLoad = false
             
-            if self.isFirstMatch {
-                self.sendMessage(self.content)
-                self.isFirstMatch = false
-            }
+            
         }
     }
     
@@ -321,6 +318,12 @@ extension ChatRoomViewController: StompClientLibDelegate {
         var headers = ["Authorization": KeychainHandler.shared.accessToken]
         headers["id"] = "sub-\(chatRoomId)"
         socketClient.subscribeWithHeader(destination: "/topic/\(chatRoomId)", withHeader: headers)
+        
+        // 매치 직후 메시지 전송
+        if self.isFirstMatch {
+            self.sendMessage(self.content)
+            self.isFirstMatch = false
+        }
     }
     
     func serverDidSendError(client: StompClientLib, withErrorMessage description: String, detailedErrorMessage message: String?) {
