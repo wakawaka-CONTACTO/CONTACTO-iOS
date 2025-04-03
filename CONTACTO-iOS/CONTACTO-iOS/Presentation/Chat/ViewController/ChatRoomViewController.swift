@@ -123,16 +123,14 @@ final class ChatRoomViewController: BaseViewController {
         chatRoomView.nameLabel.text = chatRoomTitle
         if !self.chatRoomThumbnail.isEmpty,
            let imageUrl = URL(string: self.chatRoomThumbnail) {
-            self.chatRoomView.profileImageButton.kf.setBackgroundImage(with: imageUrl, for: .normal)
+            self.chatRoomView.profileImageButton.kf.setImage(with: imageUrl, for: .normal)
         } else {
-            self.chatRoomView.profileImageButton.setBackgroundImage(UIImage(named: "defaultProfile"), for: .normal)
+            self.chatRoomView.profileImageButton.setImage(UIImage(named: "defaultProfile"), for: .normal)
         }
         chatMessages(isFirstLoad: true) { _ in
             self.chatRoomView.chatRoomCollectionView.reloadData()
             self.scrollToBottom()
             self.isFirstLoad = false
-            
-            
         }
     }
     

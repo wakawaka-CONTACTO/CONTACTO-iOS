@@ -36,6 +36,7 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
         profileImageView.do {
             $0.setRoundBorder(borderColor: .clear, borderWidth: 0, cornerRadius: 35)
             $0.backgroundColor = .ctblack
+            $0.contentMode = .scaleAspectFill
             $0.clipsToBounds = true
         }
         
