@@ -56,6 +56,8 @@ public enum EventName: String {
     case VIEW_RESET_PASSWORD
     case VIEW_INPUT_NAME
     case VIEW_HOME
+    case VIEW_HOME_TUTORIAL
+    case VIEW_MATCH
 
     case CLICK_LOGIN_CONTINUE
     case CLICK_LOGIN_CREATE
@@ -142,6 +144,10 @@ extension EventName {
             return "Input your Profile name (이메일 찾기 버튼 후 진입된) 뷰"
         case .VIEW_HOME:
             return "로그인 이후 보여진 홈 뷰"
+        case .VIEW_HOME_TUTORIAL:
+            return "홈 화면의 튜토리얼 확인 시"
+        case .VIEW_MATCH:
+            return "match 화면 떴을 때"
             
             
         case .CLICK_LOGIN_CONTINUE:

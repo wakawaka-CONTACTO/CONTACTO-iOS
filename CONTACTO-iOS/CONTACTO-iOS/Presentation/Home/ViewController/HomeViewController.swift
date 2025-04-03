@@ -11,7 +11,7 @@ import Kingfisher
 import SnapKit
 import Then
 
-final class HomeViewController: BaseViewController {
+final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     var isFirst = false /// 튜토리얼 필요 유무
     let tutorialImageDummy: [UIImage] = [.imgTutorial1, .imgTutorial2, .imgTutorial3, .imgTutorial4]
@@ -58,7 +58,6 @@ final class HomeViewController: BaseViewController {
     let homeView = HomeView()
     let homeEmptyView = HomeEmptyView()
     
-    let amplitude = HomeAmplitudeSender()
     private func setAmplitudeUserProperties(){
         var metaProperties = UserPropertyMetadata(homeYesCount: 0, homeNoCount: 0, chatroomCount: 0, pushNotificationConsent: false) // todo 추후 값 수정하고 반영
         let userProperty = UserPropertiesInfo.from(previewPortfolioData, metadata:
@@ -79,7 +78,7 @@ final class HomeViewController: BaseViewController {
             object: nil
         )
         setAmplitudeUserProperties()
-        amplitude.sendAmpliLog(eventName: EventName.VIEW_HOME)
+        sendAmpliLog(eventName: EventName.VIEW_HOME)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -160,6 +159,7 @@ final class HomeViewController: BaseViewController {
         if isFirst {
             let tutorialTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tutorialTap(_:)))
             tutorialView.addGestureRecognizer(tutorialTapGestureRecognizer)
+            self.sendAmpliLog(eventName: EventName.VIEW_HOME_TUTORIAL)
         } else {
             homeView.isHidden = false
             tutorialView.removeFromSuperview()

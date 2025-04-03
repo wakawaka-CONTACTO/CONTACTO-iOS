@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class HomeView: BaseView {
+final class HomeView: BaseView, HomeAmplitudeSender{
     lazy var pageCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: pageFlowLayout
@@ -32,6 +32,7 @@ final class HomeView: BaseView {
     
     override func setStyle() {
         self.backgroundColor = .ctblack
+        self.sendAmpliLog(eventName: EventName.VIEW_HOME)
         
         pageCollectionView.do {
             $0.backgroundColor = .clear
