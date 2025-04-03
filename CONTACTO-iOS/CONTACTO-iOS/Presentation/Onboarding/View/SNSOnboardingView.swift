@@ -21,7 +21,7 @@ final class SNSOnboardingView: BaseView {
     private let instaAtLabel = UILabel()
     
     private let websiteLabel = UILabel()
-    let websiteTextField = BaseTextField()
+    let websiteTextField = UITextField()
 
     private let nationalityLabel = UILabel()
     let nationalityTextField = BaseTextField()
@@ -99,6 +99,7 @@ final class SNSOnboardingView: BaseView {
             $0.autocapitalizationType = .none
             $0.addPadding(left: 10)
             $0.text = "https://"
+            $0.delegate = self
         }
         
         nationalityLabel.do {
@@ -235,5 +236,29 @@ extension SNSOnboardingView: UITextFieldDelegate {
         if textField == nationalityTextField {
             nextButton.isHidden = false
         }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == websiteTextField {
+            // 이모지 체크
+            for scalar in string.unicodeScalars {
+                switch scalar.value {
+                case 0x1F600...0x1F64F, // Emoticons
+                     0x1F300...0x1F5FF, // Misc Symbols and Pictographs
+                     0x1F680...0x1F6FF, // Transport and Map
+                     0x1F1E6...0x1F1FF, // Regional country flags
+                     0x2600...0x26FF,   // Misc symbols
+                     0x2700...0x27BF,   // Dingbats
+                     0xFE00...0xFE0F,   // Variation Selectors
+                     0x1F900...0x1F9FF, // Supplemental Symbols and Pictographs
+                     0x1F018...0x1F270: // Various asian characters
+                    return false
+                default:
+                    continue
+                }
+            }
+            return true
+        }
+        return true
     }
 }
