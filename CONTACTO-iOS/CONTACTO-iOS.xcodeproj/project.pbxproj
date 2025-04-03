@@ -943,6 +943,7 @@
 				C3E88C6D2C92781D005A19BE /* Components */,
 				C3FD90552C913FA10021D2BA /* Extensions */,
 				C3FD90562C913FAA0021D2BA /* Literals */,
+				C3FD90572C913FC10021D2BA /* Resources */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -1056,7 +1057,6 @@
 				C3FD90802C915E870021D2BA /* LoginView.swift */,
 				C3E6D90D2CFAC7B500D6ABDC /* SignUpView.swift */,
 				C3E6D90F2CFAD27E00D6ABDC /* EmailCodeView.swift */,
-				C3FD90572C913FC10021D2BA /* Resources */,
 				C3E6D9132CFADC9200D6ABDC /* SetPassWordView.swift */,
 			);
 			path = View;
