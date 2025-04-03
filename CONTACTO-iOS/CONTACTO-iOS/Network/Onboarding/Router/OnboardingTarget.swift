@@ -18,6 +18,7 @@ enum OnboardingTarget {
     case reissue
     case emailExist(_ queryDTO: EmailExistRequestQueryDTO)
     case updatePwd(_ bodyDTO: LoginRequestBodyDTO)
+    case invalidateEmailCode(_ bodyDTO: CodeTimeOverRequest)
 }
 
 extension OnboardingTarget: TargetType {
@@ -38,6 +39,8 @@ extension OnboardingTarget: TargetType {
         case .emailExist(_):
             return .unauthorization
         case .updatePwd(_):
+            return .authorization
+        case .invalidateEmailCode(_):
             return .unauthorization
         }
     }
@@ -59,6 +62,8 @@ extension OnboardingTarget: TargetType {
         case .emailExist(_):
             return .plain
         case .updatePwd(_):
+            return .hasToken
+        case .invalidateEmailCode(_):
             return .plain
         }
     }
@@ -81,6 +86,8 @@ extension OnboardingTarget: TargetType {
             return .get
         case .updatePwd(_):
             return .patch
+        case .invalidateEmailCode(_):
+            return .patch
         }
     }
     
@@ -102,6 +109,8 @@ extension OnboardingTarget: TargetType {
             return "/v1/users/me/email"
         case .updatePwd:
             return "/v1/users/me/pwd"
+        case .invalidateEmailCode:
+            return "/v1/auth/email"
         }
     }
     
@@ -122,6 +131,8 @@ extension OnboardingTarget: TargetType {
         case .emailExist(let queryDTO):
             return .requestQuery(queryDTO)
         case .updatePwd(let bodyDTO):
+            return .requestWithBody(bodyDTO)
+        case .invalidateEmailCode(let bodyDTO):
             return .requestWithBody(bodyDTO)
         }
     }
