@@ -57,9 +57,8 @@ final class HomeViewController: BaseViewController {
     
     let homeView = HomeView()
     let homeEmptyView = HomeEmptyView()
+    
     let amplitude = HomeAmplitudeSender()
-    
-    
     private func setAmplitudeUserProperties(){
         var metaProperties = UserPropertyMetadata(homeYesCount: 0, homeNoCount: 0, chatroomCount: 0, pushNotificationConsent: false) // todo 추후 값 수정하고 반영
         let userProperty = UserPropertiesInfo.from(previewPortfolioData, metadata:

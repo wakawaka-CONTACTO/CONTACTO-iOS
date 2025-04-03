@@ -54,7 +54,7 @@ public enum EventName: String {
     case VIEW_SET_PASSWORD
     case VIEW_SEND_CODE
     case VIEW_RESET_PASSWORD
-    case VIEW_INPIT_NAME
+    case VIEW_INPUT_NAME
     case VIEW_HOME
 
     case CLICK_LOGIN_CONTINUE
@@ -138,7 +138,7 @@ extension EventName {
             return "Send a verification code 뷰"
         case .VIEW_RESET_PASSWORD:
             return "Reset Password 뷰"
-        case .VIEW_INPIT_NAME:
+        case .VIEW_INPUT_NAME:
             return "Input your Profile name (이메일 찾기 버튼 후 진입된) 뷰"
         case .VIEW_HOME:
             return "로그인 이후 보여진 홈 뷰"
