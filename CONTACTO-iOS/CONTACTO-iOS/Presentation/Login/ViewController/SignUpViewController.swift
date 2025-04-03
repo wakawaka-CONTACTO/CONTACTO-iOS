@@ -101,6 +101,7 @@ final class SignUpViewController: UIViewController {
         emailCodeView.resendButton.addTarget(self, action: #selector(sendCode), for: .touchUpInside)
         
         setPWView.continueButton.addTarget(self, action: #selector(pwContinueButton), for: .touchUpInside)
+        amplitude.sendAmpliLog(eventName: EventName.VIEW_SIGNUP)
     }
     
     private func setDelegate() {
