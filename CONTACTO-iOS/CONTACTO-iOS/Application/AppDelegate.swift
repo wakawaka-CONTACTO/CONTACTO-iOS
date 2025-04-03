@@ -9,6 +9,7 @@ import UIKit
 import FirebaseCore
 import FirebaseMessaging
 import FirebaseAnalytics
+import AmplitudeSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -32,6 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           )
         
         UIApplication.shared.registerForRemoteNotifications()
+        let configuration = Configuration(apiKey: Config.amplitudeApiKey, autocapture: .appLifecycles)
+        AmplitudeManager.amplitude = Amplitude(configuration: configuration)
         
         return true
     }

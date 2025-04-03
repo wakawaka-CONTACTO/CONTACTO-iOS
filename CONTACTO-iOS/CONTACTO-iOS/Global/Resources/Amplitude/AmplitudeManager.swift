@@ -9,12 +9,6 @@ import Foundation
 import AmplitudeSwift
 
 public struct AmplitudeManager{
-//    static public let amplitude = Amplitude(configuration: Configuration(
-//        apiKey: Config.amplitudeApiKey,
-//        defaultTracking: DefaultTrackingOptions(
-//            sessions: true
-//        )
-//    ))
     static public var amplitude: Amplitude!
     
     private init(){}
@@ -27,7 +21,7 @@ extension Amplitude {
             "view": eventInfo.eventView.rawValue,
             "trigger": eventInfo.trigger
         ]
-        
+        print("[LOG] amplitude track \(properties)")
         AmplitudeManager.amplitude.track(eventType: eventType, eventProperties: properties)
     }
     

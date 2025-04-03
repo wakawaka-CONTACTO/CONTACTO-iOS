@@ -28,6 +28,8 @@ final class LoginViewController: UIViewController {
     var purpose =  EmailSendPurpose.signup
     weak var delegate: EmailCodeViewDelegate?
     
+    let amplitude = LoginAmplitudeSender()    
+    
     // 로딩 인디케이터: 전체 화면 오버레이
     private var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)

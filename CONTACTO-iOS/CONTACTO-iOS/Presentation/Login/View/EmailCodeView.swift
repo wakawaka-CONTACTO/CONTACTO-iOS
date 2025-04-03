@@ -31,7 +31,8 @@ final class EmailCodeView: BaseView {
     private var timer: Timer?
     weak var delegate: EmailCodeViewDelegate?
     let backButton = UIButton()
-    
+    let amplitude = LoginAmplitudeSender()
+
     public func setFail(){
         explainContents = "THIS CODE IS INVALID. ENTER CORRECT CODE."
         explain.text = explainContents
@@ -172,6 +173,7 @@ final class EmailCodeView: BaseView {
     
     override func setAddTarget() {
         backButton.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
+        amplitude.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE)
     }
     
     @objc private func backButtonDidTap() {
