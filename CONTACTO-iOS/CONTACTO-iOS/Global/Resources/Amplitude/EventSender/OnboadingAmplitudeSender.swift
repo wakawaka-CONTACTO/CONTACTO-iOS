@@ -6,21 +6,6 @@
 //
 
 import Foundation
-class OnbodingAmplitudeSender: EventAmplitudeSender {
-    
-    public func sendAmpliLog(eventName: EventName){
-        let info = EventInfo(event: EventView.ONBOARDING, eventName: eventName)
-        
-        AmplitudeManager.amplitude.track(eventInfo: info)
-    }
-
-    public func sendAmpliLog(eventName: EventName, properties: [String: Any]){
-        let info = EventInfo(event: EventView.ONBOARDING, eventName: eventName)
-        
-        AmplitudeManager.amplitude.track(eventInfo: info, properties: properties)
-    }
-}
-
 
 public protocol OnboadingAmplitudeSender: EventAmplitudeSender{
     func sendAmpliLog(eventName: EventName)

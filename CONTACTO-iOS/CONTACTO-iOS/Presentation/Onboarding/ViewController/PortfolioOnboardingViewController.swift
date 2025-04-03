@@ -44,14 +44,13 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
     }
     
     @objc private func nextButtonTapped() {
-        let portfolio_count = UserInfo.shared.portfolioImageUrl.count
-        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING6_NEXT, properties: ["portfolio_count" : portfolio_count])
-
         isLoading = true
         portfolioOnboardingView.nextButton.isEnabled = false
         UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
         let deviceType = UIDevice.current.model
+        let portfolio_count = UserInfo.shared.portfolioImageUrl.count
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING6_NEXT, properties: ["portfolio_count" : portfolio_count])
         
         Messaging.messaging().token { firebaseToken, error in
             guard let firebaseToken = firebaseToken else {
@@ -82,6 +81,7 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
                     let mainTabBarViewController = MainTabBarViewController()
                     mainTabBarViewController.homeViewController.isFirst = true
                     self.navigationController?.pushViewController(mainTabBarViewController, animated: true)
+                    
                 } else {
                     let alertController = UIAlertController(
                         title: "Error",
