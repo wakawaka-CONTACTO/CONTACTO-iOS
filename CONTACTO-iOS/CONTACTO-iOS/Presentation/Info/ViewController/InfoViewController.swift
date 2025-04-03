@@ -99,6 +99,7 @@ extension InfoViewController {
             sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
         }
         
+        AmplitudeManager.amplitude.reset()
         alert.addAction(cancel)
         alert.addAction(success)
         present(alert, animated: true)
