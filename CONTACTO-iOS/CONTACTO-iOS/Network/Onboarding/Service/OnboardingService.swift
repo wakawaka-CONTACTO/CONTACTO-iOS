@@ -24,6 +24,8 @@ protocol OnboardingServiceProtocol {
     func emailExist(queryDTO: EmailExistRequestQueryDTO, completion: @escaping (NetworkResult<EmailExistResponseDTO>) -> Void)
     
     func updatePwd(bodyDTO: LoginRequestBodyDTO, completion: @escaping (NetworkResult<ResetPasswordResponseDTO>) -> Void)
+    
+    func invalidateEmailCode(bodyDTO: CodeTimeOverRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
 }
 
 final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingServiceProtocol {
@@ -58,5 +60,9 @@ final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingSer
     
     func updatePwd(bodyDTO: LoginRequestBodyDTO, completion: @escaping (NetworkResult<ResetPasswordResponseDTO>) -> Void) {
         fetchData(target: .updatePwd(bodyDTO), responseData: ResetPasswordResponseDTO.self, completion: completion)
+    }
+    
+    func invalidateEmailCode(bodyDTO: CodeTimeOverRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void) {
+        fetchData(target: .invalidateEmailCode(bodyDTO), responseData: EmptyResponse.self, completion: completion)
     }
 }
