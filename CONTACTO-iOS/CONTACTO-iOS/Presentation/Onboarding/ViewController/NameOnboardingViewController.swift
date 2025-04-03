@@ -10,16 +10,14 @@ import UIKit
 import SnapKit
 import Then
 
-final class NameOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
+final class NameOnboardingViewController: BaseViewController {
     
     private let nameOnboardingView = NameOnboardingView()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.addKeyboardNotifications()
-        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING1)
     }
-    
     override func viewWillDisappear(_ animated: Bool) {
         self.removeKeyboardNotifications()
     }
@@ -96,7 +94,6 @@ extension NameOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
-        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING1_NEXT)
         let name = nameOnboardingView.nameTextField.text ?? ""
             
         if !isValidName(name) {

@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class ExplainOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
+final class ExplainOnboardingViewController: BaseViewController {
     
     let explainOnboardingView = ExplainOnboardingView()
     var explain = ""
@@ -18,7 +18,6 @@ final class ExplainOnboardingViewController: BaseViewController, OnboadingAmplit
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.addKeyboardNotifications()
-        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING3)
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.removeKeyboardNotifications()
@@ -89,7 +88,6 @@ extension ExplainOnboardingViewController {
     
     @objc private func nextButtonTapped() {
         UserInfo.shared.description = explainOnboardingView.explainTextView.text ?? ""
-        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING3_NEXT)
         let SNSOnboardingViewController = SNSOnboardingViewController()
         self.navigationController?.pushViewController(SNSOnboardingViewController, animated: true)
     }

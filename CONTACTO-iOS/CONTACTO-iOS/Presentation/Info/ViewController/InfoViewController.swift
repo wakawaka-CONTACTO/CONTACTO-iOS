@@ -111,26 +111,11 @@ extension InfoViewController {
         
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         
-        let notYet = UIAlertAction(title: StringLiterals.Info.Alert.Delete.notYet, style: .default){ action in
+        let success = UIAlertAction(title: StringLiterals.Info.Alert.Delete.notYet, style: .default){ action in
             print("취소 버튼이 눌렸습니다.")
         }
         
-        let yes = UIAlertAction(title: StringLiterals.Info.Alert.Delete.yes, style: .destructive){ cancel in
-            self.showFinalDeleteConfirmation()
-        }
-        
-        alert.addAction(notYet)
-        alert.addAction(yes)
-        present(alert, animated: true)
-    }
-    
-    private func showFinalDeleteConfirmation() {
-        let title = StringLiterals.Info.Alert.Delete.finalTitle
-        let description = StringLiterals.Info.Alert.Delete.finalDescription
-        
-        let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
-        
-        let delete = UIAlertAction(title: StringLiterals.Info.Alert.Delete.delete, style: .destructive) { _ in
+        let cancel = UIAlertAction(title: StringLiterals.Info.Alert.Delete.delete, style: .destructive){ cancel in
             self.deleteMe { _ in
                 KeychainHandler.shared.accessToken.removeAll()
                 KeychainHandler.shared.refreshToken.removeAll()
@@ -139,17 +124,15 @@ extension InfoViewController {
             }
         }
         
-        let cancle = UIAlertAction(title: StringLiterals.Info.Alert.Delete.cancel, style: .cancel)
-        
-        alert.addAction(delete)
-        alert.addAction(cancle)
+        alert.addAction(success)
+        alert.addAction(cancel)
         present(alert, animated: true)
     }
     
     private func deleteMe(completion: @escaping (Bool) -> Void) {
         NetworkService.shared.infoService.deleteMe() { response in
             switch response {
-            case .success(_):
+            case .success(let data):
                 completion(true)
             default:
                 completion(false)

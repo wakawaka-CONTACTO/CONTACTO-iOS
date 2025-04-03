@@ -204,12 +204,8 @@ enum StringLiterals {
             
             enum Delete {
                 static let deleteTitle = "Delete Account"
-                static let deleteDescription = "Are you sure you want to\ndelete your account?\nWARNING: This cannot be undone."
-                static let notYet = "Not, yet"
-                static let yes = "Yes"
-                static let finalTitle = "Are you sure?"
-                static let finalDescription = "Deleting your account will remove all of\nyour information from our database.\nThis cannot be undone."
-                static let cancel = "Cancel"
+                static let deleteDescription = "Deleting your account will remove all of\nyour information from our database.\nThis cannot be undone."
+                static let notYet = "Not yet"
                 static let delete = "Delete"
             }
         }
