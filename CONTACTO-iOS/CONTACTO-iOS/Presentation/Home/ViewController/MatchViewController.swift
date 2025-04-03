@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class MatchViewController: BaseViewController {
+final class MatchViewController: BaseViewController, HomeAmplitudeSender {
     var greet: [Int] = [] {
         didSet {
             matchView.textCollectionView.reloadData()
@@ -33,6 +33,7 @@ final class MatchViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         matchView.textCollectionView.reloadData()
+        self.sendAmpliLog(eventName: EventName.VIEW_MATCH)
     }
     
     override func setNavigationBar() {

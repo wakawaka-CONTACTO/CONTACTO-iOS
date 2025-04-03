@@ -11,7 +11,7 @@ import Kingfisher
 import SnapKit
 import Then
 
-final class HomeViewController: BaseViewController {
+final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     var isFirst = false /// 튜토리얼 필요 유무
     let tutorialImageDummy: [UIImage] = [.imgTutorial1, .imgTutorial2, .imgTutorial3, .imgTutorial4]
@@ -58,7 +58,6 @@ final class HomeViewController: BaseViewController {
     let homeView = HomeView()
     let homeEmptyView = HomeEmptyView()
     
-    let amplitude = HomeAmplitudeSender()
     private func setAmplitudeUserProperties(){
         var metaProperties = UserPropertyMetadata(homeYesCount: 0, homeNoCount: 0, chatroomCount: 0, pushNotificationConsent: false) // todo 추후 값 수정하고 반영
         let userProperty = UserPropertiesInfo.from(previewPortfolioData, metadata:
@@ -79,7 +78,7 @@ final class HomeViewController: BaseViewController {
             object: nil
         )
         setAmplitudeUserProperties()
-        amplitude.sendAmpliLog(eventName: EventName.VIEW_HOME)
+        sendAmpliLog(eventName: EventName.VIEW_HOME)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -160,6 +159,7 @@ final class HomeViewController: BaseViewController {
         if isFirst {
             let tutorialTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tutorialTap(_:)))
             tutorialView.addGestureRecognizer(tutorialTapGestureRecognizer)
+            self.sendAmpliLog(eventName: EventName.VIEW_HOME_TUTORIAL)
         } else {
             homeView.isHidden = false
             tutorialView.removeFromSuperview()
@@ -180,6 +180,7 @@ extension HomeViewController {
         }
         detailProfileViewController.isPreview = self.isPreview
         detailProfileViewController.userId = self.currentUserId
+        self.sendAmpliLog(eventName: EventName.CLICK_HOME_PROFILE)
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
     
@@ -188,6 +189,7 @@ extension HomeViewController {
         
         if portfolioImageIdx > 0 { portfolioImageIdx -= 1 }
         else { portfolioImageIdx = portfolioImageCount - 1 }
+        self.sendAmpliLog(eventName: EventName.CLICK_HOME_BACK)
     }
     
     @objc private func handleNextTap(_ sender: UITapGestureRecognizer) {
@@ -195,6 +197,7 @@ extension HomeViewController {
         
         if portfolioImageIdx >= portfolioImageCount - 1 { portfolioImageIdx = 0 }
         else { portfolioImageIdx += 1 }
+        self.sendAmpliLog(eventName: EventName.CLICK_HOME_NEXT)
     }
     
     @objc private func tutorialTap(_ sender: UITapGestureRecognizer) {
@@ -285,6 +288,7 @@ extension HomeViewController {
             homeView.profileNameLabel.text = previewPortfolioData.username
             portfolioImageCount = previewPortfolioData.userPortfolio?.portfolioImageUrl.count ?? 0
             homeEmptyView.isHidden = true
+            self.sendAmpliLog(eventName: EventName.VIEW_HOME_EMPTY)
         }
     }
     
@@ -380,6 +384,7 @@ extension HomeViewController {
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
                 self.animateImage(status: true)
             }
+            self.sendAmpliLog(eventName: EventName.CLICK_HOME_YES)
         } else {
             self.animateImage(status: true)
         }
@@ -395,6 +400,7 @@ extension HomeViewController {
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
                 self.animateImage(status: false)
             }
+            self.sendAmpliLog(eventName: EventName.CLICK_HOME_NO)
         } else {
             self.animateImage(status: false)
         }
@@ -406,6 +412,7 @@ extension HomeViewController {
         isUndo = true
         self.recommendedPortfolioIdx -= 1
         self.animateImage(status: false)
+        self.sendAmpliLog(eventName: EventName.CLICK_HOME_REVERT)
     }
     
     private func animateImage(status: Bool) {
