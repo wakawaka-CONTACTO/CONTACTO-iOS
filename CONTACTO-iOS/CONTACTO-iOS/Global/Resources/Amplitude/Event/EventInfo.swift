@@ -89,6 +89,14 @@ public enum EventName: String {
     case CLICK_INPUT_NAME_FORGET
     case CLICK_INPUT_NAME_GO_TO_LOGIN
     
+    case CLICK_HOME_BACK
+    case CLICK_HOME_NEXT
+    case CLICK_HOME_PROFILE
+    case VIEW_HOME_EMPTY
+    case CLICK_HOME_YES
+    case CLICK_HOME_NO
+    case CLICK_HOME_REVERT
+    
     case SUCCESS_LOGIN
     case TEST
     
@@ -148,6 +156,8 @@ extension EventName {
             return "홈 화면의 튜토리얼 확인 시"
         case .VIEW_MATCH:
             return "match 화면 떴을 때"
+        case .VIEW_HOME_EMPTY:
+            return "empty 화면 보일 때"
             
             
         case .CLICK_LOGIN_CONTINUE:
@@ -205,6 +215,20 @@ extension EventName {
             return "Input your Profile name 뷰에서 [Forget your password] 버튼 선택 시"
         case .CLICK_INPUT_NAME_GO_TO_LOGIN:
             return "Input your Profile name 뷰에서 [Go to Log in] 버튼 선택 시"
+        
+        case .CLICK_HOME_BACK:
+            return "포트폴리오 이전으로 돌릴 때"
+        case .CLICK_HOME_NEXT:
+            return "포트폴리오 다음으로 넘길 때"
+        case .CLICK_HOME_PROFILE:
+            return "프로필 버튼 눌렀을 때"
+        case .CLICK_HOME_YES:
+            return "Yes 버튼 클릭 / Yes 스와이프"
+        case .CLICK_HOME_NO:
+            return "No 버튼 클릭 / No 스와이프"
+        case .CLICK_HOME_REVERT:
+            return "되돌리기 버튼 눌렀을 때"
+            
             
         case .SUCCESS_LOGIN:
             return "Login 성공"
