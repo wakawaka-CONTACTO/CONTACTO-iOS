@@ -12,7 +12,7 @@ import SnapKit
 import Then
 import FirebaseMessaging
 
-final class PortfolioOnboardingViewController: BaseViewController {
+final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     private let portfolioOnboardingView = PortfolioOnboardingView()
     private var isLoading = false
@@ -26,6 +26,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING6)
     }
     
     override func setNavigationBar() {
@@ -43,6 +44,9 @@ final class PortfolioOnboardingViewController: BaseViewController {
     }
     
     @objc private func nextButtonTapped() {
+        let portfolio_count = UserInfo.shared.portfolioImageUrl.count
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING6_NEXT, properties: ["portfolio_count" : portfolio_count])
+
         isLoading = true
         portfolioOnboardingView.nextButton.isEnabled = false
         UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }

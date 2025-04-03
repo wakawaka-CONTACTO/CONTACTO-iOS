@@ -217,7 +217,6 @@ extension LoginViewController {
     @objc func signUpButtonTapped() {
         let signUpViewController = SignUpViewController()
         self.navigationController?.pushViewController(signUpViewController, animated: false)
-        amplitude.sendAmpliLog(eventName: EventName.VIEW_SIGNUP)
         amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_CREATE)
     }
     
