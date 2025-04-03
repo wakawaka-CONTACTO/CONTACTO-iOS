@@ -9,13 +9,14 @@ import UIKit
 
 import SnapKit
 
-final class SNSOnboardingViewController: BaseViewController {
+final class SNSOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     private let snsOnboardingView = SNSOnboardingView()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.addKeyboardNotifications()
+        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING4)
     }
     override func viewWillDisappear(_ animated: Bool) {
         self.removeKeyboardNotifications()
@@ -92,6 +93,7 @@ extension SNSOnboardingViewController {
 
     
     @objc private func nextButtonTapped() {
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING4_NEXT)
         if !validateWebsite(self.snsOnboardingView.websiteTextField.text) {
             let alert = UIAlertController(
                 title: "Notify",

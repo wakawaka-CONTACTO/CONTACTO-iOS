@@ -328,29 +328,21 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		261111FB2D895D8000D481E2 /* PortfolioItem */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = PortfolioItem;
 			sourceTree = "<group>";
 		};
 		263350202D9D352E00818CB9 /* Amplitude */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = Amplitude;
 			sourceTree = "<group>";
 		};
 		26B59E7E2D96408A00B4E01B /* DTO */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = DTO;
 			sourceTree = "<group>";
 		};
 		26BBF5E62D8432830089E60C /* Alert */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = Alert;
 			sourceTree = "<group>";
 		};
