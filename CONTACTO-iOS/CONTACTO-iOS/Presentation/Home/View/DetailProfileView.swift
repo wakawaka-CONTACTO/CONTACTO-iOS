@@ -98,7 +98,7 @@ final class DetailProfileView: BaseView {
         }
         
         nationalityLabel.do {
-            $0.font = .fontContacto(.title3)
+            $0.font = .fontContacto(.title)
             $0.textColor = .ctgray6
         }
         
@@ -238,11 +238,11 @@ final class DetailProfileView: BaseView {
         
         nationalityLabel.snp.makeConstraints {
             $0.leading.equalToSuperview().inset(13)
-            $0.top.equalTo(pageCollectionView.snp.bottom).offset(21)
+            $0.top.equalTo(nameLabel.snp.bottom).offset(21)
         }
         
         talentCollectionView.snp.makeConstraints {
-            $0.top.equalTo(nameLabel.snp.bottom).offset(17)
+            $0.top.equalTo(nationalityLabel.snp.bottom).offset(17)
             $0.leading.equalToSuperview().inset(13)
             $0.trailing.equalToSuperview().inset(13)
             $0.height.equalTo(0)
