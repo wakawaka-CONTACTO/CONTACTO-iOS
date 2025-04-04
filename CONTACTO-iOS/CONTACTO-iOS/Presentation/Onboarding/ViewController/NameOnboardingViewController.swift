@@ -110,7 +110,7 @@ extension NameOnboardingViewController {
     }
     
     private func isValidName(_ name: String) -> Bool {
-        let regex = "^[a-zA-Z0-9가-힣]{2,20}$" // 2~20자의 영문자, 숫자, 한글만 허용
+        let regex = "^[a-zA-Z0-9]{2,20}$" // 2~20자의 영문, 숫자만 허용
         let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
         return predicate.evaluate(with: name)
     }
@@ -118,7 +118,7 @@ extension NameOnboardingViewController {
     private func showInvalidNameAlert() {
         let alertController = UIAlertController(
             title: "Error",
-            message: "이름은 2~20자의 영문자, 숫자, 한글만 사용할 수 있습니다.",
+            message: "이름은 2~20자의 영문, 숫자만 사용할 수 있습니다.",
             preferredStyle: .alert
         )
         
