@@ -49,6 +49,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         }
     }
     
+    var isProcessing = false
     var isAnimating = false
     let oldAnchorPoint = CGPoint(x: 0.5, y: 0.5)
     let newAnchorPoint = CGPoint(x: 0.5, y: -0.5)
@@ -375,7 +376,8 @@ extension HomeViewController {
     }
     
     @objc private func yesButtonTapped() {
-        guard !isAnimating else { return }
+        guard !isProcessing else { return }
+        isProcessing = true
         
         if !isPreview {
             if !isUndo {
@@ -391,7 +393,8 @@ extension HomeViewController {
     }
     
     @objc private func noButtonTapped() {
-        guard !isAnimating else { return }
+        guard !isProcessing else { return }
+        isProcessing = true
         
         if !isPreview {
             if !isUndo {
@@ -407,7 +410,8 @@ extension HomeViewController {
     }
     
     @objc private func undoButtonTapped() {
-        guard !isAnimating else { return }
+        guard !isProcessing else { return }
+        isProcessing = true
         
         isUndo = true
         self.recommendedPortfolioIdx -= 1
@@ -446,6 +450,7 @@ extension HomeViewController {
                 self.isUndo = false
             }
             self.isAnimating = false
+            self.isProcessing = false
             self.portfolioImageIdx = 0
         }
     }
