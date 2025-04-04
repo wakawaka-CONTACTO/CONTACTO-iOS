@@ -17,4 +17,5 @@ final class NetworkService {
     let chatService: ChatServiceProtocol = ChatService(apiLogger: APIEventLogger())
     let editService: EditServiceProtocol = EditService(apiLogger: APIEventLogger())
     let infoService: InfoServiceProtocol = InfoService(apiLogger: APIEventLogger())
+    let alarmService: AlarmServiceProtocol = AlarmService(apiLogger: APIEventLogger())
 }
