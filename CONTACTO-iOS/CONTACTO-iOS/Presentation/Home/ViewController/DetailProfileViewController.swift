@@ -38,6 +38,11 @@ final class DetailProfileViewController: BaseViewController {
         setData()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BACK)
+    }
+    
     override func setNavigationBar() {
         self.navigationController?.navigationBar.isHidden = true
     }
@@ -75,6 +80,7 @@ final class DetailProfileViewController: BaseViewController {
         detailProfileView.talentCollectionView.dataSource = self
         detailProfileView.purposeCollectionView.delegate = self
         detailProfileView.purposeCollectionView.dataSource = self
+        detailProfileView.scrollView.delegate = self
     }
     
     private func setCollectionView() {
@@ -195,6 +201,7 @@ final class DetailProfileViewController: BaseViewController {
         let id = portfolioData.instagramId
         let url = URL(string: "https://www.instagram.com/\(id)")!
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_INSTA)
     }
     
     @objc private func webButtonTapped() {
@@ -216,6 +223,7 @@ final class DetailProfileViewController: BaseViewController {
             }
             UIApplication.shared.open(chatURL, options: [:], completionHandler: nil)
         }
+        detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_WEB)
     }
     
     @objc private func popButtonTapped() {
@@ -231,8 +239,11 @@ final class DetailProfileViewController: BaseViewController {
             preferredStyle: .alert
         )
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            self.detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_NO)
+        }
         let blockAction = UIAlertAction(title: "Block", style: .destructive) { _ in
+            self.detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_YES)
             self.blockUser(blockedUserId: self.portfolioData.id) { success in
                 DispatchQueue.main.async {
                     if success {
@@ -306,6 +317,7 @@ final class DetailProfileViewController: BaseViewController {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         alert.addAction(cancelAction)
         
+        detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_NO)
         present(alert, animated: true, completion: nil)
     }
 }
@@ -403,7 +415,10 @@ extension DetailProfileViewController: UIScrollViewDelegate {
         if let collectionView = scrollView as? UICollectionView, collectionView.tag == 0 {
             let pageWidth = scrollView.frame.width
             let currentPage = Int(scrollView.contentOffset.x / pageWidth)
-            currentNum = currentPage
         }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        detailProfileView.sendAmpliLog(eventName: EventName.SCROLL_DETAIL)
     }
 }

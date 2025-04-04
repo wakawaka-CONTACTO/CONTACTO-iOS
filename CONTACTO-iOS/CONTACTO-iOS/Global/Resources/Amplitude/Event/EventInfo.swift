@@ -100,6 +100,16 @@ public enum EventName: String {
     case SUCCESS_LOGIN
     case TEST
     
+    // Detail
+    case VIEW_DETAIL
+    case SCROLL_DETAIL
+    case CLICK_DETAIL_BACK
+    case CLICK_DETAIL_INSTA
+    case CLICK_DETAIL_WEB
+    case CLICK_DETAIL_BLOCK_YES
+    case CLICK_DETAIL_BLOCK_NO
+    case CLICK_DETAIL_REPORT_YES
+    case CLICK_DETAIL_REPORT_NO
 }
 
 extension EventName {
@@ -232,6 +242,27 @@ extension EventName {
             
         case .SUCCESS_LOGIN:
             return "Login 성공"
+            
+    // 2) extension EventName의 switch문에 새 케이스 추가
+    // ------------------------------------------
+        case .VIEW_DETAIL:
+            return "디테일 화면"
+        case .SCROLL_DETAIL:
+            return "디테일 화면 스크롤 시"
+        case .CLICK_DETAIL_BACK:
+            return "디테일 화면 나갈 때"
+        case .CLICK_DETAIL_INSTA:
+            return "인스타그램 버튼 클릭 시"
+        case .CLICK_DETAIL_WEB:
+            return "웹 버튼 클릭 시"
+        case .CLICK_DETAIL_BLOCK_YES:
+            return "block 버튼 클릭 시"
+        case .CLICK_DETAIL_BLOCK_NO:
+            return "block no 버튼 클릭 시"
+        case .CLICK_DETAIL_REPORT_YES:
+            return "report 내부에서 Spam 등 버튼 클릭 시"
+        case .CLICK_DETAIL_REPORT_NO:
+            return "report 내부에서 cancel 버튼 클릭 시"
 
         default:
             return "unknown"

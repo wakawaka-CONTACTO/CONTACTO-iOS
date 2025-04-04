@@ -10,9 +10,9 @@ import UIKit
 import SnapKit
 import Then
 
-final class DetailProfileView: BaseView {
+final class DetailProfileView: BaseView, DetailAmplitudeSender {
     
-    private let scrollView = UIScrollView()
+    let scrollView = UIScrollView()
     private let contentsView = UIView()
     
     private let topGradientView = UIImageView()
