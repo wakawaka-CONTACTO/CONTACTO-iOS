@@ -520,18 +520,7 @@ extension LoginViewController: UITextFieldDelegate {
 
 extension LoginViewController: EmailCodeViewDelegate {
     func timerDidFinish(_ view: EmailCodeView) {
-        let requestDTO = CodeTimeOverRequest(email: self.email)
         
-        NetworkService.shared.onboardingService.invalidateEmailCode(bodyDTO: requestDTO) { [weak self] result in
-            switch result {
-            case .success:
-                print("이메일 인증 코드가 무효화되었습니다.")
-            case .failure(let error):
-                print("이메일 인증 코드 무효화 실패: \(error)")
-            default:
-                print("이메일 인증 코드 무효화 실패")
-            }
-        }
     }
     
     @objc internal func backButtonTapped() {
