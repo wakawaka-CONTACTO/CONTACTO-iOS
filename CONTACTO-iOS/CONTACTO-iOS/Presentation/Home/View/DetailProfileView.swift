@@ -29,7 +29,8 @@ final class DetailProfileView: BaseView {
     let pageFlowLayout = UICollectionViewFlowLayout()
     
     let nameLabel = UILabel()
-    
+    let nationalityLabel = UILabel()
+
     lazy var talentCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: talentFlowLayout
@@ -93,6 +94,11 @@ final class DetailProfileView: BaseView {
         
         nameLabel.do {
             $0.font = .fontContacto(.title3)
+            $0.textColor = .ctgray6
+        }
+        
+        nationalityLabel.do {
+            $0.font = .fontContacto(.title)
             $0.textColor = .ctgray6
         }
         
@@ -187,6 +193,7 @@ final class DetailProfileView: BaseView {
         contentsView.addSubviews(portImageCollectionView,
                                pageCollectionView,
                                nameLabel,
+                               nationalityLabel,
                                talentCollectionView,
                                descriptionLabel,
                                purposeLabel,
@@ -229,8 +236,13 @@ final class DetailProfileView: BaseView {
             $0.top.equalTo(pageCollectionView.snp.bottom).offset(21)
         }
         
+        nationalityLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(13)
+            $0.top.equalTo(nameLabel.snp.bottom).offset(21)
+        }
+        
         talentCollectionView.snp.makeConstraints {
-            $0.top.equalTo(nameLabel.snp.bottom).offset(17)
+            $0.top.equalTo(nationalityLabel.snp.bottom).offset(17)
             $0.leading.equalToSuperview().inset(13)
             $0.trailing.equalToSuperview().inset(13)
             $0.height.equalTo(0)

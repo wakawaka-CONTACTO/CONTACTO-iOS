@@ -305,9 +305,7 @@ extension SignUpViewController: UITextFieldDelegate {
 }
 
 extension SignUpViewController: EmailCodeViewDelegate {
-    func timerDidFinish(_ view: EmailCodeView) {
-        sendCode()
-    }
+    @objc func timerDidFinish(_ view: EmailCodeView) {    }
     
     @objc internal func backButtonTapped() {
         // 로그인 화면으로 이동
