@@ -519,9 +519,7 @@ extension LoginViewController: UITextFieldDelegate {
 }
 
 extension LoginViewController: EmailCodeViewDelegate {
-    @objc func timerDidFinish(_ view: EmailCodeView) {
-        sendCode()
-    }
+    @objc func timerDidFinish(_ view: EmailCodeView) {    }
     
     @objc internal func backButtonTapped() {
         let loginVC = LoginViewController()
