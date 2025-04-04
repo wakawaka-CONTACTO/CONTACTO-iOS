@@ -23,6 +23,9 @@
 		ACAC3E1B2D8413640001B069 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */; };
 		ACAC3E1D2D8413640001B069 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */; };
 		ACAC3E1F2D8413640001B069 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1E2D8413640001B069 /* FirebaseMessaging */; };
+		ACFE3D222D9FDB0900F14592 /* AlarmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFE3D1F2D9FDB0900F14592 /* AlarmService.swift */; };
+		ACFE3D232D9FDB0900F14592 /* AlarmTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFE3D1D2D9FDB0900F14592 /* AlarmTarget.swift */; };
+		ACFE3D242D9FDB0900F14592 /* DeviceTokenRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFE3D1A2D9FDB0900F14592 /* DeviceTokenRequestDTO.swift */; };
 		C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */; };
 		C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */; };
 		C30C2E462CF2F79600FAE056 /* SignUpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */; };
@@ -182,6 +185,9 @@
 		333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockResponseDTO.swift; sourceTree = "<group>"; };
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		AC0EAA8E2D68451C00757EBD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		ACFE3D1A2D9FDB0900F14592 /* DeviceTokenRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTokenRequestDTO.swift; sourceTree = "<group>"; };
+		ACFE3D1D2D9FDB0900F14592 /* AlarmTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTarget.swift; sourceTree = "<group>"; };
+		ACFE3D1F2D9FDB0900F14592 /* AlarmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmService.swift; sourceTree = "<group>"; };
 		C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpResponseDTO.swift; sourceTree = "<group>"; };
 		C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRequestBodyDTO.swift; sourceTree = "<group>"; };
@@ -376,6 +382,48 @@
 				19F102294D75A8C826FC5EB2 /* Pods-CONTACTO-iOS.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		ACFE3D1B2D9FDB0900F14592 /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				ACFE3D1A2D9FDB0900F14592 /* DeviceTokenRequestDTO.swift */,
+			);
+			path = Request;
+			sourceTree = "<group>";
+		};
+		ACFE3D1C2D9FDB0900F14592 /* DTO */ = {
+			isa = PBXGroup;
+			children = (
+				ACFE3D1B2D9FDB0900F14592 /* Request */,
+			);
+			path = DTO;
+			sourceTree = "<group>";
+		};
+		ACFE3D1E2D9FDB0900F14592 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				ACFE3D1D2D9FDB0900F14592 /* AlarmTarget.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		ACFE3D202D9FDB0900F14592 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				ACFE3D1F2D9FDB0900F14592 /* AlarmService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		ACFE3D212D9FDB0900F14592 /* Alarm */ = {
+			isa = PBXGroup;
+			children = (
+				ACFE3D1C2D9FDB0900F14592 /* DTO */,
+				ACFE3D1E2D9FDB0900F14592 /* Router */,
+				ACFE3D202D9FDB0900F14592 /* Service */,
+			);
+			path = Alarm;
 			sourceTree = "<group>";
 		};
 		B48332836741E45F1ECC447E /* Frameworks */ = {
@@ -998,6 +1046,7 @@
 		C3FD905E2C9142D70021D2BA /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				ACFE3D212D9FDB0900F14592 /* Alarm */,
 				C33D73D82CDEEEF800889B1B /* Base */,
 				C33D73DB2CDEEFF400889B1B /* Onboarding */,
 				C33D73F12CDEF16700889B1B /* Home */,
@@ -1365,6 +1414,9 @@
 				C34C1F582CE39C0900F94BCD /* EmailSendRequestBodyDTO.swift in Sources */,
 				33185B092D79A6A200B508A3 /* PageableResponse.swift in Sources */,
 				C393A6172C941FFA00ECF1B5 /* MainTabBarViewController.swift in Sources */,
+				ACFE3D222D9FDB0900F14592 /* AlarmService.swift in Sources */,
+				ACFE3D232D9FDB0900F14592 /* AlarmTarget.swift in Sources */,
+				ACFE3D242D9FDB0900F14592 /* DeviceTokenRequestDTO.swift in Sources */,
 				C30C2E462CF2F79600FAE056 /* SignUpRequestBodyDTO.swift in Sources */,
 				C35744112CF8B5FC00FE691D /* SplashViewController.swift in Sources */,
 				C3FD90592C9142880021D2BA /* adjust+.swift in Sources */,
