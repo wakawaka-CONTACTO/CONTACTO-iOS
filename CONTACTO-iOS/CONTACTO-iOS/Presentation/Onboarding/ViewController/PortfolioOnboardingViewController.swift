@@ -89,7 +89,7 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
                         preferredStyle: .alert)
 
                     let retryAction = UIAlertAction(title: "OK", style: .default) { _ in
-                        self.navigationController?.popToRootViewController(animated: true)
+                        alertController.dismiss(animated: true, completion: nil)
                     }
 
                     alertController.addAction(retryAction)
