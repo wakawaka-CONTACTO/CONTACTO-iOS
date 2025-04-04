@@ -18,6 +18,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     var tutorialNum = 0
     let tutorialView = UIImageView()
     
+    var isFromProfile = false /// 프로필에서 돌아왔는지 여부
     var hasCheckedMyPort = false /// 로그인한 사용자 프로필 조회 여부
     
     var isPreview = false /// edit의 preview 여부
@@ -85,6 +86,13 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationBar()
+        
+        // DetailProfileViewController에서 돌아왔을 경우 데이터 재로드하지 않음
+        if isFromProfile {
+            isFromProfile = false // 플래그 리셋
+            return
+        }
+        
         setData()
     }
     
@@ -182,6 +190,8 @@ extension HomeViewController {
         detailProfileViewController.isPreview = self.isPreview
         detailProfileViewController.userId = self.currentUserId
         self.sendAmpliLog(eventName: EventName.CLICK_HOME_PROFILE)
+        self.isFromProfile = true
+        detailProfileViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
     
