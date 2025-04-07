@@ -123,19 +123,14 @@ final class ChatRoomViewController: BaseViewController {
         chatRoomView.nameLabel.text = chatRoomTitle
         if !self.chatRoomThumbnail.isEmpty,
            let imageUrl = URL(string: self.chatRoomThumbnail) {
-            self.chatRoomView.profileImageButton.kf.setBackgroundImage(with: imageUrl, for: .normal)
+            self.chatRoomView.profileImageButton.kf.setImage(with: imageUrl, for: .normal)
         } else {
-            self.chatRoomView.profileImageButton.setBackgroundImage(UIImage(named: "defaultProfile"), for: .normal)
+            self.chatRoomView.profileImageButton.setImage(UIImage(named: "defaultProfile"), for: .normal)
         }
         chatMessages(isFirstLoad: true) { _ in
             self.chatRoomView.chatRoomCollectionView.reloadData()
             self.scrollToBottom()
             self.isFirstLoad = false
-            
-            if self.isFirstMatch {
-                self.sendMessage(self.content)
-                self.isFirstMatch = false
-            }
         }
     }
     
@@ -321,6 +316,12 @@ extension ChatRoomViewController: StompClientLibDelegate {
         var headers = ["Authorization": KeychainHandler.shared.accessToken]
         headers["id"] = "sub-\(chatRoomId)"
         socketClient.subscribeWithHeader(destination: "/topic/\(chatRoomId)", withHeader: headers)
+        
+        // 매치 직후 메시지 전송
+        if self.isFirstMatch {
+            self.sendMessage(self.content)
+            self.isFirstMatch = false
+        }
     }
     
     func serverDidSendError(client: StompClientLib, withErrorMessage description: String, detailedErrorMessage message: String?) {

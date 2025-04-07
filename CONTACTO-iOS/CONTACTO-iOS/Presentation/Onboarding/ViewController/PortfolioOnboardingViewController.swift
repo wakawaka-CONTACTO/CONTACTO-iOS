@@ -12,7 +12,7 @@ import SnapKit
 import Then
 import FirebaseMessaging
 
-final class PortfolioOnboardingViewController: BaseViewController {
+final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     private let portfolioOnboardingView = PortfolioOnboardingView()
     private var isLoading = false
@@ -26,6 +26,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING6)
     }
     
     override func setNavigationBar() {
@@ -48,6 +49,8 @@ final class PortfolioOnboardingViewController: BaseViewController {
         UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
         let deviceType = UIDevice.current.model
+        let portfolio_count = UserInfo.shared.portfolioImageUrl.count
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING6_NEXT, properties: ["portfolio_count" : portfolio_count])
         
         Messaging.messaging().token { firebaseToken, error in
             guard let firebaseToken = firebaseToken else {
@@ -78,6 +81,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
                     let mainTabBarViewController = MainTabBarViewController()
                     mainTabBarViewController.homeViewController.isFirst = true
                     self.navigationController?.pushViewController(mainTabBarViewController, animated: true)
+                    
                 } else {
                     let alertController = UIAlertController(
                         title: "Error",
@@ -85,7 +89,7 @@ final class PortfolioOnboardingViewController: BaseViewController {
                         preferredStyle: .alert)
 
                     let retryAction = UIAlertAction(title: "OK", style: .default) { _ in
-                        self.navigationController?.popToRootViewController(animated: true)
+                        alertController.dismiss(animated: true, completion: nil)
                     }
 
                     alertController.addAction(retryAction)

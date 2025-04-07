@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class TalentOnboardingViewController: BaseViewController {
+final class TalentOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     let talentOnboardingView = TalentOnboardingView()
     
@@ -32,6 +32,7 @@ final class TalentOnboardingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING5)
     }
     
     override func setNavigationBar() {
@@ -77,6 +78,8 @@ final class TalentOnboardingViewController: BaseViewController {
                 Talent.allCases.first(where: { $0.info.koreanName == talentInfo.koreanName })?.rawValue
             }
             UserInfo.shared.userTalents = selectedTalents
+            let talent_count = selectedTalents.count
+                        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING5_NEXT, properties: ["talent_count":  talent_count])
             
             let portfolioOnboardingViewController = PortfolioOnboardingViewController()
             self.navigationController?.pushViewController(portfolioOnboardingViewController, animated: true)

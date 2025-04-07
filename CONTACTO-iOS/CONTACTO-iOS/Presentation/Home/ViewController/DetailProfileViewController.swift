@@ -147,6 +147,7 @@ final class DetailProfileViewController: BaseViewController {
         }
         
         self.detailProfileView.nameLabel.text = self.portfolioData.username
+        self.detailProfileView.nationalityLabel.text = self.portfolioData.nationality.displayName
         self.detailProfileView.descriptionLabel.text = self.portfolioData.description
         if let webUrl = self.portfolioData.webUrl, !webUrl.isEmpty {
             self.detailProfileView.webButton.isHidden = false
@@ -177,7 +178,7 @@ final class DetailProfileViewController: BaseViewController {
         
         let talentHeight = self.detailProfileView.talentCollectionView.collectionViewLayout.collectionViewContentSize.height
         self.detailProfileView.talentCollectionView.snp.remakeConstraints {
-            $0.top.equalTo(self.detailProfileView.nameLabel.snp.bottom).offset(17)
+            $0.top.equalTo(self.detailProfileView.nationalityLabel.snp.bottom).offset(17)
             $0.leading.equalToSuperview().inset(13)
             $0.trailing.equalToSuperview().inset(13)
             $0.height.equalTo(talentHeight + 10)

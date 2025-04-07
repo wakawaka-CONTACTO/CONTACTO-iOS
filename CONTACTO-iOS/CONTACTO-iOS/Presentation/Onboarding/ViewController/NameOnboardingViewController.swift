@@ -10,14 +10,16 @@ import UIKit
 import SnapKit
 import Then
 
-final class NameOnboardingViewController: BaseViewController {
+final class NameOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
     
     private let nameOnboardingView = NameOnboardingView()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.addKeyboardNotifications()
+        self.sendAmpliLog(eventName: EventName.VIEW_ONBOARDING1)
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         self.removeKeyboardNotifications()
     }
@@ -94,6 +96,7 @@ extension NameOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING1_NEXT)
         let name = nameOnboardingView.nameTextField.text ?? ""
             
         if !isValidName(name) {
@@ -107,7 +110,7 @@ extension NameOnboardingViewController {
     }
     
     private func isValidName(_ name: String) -> Bool {
-        let regex = "^[a-zA-Z0-9가-힣]{2,20}$" // 2~20자의 영문자, 숫자, 한글만 허용
+        let regex = "^[a-zA-Z0-9]{2,20}$" // 2~20자의 영문, 숫자만 허용
         let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
         return predicate.evaluate(with: name)
     }
@@ -115,7 +118,7 @@ extension NameOnboardingViewController {
     private func showInvalidNameAlert() {
         let alertController = UIAlertController(
             title: "Error",
-            message: "이름은 2~20자의 영문자, 숫자, 한글만 사용할 수 있습니다.",
+            message: "이름은 2~20자의 영문, 숫자만 사용할 수 있습니다.",
             preferredStyle: .alert
         )
         

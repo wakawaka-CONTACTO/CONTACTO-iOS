@@ -39,7 +39,8 @@ final class LoginView: BaseView {
         super.init(frame: CGRect())
         setLoginState(state: state)
     }
-    
+    let amplitude = LoginAmplitudeSender()
+
     override func setAddTarget() {
         mainTextField.eyeButton.addTarget(self, action: #selector(eyeButtonTapped), for: .touchUpInside)
     }
@@ -184,6 +185,7 @@ final class LoginView: BaseView {
         self.state = state
         switch state {
         case .email:
+            amplitude.sendAmpliLog(eventName: EventName.VIEW_LOGIN)
             newAccountButton.isHidden = false
             helpButton.isHidden = false
             privacyButton.isHidden = false
@@ -199,6 +201,7 @@ final class LoginView: BaseView {
             mainTextField.eyeButton.isHidden = true
             
         case .emailError:
+            amplitude.sendAmpliLog(eventName: EventName.VIEW_NOACCOUNT)
             newAccountButton.isHidden = true
             helpButton.isHidden = false
             privacyButton.isHidden = false
@@ -215,6 +218,7 @@ final class LoginView: BaseView {
 
 
         case .pw:
+            amplitude.sendAmpliLog(eventName: EventName.VIEW_SET_PASSWORD)
             newAccountButton.isHidden = true
             helpButton.isHidden = true
             privacyButton.isHidden = true
@@ -230,6 +234,7 @@ final class LoginView: BaseView {
             forgetEmailButton.isHidden = true
             
         case .pwError:
+            amplitude.sendAmpliLog(eventName: EventName.VIEW_INCORRECT)
             newAccountButton.isHidden = true
             helpButton.isHidden = true
             privacyButton.isHidden = true
@@ -245,6 +250,7 @@ final class LoginView: BaseView {
             forgetEmailButton.isHidden = true
             
         case .emailForget:
+            amplitude.sendAmpliLog(eventName: EventName.VIEW_INPUT_NAME)
             newAccountButton.isHidden = true
             helpButton.isHidden = true
             privacyButton.isHidden = true
@@ -260,6 +266,7 @@ final class LoginView: BaseView {
             explain.text = ""
             
         case .pwForget:
+            amplitude.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE)
             newAccountButton.isHidden = true
             helpButton.isHidden = true
             privacyButton.isHidden = true

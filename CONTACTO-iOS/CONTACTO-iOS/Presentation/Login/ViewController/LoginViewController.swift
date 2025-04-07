@@ -28,6 +28,8 @@ final class LoginViewController: UIViewController {
     var purpose =  EmailSendPurpose.signup
     weak var delegate: EmailCodeViewDelegate?
     
+    let amplitude = LoginAmplitudeSender()
+    
     // 로딩 인디케이터: 전체 화면 오버레이
     private var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
@@ -148,6 +150,7 @@ extension LoginViewController {
         switch loginView.state {
         case .email, .emailError:
             showLoadingIndicator()
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_CONTINUE)
             emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
                 if self.isExistEmail {
                     self.loginView.mainTextField.text = ""
@@ -161,7 +164,7 @@ extension LoginViewController {
             showLoadingIndicator()
             let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
             let deviceType = UIDevice.current.model
-            
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_BUTTON)
             // FCM 토큰 비동기 처리
             Messaging.messaging().token { firebaseToken, error in
                 guard let firebaseToken = firebaseToken else {
@@ -194,6 +197,7 @@ extension LoginViewController {
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
         }
         case .pwForget:
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT)
             emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
                 if self.isExistEmail {
                     self.sendCode()
@@ -213,17 +217,20 @@ extension LoginViewController {
     @objc func signUpButtonTapped() {
         let signUpViewController = SignUpViewController()
         self.navigationController?.pushViewController(signUpViewController, animated: false)
+        amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_CREATE)
     }
     
     @objc func helpEmailButtonTapped() {
         loginView.mainTextField.text = ""
         self.decodeEmail = ""
         loginView.setLoginState(state: .emailForget)
+        amplitude.sendAmpliLog(eventName: EventName.CLICK_NOACCOUNT_FORGET)
     }
     
     @objc func helpPWButtonTapped() {
         loginView.mainTextField.text = ""
         loginView.setLoginState(state: .pwForget)
+        amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_NEEDHELP)
     }
     
     @objc private func privacyButtonTapped() {
@@ -233,6 +240,7 @@ extension LoginViewController {
     }
 
     @objc private func codeVerifyButtonTapped() {
+        amplitude.sendAmpliLog(eventName: EventName.CLICK_SEND_CODE_CONTINUE)
         emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
             if response {
                 self.loginView.isHidden = true
@@ -245,6 +253,7 @@ extension LoginViewController {
     }
     
     @objc private func sendCode() {
+        amplitude.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_RESEND)
         self.purpose = EmailSendPurpose.reset
         self.emailCodeView.startTimer()
         emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: self.purpose)) { _ in            self.loginView.isHidden = true
@@ -403,6 +412,7 @@ extension LoginViewController {
     }
     
     private func updatePwd(bodyDTO: LoginRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+        amplitude.sendAmpliLog(eventName: EventName.CLICK_RESET_PASSWORD_NEXT)
         NetworkService.shared.onboardingService.updatePwd(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
@@ -509,9 +519,7 @@ extension LoginViewController: UITextFieldDelegate {
 }
 
 extension LoginViewController: EmailCodeViewDelegate {
-    @objc func timerDidFinish(_ view: EmailCodeView) {
-        sendCode()
-    }
+    @objc func timerDidFinish(_ view: EmailCodeView) {    }
     
     @objc internal func backButtonTapped() {
         let loginVC = LoginViewController()

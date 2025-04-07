@@ -9,6 +9,7 @@ import UIKit
 import FirebaseCore
 import FirebaseMessaging
 import FirebaseAnalytics
+import AmplitudeSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -32,6 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           )
         
         UIApplication.shared.registerForRemoteNotifications()
+        let configuration = Configuration(apiKey: Config.amplitudeApiKey, autocapture: .appLifecycles)
+        AmplitudeManager.amplitude = Amplitude(configuration: configuration)
         
         return true
     }
@@ -83,5 +86,32 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase Token: \(String(describing: fcmToken))")
+        
+        guard let token = fcmToken else { return }
+        
+        let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+        let deviceType = UIDevice.current.model
+        
+        // 서버에 디바이스 토큰 업데이트 요청
+        NetworkService.shared.alarmService.updateDeviceToken(bodyDTO: DeviceTokenRequestDTO(
+            deviceId: deviceId,
+            deviceType: deviceType,
+            firebaseToken: token
+        )) { response in
+            switch response {
+            case .success:
+                print("Device token updated successfully")
+            case .requestErr:
+                print("Request error while updating device token")
+            case .pathErr:
+                print("Path error while updating device token")
+            case .serverErr:
+                print("Server error while updating device token")
+            case .networkErr:
+                print("Network error while updating device token")
+            case .failure(let error):
+                print("Failure error while updating device token: \(error)")
+            }
+        }
     }
 }
