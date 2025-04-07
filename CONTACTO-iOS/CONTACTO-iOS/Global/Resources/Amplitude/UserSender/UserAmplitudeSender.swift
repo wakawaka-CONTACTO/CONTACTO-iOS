@@ -13,9 +13,6 @@ public final class AmplitudeUserPropertySender {
     static func setUserProperties(user: UserPropertiesInfo) {
         let identify = Identify()
 
-        let userId = KeychainHandler.shared.userID
-        AmplitudeManager.amplitude.setUserId(userId: userId)
-
         // String
         identify.set(property: "user_name", value: user.name)
         identify.set(property: "user_email", value: user.email)
