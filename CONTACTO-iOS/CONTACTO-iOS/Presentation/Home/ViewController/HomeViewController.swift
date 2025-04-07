@@ -386,7 +386,7 @@ extension HomeViewController {
     }
     
     @objc private func yesButtonTapped() {
-        guard !isProcessing else { return }
+        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
         isProcessing = true
         
         if !isPreview {
@@ -403,7 +403,7 @@ extension HomeViewController {
     }
     
     @objc private func noButtonTapped() {
-        guard !isProcessing else { return }
+        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
         isProcessing = true
         
         if !isPreview {
@@ -420,7 +420,7 @@ extension HomeViewController {
     }
     
     @objc private func undoButtonTapped() {
-        guard !isProcessing else { return }
+        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
         isProcessing = true
         
         isUndo = true
