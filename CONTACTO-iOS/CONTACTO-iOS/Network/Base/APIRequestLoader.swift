@@ -13,8 +13,8 @@ class APIRequestLoader<T: TargetType> {
     private let configuration: URLSessionConfiguration
     private let apiLogger: APIEventLogger
     private let session: Session
-//    private let interceptorSession: Session
-//    let interceptor = ContactoRequestInterceptor()
+    private let interceptorSession: Session
+    let interceptor = ContactoRequestInterceptor()
     
     init(
         configuration: URLSessionConfiguration = .default,
@@ -24,7 +24,7 @@ class APIRequestLoader<T: TargetType> {
         self.apiLogger = apiLogger
         
         self.session = Session(configuration: configuration, eventMonitors: [apiLogger])
-//        self.interceptorSession = Session(configuration: configuration, interceptor: interceptor, eventMonitors: [apiLogger])
+        self.interceptorSession = Session(configuration: configuration, interceptor: interceptor, eventMonitors: [apiLogger])
     }
     
     func fetchData<M: Decodable>(
@@ -35,7 +35,7 @@ class APIRequestLoader<T: TargetType> {
         var dataRequest = session.request(target)
         
         if target.authorization == .authorization {
-//            dataRequest = interceptorSession.request(target).validate()
+            dataRequest = interceptorSession.request(target).validate()
         }
         
         dataRequest.responseData(emptyResponseCodes: [200]) { response in
@@ -58,7 +58,23 @@ class APIRequestLoader<T: TargetType> {
     
     private func judgeStatus<M: Decodable>(by statusCode: Int, _ data: Data, type: M.Type) -> NetworkResult<M> {
         switch statusCode {
-        case 200...299: return isValidData(data: data, type: M.self)
+        case 200...299:
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+               let status = json["status"] as? String,
+               status == "NOT_FOUND" {
+                let error = NetworkError(data: data, statusCode: 404, underlyingError: nil)
+                return .failure(error)
+            }
+            return isValidData(data: data, type: M.self)
+            
+        case 400...499: 
+            let error = NetworkError(data: data, statusCode: statusCode, underlyingError: nil)
+            return .failure(error)
+            
+        case 500...599: 
+            let error = NetworkError(data: data, statusCode: statusCode, underlyingError: nil)
+            return .failure(error)
+            
         default:
             let error = NetworkError(data: data, statusCode: statusCode, underlyingError: nil)
             return .failure(error)

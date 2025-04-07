@@ -10,10 +10,11 @@ import UIKit
 import SnapKit
 import Then
 import SafariServices
+import FirebaseMessaging
 
 final class LoginViewController: UIViewController {
     
-    private let loginView = LoginView(state: .email)
+    var loginView: LoginView
     private let emailCodeView = EmailCodeView()
     private let setPWView = SetPassWordView()
     var email = ""
@@ -24,7 +25,8 @@ final class LoginViewController: UIViewController {
     var authCode = ""
     
     var isExistEmail = false
-    
+    var purpose =  EmailSendPurpose.signup
+    weak var delegate: EmailCodeViewDelegate?
     
     // 로딩 인디케이터: 전체 화면 오버레이
     private var activityIndicator: UIActivityIndicatorView = {
@@ -34,6 +36,15 @@ final class LoginViewController: UIViewController {
         indicator.hidesWhenStopped = true
         return indicator
     }()
+    
+    init() {
+        self.loginView = LoginView(state: .email)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -114,6 +125,7 @@ final class LoginViewController: UIViewController {
     private func setDelegate() {
         loginView.mainTextField.delegate = self
         emailCodeView.mainTextField.delegate = self
+        emailCodeView.delegate = self
         setPWView.mainTextField.delegate = self
         setPWView.confirmTextField.delegate = self
     }
@@ -141,18 +153,37 @@ extension LoginViewController {
                     self.loginView.mainTextField.text = ""
                     self.loginView.setLoginState(state: .pw)
                 } else {
-                    self.loginView.mainTextField.text = ""
                     self.loginView.setLoginState(state: .emailError)
                 }
             }
             hideLoadingIndicator()
         case .pw, .pwError:
             showLoadingIndicator()
-            login(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { result in
-                if result {
-                    let mainTabBarViewController = MainTabBarViewController()
-                    mainTabBarViewController.homeViewController.isFirst = false
-                    self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+            let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+            let deviceType = UIDevice.current.model
+            
+            // FCM 토큰 비동기 처리
+            Messaging.messaging().token { firebaseToken, error in
+                guard let firebaseToken = firebaseToken else {
+                    self.view.showToast(message: "FCM 토큰을 가져올 수 없습니다")
+                    return
+                }
+                
+                // 로그인 요청에 디바이스 정보 포함
+                let bodyDTO = LoginRequestBodyDTO(
+                    email: self.email,
+                    password: self.pw,
+                    firebaseToken: firebaseToken,
+                    deviceId: deviceId,
+                    deviceType: deviceType
+                )
+                
+                self.login(bodyDTO: bodyDTO) { response in
+                    if response {
+                        let mainTabBarViewController = MainTabBarViewController()
+                        mainTabBarViewController.homeViewController.isFirst = false
+                        self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
+                    }
                 }
                 self.hideLoadingIndicator()
             }
@@ -160,11 +191,18 @@ extension LoginViewController {
         case .emailForget:
             helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
                 self.loginView.mainTextField.text = ""
-                self.loginView.setLoginState(state: .findEmail)
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
         }
         case .pwForget:
-            sendCode()
+            emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
+                if self.isExistEmail {
+                    self.sendCode()
+                } else {
+                    self.loginView.setExplain(description: "Cannot find your email.")
+                    self.loginView.mainTextField.text = ""
+                    self.loginView.setLoginState(state: .pwForget)
+                }
+            }
             
         case .findEmail:
             loginView.mainTextField.text = ""
@@ -179,6 +217,7 @@ extension LoginViewController {
     
     @objc func helpEmailButtonTapped() {
         loginView.mainTextField.text = ""
+        self.decodeEmail = ""
         loginView.setLoginState(state: .emailForget)
     }
     
@@ -192,12 +231,7 @@ extension LoginViewController {
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
     }
-    
-    @objc func backButtonTapped() {
-        loginView.mainTextField.text = self.email
-        loginView.setLoginState(state: .email)
-    }
-    
+
     @objc private func codeVerifyButtonTapped() {
         emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
             if response {
@@ -211,21 +245,43 @@ extension LoginViewController {
     }
     
     @objc private func sendCode() {
-        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email)) { _ in
-            self.loginView.isHidden = true
+        self.purpose = EmailSendPurpose.reset
+        self.emailCodeView.startTimer()
+        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: self.purpose)) { _ in            self.loginView.isHidden = true
             self.emailCodeView.isHidden = false
             self.setPWView.isHidden = true
         }
+        self.purpose = EmailSendPurpose.signup
     }
     
     @objc private func pwContinueButton() {
-        updatePwd(bodyDTO: LoginRequestBodyDTO(email: self.email, password: self.pw)) { response in
-            if response {
-                let mainTabBarViewController = MainTabBarViewController()
-                mainTabBarViewController.homeViewController.isFirst = false
-                self.view.window?.rootViewController = UINavigationController(rootViewController: mainTabBarViewController)
-            } else {
-                self.view.showToast(message: "Something went wrong. Try Again")
+        let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+        let deviceType = UIDevice.current.model
+        
+        // FCM 토큰 비동기 처리
+        Messaging.messaging().token { firebaseToken, error in
+            guard let firebaseToken = firebaseToken else {
+                self.view.showToast(message: "FCM 토큰을 가져올 수 없습니다")
+                return
+            }
+            
+            // 로그인 요청에 디바이스 정보 포함
+            let bodyDTO = LoginRequestBodyDTO(
+                email: self.email,
+                password: self.pw,
+                firebaseToken: firebaseToken,
+                deviceId: deviceId,
+                deviceType: deviceType
+            )
+            
+            self.updatePwd(bodyDTO: bodyDTO) { response in
+                if response {
+                    self.view.showToast(message: "Your Password is updated successfully!")
+                    let loginVC = LoginViewController()
+                    self.navigationController?.setViewControllers([loginVC], animated: false)
+                } else {
+                    self.view.showToast(message: "Something went wrong. Try Again")
+                }
             }
         }
     }
@@ -250,6 +306,15 @@ extension LoginViewController {
                 KeychainHandler.shared.accessToken = data.accessToken
                 KeychainHandler.shared.refreshToken = data.refreshToken
                 completion(true)
+            case .failure(let error):
+                if let data = error.data,
+                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
+                    DispatchQueue.main.async {
+                        self.view.showToast(message: errorResponse.message)
+                    }
+                }
+                self.loginView.setLoginState(state: .pwError)
+                completion(false)
             default:
                 self.loginView.setLoginState(state: .pwError)
                 completion(false)
@@ -262,7 +327,20 @@ extension LoginViewController {
             switch response {
             case .success(let data):
                 self?.decodeEmail = data.decodeEmail
+                DispatchQueue.main.async {
+                    self?.loginView.setLoginState(state: .findEmail)
+                    self?.loginView.mainTextField.text = data.decodeEmail
+                }
                 completion(true)
+            case .failure(let error):
+                if error.statusCode == 404 {
+                    DispatchQueue.main.async {
+                        //self?.loginView.setLoginState(state: .emailForget)
+                        self?.view.showToast(message: "The user name does not exist.")
+                        self?.loginView.mainTextField.isError = true
+                    }
+                }
+                completion(false)
             default:
                 completion(false)
             }
@@ -273,6 +351,8 @@ extension LoginViewController {
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(_):
+                self.emailCodeView.setStatus()
+                self.emailCodeView.startTimer()
                 completion(true)
             default:
                 completion(false)
@@ -286,24 +366,36 @@ extension LoginViewController {
             case .success(let data):
                 completion(data.isSuccess)
             default:
+                self.emailCodeView.setFail()
                 completion(false)
             }
         }
     }
     
     private func emailExist(queryDTO: EmailExistRequestQueryDTO, completion: @escaping (Bool) -> Void) {
-        self.isExistEmail = true
+        self.isExistEmail = false 
         NetworkService.shared.onboardingService.emailExist(queryDTO: queryDTO) { response in
             switch response {
-            case .success(let data):
-                if data?.status == "NOT_FOUND" {
+            case .success(_):
+                self.isExistEmail = true
+                completion(true)
+                
+            case .failure(let error):
+                if error.statusCode == 404 {
                     self.isExistEmail = false
                     completion(true)
+                    return
                 }
-//                if status == 200 {
-//                    self.isExistEmail = true
-//                    completion(true)
-//                }
+                
+                // 그 외 에러
+                if let data = error.data,
+                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
+                    DispatchQueue.main.async {
+                        self.view.showToast(message: errorResponse.message)
+                    }
+                }
+                completion(false)
+                
             default:
                 completion(false)
             }
@@ -391,7 +483,7 @@ extension LoginViewController: UITextFieldDelegate {
             let textLength = updatedText.count
             
             if textLength > 1 {
-                attributedString.addAttribute(.kern, value: 36, range: NSRange(location: 0, length: textLength - 1))
+                attributedString.addAttribute(.kern, value: adjustedValueForiPhone16Pro(), range: NSRange(location: 0, length: textLength - 1))
             }
             
             attributedString.addAttribute(.font, value: UIFont.fontContacto(.number), range: NSRange(location: 0, length: textLength))
@@ -402,5 +494,27 @@ extension LoginViewController: UITextFieldDelegate {
         default:
             return true
         }
+    }
+    
+    func adjustedValueForiPhone16Pro() -> CGFloat {
+        let screenWidth = UIScreen.main.bounds.width
+        let iPhone16ProWidth: CGFloat = 393
+
+        if screenWidth >= iPhone16ProWidth {
+            return 40.adjustedWidth
+        } else {
+            return 42.adjustedWidth
+        }
+    }
+}
+
+extension LoginViewController: EmailCodeViewDelegate {
+    @objc func timerDidFinish(_ view: EmailCodeView) {
+        sendCode()
+    }
+    
+    @objc internal func backButtonTapped() {
+        let loginVC = LoginViewController()
+        self.navigationController?.setViewControllers([loginVC], animated: false)
     }
 }

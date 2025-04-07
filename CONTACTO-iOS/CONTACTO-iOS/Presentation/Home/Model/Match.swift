@@ -14,4 +14,5 @@ struct Match: Codable {
     let yourId: Int
     let yourLabel: String
     let yourImageURL: String
+    let chatRoomId: Int
 }

@@ -93,6 +93,10 @@ enum StringLiterals {
             static let title = "SHOW YOUR\nBEST PORTFOLIO"
             static let upload = "Upload"
         }
+        
+        enum Nationality {
+            static let title = "NATIONALITY"
+        }
     }
     
     enum Home {
@@ -111,7 +115,7 @@ enum StringLiterals {
         }
         
         enum Block {
-            static let title = "User Block"
+            static let title = "Block User"
             static let message = "Are you sure you want to\nblock this user?"
             static let result = "User blocked successfully. It may take some time for the block to be fully applied."
         }
@@ -208,6 +212,8 @@ enum StringLiterals {
     }
     
     enum URL {
+        static let insta =
+            "https://www.instagram.com/contacto.creator"
         static let guidelines = "https://pomus.notion.site/1437a75859a880deb38afb0ead0f8b39?pvs=4"
         static let privacy = "https://contactocreator.notion.site/1437a75859a88040b512e1a9b98228ac?pvs=4"
     }

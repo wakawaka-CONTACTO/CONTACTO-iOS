@@ -14,7 +14,7 @@ struct MyDetailResponseDTO: Codable {
     let socialId: Int?
     let loginType: String?
     let email: String
-    let nationality: String
+    var nationality: Nationalities
     var webUrl: String?
     let password: String?
     var userPortfolio: UserPortfolio?
@@ -24,7 +24,7 @@ struct MyDetailResponseDTO: Codable {
 
 // MARK: - UserPortfolio
 struct UserPortfolio: Codable {
-    let portfolioId, userId: Int
+    let portfolioId, userId: Int?
     var portfolioImageUrl: [String]
 }
 

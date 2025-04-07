@@ -50,7 +50,7 @@ final class MatchViewController: BaseViewController {
     override func setAddTarget() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAction))
         matchView.fieldView.addGestureRecognizer(tapGesture)
-        matchView.sendButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        matchView.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
         matchView.popButton.addTarget(self, action: #selector(popButtonTapped), for: .touchUpInside)
     }
     
@@ -74,9 +74,20 @@ extension MatchViewController {
         matchView.textCollectionView.isHidden = false
     }
     
-    @objc private func nextButtonTapped() {
+    @objc private func sendButtonTapped() {
         if !greet.isEmpty {
-            NotificationCenter.default.post(name: Notification.Name("moveToChat"), object: nil)
+            let selectedGreetings = greet.map { greetMessage[$0] }.joined(separator: " ")
+            NotificationCenter.default.post(
+                name: Notification.Name("moveToChatRoomFromMatch"),
+                object: nil,
+                userInfo: [
+                    "message": selectedGreetings,
+                    "chatRoomId": matchData?.chatRoomId ?? 0,
+                    "yourId": matchData?.yourId ?? 0,
+                    "yourImageURL": matchData?.yourImageURL ?? "",
+                    "yourLabel": matchData?.yourLabel ?? ""
+                ]
+            )
             self.dismiss(animated: true)
         }
     }

@@ -17,6 +17,9 @@ struct SignUpRequestBodyDTO: Codable {
 struct UserSignUpRequest: Codable {
     let name, email, description, instagramId, password, loginType, nationality: String
     let webUrl: String?
+    let firebaseToken: String?
+    let deviceId: String?
+    let deviceType : String?
 }
 
 struct Purpose: Codable {

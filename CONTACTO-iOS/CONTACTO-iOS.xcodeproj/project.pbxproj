@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26334F852D9D0A7200818CB9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 26334F842D9D07EF00818CB9 /* GoogleService-Info.plist */; };
+		2633502D2D9D390300818CB9 /* AmplitudeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2633502C2D9D390300818CB9 /* AmplitudeSwift */; };
 		26434AC82D82D604000FB7AE /* Nationality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26434AC72D82D604000FB7AE /* Nationality.swift */; };
 		26DEC0212D806D0B00667450 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEC0202D806D0B00667450 /* EmptyResponse.swift */; };
 		330688D32D82D7F400BD34EA /* ReportRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */; };
@@ -15,7 +17,10 @@
 		33185B0B2D7B1E6B00B508A3 /* PageableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */; };
 		333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */; };
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
-		8C6A7C97DD9DE3A79AFFCBC0 /* Pods_CONTACTO_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */; };
+		52259755595FA388540C3A24 /* Pods_CONTACTO_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0F5297BC8F72493DC49B4B2 /* Pods_CONTACTO_iOS.framework */; };
+		ACAC3E1B2D8413640001B069 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */; };
+		ACAC3E1D2D8413640001B069 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */; };
+		ACAC3E1F2D8413640001B069 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1E2D8413640001B069 /* FirebaseMessaging */; };
 		C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */; };
 		C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */; };
 		C30C2E462CF2F79600FAE056 /* SignUpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */; };
@@ -162,19 +167,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0DEA1664F7C3DD88F43E1FDF /* Pods-CONTACTO-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.release.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		26334F842D9D07EF00818CB9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		26434AC72D82D604000FB7AE /* Nationality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nationality.swift; sourceTree = "<group>"; };
 		26DEC0202D806D0B00667450 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
+		26ED0BECEC61DA9C9552DA6E /* Pods-CONTACTO-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		2E3CBD386904C5B0B3473417 /* Pods-CONTACTO-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.release.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportRequestBodyDTO.swift; sourceTree = "<group>"; };
 		330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportResponseDTO.swift; sourceTree = "<group>"; };
 		33185B082D79A6A200B508A3 /* PageableResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableResponse.swift; sourceTree = "<group>"; };
 		33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableRequest.swift; sourceTree = "<group>"; };
 		333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockResponseDTO.swift; sourceTree = "<group>"; };
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
-		5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CONTACTO_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7BE1A2D5A19E66A4ACF01783 /* Pods-CONTACTO-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		AC0EAA8E2D68451C00757EBD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AC3389C32D67259100BE7518 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		C0F5297BC8F72493DC49B4B2 /* Pods_CONTACTO_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CONTACTO_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpResponseDTO.swift; sourceTree = "<group>"; };
 		C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRequestBodyDTO.swift; sourceTree = "<group>"; };
@@ -318,17 +324,44 @@
 		C3FD909C2C9189F30021D2BA /* ABCDiatype-BoldItalic-Trial.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ABCDiatype-BoldItalic-Trial.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		261111FB2D895D8000D481E2 /* PortfolioItem */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PortfolioItem;
+			sourceTree = "<group>";
+		};
+		263350202D9D352E00818CB9 /* Amplitude */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Amplitude;
+			sourceTree = "<group>";
+		};
+		26B59E7E2D96408A00B4E01B /* DTO */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DTO;
+			sourceTree = "<group>";
+		};
+		26BBF5E62D8432830089E60C /* Alert */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Alert;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		C3FD90322C9139D40021D2BA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACAC3E1F2D8413640001B069 /* FirebaseMessaging in Frameworks */,
+				ACAC3E1B2D8413640001B069 /* FirebaseAnalytics in Frameworks */,
 				C33D73CD2CDEEE7E00889B1B /* SwiftKeychainWrapper in Frameworks */,
 				C34C1F562CE38E2800F94BCD /* Alamofire in Frameworks */,
+				ACAC3E1D2D8413640001B069 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				C3FD904E2C913EC40021D2BA /* SnapKit in Frameworks */,
 				C3FD90512C913ECD0021D2BA /* Then in Frameworks */,
 				C32D06F52CE633260016F497 /* Kingfisher in Frameworks */,
-				8C6A7C97DD9DE3A79AFFCBC0 /* Pods_CONTACTO_iOS.framework in Frameworks */,
+				2633502D2D9D390300818CB9 /* AmplitudeSwift in Frameworks */,
+				52259755595FA388540C3A24 /* Pods_CONTACTO_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,16 +371,16 @@
 		4409E7E3BA55A92D581A48CE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				7BE1A2D5A19E66A4ACF01783 /* Pods-CONTACTO-iOS.debug.xcconfig */,
-				0DEA1664F7C3DD88F43E1FDF /* Pods-CONTACTO-iOS.release.xcconfig */,
+				26ED0BECEC61DA9C9552DA6E /* Pods-CONTACTO-iOS.debug.xcconfig */,
+				2E3CBD386904C5B0B3473417 /* Pods-CONTACTO-iOS.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		7A31FA26A707F91E52E2DDB3 /* Frameworks */ = {
+		80C30AC23C9577E2F8DA0D96 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5957E3576D0A1BDEF8E58708 /* Pods_CONTACTO_iOS.framework */,
+				C0F5297BC8F72493DC49B4B2 /* Pods_CONTACTO_iOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -701,6 +734,7 @@
 		C37A28DB2CB417A0004BC6AE /* Edit */ = {
 			isa = PBXGroup;
 			children = (
+				261111FB2D895D8000D481E2 /* PortfolioItem */,
 				C3F574F72CC3952500440D98 /* Cell */,
 				C37A28DF2CB417C2004BC6AE /* View */,
 				C37A28DC2CB417AE004BC6AE /* ViewController */,
@@ -863,12 +897,13 @@
 		C3FD902C2C9139D40021D2BA = {
 			isa = PBXGroup;
 			children = (
+				26334F842D9D07EF00818CB9 /* GoogleService-Info.plist */,
 				AC0EAA8E2D68451C00757EBD /* .gitignore */,
 				AC3389C32D67259100BE7518 /* Config.xcconfig */,
 				C3FD90372C9139D40021D2BA /* CONTACTO-iOS */,
 				C3FD90362C9139D40021D2BA /* Products */,
 				4409E7E3BA55A92D581A48CE /* Pods */,
-				7A31FA26A707F91E52E2DDB3 /* Frameworks */,
+				80C30AC23C9577E2F8DA0D96 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -947,6 +982,7 @@
 		C3FD90572C913FC10021D2BA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				263350202D9D352E00818CB9 /* Amplitude */,
 				C3FD90872C9160F30021D2BA /* Font */,
 				C33D73D92CDEEF4900889B1B /* Config.swift */,
 				C3FD90412C9139D70021D2BA /* Assets.xcassets */,
@@ -974,6 +1010,7 @@
 		C3FD905F2C9142DE0021D2BA /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				26BBF5E62D8432830089E60C /* Alert */,
 				C3FD90842C915EBE0021D2BA /* Base */,
 				C35744122CF8B60300FE691D /* Splash */,
 				C3FD90792C915E160021D2BA /* Login */,
@@ -998,6 +1035,7 @@
 		C3FD90792C915E160021D2BA /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				26B59E7E2D96408A00B4E01B /* DTO */,
 				C3FD907F2C915E770021D2BA /* View */,
 				C3FD907E2C915E710021D2BA /* ViewController */,
 			);
@@ -1095,15 +1133,21 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C3FD90492C9139D70021D2BA /* Build configuration list for PBXNativeTarget "CONTACTO-iOS" */;
 			buildPhases = (
-				FBCB8FBC105AC7F6A979B95C /* [CP] Check Pods Manifest.lock */,
+				03B0E6118AD4CC0DA66EED40 /* [CP] Check Pods Manifest.lock */,
 				C3FD90312C9139D40021D2BA /* Sources */,
 				C3FD90322C9139D40021D2BA /* Frameworks */,
 				C3FD90332C9139D40021D2BA /* Resources */,
-				136CEA5D7C3B20210070C394 /* [CP] Embed Pods Frameworks */,
+				6B834458503BC00B2BE2CF2B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				261111FB2D895D8000D481E2 /* PortfolioItem */,
+				263350202D9D352E00818CB9 /* Amplitude */,
+				26B59E7E2D96408A00B4E01B /* DTO */,
+				26BBF5E62D8432830089E60C /* Alert */,
 			);
 			name = "CONTACTO-iOS";
 			packageProductDependencies = (
@@ -1112,6 +1156,10 @@
 				C33D73CC2CDEEE7E00889B1B /* SwiftKeychainWrapper */,
 				C34C1F552CE38E2800F94BCD /* Alamofire */,
 				C32D06F42CE633260016F497 /* Kingfisher */,
+				ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */,
+				ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */,
+				ACAC3E1E2D8413640001B069 /* FirebaseMessaging */,
+				2633502C2D9D390300818CB9 /* AmplitudeSwift */,
 			);
 			productName = "CONTACTO-iOS";
 			productReference = C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */;
@@ -1133,7 +1181,6 @@
 				};
 			};
 			buildConfigurationList = C3FD90302C9139D40021D2BA /* Build configuration list for PBXProject "CONTACTO-iOS" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1147,7 +1194,10 @@
 				C33D73CB2CDEEE7E00889B1B /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 				C34C1F542CE38E2800F94BCD /* XCRemoteSwiftPackageReference "Alamofire" */,
 				C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				2633502B2D9D390300818CB9 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = C3FD90362C9139D40021D2BA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1162,6 +1212,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26334F852D9D0A7200818CB9 /* GoogleService-Info.plist in Resources */,
 				C3FD90992C9189850021D2BA /* FKRasterRomanCompactTrial-Blended.otf in Resources */,
 				C3E6D9122CFAD76900D6ABDC /* Pretendard-Bold.otf in Resources */,
 				C3FD90422C9139D70021D2BA /* Assets.xcassets in Resources */,
@@ -1180,24 +1231,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		136CEA5D7C3B20210070C394 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FBCB8FBC105AC7F6A979B95C /* [CP] Check Pods Manifest.lock */ = {
+		03B0E6118AD4CC0DA66EED40 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1217,6 +1251,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6B834458503BC00B2BE2CF2B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1500,7 +1551,7 @@
 		};
 		C3FD904A2C9139D70021D2BA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7BE1A2D5A19E66A4ACF01783 /* Pods-CONTACTO-iOS.debug.xcconfig */;
+			baseConfigurationReference = AC3389C32D67259100BE7518 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1515,11 +1566,12 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "contacto.CONTACTO-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1532,7 +1584,7 @@
 		};
 		C3FD904B2C9139D70021D2BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0DEA1664F7C3DD88F43E1FDF /* Pods-CONTACTO-iOS.release.xcconfig */;
+			baseConfigurationReference = AC3389C32D67259100BE7518 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1547,11 +1599,12 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "contacto.CONTACTO-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1586,6 +1639,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2633502B2D9D390300818CB9 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amplitude/Amplitude-Swift";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.9.0;
+			};
+		};
 		C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -1629,6 +1698,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2633502C2D9D390300818CB9 /* AmplitudeSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2633502B2D9D390300818CB9 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */;
+			productName = AmplitudeSwift;
+		};
+		ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		ACAC3E1E2D8413640001B069 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		C32D06F42CE633260016F497 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */;

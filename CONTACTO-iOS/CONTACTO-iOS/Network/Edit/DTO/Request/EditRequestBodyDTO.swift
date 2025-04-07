@@ -11,7 +11,13 @@ struct EditRequestBodyDTO: Codable {
     let username: String
     let email, description, instagramId, password: String
     let webUrl: String?
+    let nationality: Nationalities
     let userPurposes: [Int]
     let userTalents: [String]
-    let portfolioImageUrl: [Data]?
+
+    let newPortfolioImages: [Data]?
+    let newImageKeys: [Int]?
+
+    let existedImageUrl: [String]?
+    let existingImageKeys: [Int]?
 }

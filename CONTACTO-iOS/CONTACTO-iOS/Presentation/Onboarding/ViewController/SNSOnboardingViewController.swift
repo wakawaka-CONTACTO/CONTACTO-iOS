@@ -83,18 +83,21 @@ extension SNSOnboardingViewController {
     
     @objc func textFieldDidChange(_ sender: Any?) {
         if let textField = sender as? UITextField {
-            if let currentText = textField.text, !currentText.isEmpty, !currentText.isOnlyWhitespace() {
-                snsOnboardingView.nextButton.isEnabled = true
-            } else {
-                snsOnboardingView.nextButton.isEnabled = false
-            }
+            let hasText = !(textField.text?.isEmpty ?? true) && !(textField.text?.isOnlyWhitespace() ?? true)
+            let isNationalitySelected = snsOnboardingView.selectedNationality != .NONE
+            
+            snsOnboardingView.nextButton.isEnabled = hasText && isNationalitySelected
         }
     }
+
     
     @objc private func nextButtonTapped() {
-        guard let website = self.snsOnboardingView.websiteTextField.text,
-              website.hasPrefix("http://") || website.hasPrefix("https://") else {
-            let alert = UIAlertController(title: "Notify", message: "Your website address should be started with http:// or https://", preferredStyle: .alert)
+        if !validateWebsite(self.snsOnboardingView.websiteTextField.text) {
+            let alert = UIAlertController(
+                title: "Notify",
+                message: "Your website address should be started with http:// or https://",
+                preferredStyle: .alert
+            )
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             if let topVC = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController {
                 topVC.present(alert, animated: true, completion: nil)
@@ -102,12 +105,33 @@ extension SNSOnboardingViewController {
             return
         }
         
+        let url = self.snsOnboardingView.websiteTextField.text
+        if url == "http://" || url == "https://" {
+            UserInfo.shared.webUrl = ""
+        } else{
+            UserInfo.shared.webUrl = url
+        }
+
         UserInfo.shared.instagramId = self.snsOnboardingView.instaTextField.text ?? ""
-        UserInfo.shared.webUrl = self.snsOnboardingView.websiteTextField.text ?? ""
         UserInfo.shared.nationality = self.snsOnboardingView.selectedNationality.rawValue
 
         let talentOnboardingViewController = TalentOnboardingViewController()
         self.navigationController?.pushViewController(talentOnboardingViewController, animated: true)
+    }
+    
+    func validateWebsite(_ website: String?) -> Bool {
+        guard let website = website?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !website.isEmpty else {
+            return true
+        }
+        
+        if website.hasPrefix("http://") || website.hasPrefix("https://") {
+            if let url = URL(string: website), UIApplication.shared.canOpenURL(url) {
+                return true
+            }
+        }
+        
+        return false
     }
 }
 

@@ -10,4 +10,7 @@ import Foundation
 struct LoginRequestBodyDTO: Codable {
     let email: String
     let password: String
+    let firebaseToken: String?
+    let deviceId: String?
+    let deviceType : String?
 }
