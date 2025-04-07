@@ -110,6 +110,21 @@ public enum EventName: String {
     case CLICK_DETAIL_BLOCK_NO
     case CLICK_DETAIL_REPORT_YES
     case CLICK_DETAIL_REPORT_NO
+    
+    // Edit
+    case VIEW_EDIT
+    case SCROLL_EDIT
+    case CLICK_EDIT_PROFILE
+    case CLICK_EDIT_PREVIEW
+    case CLICK_EDIT_NAME
+    case CLICK_EDIT_PORTFOLIO
+    case CLICK_EDIT_PORTFOLIO_DELETE
+    case CLICK_EDIT_TALENT
+    case CLICK_EDIT_DESCRIPTION
+    case CLICK_EDIT_PURPOSE
+    case CLICK_EDIT_INSTA
+    case CLICK_EDIT_WEB
+    case VIEW_PREVIEW
 }
 
 extension EventName {
@@ -239,12 +254,9 @@ extension EventName {
         case .CLICK_HOME_REVERT:
             return "되돌리기 버튼 눌렀을 때"
             
-            
         case .SUCCESS_LOGIN:
             return "Login 성공"
             
-    // 2) extension EventName의 switch문에 새 케이스 추가
-    // ------------------------------------------
         case .VIEW_DETAIL:
             return "디테일 화면"
         case .SCROLL_DETAIL:
@@ -263,6 +275,34 @@ extension EventName {
             return "report 내부에서 Spam 등 버튼 클릭 시"
         case .CLICK_DETAIL_REPORT_NO:
             return "report 내부에서 cancel 버튼 클릭 시"
+            
+            // Edit
+        case .VIEW_EDIT:
+            return "edit 화면"
+        case .SCROLL_EDIT:
+            return "edit 화면 스크롤 시"
+        case .CLICK_EDIT_PROFILE:
+            return "상단 profile edit 버튼 선택 시"
+        case .CLICK_EDIT_PREVIEW:
+            return "edit 화면에서 preview 버튼 선택 시"
+        case .CLICK_EDIT_NAME:
+            return "name 텍스트 필드 선택 시"
+        case .CLICK_EDIT_PORTFOLIO:
+            return "portfolio 버튼 선택 시"
+        case .CLICK_EDIT_PORTFOLIO_DELETE:
+            return "portfolio 사진 삭제 버튼 선택 시"
+        case .CLICK_EDIT_TALENT:
+            return "talent 수정 버튼 선택 시"
+        case .CLICK_EDIT_DESCRIPTION:
+            return "description 텍스트 필드 선택 시"
+        case .CLICK_EDIT_PURPOSE:
+            return "purpose 수정 버튼 선택 시"
+        case .CLICK_EDIT_INSTA:
+            return "instagram 버튼 선택 시"
+        case .CLICK_EDIT_WEB:
+            return "web 버튼 선택 시"
+        case .VIEW_PREVIEW:
+            return "preview 화면"
 
         default:
             return "unknown"
