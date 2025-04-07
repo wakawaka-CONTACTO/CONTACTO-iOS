@@ -80,7 +80,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             object: nil
         )
         setAmplitudeUserProperties()
-        sendAmpliLog(eventName: EventName.VIEW_HOME)
+        self.sendAmpliLog(eventName: EventName.VIEW_HOME)
     }
     
     override func viewWillAppear(_ animated: Bool) {

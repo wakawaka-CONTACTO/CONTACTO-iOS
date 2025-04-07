@@ -84,6 +84,13 @@ final class EditViewController: UIViewController {
         hideKeyboardWhenTappedAround()
         setCollectionView()
         setPickerDelegate()
+        
+        // user_id 설정
+        if let userId = portfolioManager?.currentData.id {
+            UserDefaults.standard.set(String(userId), forKey: "userId")
+        }
+        
+        editView.amplitude.sendAmpliLog(eventName: EventName.VIEW_EDIT)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -369,6 +376,7 @@ final class EditViewController: UIViewController {
     
     // MARK: - Button Actions
     @objc private func previewButtonTapped() {
+        editView.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_PREVIEW)
         let previewVC = HomeViewController()
         previewVC.isPreview = true
         if let manager = portfolioManager {
@@ -389,6 +397,7 @@ final class EditViewController: UIViewController {
     }
     
     @objc private func talentEditButtonTapped() {
+        editView.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_TALENT)
         let talentVC = TalentOnboardingViewController()
         talentVC.hidesBottomBarWhenPushed = true
         talentVC.talentOnboardingView.nextButton.setTitle(StringLiterals.Edit.doneButton, for: .normal)
@@ -707,5 +716,11 @@ extension EditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
             let isMatch = regex?.firstMatch(in: string, options: [], range: range) != nil
             return isMatch
         }
+    }
+}
+
+extension EditViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        editView.amplitude.sendAmpliLog(eventName: EventName.SCROLL_EDIT)
     }
 }

@@ -10,10 +10,11 @@ import UIKit
 import SnapKit
 import Then
 
-final class DetailProfileView: BaseView, DetailAmplitudeSender {
+final class DetailProfileView: BaseView {
     
     let scrollView = UIScrollView()
     private let contentsView = UIView()
+    let amplitude = DetailAmplitudeSender()
     
     private let topGradientView = UIImageView()
     lazy var portImageCollectionView = UICollectionView(

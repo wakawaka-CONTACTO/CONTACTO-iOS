@@ -11,7 +11,7 @@ import AmplitudeSwift
 public struct AmplitudeManager{
     static public var amplitude: Amplitude!
     
-    private init(){}
+    private init(){ }
 }
 
 extension Amplitude {

@@ -12,6 +12,8 @@ import Then
 
 final class EditView: BaseView {
     
+    let amplitude = EditAmplitudeSender()
+    
     private let topView = UIView()
     private let topImageView = UIImageView()
     

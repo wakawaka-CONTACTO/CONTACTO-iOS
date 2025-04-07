@@ -314,6 +314,8 @@ extension LoginViewController {
                 KeychainHandler.shared.userID = String(data.userId)
                 KeychainHandler.shared.accessToken = data.accessToken
                 KeychainHandler.shared.refreshToken = data.refreshToken
+                AmplitudeManager.amplitude.setUserId(userId: String(data.userId))
+                self.amplitude.sendAmpliLog(eventName: EventName.SUCCESS_LOGIN)
                 completion(true)
             case .failure(let error):
                 if let data = error.data,

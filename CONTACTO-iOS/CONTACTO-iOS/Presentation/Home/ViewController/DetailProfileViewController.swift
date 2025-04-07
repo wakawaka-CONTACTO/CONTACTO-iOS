@@ -31,6 +31,11 @@ final class DetailProfileViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        
+//        // user_id 설정
+//        if let userId = portfolioData.id {
+//            UserDefaults.standard.set(String(userId), forKey: "userId")
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -40,7 +45,7 @@ final class DetailProfileViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BACK)
+        detailProfileView.amplitude.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BACK)
     }
     
     override func setNavigationBar() {
@@ -98,6 +103,7 @@ final class DetailProfileViewController: BaseViewController {
                 case .success(let data):
                     self?.portfolioData = data
                     self?.updatePortfolio()
+//                    self?.updateUserInfo(from: data)
                     completion(true)
                 default:
                     completion(false)
@@ -108,6 +114,17 @@ final class DetailProfileViewController: BaseViewController {
         }
         completion(true)
     }
+    
+//    func updateUserInfo(from data: MyDetailResponseDTO) {
+//        UserInfo.shared.name = data.username
+//        UserInfo.shared.email = data.email
+//        UserInfo.shared.description = data.description
+//        UserInfo.shared.instagramId = data.instagramId
+//        UserInfo.shared.webUrl = data.webUrl
+//        UserInfo.shared.userPurposes = data.userPurposes
+//        UserInfo.shared.userTalents = data.userTalents.map { $0.talentType }
+//        UserInfo.shared.portfolioImageUrl = [] // or fetch & convert from URL
+//    }
     
     private func blockUser(blockedUserId: Int, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.homeService.blockUser(blockedUserId: portfolioData.id) { response in
@@ -201,7 +218,7 @@ final class DetailProfileViewController: BaseViewController {
         let id = portfolioData.instagramId
         let url = URL(string: "https://www.instagram.com/\(id)")!
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_INSTA)
+        detailProfileView.amplitude.sendAmpliLog(eventName: EventName.CLICK_DETAIL_INSTA)
     }
     
     @objc private func webButtonTapped() {
@@ -223,7 +240,7 @@ final class DetailProfileViewController: BaseViewController {
             }
             UIApplication.shared.open(chatURL, options: [:], completionHandler: nil)
         }
-        detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_WEB)
+        detailProfileView.amplitude.sendAmpliLog(eventName: EventName.CLICK_DETAIL_WEB)
     }
     
     @objc private func popButtonTapped() {
@@ -240,10 +257,10 @@ final class DetailProfileViewController: BaseViewController {
         )
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            self.detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_NO)
+            self.detailProfileView.amplitude.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_NO)
         }
         let blockAction = UIAlertAction(title: "Block", style: .destructive) { _ in
-            self.detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_YES)
+            self.detailProfileView.amplitude.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_YES)
             self.blockUser(blockedUserId: self.portfolioData.id) { success in
                 DispatchQueue.main.async {
                     if success {
@@ -317,7 +334,7 @@ final class DetailProfileViewController: BaseViewController {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         alert.addAction(cancelAction)
         
-        detailProfileView.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_NO)
+        detailProfileView.amplitude.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_NO)
         present(alert, animated: true, completion: nil)
     }
 }
@@ -419,6 +436,6 @@ extension DetailProfileViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        detailProfileView.sendAmpliLog(eventName: EventName.SCROLL_DETAIL)
+        detailProfileView.amplitude.sendAmpliLog(eventName: EventName.SCROLL_DETAIL)
     }
 }
