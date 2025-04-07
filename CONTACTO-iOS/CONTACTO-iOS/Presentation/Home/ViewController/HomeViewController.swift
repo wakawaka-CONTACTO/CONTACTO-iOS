@@ -196,6 +196,7 @@ extension HomeViewController {
     }
     
     @objc private func handleBackTap(_ sender: UITapGestureRecognizer) {
+        guard !(recommendedPortfolios.isEmpty), !(portfolioImages.isEmpty) else { return }
         HapticService.impact(.light).run()
         
         if portfolioImageIdx > 0 { portfolioImageIdx -= 1 }
@@ -204,6 +205,7 @@ extension HomeViewController {
     }
     
     @objc private func handleNextTap(_ sender: UITapGestureRecognizer) {
+        guard !(recommendedPortfolios.isEmpty), !(portfolioImages.isEmpty) else { return }
         HapticService.impact(.light).run()
         
         if portfolioImageIdx >= portfolioImageCount - 1 { portfolioImageIdx = 0 }
@@ -386,7 +388,7 @@ extension HomeViewController {
     }
     
     @objc private func yesButtonTapped() {
-        guard !isProcessing else { return }
+        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
         isProcessing = true
         
         if !isPreview {
@@ -403,7 +405,7 @@ extension HomeViewController {
     }
     
     @objc private func noButtonTapped() {
-        guard !isProcessing else { return }
+        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
         isProcessing = true
         
         if !isPreview {
@@ -420,7 +422,7 @@ extension HomeViewController {
     }
     
     @objc private func undoButtonTapped() {
-        guard !isProcessing else { return }
+        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
         isProcessing = true
         
         isUndo = true
