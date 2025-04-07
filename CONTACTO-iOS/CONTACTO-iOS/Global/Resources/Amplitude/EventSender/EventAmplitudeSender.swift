@@ -12,7 +12,7 @@ public protocol EventAmplitudeSender {
     func sendAmpliLog(eventName: EventName, properties: [String: Any])
 }
 
-public class extensionAmplitudeSender: EventAmplitudeSender {
+public class ExtendedAmplitudeSender: EventAmplitudeSender {
     let eventView: EventView
 
     init(eventView: EventView) {
