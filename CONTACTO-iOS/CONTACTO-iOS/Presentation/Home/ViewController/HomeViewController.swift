@@ -196,6 +196,7 @@ extension HomeViewController {
     }
     
     @objc private func handleBackTap(_ sender: UITapGestureRecognizer) {
+        guard !(recommendedPortfolios.isEmpty) else { return }
         HapticService.impact(.light).run()
         
         if portfolioImageIdx > 0 { portfolioImageIdx -= 1 }
@@ -204,6 +205,7 @@ extension HomeViewController {
     }
     
     @objc private func handleNextTap(_ sender: UITapGestureRecognizer) {
+        guard !(recommendedPortfolios.isEmpty) else { return }
         HapticService.impact(.light).run()
         
         if portfolioImageIdx >= portfolioImageCount - 1 { portfolioImageIdx = 0 }
