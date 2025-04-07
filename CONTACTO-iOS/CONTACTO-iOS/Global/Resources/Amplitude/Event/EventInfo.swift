@@ -127,6 +127,33 @@ public enum EventName: String {
     case CLICK_EDIT_SAVE
     case CLICK_EDIT_EDITSTART
     case VIEW_PREVIEW
+    
+    
+    // Home
+    case CLICK_MATCH_SEND
+
+    // Chat
+    case VIEW_CHAT
+    case VIEW_EMPTY
+    case SCROLL_CHAT
+    case CLICK_CHAT
+    case VIEW_CHATROOM
+    case CLICK_CHATROOM_PLUS
+    case CLICK_CHATROOM_TRANS_ON
+    case CLICK_CHATROOM_TRANS_OFF
+    case CLICK_CHATROOM_TRANSLATE_CHOOSE
+    case CLICK_CHATROOM_TRANSLATE_LANGUAGE
+    case CLICK_CHATROOM_BACK
+
+    // Info
+    case VIEW_INFO
+    case CLICK_INFO_HELP
+    case CLICK_INFO_COMMUNITY
+    case CLICK_INFO_PRIVACY
+    case CLICK_INFO_LOGOUT
+    case CLICK_INFO_DELETE
+    case CLICK_INFO_DELETE_YES
+    case CLICK_INFO_DELETE_NO
 }
 
 extension EventName {
@@ -309,6 +336,49 @@ extension EventName {
             return "edit start 버튼 클릭 시"
         case .VIEW_PREVIEW:
             return "preview 화면"
+            
+        case .CLICK_MATCH_SEND:
+            return "매치 보낼 때"
+
+        case .VIEW_CHAT:
+            return "채팅 화면"
+        case .VIEW_EMPTY:
+            return "empty 화면"
+        case .SCROLL_CHAT:
+            return "채팅 화면 스크롤 시"
+        case .CLICK_CHAT:
+            return "채팅 클릭 시"
+        case .VIEW_CHATROOM:
+            return "채팅방 뷰"
+        case .CLICK_CHATROOM_PLUS:
+            return "채팅방 + 버튼 클릭 시"
+        case .CLICK_CHATROOM_TRANS_ON:
+            return "채팅방 번역 on"
+        case .CLICK_CHATROOM_TRANS_OFF:
+            return "채팅방 번역 off"
+        case .CLICK_CHATROOM_TRANSLATE_CHOOSE:
+            return "채팅방 번역할 언어 선택 시"
+        case .CLICK_CHATROOM_TRANSLATE_LANGUAGE:
+            return "채팅방 번역 언어 바꾸기"
+        case .CLICK_CHATROOM_BACK:
+            return "채팅방 뒤로가기 시"
+
+        case .VIEW_INFO:
+            return "info 화면"
+        case .CLICK_INFO_HELP:
+            return "Help & Support 버튼 눌렀을 때"
+        case .CLICK_INFO_COMMUNITY:
+            return "Community 버튼 눌렀을 때"
+        case .CLICK_INFO_PRIVACY:
+            return "Privacy 버튼 눌렀을 때"
+        case .CLICK_INFO_LOGOUT:
+            return "로그아웃 시"
+        case .CLICK_INFO_DELETE:
+            return "계정 삭제 버튼 눌렀을 때"
+        case .CLICK_INFO_DELETE_YES:
+            return "계정 삭제 Yes"
+        case .CLICK_INFO_DELETE_NO:
+            return "계정 삭제 No"
 
         default:
             return "unknown"
