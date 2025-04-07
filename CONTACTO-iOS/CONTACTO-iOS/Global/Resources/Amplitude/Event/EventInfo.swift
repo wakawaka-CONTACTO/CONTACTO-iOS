@@ -124,6 +124,8 @@ public enum EventName: String {
     case CLICK_EDIT_PURPOSE
     case CLICK_EDIT_INSTA
     case CLICK_EDIT_WEB
+    case CLICK_EDIT_SAVE
+    case CLICK_EDIT_EDITSTART
     case VIEW_PREVIEW
 }
 
@@ -301,6 +303,10 @@ extension EventName {
             return "instagram 버튼 선택 시"
         case .CLICK_EDIT_WEB:
             return "web 버튼 선택 시"
+        case .CLICK_EDIT_SAVE:
+            return "edit save 버튼 클릭 시"
+        case .CLICK_EDIT_EDITSTART:
+            return "edit start 버튼 클릭 시"
         case .VIEW_PREVIEW:
             return "preview 화면"
 

@@ -7,11 +7,6 @@
 
 import Foundation
 
-//public protocol EditAmplitudeSender: EventAmplitudeSender{
-//    func sendAmpliLog(eventName: EventName)
-//    func sendAmpliLog(eventName: EventName, properties: [String: Any])
-//}
-
 public class EditAmplitudeSender: EventAmplitudeSender{
     public func sendAmpliLog(eventName: EventName){
         let info = EventInfo(event: EventView.EDIT, eventName: eventName)

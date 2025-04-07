@@ -72,6 +72,7 @@ final class EditViewController: UIViewController {
     }
     
     let editView = EditView()
+    let amplitude = EditAmplitudeSender()
     
     private let countries = Nationalities.allCases
     
@@ -90,7 +91,7 @@ final class EditViewController: UIViewController {
             UserDefaults.standard.set(String(userId), forKey: "userId")
         }
         
-        editView.amplitude.sendAmpliLog(eventName: EventName.VIEW_EDIT)
+        self.amplitude.sendAmpliLog(eventName: EventName.VIEW_EDIT)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -153,6 +154,8 @@ final class EditViewController: UIViewController {
         editView.instaTextField.delegate = self
         editView.websiteTextField.delegate = self
         editView.nationalityTextField.delegate = self
+        
+        editView.scrollView.delegate = self
     }
     
     private func setCollectionView() {
@@ -353,6 +356,7 @@ final class EditViewController: UIViewController {
                 $0.leading.equalTo(editView.cancelButton.snp.trailing).offset(8)
                 $0.trailing.equalToSuperview().inset(16)
             } else {
+                amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_SAVE)
                 $0.leading.trailing.equalToSuperview().inset(16)
             }
         }
@@ -376,7 +380,7 @@ final class EditViewController: UIViewController {
     
     // MARK: - Button Actions
     @objc private func previewButtonTapped() {
-        editView.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_PREVIEW)
+        self.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_PREVIEW)
         let previewVC = HomeViewController()
         previewVC.isPreview = true
         if let manager = portfolioManager {
@@ -397,7 +401,7 @@ final class EditViewController: UIViewController {
     }
     
     @objc private func talentEditButtonTapped() {
-        editView.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_TALENT)
+        self.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_TALENT)
         let talentVC = TalentOnboardingViewController()
         talentVC.hidesBottomBarWhenPushed = true
         talentVC.talentOnboardingView.nextButton.setTitle(StringLiterals.Edit.doneButton, for: .normal)
@@ -453,7 +457,8 @@ final class EditViewController: UIViewController {
             }
             guard let manager = portfolioManager else { return }
             let body = manager.prepareUpdateRequestBody()
-            
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_SAVE)
+
             editMyPort(bodyDTO: body) { success in
                 if success {
                     self.editView.portfolioCollectionView.reloadData()
@@ -472,6 +477,7 @@ final class EditViewController: UIViewController {
             }
         } else {
             editView.editButton.isEnabled = false
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_EDITSTART)
         }
         
         editView.portfolioCollectionView.reloadData()
@@ -514,11 +520,13 @@ extension EditViewController: UICollectionViewDataSource {
             
             cell.uploadAction = { [weak self] in
                 self?.setPortfolio()
+                self?.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_PORTFOLIO)
             }
             
             cell.cancelAction = { [weak self] in
                 guard let self = self, let manager = self.portfolioManager, indexPath.row < manager.portfolioItems.count else { return }
                 manager.portfolioItems.remove(at: indexPath.row)
+                self.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_PORTFOLIO_DELETE)
                 self.isPortfolioFilled = !manager.portfolioItems.isEmpty
                 collectionView.reloadData()
                 self.checkForChanges()
@@ -660,6 +668,22 @@ extension EditViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
         
+        if textField == editView.instaTextField {
+            amplitude.sendAmpliLog(eventName: .CLICK_EDIT_INSTA)
+        }
+        
+        else if textField == editView.websiteTextField {
+            amplitude.sendAmpliLog(eventName: .CLICK_EDIT_WEB)
+        }
+        
+        else if textField == editView.descriptionTextView {
+            amplitude.sendAmpliLog(eventName: .CLICK_EDIT_DESCRIPTION)
+        }
+        
+        else if textField == editView.nameTextField {
+            amplitude.sendAmpliLog(eventName: .CLICK_EDIT_NAME)
+        }
+        
         if textField == editView.nationalityTextField {
             editView.toggleSaveButtonVisibility(false)
         }
@@ -720,7 +744,15 @@ extension EditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 }
 
 extension EditViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if let collectionView = scrollView as? UICollectionView, collectionView.tag == 0 {
+            let pageWidth = scrollView.frame.width
+            let currentPage = Int(scrollView.contentOffset.x / pageWidth)
+        }
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        editView.amplitude.sendAmpliLog(eventName: EventName.SCROLL_EDIT)
+        self.amplitude.sendAmpliLog(eventName: EventName.SCROLL_EDIT)
     }
 }
