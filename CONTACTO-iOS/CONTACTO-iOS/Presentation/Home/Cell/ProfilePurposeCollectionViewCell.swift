@@ -12,6 +12,7 @@ import Then
 
 final class ProfilePurposeCollectionViewCell: UICollectionViewCell {
     var tapAction: (() -> Void) = {}
+    let amplitude = EditAmplitudeSender()
     
     var num = 0
     var isTapped = false {
@@ -97,6 +98,7 @@ final class ProfilePurposeCollectionViewCell: UICollectionViewCell {
         if isEditing {
             isTapped.toggle()
             tapAction()
+            self.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_PURPOSE)
         }
     }
 }
