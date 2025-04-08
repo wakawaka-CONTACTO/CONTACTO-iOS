@@ -144,6 +144,8 @@ extension InfoViewController {
             self.deleteMe { _ in
                 KeychainHandler.shared.accessToken.removeAll()
                 KeychainHandler.shared.refreshToken.removeAll()
+                AmplitudeManager.amplitude.flush()
+                AmplitudeManager.amplitude.reset()
                 guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
                 sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
             }
