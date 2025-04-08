@@ -609,6 +609,7 @@ extension EditViewController: PHPickerViewControllerDelegate {
 extension EditViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         activeTextField = textView
+        amplitude.sendAmpliLog(eventName: .CLICK_EDIT_DESCRIPTION)
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -674,10 +675,6 @@ extension EditViewController: UITextFieldDelegate {
         
         else if textField == editView.websiteTextField {
             amplitude.sendAmpliLog(eventName: .CLICK_EDIT_WEB)
-        }
-        
-        else if textField == editView.descriptionTextView {
-            amplitude.sendAmpliLog(eventName: .CLICK_EDIT_DESCRIPTION)
         }
         
         else if textField == editView.nameTextField {
