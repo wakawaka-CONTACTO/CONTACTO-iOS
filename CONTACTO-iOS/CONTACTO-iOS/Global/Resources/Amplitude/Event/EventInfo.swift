@@ -151,6 +151,8 @@ public enum EventName: String {
     case CLICK_INFO_COMMUNITY
     case CLICK_INFO_PRIVACY
     case CLICK_INFO_LOGOUT
+    case CLICK_INFO_LOGOUT_YES
+    case CLICK_INFO_LOGOUT_NO
     case CLICK_INFO_DELETE
     case CLICK_INFO_DELETE_YES
     case CLICK_INFO_DELETE_NO
@@ -373,6 +375,10 @@ extension EventName {
             return "Privacy 버튼 눌렀을 때"
         case .CLICK_INFO_LOGOUT:
             return "로그아웃 시"
+        case .CLICK_INFO_LOGOUT_YES:
+            return "로그아웃 버튼 선택 후 yes 선택 시"
+        case .CLICK_INFO_LOGOUT_NO:
+            return "로그아웃 버튼 선택 후 no 선택 시"
         case .CLICK_INFO_DELETE:
             return "계정 삭제 버튼 눌렀을 때"
         case .CLICK_INFO_DELETE_YES:
