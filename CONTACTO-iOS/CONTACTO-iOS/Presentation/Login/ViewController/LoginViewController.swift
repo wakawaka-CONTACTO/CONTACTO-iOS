@@ -150,7 +150,11 @@ extension LoginViewController {
         switch loginView.state {
         case .email, .emailError:
             showLoadingIndicator()
-            amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_CONTINUE)
+            if loginView.state == .email {
+                amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_CONTINUE)
+            } else{
+                amplitude.sendAmpliLog(eventName: EventName.CLICK_NOACCOUNT_CONTINUE)
+            }
             emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
                 if self.isExistEmail {
                     self.loginView.mainTextField.text = ""
