@@ -12,7 +12,7 @@ import SnapKit
 import StompClientLib
 import Then
 
-final class ChatRoomViewController: BaseViewController {
+final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
     
     var content = ""
     var senderId = KeychainHandler.shared.userID
@@ -46,6 +46,7 @@ final class ChatRoomViewController: BaseViewController {
         self.addKeyboardNotifications()
         self.setData()
         self.registerSocket()
+        self.sendAmpliLog(eventName: EventName.VIEW_CHATROOM)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -58,6 +59,7 @@ final class ChatRoomViewController: BaseViewController {
             // 먼저 구독 해제
             socketClient.unsubscribe(destination: "/topic/\(chatRoomId)")
             print("ChatRoom: 소켓 구독 해제 - roomId: \(chatRoomId)")
+            self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_BACK)
             
             // 약간의 지연 후 연결 종료
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
@@ -95,7 +97,7 @@ final class ChatRoomViewController: BaseViewController {
     override func setAddTarget() {
         chatRoomView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         chatRoomView.profileImageButton.addTarget(self, action: #selector(profileImageButtonTapped), for: .touchUpInside)
-//        chatRoomView.plusButton.addTarget(self, action: #selector(plusButtonTappped), for: .touchUpInside)
+        chatRoomView.plusButton.addTarget(self, action: #selector(plusButtonTappped), for: .touchUpInside)
         chatRoomView.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
     }
     
@@ -423,6 +425,7 @@ extension ChatRoomViewController {
         configuration.selection = .default
         self.present(picker, animated: true, completion: nil)
         picker.delegate = self
+        self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_PLUS)
     }
     
     @objc private func sendButtonTapped() {
@@ -448,6 +451,7 @@ extension ChatRoomViewController {
             createdAt: createdAt,
             readStatus: false)
         
+        self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_SEND)
         // 로컬 UI 업데이트
         chatList.append(newMessage)
         chatRoomView.chatRoomCollectionView.reloadData()
@@ -475,6 +479,7 @@ extension ChatRoomViewController {
                 chatRoomView.chatRoomCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
             }
         }
+        self.sendAmpliLog(eventName: EventName.SCROLL_CHATROOM)
     }
     
     private func isAtBottom() -> Bool {
