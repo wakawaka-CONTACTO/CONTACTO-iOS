@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class ChatListViewController: BaseViewController {
+final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     var chatRoomListData: [ChatListResponseDTO] = []
     let chatListView = ChatListView()
     let chatEmptyView = ChatEmptyView()
@@ -35,6 +35,7 @@ final class ChatListViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.sendAmpliLog(eventName: EventName.VIEW_CHAT)
         currentPage = 0
         chatRoomListData = []
         hasNext = true
@@ -121,6 +122,7 @@ final class ChatListViewController: BaseViewController {
         chatRoomViewController.participants = chatRoomListData[indexPath.row].participants
         chatRoomViewController.chatRoomTitle = chatRoomListData[indexPath.row].title
         chatRoomViewController.chatRoomThumbnail = chatRoomListData[indexPath.row].chatRoomThumbnail ?? ""
+        self.sendAmpliLog(eventName: EventName.VIEW_CHATROOM)
         self.navigationController?.pushViewController(chatRoomViewController, animated: true)
     }
     
@@ -181,6 +183,7 @@ extension ChatListViewController: UICollectionViewDelegate {
                 }
             }
         }
+        self.sendAmpliLog(eventName: EventName.SCROLL_CHAT)
     }
 }
 
