@@ -13,7 +13,7 @@ import Then
 
 // editView.nationalityTextField.text = userInfo.nationality
 
-final class EditViewController: UIViewController {
+final class EditViewController: UIViewController, EditAmplitudeSender {
     
     private var portfolioManager: PortfolioManager?
     
@@ -72,7 +72,6 @@ final class EditViewController: UIViewController {
     }
     
     let editView = EditView()
-    let amplitude = EditAmplitudeSender()
     
     private let countries = Nationalities.allCases
     
@@ -91,7 +90,7 @@ final class EditViewController: UIViewController {
             UserDefaults.standard.set(String(userId), forKey: "userId")
         }
         
-        self.amplitude.sendAmpliLog(eventName: EventName.VIEW_EDIT)
+        self.sendAmpliLog(eventName: EventName.VIEW_EDIT)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -356,7 +355,7 @@ final class EditViewController: UIViewController {
                 $0.leading.equalTo(editView.cancelButton.snp.trailing).offset(8)
                 $0.trailing.equalToSuperview().inset(16)
             } else {
-                amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_SAVE)
+                self.sendAmpliLog(eventName: EventName.CLICK_EDIT_SAVE)
                 $0.leading.trailing.equalToSuperview().inset(16)
             }
         }
@@ -380,7 +379,7 @@ final class EditViewController: UIViewController {
     
     // MARK: - Button Actions
     @objc private func previewButtonTapped() {
-        self.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_PREVIEW)
+        self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PREVIEW)
         let previewVC = HomeViewController()
         previewVC.isPreview = true
         if let manager = portfolioManager {
@@ -401,7 +400,7 @@ final class EditViewController: UIViewController {
     }
     
     @objc private func talentEditButtonTapped() {
-        self.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_TALENT)
+        self.sendAmpliLog(eventName: EventName.CLICK_EDIT_TALENT)
         let talentVC = TalentOnboardingViewController()
         talentVC.hidesBottomBarWhenPushed = true
         talentVC.talentOnboardingView.nextButton.setTitle(StringLiterals.Edit.doneButton, for: .normal)
@@ -457,7 +456,7 @@ final class EditViewController: UIViewController {
             }
             guard let manager = portfolioManager else { return }
             let body = manager.prepareUpdateRequestBody()
-            amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_SAVE)
+            self.sendAmpliLog(eventName: EventName.CLICK_EDIT_SAVE)
 
             editMyPort(bodyDTO: body) { success in
                 if success {
@@ -477,7 +476,7 @@ final class EditViewController: UIViewController {
             }
         } else {
             editView.editButton.isEnabled = false
-            amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_EDITSTART)
+            self.sendAmpliLog(eventName: EventName.CLICK_EDIT_EDITSTART)
         }
         
         editView.portfolioCollectionView.reloadData()
@@ -520,13 +519,13 @@ extension EditViewController: UICollectionViewDataSource {
             
             cell.uploadAction = { [weak self] in
                 self?.setPortfolio()
-                self?.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_PORTFOLIO)
+                self?.sendAmpliLog(eventName: EventName.CLICK_EDIT_PORTFOLIO)
             }
             
             cell.cancelAction = { [weak self] in
                 guard let self = self, let manager = self.portfolioManager, indexPath.row < manager.portfolioItems.count else { return }
                 manager.portfolioItems.remove(at: indexPath.row)
-                self.amplitude.sendAmpliLog(eventName: EventName.CLICK_EDIT_PORTFOLIO_DELETE)
+                self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PORTFOLIO_DELETE)
                 self.isPortfolioFilled = !manager.portfolioItems.isEmpty
                 collectionView.reloadData()
                 self.checkForChanges()
@@ -609,7 +608,7 @@ extension EditViewController: PHPickerViewControllerDelegate {
 extension EditViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         activeTextField = textView
-        amplitude.sendAmpliLog(eventName: .CLICK_EDIT_DESCRIPTION)
+        self.sendAmpliLog(eventName: .CLICK_EDIT_DESCRIPTION)
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -670,15 +669,15 @@ extension EditViewController: UITextFieldDelegate {
         activeTextField = textField
         
         if textField == editView.instaTextField {
-            amplitude.sendAmpliLog(eventName: .CLICK_EDIT_INSTA)
+            self.sendAmpliLog(eventName: .CLICK_EDIT_INSTA)
         }
         
         else if textField == editView.websiteTextField {
-            amplitude.sendAmpliLog(eventName: .CLICK_EDIT_WEB)
+            self.sendAmpliLog(eventName: .CLICK_EDIT_WEB)
         }
         
         else if textField == editView.nameTextField {
-            amplitude.sendAmpliLog(eventName: .CLICK_EDIT_NAME)
+            self.sendAmpliLog(eventName: .CLICK_EDIT_NAME)
         }
         
         if textField == editView.nationalityTextField {
@@ -750,6 +749,6 @@ extension EditViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.amplitude.sendAmpliLog(eventName: EventName.SCROLL_EDIT)
+        self.sendAmpliLog(eventName: EventName.SCROLL_EDIT)
     }
 }

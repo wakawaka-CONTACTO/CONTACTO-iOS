@@ -7,14 +7,19 @@
 
 import Foundation
 
-public class EditAmplitudeSender: EventAmplitudeSender{
-    public func sendAmpliLog(eventName: EventName){
+protocol EditAmplitudeSender: EventAmplitudeSender{
+    func sendAmpliLog(eventName: EventName)
+    func sendAmpliLog(eventName: EventName, properties: [String: Any])
+}
+
+extension EditAmplitudeSender {
+    func sendAmpliLog(eventName: EventName){
         let info = EventInfo(event: EventView.EDIT, eventName: eventName)
         
         AmplitudeManager.amplitude.track(eventInfo: info)
     }
 
-    public func sendAmpliLog(eventName: EventName, properties: [String: Any]){
+    func sendAmpliLog(eventName: EventName, properties: [String: Any]){
         let info = EventInfo(event: EventView.EDIT, eventName: eventName)
         
         AmplitudeManager.amplitude.track(eventInfo: info, properties: properties)
