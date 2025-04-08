@@ -36,6 +36,9 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
     private var isFetching = false
     private var isFirstLoad = true
     
+    private var lastScrollLogTime: Date?
+    private let scrollLogInterval: TimeInterval = 3.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
@@ -479,7 +482,11 @@ extension ChatRoomViewController {
                 chatRoomView.chatRoomCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
             }
         }
-        self.sendAmpliLog(eventName: EventName.SCROLL_CHATROOM)
+        let currentTime = Date()
+        if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
+            self.sendAmpliLog(eventName: EventName.SCROLL_CHATROOM)
+            lastScrollLogTime = currentTime
+        }
     }
     
     private func isAtBottom() -> Bool {

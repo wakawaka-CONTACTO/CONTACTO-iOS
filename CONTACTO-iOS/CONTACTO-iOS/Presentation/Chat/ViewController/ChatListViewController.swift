@@ -15,6 +15,9 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     let chatListView = ChatListView()
     let chatEmptyView = ChatEmptyView()
     
+    private var lastScrollLogTime: Date?
+    private let scrollLogInterval: TimeInterval = 3.0
+    
     private var hasNext = true
     private var currentPage = 0
     private let pageSize = 10
@@ -182,7 +185,12 @@ extension ChatListViewController: UICollectionViewDelegate {
                 }
             }
         }
-        self.sendAmpliLog(eventName: EventName.SCROLL_CHAT)
+        
+        let currentTime = Date()
+        if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
+            self.sendAmpliLog(eventName: EventName.SCROLL_CHAT)
+            lastScrollLogTime = currentTime
+        }
     }
 }
 

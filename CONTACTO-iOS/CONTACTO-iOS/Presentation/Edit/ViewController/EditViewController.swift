@@ -38,6 +38,9 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
         }
     }
     
+    private var lastScrollLogTime: Date?
+    private let scrollLogInterval: TimeInterval = 3.0
+    
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
         didSet {
             self.portfolioManager?.currentData.userPurposes = tappedStates.enumerated().compactMap { index, state in
@@ -753,6 +756,10 @@ extension EditViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.sendAmpliLog(eventName: EventName.SCROLL_EDIT)
+        let currentTime = Date()
+        if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
+            self.sendAmpliLog(eventName: EventName.SCROLL_EDIT)
+            lastScrollLogTime = currentTime
+        }
     }
 }

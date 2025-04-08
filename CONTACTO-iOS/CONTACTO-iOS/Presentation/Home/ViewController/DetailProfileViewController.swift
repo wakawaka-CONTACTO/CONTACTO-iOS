@@ -27,6 +27,8 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     let detailProfileView = DetailProfileView()
     var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: Nationalities.NONE, webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
+    private var lastScrollLogTime: Date?
+    private let scrollLogInterval: TimeInterval = 3.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -418,6 +420,10 @@ extension DetailProfileViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.sendAmpliLog(eventName: EventName.SCROLL_DETAIL)
+        let currentTime = Date()
+        if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
+            self.sendAmpliLog(eventName: EventName.SCROLL_DETAIL)
+            lastScrollLogTime = currentTime
+        }
     }
 }
