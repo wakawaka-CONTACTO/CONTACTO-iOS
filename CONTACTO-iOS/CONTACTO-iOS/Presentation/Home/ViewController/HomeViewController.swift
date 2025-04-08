@@ -372,6 +372,7 @@ extension HomeViewController {
                 KeychainHandler.shared.userID = String(data.id)
                 #if DEBUG
                 print("내 포트폴리오 데이터: \(data)")
+                KeychainHandler.shared.userName = "\(data.username), Debug"
                 #endif
             default:
                 #if DEBUG
