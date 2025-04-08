@@ -75,6 +75,7 @@ extension InfoViewController {
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_PRIVACY)
     }
     
     @objc private func logoutButtonTapped() {
