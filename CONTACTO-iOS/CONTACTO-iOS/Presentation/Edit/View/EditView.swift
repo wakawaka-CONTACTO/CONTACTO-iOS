@@ -10,8 +10,8 @@ import UIKit
 import SnapKit
 import Then
 
-final class EditView: BaseView {
-    
+final class EditView: BaseView, EditAmplitudeSender {
+        
     private let topView = UIView()
     private let topImageView = UIImageView()
     

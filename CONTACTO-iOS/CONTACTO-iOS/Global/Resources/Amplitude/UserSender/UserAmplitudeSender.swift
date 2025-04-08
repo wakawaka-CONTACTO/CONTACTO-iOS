@@ -12,10 +12,9 @@ public final class AmplitudeUserPropertySender {
 
     static func setUserProperties(user: UserPropertiesInfo) {
         let identify = Identify()
-
-        let userId = KeychainHandler.shared.userID
+        
+        let userId = "\(KeychainHandler.shared.userID) - \(KeychainHandler.shared.userName)"
         AmplitudeManager.amplitude.setUserId(userId: userId)
-
         // String
         identify.set(property: "user_name", value: user.name)
         identify.set(property: "user_email", value: user.email)
@@ -39,18 +38,6 @@ public final class AmplitudeUserPropertySender {
         let lastUsed = isoFormatter.string(from: user.lastUseDate)
         identify.set(property: "user_last_use_date", value: lastUsed)
 
-        // Amplitude에 전송
         AmplitudeManager.amplitude.identify(identify: identify)
     }
-
-    /* todo
-     아래 프로퍼티 설정하는 메서드
-     "user_chatroom_count": 0,
-     "user_home_no": 0,
-     "user_home_yes": 0,
-     "user_purpose": [ - 한국어로 반환
-       "0"
-     ],
-     "user_pushnotification": true,
-     */
 }

@@ -1,29 +1,27 @@
 //
-//  LoginAmplitudeSender.swift
+//  DetailAmplitudeSender.swift
 //  CONTACTO-iOS
 //
-//  Created by 장아령 on 3/26/25.
+//  Created by 장아령 on 4/4/25.
 //
 
 import Foundation
 
-public protocol LoginAmplitudeSender: EventAmplitudeSender{
+public protocol DetailAmplitudeSender: EventAmplitudeSender{
     func sendAmpliLog(eventName: EventName)
-    
     func sendAmpliLog(eventName: EventName, properties: [String: Any])
 }
 
-public extension LoginAmplitudeSender {
+public extension DetailAmplitudeSender {
     func sendAmpliLog(eventName: EventName){
-        let info = EventInfo(event: EventView.LOGIN, eventName: eventName)
-        
+        let info = EventInfo(event: EventView.DETAIL, eventName: eventName)
+
         AmplitudeManager.amplitude.track(eventInfo: info)
     }
 
     func sendAmpliLog(eventName: EventName, properties: [String: Any]){
-        let info = EventInfo(event: EventView.LOGIN, eventName: eventName)
-        
+        let info = EventInfo(event: EventView.DETAIL, eventName: eventName)
+
         AmplitudeManager.amplitude.track(eventInfo: info, properties: properties)
     }
 }
-

@@ -11,12 +11,13 @@ import SafariServices
 import SnapKit
 import Then
 
-final class InfoViewController: BaseViewController {
+final class InfoViewController: BaseViewController, InfoAmplitudeSender {
     private let infoView = InfoView()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         checkMyPort { _ in }
+        self.sendAmpliLog(eventName: EventName.VIEW_INFO)
     }
     
     override func setNavigationBar() {
@@ -60,26 +61,31 @@ extension InfoViewController {
     @objc private func helpButtonTapped() {
         guard let url = URL(string: StringLiterals.URL.insta) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_HELP)
     }
     
     @objc private func guidelinesTapped() {
         guard let url = URL(string: StringLiterals.URL.guidelines) else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_COMMUNITY)
     }
     
     @objc private func cookieButtonTapped() {
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_PRIVACY)
     }
     
     @objc private func logoutButtonTapped() {
         self.setLogoutAlertController()
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT)
     }
     
     @objc private func deleteButtonTapped() {
         self.setDeleteAlertController()
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE)
     }
     
     private func setLogoutAlertController() {
@@ -90,6 +96,7 @@ extension InfoViewController {
         
         let cancel = UIAlertAction(title: StringLiterals.Info.Alert.Logout.no, style: .cancel){ cancel in
             print("취소 버튼이 눌렸습니다.")
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_NO)
         }
         
         let success = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ [weak self] action in
@@ -101,7 +108,11 @@ extension InfoViewController {
                 case .success:
                     KeychainHandler.shared.accessToken.removeAll()
                     KeychainHandler.shared.refreshToken.removeAll()
+
+                    AmplitudeManager.amplitude.flush()
                     AmplitudeManager.amplitude.reset()
+                    self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_YES)
+                  
                     guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
                     sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                 default:
@@ -123,10 +134,12 @@ extension InfoViewController {
         
         let notYet = UIAlertAction(title: StringLiterals.Info.Alert.Delete.notYet, style: .default){ action in
             print("취소 버튼이 눌렸습니다.")
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE_NO)
         }
         
         let yes = UIAlertAction(title: StringLiterals.Info.Alert.Delete.yes, style: .destructive){ cancel in
             self.showFinalDeleteConfirmation()
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE_YES)
         }
         
         alert.addAction(notYet)
@@ -144,6 +157,8 @@ extension InfoViewController {
             self.deleteMe { _ in
                 KeychainHandler.shared.accessToken.removeAll()
                 KeychainHandler.shared.refreshToken.removeAll()
+                AmplitudeManager.amplitude.flush()
+                AmplitudeManager.amplitude.reset()
                 guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
                 sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
             }

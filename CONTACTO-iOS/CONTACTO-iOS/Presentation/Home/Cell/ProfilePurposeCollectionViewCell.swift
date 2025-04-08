@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class ProfilePurposeCollectionViewCell: UICollectionViewCell {
+final class ProfilePurposeCollectionViewCell: UICollectionViewCell, EditAmplitudeSender {
     var tapAction: (() -> Void) = {}
     
     var num = 0
@@ -97,6 +97,7 @@ final class ProfilePurposeCollectionViewCell: UICollectionViewCell {
         if isEditing {
             isTapped.toggle()
             tapAction()
+            self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PURPOSE)
         }
     }
 }

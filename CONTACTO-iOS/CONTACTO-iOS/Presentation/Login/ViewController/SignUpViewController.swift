@@ -11,7 +11,7 @@ import SnapKit
 import Then
 import SafariServices
 
-final class SignUpViewController: UIViewController {
+final class SignUpViewController: UIViewController, LoginAmplitudeSender {
     
     let signUpView = SignUpView()
     let emailCodeView = EmailCodeView()
@@ -23,7 +23,6 @@ final class SignUpViewController: UIViewController {
     var nationality = ""
     
     weak var delegate: EmailCodeViewDelegate?
-    let amplitude = LoginAmplitudeSender()
 
     var isPrivacyAgree = false {
         didSet {
@@ -101,7 +100,7 @@ final class SignUpViewController: UIViewController {
         emailCodeView.resendButton.addTarget(self, action: #selector(sendCode), for: .touchUpInside)
         
         setPWView.continueButton.addTarget(self, action: #selector(pwContinueButton), for: .touchUpInside)
-        amplitude.sendAmpliLog(eventName: EventName.VIEW_SIGNUP)
+        self.sendAmpliLog(eventName: EventName.VIEW_SIGNUP)
     }
     
     private func setDelegate() {
@@ -156,11 +155,11 @@ extension SignUpViewController {
     
     @objc private func privacyAgreeButtonTapped() {
         isPrivacyAgree.toggle()
-        amplitude.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_AGREE)
+        self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_AGREE)
     }
     
     @objc private func privacyAgreeDetailButtonTapped() {
-        amplitude.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_AGREE_DETAIL)
+        self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_AGREE_DETAIL)
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
@@ -183,7 +182,7 @@ extension SignUpViewController {
         UserInfo.shared.email = self.email
         UserInfo.shared.password = self.pw
         
-        amplitude.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
+        self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
         let nameOnboardingViewController = NameOnboardingViewController()
         view.window?.rootViewController = UINavigationController(rootViewController: nameOnboardingViewController)
     }
@@ -311,6 +310,6 @@ extension SignUpViewController: EmailCodeViewDelegate {
         // 로그인 화면으로 이동
         let loginVC = LoginViewController()
         self.navigationController?.setViewControllers([loginVC], animated: false)
-        amplitude.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_BACK)
+        self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_BACK)
     }
 }
