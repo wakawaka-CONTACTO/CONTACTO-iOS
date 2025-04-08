@@ -7,21 +7,23 @@
 
 import Foundation
 
-//public protocol DetailAmplitudeSender: EventAmplitudeSender{
-//    func sendAmpliLog(eventName: EventName)
-//    func sendAmpliLog(eventName: EventName, properties: [String: Any])
-//}
+public protocol DetailAmplitudeSender: EventAmplitudeSender{
+    func sendAmpliLog(eventName: EventName)
+    func sendAmpliLog(eventName: EventName, properties: [String: Any])
+}
 
-public class DetailAmplitudeSender: EventAmplitudeSender{
-    public func sendAmpliLog(eventName: EventName){
+public extension DetailAmplitudeSender {
+    func sendAmpliLog(eventName: EventName){
         let info = EventInfo(event: EventView.DETAIL, eventName: eventName)
-        
+        let userId = "Amplitude Test Account"
+        AmplitudeManager.amplitude.setUserId(userId: userId)
         AmplitudeManager.amplitude.track(eventInfo: info)
     }
 
-    public func sendAmpliLog(eventName: EventName, properties: [String: Any]){
+    func sendAmpliLog(eventName: EventName, properties: [String: Any]){
         let info = EventInfo(event: EventView.DETAIL, eventName: eventName)
-        
+        let userId = "Amplitude Test Account"
+        AmplitudeManager.amplitude.setUserId(userId: userId)
         AmplitudeManager.amplitude.track(eventInfo: info, properties: properties)
     }
 }
