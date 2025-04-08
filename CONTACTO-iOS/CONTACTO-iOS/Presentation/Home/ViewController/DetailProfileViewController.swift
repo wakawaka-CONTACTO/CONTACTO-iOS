@@ -315,10 +315,11 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
             alert.addAction(action)
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_NO)
+        }
         alert.addAction(cancelAction)
         
-        self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_NO)
         present(alert, animated: true, completion: nil)
     }
 }
