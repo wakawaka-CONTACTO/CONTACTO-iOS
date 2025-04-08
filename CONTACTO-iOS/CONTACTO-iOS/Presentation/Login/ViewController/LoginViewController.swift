@@ -168,7 +168,11 @@ extension LoginViewController {
             showLoadingIndicator()
             let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
             let deviceType = UIDevice.current.model
-            amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_BUTTON)
+            if loginView.state == .pw{
+                amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_BUTTON)
+            } else{
+                amplitude.sendAmpliLog(eventName: EventName.CLICK_INCORRECT_LOGIN)
+            }
             // FCM 토큰 비동기 처리
             Messaging.messaging().token { firebaseToken, error in
                 guard let firebaseToken = firebaseToken else {
@@ -196,6 +200,7 @@ extension LoginViewController {
             }
                 
         case .emailForget:
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_INPUT_NAME_CONTINUE)
             helpEmail(bodyDTO: SignInHelpRequestBodyDTO(userName: self.name)) { _ in
                 self.loginView.mainTextField.text = ""
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
@@ -227,14 +232,24 @@ extension LoginViewController {
     @objc func helpEmailButtonTapped() {
         loginView.mainTextField.text = ""
         self.decodeEmail = ""
+        if loginView.state == .email || loginView.state == .emailError {
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_SEND_CODE_FORGET)
+        }
         loginView.setLoginState(state: .emailForget)
         amplitude.sendAmpliLog(eventName: EventName.CLICK_NOACCOUNT_FORGET)
     }
     
     @objc func helpPWButtonTapped() {
         loginView.mainTextField.text = ""
+        if loginView.state == .pwError {
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_INCORRECT_FORGET)
+        } else if loginView.state == .emailForget {
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_INPUT_NAME_FORGET)
+        } else {
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_NEEDHELP)
+        }
         loginView.setLoginState(state: .pwForget)
-        amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_NEEDHELP)
+        
     }
     
     @objc private func privacyButtonTapped() {
@@ -250,6 +265,7 @@ extension LoginViewController {
                 self.loginView.isHidden = true
                 self.emailCodeView.isHidden = true
                 self.setPWView.isHidden = false
+                self.amplitude.sendAmpliLog(eventName: EventName.VIEW_RESET_PASSWORD)
             } else {
                 self.emailCodeView.underLineView.image = .imgUnderLineRed
             }
@@ -270,7 +286,7 @@ extension LoginViewController {
     @objc private func pwContinueButton() {
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
         let deviceType = UIDevice.current.model
-        
+        amplitude.sendAmpliLog(eventName: EventName.CLICK_SET_PASSWORD_NEXT)
         // FCM 토큰 비동기 처리
         Messaging.messaging().token { firebaseToken, error in
             guard let firebaseToken = firebaseToken else {
@@ -529,6 +545,13 @@ extension LoginViewController: EmailCodeViewDelegate {
     
     @objc internal func backButtonTapped() {
         let loginVC = LoginViewController()
+        if loginView.state == .emailForget{
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_INPUT_NAME_GO_TO_LOGIN)
+        }
+        else{
+            amplitude.sendAmpliLog(eventName: EventName.CLICK_LOGIN_FIRST_STEP)
+        }
+        
         self.navigationController?.setViewControllers([loginVC], animated: false)
     }
 }
