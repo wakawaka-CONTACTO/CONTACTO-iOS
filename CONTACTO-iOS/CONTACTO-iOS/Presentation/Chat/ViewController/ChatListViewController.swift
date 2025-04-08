@@ -122,7 +122,6 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         chatRoomViewController.participants = chatRoomListData[indexPath.row].participants
         chatRoomViewController.chatRoomTitle = chatRoomListData[indexPath.row].title
         chatRoomViewController.chatRoomThumbnail = chatRoomListData[indexPath.row].chatRoomThumbnail ?? ""
-        self.sendAmpliLog(eventName: EventName.VIEW_CHATROOM)
         self.navigationController?.pushViewController(chatRoomViewController, animated: true)
     }
     

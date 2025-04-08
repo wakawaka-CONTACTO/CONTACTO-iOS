@@ -136,9 +136,11 @@ public enum EventName: String {
     case VIEW_CHAT
     case VIEW_EMPTY
     case SCROLL_CHAT
+    case SCROLL_CHATROOM
     case CLICK_CHAT
     case VIEW_CHATROOM
     case CLICK_CHATROOM_PLUS
+    case CLICK_CHATROOM_SEND
     case CLICK_CHATROOM_TRANS_ON
     case CLICK_CHATROOM_TRANS_OFF
     case CLICK_CHATROOM_TRANSLATE_CHOOSE
@@ -348,12 +350,16 @@ extension EventName {
             return "empty 화면"
         case .SCROLL_CHAT:
             return "채팅 화면 스크롤 시"
+        case .SCROLL_CHATROOM:
+            return "채팅방 화면 스크롤 시"
         case .CLICK_CHAT:
             return "채팅 클릭 시"
         case .VIEW_CHATROOM:
             return "채팅방 뷰"
         case .CLICK_CHATROOM_PLUS:
             return "채팅방 + 버튼 클릭 시"
+        case .CLICK_CHATROOM_SEND:
+            return "채팅방 보내기 버튼 눌렀을 때"
         case .CLICK_CHATROOM_TRANS_ON:
             return "채팅방 번역 on"
         case .CLICK_CHATROOM_TRANS_OFF:
