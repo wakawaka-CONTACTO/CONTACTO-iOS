@@ -31,11 +31,6 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
-        
-//        // user_id 설정
-//        if let userId = portfolioData.id {
-//            UserDefaults.standard.set(String(userId), forKey: "userId")
-//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -103,7 +98,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
                 case .success(let data):
                     self?.portfolioData = data
                     self?.updatePortfolio()
-//                    self?.updateUserInfo(from: data)
+                    self?.setAmplitudeUserProperties(data: data)
                     completion(true)
                 default:
                     completion(false)
@@ -115,16 +110,12 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         completion(true)
     }
     
-//    func updateUserInfo(from data: MyDetailResponseDTO) {
-//        UserInfo.shared.name = data.username
-//        UserInfo.shared.email = data.email
-//        UserInfo.shared.description = data.description
-//        UserInfo.shared.instagramId = data.instagramId
-//        UserInfo.shared.webUrl = data.webUrl
-//        UserInfo.shared.userPurposes = data.userPurposes
-//        UserInfo.shared.userTalents = data.userTalents.map { $0.talentType }
-//        UserInfo.shared.portfolioImageUrl = [] // or fetch & convert from URL
-//    }
+    private func setAmplitudeUserProperties(data: MyDetailResponseDTO){
+        var metaProperties = UserPropertyMetadata(homeYesCount: 0, homeNoCount: 0, chatroomCount: 0, pushNotificationConsent: false) // todo 추후 값 수정하고 반영
+        let userProperty = UserPropertiesInfo.from(data, metadata:
+                                                    metaProperties)
+        AmplitudeUserPropertySender.setUserProperties(user: userProperty)
+    }
     
     private func blockUser(blockedUserId: Int, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.homeService.blockUser(blockedUserId: portfolioData.id) { response in

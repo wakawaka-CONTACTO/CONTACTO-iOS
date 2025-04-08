@@ -12,7 +12,10 @@ public final class AmplitudeUserPropertySender {
 
     static func setUserProperties(user: UserPropertiesInfo) {
         let identify = Identify()
-
+        
+        let userId = "\(user.email) - \(user.name)"
+        print("[LOG] userId: \(userId)")
+        AmplitudeManager.amplitude.setUserId(userId: userId)
         // String
         identify.set(property: "user_name", value: user.name)
         identify.set(property: "user_email", value: user.email)
