@@ -362,7 +362,6 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
                 $0.leading.equalTo(editView.cancelButton.snp.trailing).offset(8)
                 $0.trailing.equalToSuperview().inset(16)
             } else {
-                self.sendAmpliLog(eventName: EventName.CLICK_EDIT_SAVE)
                 $0.leading.trailing.equalToSuperview().inset(16)
             }
         }
@@ -463,7 +462,6 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
             }
             guard let manager = portfolioManager else { return }
             let body = manager.prepareUpdateRequestBody()
-            self.sendAmpliLog(eventName: EventName.CLICK_EDIT_SAVE)
 
             editMyPort(bodyDTO: body) { success in
                 if success {
@@ -472,6 +470,7 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
                     self.view.endEditing(true)
                     self.isDataChanged = false
                     self.editView.editButton.isEnabled = true
+                    self.sendAmpliLog(eventName: EventName.CLICK_EDIT_SAVE)
                 }
                 else {
                     AlertManager.showAlert(on: self,
