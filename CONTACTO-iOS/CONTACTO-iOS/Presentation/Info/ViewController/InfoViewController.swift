@@ -99,15 +99,28 @@ extension InfoViewController {
             self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_NO)
         }
         
-        let success = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ action in
-            KeychainHandler.shared.accessToken.removeAll()
-            KeychainHandler.shared.refreshToken.removeAll()
-            guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-            sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-            self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_YES)
+        let success = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ [weak self] action in
+            guard let self = self else { return }
+            let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+            
+            NetworkService.shared.infoService.logout(deviceId: deviceId) { response in
+                switch response {
+                case .success:
+                    KeychainHandler.shared.accessToken.removeAll()
+                    KeychainHandler.shared.refreshToken.removeAll()
+
+                    AmplitudeManager.amplitude.flush()
+                    AmplitudeManager.amplitude.reset()
+                    self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_YES)
+                  
+                    guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                    sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                default:
+                    self.view.showToast(message: "로그아웃에 실패했습니다.")
+                }
+            }
         }
-        AmplitudeManager.amplitude.flush()
-        AmplitudeManager.amplitude.reset()
+        
         alert.addAction(cancel)
         alert.addAction(success)
         present(alert, animated: true)
