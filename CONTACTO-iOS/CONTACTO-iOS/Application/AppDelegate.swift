@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.registerForRemoteNotifications()
         let configuration = Configuration(apiKey: Config.amplitudeApiKey)
         AmplitudeManager.amplitude = Amplitude(configuration: configuration)
-        let userId = "Amplitude Test Account"
+        let userId = "\(KeychainHandler.shared.userID) - \(KeychainHandler.shared.userName)"
         AmplitudeManager.amplitude.setUserId(userId: userId)
         return true
     }

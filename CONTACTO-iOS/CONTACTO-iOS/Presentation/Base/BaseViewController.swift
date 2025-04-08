@@ -44,6 +44,9 @@ class BaseViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationBar()
+        
+        let userId = "\(KeychainHandler.shared.userID) - \(KeychainHandler.shared.userName)"
+        AmplitudeManager.amplitude.setUserId(userId: userId)
     }
     
     // MARK: UI

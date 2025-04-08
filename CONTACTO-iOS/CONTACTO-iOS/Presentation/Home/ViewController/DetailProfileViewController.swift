@@ -98,7 +98,6 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
                 case .success(let data):
                     self?.portfolioData = data
                     self?.updatePortfolio()
-                    self?.setAmplitudeUserProperties(data: data)
                     completion(true)
                 default:
                     completion(false)
@@ -108,13 +107,6 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
             self.updatePortfolio()
         }
         completion(true)
-    }
-    
-    private func setAmplitudeUserProperties(data: MyDetailResponseDTO){
-        var metaProperties = UserPropertyMetadata(homeYesCount: 0, homeNoCount: 0, chatroomCount: 0, pushNotificationConsent: false) // todo 추후 값 수정하고 반영
-        let userProperty = UserPropertiesInfo.from(data, metadata:
-                                                    metaProperties)
-        AmplitudeUserPropertySender.setUserProperties(user: userProperty)
     }
     
     private func blockUser(blockedUserId: Int, completion: @escaping (Bool) -> Void) {
@@ -172,7 +164,6 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         self.detailProfileView.talentCollectionView.reloadData()
         self.detailProfileView.purposeCollectionView.reloadData()
         
-        // 레이아웃이 완료된 후에 높이 계산
         DispatchQueue.main.async {
             self.resetCollectionViewLayout()
         }

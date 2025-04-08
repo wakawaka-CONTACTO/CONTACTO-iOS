@@ -59,14 +59,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     let homeView = HomeView()
     let homeEmptyView = HomeEmptyView()
-    
-    private func setAmplitudeUserProperties(){
-        var metaProperties = UserPropertyMetadata(homeYesCount: 0, homeNoCount: 0, chatroomCount: 0, pushNotificationConsent: false) // todo 추후 값 수정하고 반영
-        let userProperty = UserPropertiesInfo.from(previewPortfolioData, metadata:
-                                                    metaProperties)
-        AmplitudeUserPropertySender.setUserProperties(user: userProperty)
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setPanAction()
@@ -79,7 +72,6 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             name: Notification.Name("moveToChatRoomFromMatch"),
             object: nil
         )
-        setAmplitudeUserProperties()
         self.sendAmpliLog(eventName: EventName.VIEW_HOME)
     }
     
@@ -376,6 +368,8 @@ extension HomeViewController {
             switch response {
             case .success(let data):
                 self?.previewPortfolioData = data
+                KeychainHandler.shared.userName = data.username
+                KeychainHandler.shared.userID = String(data.id)
                 #if DEBUG
                 print("내 포트폴리오 데이터: \(data)")
                 #endif

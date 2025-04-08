@@ -90,6 +90,10 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
             UserDefaults.standard.set(String(userId), forKey: "userId")
         }
         
+        if let username = portfolioManager?.currentData.username {
+            UserDefaults.standard.set(username, forKey: "username")
+        }
+        
         self.sendAmpliLog(eventName: EventName.VIEW_EDIT)
     }
     
