@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class SetPassWordView: BaseView {
+final class SetPassWordView: BaseView, LoginAmplitudeSender {
     
     private let logoImageView = UIImageView()
     let descriptionLabel = UILabel()
@@ -20,12 +20,11 @@ final class SetPassWordView: BaseView {
     let conditionViewNum = PasswordConditionView(state: .num)
     let confirmTextField = LoginBaseTextField(state: .pw)
     let continueButton = UIButton()
-    let amplitude = LoginAmplitudeSender()
 
     override func setAddTarget() {
         mainTextField.eyeButton.addTarget(self, action: #selector(mainEyeButtonTapped), for: .touchUpInside)
         confirmTextField.eyeButton.addTarget(self, action: #selector(confirmEyeButtonTapped), for: .touchUpInside)
-        amplitude.sendAmpliLog(eventName: EventName.VIEW_SET_PASSWORD)
+        self.sendAmpliLog(eventName: EventName.VIEW_SET_PASSWORD)
     }
     
     override func setStyle() {
