@@ -197,6 +197,7 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
             NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { response in
                 switch response {
                 case .success:
+                    UserIdentityManager.updateDetailProperty(data: bodyDTO)
                     completion(true)
                 default:
                     completion(false)
