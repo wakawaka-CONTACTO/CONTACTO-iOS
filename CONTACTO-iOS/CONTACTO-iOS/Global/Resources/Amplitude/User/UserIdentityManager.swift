@@ -68,6 +68,24 @@ public struct UserIdentityManager{
         AmplitudeManager.amplitude.identify(identify: identity)
     }
     
+    static func homeYes(){
+        let identity = Identify()
+        identity.add(property: "user_home_yes", value: 1)
+        AmplitudeManager.amplitude.identify(identify: identity)
+    }
+    
+    static func homeNo(){
+        let identity = Identify()
+        identity.add(property: "user_home_no", value: 1)
+        AmplitudeManager.amplitude.identify(identify: identity)
+    }
+    
+    static func chatroom(){
+        let identity = Identify()
+        identity.add(property: "user_chatroom_count", value: 1)
+        AmplitudeManager.amplitude.identify(identify: identity)
+    }
+    
     static func agreePushNotification(isAgree: Bool){
         let identity = Identify()
         identity.set(property: "user_push_notificator", value: isAgree)
