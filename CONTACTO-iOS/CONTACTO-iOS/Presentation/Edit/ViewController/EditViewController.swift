@@ -555,7 +555,7 @@ extension EditViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
             cell.isTapped = tappedStates[indexPath.row]
-            cell.config(num: indexPath.item)
+            cell.config(purpose: ProfilePurpose.allCases[indexPath.row])
             cell.isEditing = isEditEnable
             cell.setAddTarget()
             cell.tapAction = {
