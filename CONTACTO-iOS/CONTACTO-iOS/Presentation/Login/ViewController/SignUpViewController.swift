@@ -153,7 +153,6 @@ extension SignUpViewController {
                 self.setPWView.isHidden = true
                 self.emailCodeView.startTimer()
                 self.emailCodeView.setStatus()
-                self.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE, properties: ["sendcode_view": "signup"])
             case .failure(let error):
                 var errorMessage = "이메일 전송에 실패했습니다. 잠시후 다시 시도해주세요."
                 if let data = error.data,
@@ -198,7 +197,6 @@ extension SignUpViewController {
                 self.signUpView.isHidden = true
                 self.emailCodeView.isHidden = true
                 self.setPWView.isHidden = false
-                self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT)
             } else {
                 self.emailCodeView.underLineView.image = .imgUnderLineRed
                 self.emailCodeView.setFail()
