@@ -265,7 +265,7 @@ final class LoginView: BaseView, LoginAmplitudeSender {
             explain.text = ""
             
         case .pwForget:
-            self.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE)
+            self.sendAmpliLog(eventName: EventName.VIEW_SEND_CODE)
             newAccountButton.isHidden = true
             helpButton.isHidden = true
             privacyButton.isHidden = true

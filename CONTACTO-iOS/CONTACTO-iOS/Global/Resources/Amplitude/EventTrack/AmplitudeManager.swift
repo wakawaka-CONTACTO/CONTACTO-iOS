@@ -36,7 +36,7 @@ extension Amplitude {
                 eventProps[key] = value
             }
         }
-        
+        print("[LOG] amplitude track \(properties)")
         AmplitudeManager.amplitude.track(
             eventType: eventInfo.eventName.rawValue,
             eventProperties: eventProps

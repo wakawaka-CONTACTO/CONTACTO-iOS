@@ -172,7 +172,6 @@ final class EmailCodeView: BaseView, LoginAmplitudeSender {
     
     override func setAddTarget() {
         backButton.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
-        self.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE)
     }
     
     @objc private func backButtonDidTap() {
