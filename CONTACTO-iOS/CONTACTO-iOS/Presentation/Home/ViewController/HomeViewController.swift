@@ -370,6 +370,7 @@ extension HomeViewController {
                 self?.previewPortfolioData = data
                 KeychainHandler.shared.userName = data.username
                 KeychainHandler.shared.userID = String(data.id)
+                AmplitudeManager.myDetailProperty(data: data)
                 #if DEBUG
                 print("내 포트폴리오 데이터: \(data)")
                 KeychainHandler.shared.userName = "\(data.username), Debug"
