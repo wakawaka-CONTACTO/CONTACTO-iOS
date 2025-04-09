@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.registerForRemoteNotifications()
         let configuration = Configuration(apiKey: Config.amplitudeApiKey)
         AmplitudeManager.amplitude = Amplitude(configuration: configuration)
-        AmplitudeManager.setUserId()
+        UserIdentityManager.setUserId()
         
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             let isPushAgreed = settings.authorizationStatus == .authorized
