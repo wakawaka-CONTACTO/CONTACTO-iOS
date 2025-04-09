@@ -285,6 +285,7 @@ extension LoginViewController {
     
     @objc private func sendCode() {
         self.purpose = EmailSendPurpose.reset
+        self.dismissKeyboard()
         self.emailCodeView.startTimer()
         emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: self.purpose)) { _ in            self.loginView.isHidden = true
             self.emailCodeView.isHidden = false

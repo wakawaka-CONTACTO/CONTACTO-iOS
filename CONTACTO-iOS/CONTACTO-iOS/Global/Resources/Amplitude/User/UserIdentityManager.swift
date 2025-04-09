@@ -88,7 +88,7 @@ public struct UserIdentityManager{
     
     static func agreePushNotification(isAgree: Bool){
         let identity = Identify()
-        identity.set(property: "user_push_notificator", value: isAgree)
+        identity.set(property: "user_pushnotification", value: isAgree)
         AmplitudeManager.amplitude.identify(identify: identity)
     }
 }
