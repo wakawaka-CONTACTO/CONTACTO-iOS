@@ -137,11 +137,9 @@ extension SignUpViewController {
         
         if self.isFirst() == true{
             self.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE, properties: ["sendcode_view": "signup"])
-            print(self.failCount)
             self.retry()
         } else {
             self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_RESEND)
-            print(self.failCount)
             self.retry()
         }
         
