@@ -392,11 +392,9 @@ extension LoginViewController {
     private func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         if self.isFirst() == true{
             self.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE, properties: ["sendcode_view": "forget password view"])
-            print(self.failCount)
             self.retry()
         } else {
             self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_RESEND)
-            print(self.failCount)
             self.retry()
         }
         

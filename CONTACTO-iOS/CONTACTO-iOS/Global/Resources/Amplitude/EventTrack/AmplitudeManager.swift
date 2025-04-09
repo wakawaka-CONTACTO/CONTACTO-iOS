@@ -21,7 +21,9 @@ extension Amplitude {
             "view": eventInfo.eventView.rawValue,
             "trigger": eventInfo.trigger
         ]
+#if DEBUG
         print("[LOG] amplitude track \(properties)")
+#endif
         AmplitudeManager.amplitude.track(eventType: eventType, eventProperties: properties)
     }
     
@@ -36,7 +38,9 @@ extension Amplitude {
                 eventProps[key] = value
             }
         }
+#if DEBUG
         print("[LOG] amplitude track \(properties)")
+#endif
         AmplitudeManager.amplitude.track(
             eventType: eventInfo.eventName.rawValue,
             eventProperties: eventProps
