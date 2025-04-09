@@ -145,7 +145,7 @@ enum StringLiterals {
         }
         
         enum Match {
-            static let title = "Oh! You both like each ohter"
+            static let title = "Oh! You both like each other"
             static let description = "just say hello"
             static let hello = "hello!"
             static let nice = "Nice to meet you!"
