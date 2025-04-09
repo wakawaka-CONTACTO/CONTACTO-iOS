@@ -27,6 +27,9 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
     
     private var isFromTalentVC = false
     
+    // 탭 이동 시 수정 상태 유지를 위한 변수
+    private var wasEditEnabled = false
+    
     private func scheduleChangeDetection() {
         changeDetectionTimer?.invalidate()
         changeDetectionTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
@@ -105,15 +108,28 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
         setNavigationBar()
         addKeyboardNotifications()
         if !isFromTalentVC {
-            isEditEnable = false
-            editView.toggleEditMode(false)
-            setData()
+            if wasEditEnabled {
+                // 탭 이동 후 복귀 시 이전 수정 모드 상태 복원
+                isEditEnable = true
+                editView.toggleEditMode(true)
+                wasEditEnabled = false
+            } else {
+                // 최초 로드 또는 수정 모드가 아니었던 경우
+                isEditEnable = false
+                editView.toggleEditMode(false)
+                setData()
+            }
         }
         isFromTalentVC = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         removeKeyboardNotifications()
+        
+        // 탭 전환 시 수정 모드 상태 저장
+        if isEditEnable {
+            wasEditEnabled = true
+        }
     }
     
     // MARK: - UI Setup
