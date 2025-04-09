@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             let isPushAgreed = settings.authorizationStatus == .authorized
             
-            AmplitudeManager.agreePushNotification(isAgree: isPushAgreed)
+            UserIdentityManager.agreePushNotification(isAgree: isPushAgreed)
         }
         
         return true
@@ -80,10 +80,10 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             switch response.actionIdentifier {
             case "ACCEPT_ACTION":
                 print("Accept action - meetingID: \(meetingID), userID: \(userID)")
-                AmplitudeManager.agreePushNotification(isAgree: true)
+                UserIdentityManager.agreePushNotification(isAgree: true)
             case "DECLINE_ACTION":
                 print("Decline action - meetingID: \(meetingID), userID: \(userID)")
-                AmplitudeManager.agreePushNotification(isAgree: false)
+                UserIdentityManager.agreePushNotification(isAgree: false)
             default:
                 break
             }
