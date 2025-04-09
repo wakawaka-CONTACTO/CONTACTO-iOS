@@ -8,9 +8,13 @@
 import AmplitudeSwift
 import Foundation
 
-public final class AmplitudeUserPropertySender {
+protocol AmplitudeUserPropertySender {
+    func setUserProperties(user: UserPropertiesInfo)
+}
 
-    static func setUserProperties(user: UserPropertiesInfo) {
+extension AmplitudeUserPropertySender {
+
+    func setUserProperties(user: UserPropertiesInfo) {
         let identify = Identify()
         
         let userId = "\(KeychainHandler.shared.userID) - \(KeychainHandler.shared.userName)"

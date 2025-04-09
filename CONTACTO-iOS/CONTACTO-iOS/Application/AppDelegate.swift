@@ -35,8 +35,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.registerForRemoteNotifications()
         let configuration = Configuration(apiKey: Config.amplitudeApiKey)
         AmplitudeManager.amplitude = Amplitude(configuration: configuration)
-        let userId = "\(KeychainHandler.shared.userID) - \(KeychainHandler.shared.userName)"
-        AmplitudeManager.amplitude.setUserId(userId: userId)
+        AmplitudeManager.setUserId()
+        
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            let isPushAgreed = settings.authorizationStatus == .authorized
+            
+            AmplitudeManager.agreePushNotification(isAgree: isPushAgreed)
+        }
+        
         return true
     }
 
@@ -74,8 +80,10 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             switch response.actionIdentifier {
             case "ACCEPT_ACTION":
                 print("Accept action - meetingID: \(meetingID), userID: \(userID)")
+                AmplitudeManager.agreePushNotification(isAgree: true)
             case "DECLINE_ACTION":
                 print("Decline action - meetingID: \(meetingID), userID: \(userID)")
+                AmplitudeManager.agreePushNotification(isAgree: false)
             default:
                 break
             }
