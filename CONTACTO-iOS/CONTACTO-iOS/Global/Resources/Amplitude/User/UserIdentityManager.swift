@@ -40,7 +40,7 @@ public struct UserIdentityManager{
         identity.set(property: "user_nationality", value: data.nationality)
 
         identity.set(property: "user_talent", value: data.userTalents)
-        identity.set(property: "user_purpose", value: data.userPurposes)
+        identity.set(property: "user_purpose", value: data.userPurposes.map { ProfilePurpose(rawValue: $0)?.displayName ?? "" })
         identity.set(property: "user_portfolio_count", value: data.userPortfolio?.portfolioImageUrl.count)
         
         let lastUsed = ISO8601DateFormatter.shared.string(from: Date())
@@ -59,7 +59,7 @@ public struct UserIdentityManager{
         identity.set(property: "user_nationality", value: data.nationality)
 
         identity.set(property: "user_talent", value: data.userTalents)
-        identity.set(property: "user_purpose", value: data.userPurposes)
+        identity.set(property: "user_purpose", value: data.userPurposes.map { ProfilePurpose(rawValue: $0)?.displayName ?? "" })
         identity.set(property: "user_portfolio_count", value: (data.existedImageUrl?.count ?? 0) + (data.newPortfolioImages?.count ?? 0))
         
         let lastUsed = ISO8601DateFormatter.shared.string(from: Date())
