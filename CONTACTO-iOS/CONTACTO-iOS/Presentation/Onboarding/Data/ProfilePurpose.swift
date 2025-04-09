@@ -11,8 +11,8 @@ import UIKit
 enum ProfilePurpose: Int, CaseIterable {
     case getalong
     case collaborate
-    case makenew
     case art
+    case makenew
     case group
 
     var displayName: String {
@@ -21,18 +21,17 @@ enum ProfilePurpose: Int, CaseIterable {
             return StringLiterals.Onboarding.Purpose.getalong
         case .collaborate:
             return StringLiterals.Onboarding.Purpose.collaborate
-        case .makenew:
-            return StringLiterals.Onboarding.Purpose.makenew
         case .art:
             return StringLiterals.Onboarding.Purpose.art
+        case .makenew:
+            return StringLiterals.Onboarding.Purpose.makenew
         case .group:
             return StringLiterals.Onboarding.Purpose.group
         }
     }
     
     var color: UIColor {
-        // color 배열과 순서가 맞도록 rawValue를 활용합니다.
-        let colors: [UIColor] = [.ctsubred, .ctsubpink, .ctsubblue2, .ctsubyellow2, .ctsubgreen1]
+        let colors: [UIColor] = [.ctsubred, .ctsubpink, .ctsubyellow2, .ctsubblue2, .ctsubgreen1]
         return colors[self.rawValue]
     }
 }
