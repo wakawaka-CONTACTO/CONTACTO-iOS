@@ -26,6 +26,10 @@ public struct AmplitudeManager{
         identity.set(property: "user_insta", value: UserInfo.shared.instagramId)
         identity.set(property: "user_web", value: UserInfo.shared.webUrl)
         identity.set(property: "user_nationality", value: UserInfo.shared.nationality)
+        
+        let lastUsed = ISO8601DateFormatter.shared.string(from: Date())
+        identity.set(property: "user_last_use_date", value: lastUsed)
+        
         amplitude.identify(identify: identity)
     }
     
@@ -41,6 +45,10 @@ public struct AmplitudeManager{
         identity.set(property: "user_talent", value: data.userTalents)
         identity.set(property: "user_purpose", value: data.userPurposes)
         identity.set(property: "user_portfolio_count", value: data.userPortfolio?.portfolioImageUrl.count)
+        
+        let lastUsed = ISO8601DateFormatter.shared.string(from: Date())
+        identity.set(property: "user_last_use_date", value: lastUsed)
+        
         amplitude.identify(identify: identity)
     }
     
@@ -79,4 +87,11 @@ extension Amplitude {
             eventProperties: eventProps
         )
     }
+}
+
+extension ISO8601DateFormatter {
+    static let shared: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        return formatter
+    }()
 }
