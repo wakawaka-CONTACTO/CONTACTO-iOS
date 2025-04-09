@@ -204,7 +204,7 @@ extension LoginViewController {
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
         }
         case .pwForget:
-            self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT)
+            self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT, properties: ["from": "forget password"])
             emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
                 if self.isExistEmail {
                     self.sendCode()
