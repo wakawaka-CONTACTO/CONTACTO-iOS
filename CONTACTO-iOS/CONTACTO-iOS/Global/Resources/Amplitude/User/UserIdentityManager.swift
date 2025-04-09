@@ -9,6 +9,12 @@ import Foundation
 import AmplitudeSwift
 
 public struct UserIdentityManager{
+    
+    static func setUserId(){
+        let userId = "\(KeychainHandler.shared.userID) - \(KeychainHandler.shared.userName)"
+        AmplitudeManager.amplitude.setUserId(userId: userId)
+    }
+    
     static func syncUserInfo() {
         let identity = Identify()
         identity.set(property: "user_email", value: UserInfo.shared.email)

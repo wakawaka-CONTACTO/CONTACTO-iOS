@@ -12,11 +12,6 @@ public struct AmplitudeManager{
     static var amplitude: Amplitude!
     
     private init(){ }
-    
-    static func setUserId(){
-        let userId = "\(KeychainHandler.shared.userID) - \(KeychainHandler.shared.userName)"
-        amplitude.setUserId(userId: userId)
-    }
 }
 
 extension Amplitude {
