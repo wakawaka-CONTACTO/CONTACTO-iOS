@@ -23,6 +23,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     private let pageSize = 10
     private var isFetching = false
     private var isFirstLoad = true
+    private var isInitializing = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +51,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         print("ChatList: viewDidAppear - 채팅 리스트 화면 표시됨")
         // 화면이 나타날 때마다 데이터 새로 로드
         refreshChatList()
+        isInitializing = false
     }
     
     override func setNavigationBar() {
@@ -185,7 +187,7 @@ extension ChatListViewController: UICollectionViewDelegate {
                 }
             }
         }
-        
+        if isInitializing { return }
         let currentTime = Date()
         if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
             self.sendAmpliLog(eventName: EventName.SCROLL_CHAT)

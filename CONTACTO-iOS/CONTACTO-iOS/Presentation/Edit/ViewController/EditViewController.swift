@@ -42,7 +42,7 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
     }
     
     private var lastScrollLogTime: Date?
-    private let scrollLogInterval: TimeInterval = 2.0
+    private let scrollLogInterval: TimeInterval = 3.0
     private var isInitializing: Bool = true
     
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {

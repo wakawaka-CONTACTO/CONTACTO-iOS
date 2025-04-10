@@ -29,6 +29,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     private var talentData: [TalentInfo] = []
     private var lastScrollLogTime: Date?
     private let scrollLogInterval: TimeInterval = 3.0
+    private var isInitializing = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +44,11 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BACK)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isInitializing = false
     }
     
     override func setNavigationBar() {
@@ -423,6 +429,7 @@ extension DetailProfileViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if isInitializing { return }
         let currentTime = Date()
         if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
             self.sendAmpliLog(eventName: EventName.SCROLL_DETAIL)
