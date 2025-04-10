@@ -160,6 +160,10 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
         editView.talentEditButton.addTarget(self, action: #selector(talentEditButtonTapped), for: .touchUpInside)
         editView.editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         editView.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(editProfileLabelTapped))
+        editView.editLabel.isUserInteractionEnabled = true
+        editView.editLabel.addGestureRecognizer(tapGesture)
     }
     
     private func setDelegate() {
@@ -504,6 +508,39 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
         
         editView.portfolioCollectionView.reloadData()
         editView.purposeCollectionView.reloadData()
+    }
+    
+    @objc private func editProfileLabelTapped() {
+        self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PROFILE_EDIT)
+
+        if isEditEnable {
+            showUnsavedChangesAlert()
+        }
+    }
+    
+    private func showUnsavedChangesAlert() {
+        AlertManager.showAlertWithTwoButtons(
+            on: self,
+            title: "변경사항 저장",
+            message: "변경사항을 저장하지 않고 나가시겠습니까?",
+            confirmTitle: "예",
+            cancelTitle: "아니오",
+            confirmAction: { [weak self] in
+                guard let self = self else { return }
+                // 변경사항 초기화
+                self.portfolioManager = nil
+                self.setData()
+                self.isEditEnable = false
+                self.editView.toggleEditMode(false)
+                self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PROFILE_EDIT)
+            },
+            cancelAction: { [weak self] in
+                guard let self = self else { return }
+                // 현재 상태 유지
+                self.isEditEnable = true
+                self.editView.toggleEditMode(true)
+            }
+        )
     }
 }
 

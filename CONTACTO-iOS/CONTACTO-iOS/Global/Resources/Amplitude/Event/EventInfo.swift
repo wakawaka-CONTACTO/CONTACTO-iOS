@@ -114,7 +114,7 @@ public enum EventName: String {
     // Edit
     case VIEW_EDIT
     case SCROLL_EDIT
-    case CLICK_EDIT_PROFILE
+    case CLICK_EDIT_PROFILE_EDIT
     case CLICK_EDIT_PREVIEW
     case CLICK_EDIT_NAME
     case CLICK_EDIT_PORTFOLIO
@@ -314,7 +314,7 @@ extension EventName {
             return "edit 화면"
         case .SCROLL_EDIT:
             return "edit 화면 스크롤 시"
-        case .CLICK_EDIT_PROFILE:
+        case .CLICK_EDIT_PROFILE_EDIT:
             return "상단 profile edit 버튼 선택 시"
         case .CLICK_EDIT_PREVIEW:
             return "edit 화면에서 preview 버튼 선택 시"
