@@ -108,6 +108,8 @@ public enum EventName: String {
     
     
     // Home
+    case CLICK_MATCH_CLOSE
+    case CLICK_MATCH_MESSAGE
     case CLICK_MATCH_SEND
 
     // Chat

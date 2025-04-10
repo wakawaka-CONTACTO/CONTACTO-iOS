@@ -134,6 +134,7 @@ extension EventName {
         case .CLICK_HOME_REVERT:
             return "되돌리기 버튼 눌렀을 때"
             
+            
         case .SUCCESS_LOGIN:
             return "Login 성공"
             
@@ -188,8 +189,12 @@ extension EventName {
         case .VIEW_PREVIEW:
             return "preview 화면"
             
+        case .CLICK_MATCH_CLOSE:
+            return "매칭 화면에서 x 버튼 누를 때"
+        case .CLICK_MATCH_MESSAGE:
+            return "매칭 메세지 버튼 누를 때"
         case .CLICK_MATCH_SEND:
-            return "매치 보낼 때"
+            return "메세지 보낼 때"
 
         case .VIEW_CHAT:
             return "채팅 화면"

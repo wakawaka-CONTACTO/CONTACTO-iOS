@@ -293,8 +293,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         let reportReasons = StringLiterals.Home.Report.ReportReasons.allCases
         for (index, reason) in reportReasons.enumerated() {
             let action = UIAlertAction(title: reason, style: .default) { _ in
-                print("User reported for reason at index \(index): \(reason)")
-                self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_YES)
+                self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_YES, properties: ["report_name" : reason])
 
                 self.reportUser(bodyDTO: ReportRequestBodyDTO(reportedUserId: self.portfolioData.id, reportReasonIdx: index)) { success in
                     DispatchQueue.main.async {
