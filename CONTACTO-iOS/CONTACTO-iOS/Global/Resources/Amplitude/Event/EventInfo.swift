@@ -100,6 +100,64 @@ public enum EventName: String {
     case SUCCESS_LOGIN
     case TEST
     
+    // Detail
+    case VIEW_DETAIL
+    case SCROLL_DETAIL
+    case CLICK_DETAIL_BACK
+    case CLICK_DETAIL_INSTA
+    case CLICK_DETAIL_WEB
+    case CLICK_DETAIL_BLOCK_YES
+    case CLICK_DETAIL_BLOCK_NO
+    case CLICK_DETAIL_REPORT_YES
+    case CLICK_DETAIL_REPORT_NO
+    
+    // Edit
+    case VIEW_EDIT
+    case SCROLL_EDIT
+    case CLICK_EDIT_PROFILE
+    case CLICK_EDIT_PREVIEW
+    case CLICK_EDIT_NAME
+    case CLICK_EDIT_PORTFOLIO
+    case CLICK_EDIT_PORTFOLIO_DELETE
+    case CLICK_EDIT_TALENT
+    case CLICK_EDIT_DESCRIPTION
+    case CLICK_EDIT_PURPOSE
+    case CLICK_EDIT_INSTA
+    case CLICK_EDIT_WEB
+    case CLICK_EDIT_SAVE
+    case CLICK_EDIT_EDITSTART
+    case VIEW_PREVIEW
+    
+    
+    // Home
+    case CLICK_MATCH_SEND
+
+    // Chat
+    case VIEW_CHAT
+    case VIEW_EMPTY
+    case SCROLL_CHAT
+    case SCROLL_CHATROOM
+    case CLICK_CHAT
+    case VIEW_CHATROOM
+    case CLICK_CHATROOM_PLUS
+    case CLICK_CHATROOM_SEND
+    case CLICK_CHATROOM_TRANS_ON
+    case CLICK_CHATROOM_TRANS_OFF
+    case CLICK_CHATROOM_TRANSLATE_CHOOSE
+    case CLICK_CHATROOM_TRANSLATE_LANGUAGE
+    case CLICK_CHATROOM_BACK
+
+    // Info
+    case VIEW_INFO
+    case CLICK_INFO_HELP
+    case CLICK_INFO_COMMUNITY
+    case CLICK_INFO_PRIVACY
+    case CLICK_INFO_LOGOUT
+    case CLICK_INFO_LOGOUT_YES
+    case CLICK_INFO_LOGOUT_NO
+    case CLICK_INFO_DELETE
+    case CLICK_INFO_DELETE_YES
+    case CLICK_INFO_DELETE_NO
 }
 
 extension EventName {
@@ -229,9 +287,110 @@ extension EventName {
         case .CLICK_HOME_REVERT:
             return "되돌리기 버튼 눌렀을 때"
             
-            
         case .SUCCESS_LOGIN:
             return "Login 성공"
+            
+        case .VIEW_DETAIL:
+            return "디테일 화면"
+        case .SCROLL_DETAIL:
+            return "디테일 화면 스크롤 시"
+        case .CLICK_DETAIL_BACK:
+            return "디테일 화면 나갈 때"
+        case .CLICK_DETAIL_INSTA:
+            return "인스타그램 버튼 클릭 시"
+        case .CLICK_DETAIL_WEB:
+            return "웹 버튼 클릭 시"
+        case .CLICK_DETAIL_BLOCK_YES:
+            return "block 버튼 클릭 시"
+        case .CLICK_DETAIL_BLOCK_NO:
+            return "block no 버튼 클릭 시"
+        case .CLICK_DETAIL_REPORT_YES:
+            return "report 내부에서 Spam 등 버튼 클릭 시"
+        case .CLICK_DETAIL_REPORT_NO:
+            return "report 내부에서 cancel 버튼 클릭 시"
+            
+            // Edit
+        case .VIEW_EDIT:
+            return "edit 화면"
+        case .SCROLL_EDIT:
+            return "edit 화면 스크롤 시"
+        case .CLICK_EDIT_PROFILE:
+            return "상단 profile edit 버튼 선택 시"
+        case .CLICK_EDIT_PREVIEW:
+            return "edit 화면에서 preview 버튼 선택 시"
+        case .CLICK_EDIT_NAME:
+            return "name 텍스트 필드 선택 시"
+        case .CLICK_EDIT_PORTFOLIO:
+            return "portfolio 버튼 선택 시"
+        case .CLICK_EDIT_PORTFOLIO_DELETE:
+            return "portfolio 사진 삭제 버튼 선택 시"
+        case .CLICK_EDIT_TALENT:
+            return "talent 수정 버튼 선택 시"
+        case .CLICK_EDIT_DESCRIPTION:
+            return "description 텍스트 필드 선택 시"
+        case .CLICK_EDIT_PURPOSE:
+            return "purpose 수정 버튼 선택 시"
+        case .CLICK_EDIT_INSTA:
+            return "instagram 버튼 선택 시"
+        case .CLICK_EDIT_WEB:
+            return "web 버튼 선택 시"
+        case .CLICK_EDIT_SAVE:
+            return "edit save 버튼 클릭 시"
+        case .CLICK_EDIT_EDITSTART:
+            return "edit start 버튼 클릭 시"
+        case .VIEW_PREVIEW:
+            return "preview 화면"
+            
+        case .CLICK_MATCH_SEND:
+            return "매치 보낼 때"
+
+        case .VIEW_CHAT:
+            return "채팅 화면"
+        case .VIEW_EMPTY:
+            return "empty 화면"
+        case .SCROLL_CHAT:
+            return "채팅 화면 스크롤 시"
+        case .SCROLL_CHATROOM:
+            return "채팅방 화면 스크롤 시"
+        case .CLICK_CHAT:
+            return "채팅 클릭 시"
+        case .VIEW_CHATROOM:
+            return "채팅방 뷰"
+        case .CLICK_CHATROOM_PLUS:
+            return "채팅방 + 버튼 클릭 시"
+        case .CLICK_CHATROOM_SEND:
+            return "채팅방 보내기 버튼 눌렀을 때"
+        case .CLICK_CHATROOM_TRANS_ON:
+            return "채팅방 번역 on"
+        case .CLICK_CHATROOM_TRANS_OFF:
+            return "채팅방 번역 off"
+        case .CLICK_CHATROOM_TRANSLATE_CHOOSE:
+            return "채팅방 번역할 언어 선택 시"
+        case .CLICK_CHATROOM_TRANSLATE_LANGUAGE:
+            return "채팅방 번역 언어 바꾸기"
+        case .CLICK_CHATROOM_BACK:
+            return "채팅방 뒤로가기 시"
+
+        case .VIEW_INFO:
+            return "info 화면"
+        case .CLICK_INFO_HELP:
+            return "Help & Support 버튼 눌렀을 때"
+        case .CLICK_INFO_COMMUNITY:
+            return "Community 버튼 눌렀을 때"
+        case .CLICK_INFO_PRIVACY:
+            return "Privacy 버튼 눌렀을 때"
+        case .CLICK_INFO_LOGOUT:
+            return "로그아웃 시"
+        case .CLICK_INFO_LOGOUT_YES:
+            return "로그아웃 버튼 선택 후 yes 선택 시"
+        case .CLICK_INFO_LOGOUT_NO:
+            return "로그아웃 버튼 선택 후 no 선택 시"
+        case .CLICK_INFO_DELETE:
+            return "계정 삭제 버튼 눌렀을 때"
+        case .CLICK_INFO_DELETE_YES:
+            return "계정 삭제 Yes"
+        case .CLICK_INFO_DELETE_NO:
+            return "계정 삭제 No"
 
         default:
             return "unknown"

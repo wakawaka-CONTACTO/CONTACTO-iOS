@@ -13,7 +13,7 @@ import Then
 
 // editView.nationalityTextField.text = userInfo.nationality
 
-final class EditViewController: UIViewController {
+final class EditViewController: UIViewController, EditAmplitudeSender {
     
     private var portfolioManager: PortfolioManager?
     
@@ -27,6 +27,9 @@ final class EditViewController: UIViewController {
     
     private var isFromTalentVC = false
     
+    // 탭 이동 시 수정 상태 유지를 위한 변수
+    private var wasEditEnabled = false
+    
     private func scheduleChangeDetection() {
         changeDetectionTimer?.invalidate()
         changeDetectionTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
@@ -37,6 +40,9 @@ final class EditViewController: UIViewController {
             }
         }
     }
+    
+    private var lastScrollLogTime: Date?
+    private let scrollLogInterval: TimeInterval = 3.0
     
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
         didSet {
@@ -84,6 +90,17 @@ final class EditViewController: UIViewController {
         hideKeyboardWhenTappedAround()
         setCollectionView()
         setPickerDelegate()
+        
+        // user_id 설정
+        if let userId = portfolioManager?.currentData.id {
+            UserDefaults.standard.set(String(userId), forKey: "userId")
+        }
+        
+        if let username = portfolioManager?.currentData.username {
+            UserDefaults.standard.set(username, forKey: "username")
+        }
+        
+        self.sendAmpliLog(eventName: EventName.VIEW_EDIT)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -91,15 +108,28 @@ final class EditViewController: UIViewController {
         setNavigationBar()
         addKeyboardNotifications()
         if !isFromTalentVC {
-            isEditEnable = false
-            editView.toggleEditMode(false)
-            setData()
+            if wasEditEnabled {
+                // 탭 이동 후 복귀 시 이전 수정 모드 상태 복원
+                isEditEnable = true
+                editView.toggleEditMode(true)
+                wasEditEnabled = false
+            } else {
+                // 최초 로드 또는 수정 모드가 아니었던 경우
+                isEditEnable = false
+                editView.toggleEditMode(false)
+                setData()
+            }
         }
         isFromTalentVC = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         removeKeyboardNotifications()
+        
+        // 탭 전환 시 수정 모드 상태 저장
+        if isEditEnable {
+            wasEditEnabled = true
+        }
     }
     
     // MARK: - UI Setup
@@ -146,6 +176,8 @@ final class EditViewController: UIViewController {
         editView.instaTextField.delegate = self
         editView.websiteTextField.delegate = self
         editView.nationalityTextField.delegate = self
+        
+        editView.scrollView.delegate = self
     }
     
     private func setCollectionView() {
@@ -165,6 +197,7 @@ final class EditViewController: UIViewController {
             NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { response in
                 switch response {
                 case .success:
+                    UserIdentityManager.updateDetailProperty(data: bodyDTO)
                     completion(true)
                 default:
                     completion(false)
@@ -369,6 +402,7 @@ final class EditViewController: UIViewController {
     
     // MARK: - Button Actions
     @objc private func previewButtonTapped() {
+        self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PREVIEW)
         let previewVC = HomeViewController()
         previewVC.isPreview = true
         if let manager = portfolioManager {
@@ -389,6 +423,7 @@ final class EditViewController: UIViewController {
     }
     
     @objc private func talentEditButtonTapped() {
+        self.sendAmpliLog(eventName: EventName.CLICK_EDIT_TALENT)
         let talentVC = TalentOnboardingViewController()
         talentVC.hidesBottomBarWhenPushed = true
         talentVC.talentOnboardingView.nextButton.setTitle(StringLiterals.Edit.doneButton, for: .normal)
@@ -444,7 +479,7 @@ final class EditViewController: UIViewController {
             }
             guard let manager = portfolioManager else { return }
             let body = manager.prepareUpdateRequestBody()
-            
+
             editMyPort(bodyDTO: body) { success in
                 if success {
                     self.editView.portfolioCollectionView.reloadData()
@@ -452,6 +487,7 @@ final class EditViewController: UIViewController {
                     self.view.endEditing(true)
                     self.isDataChanged = false
                     self.editView.editButton.isEnabled = true
+                    self.sendAmpliLog(eventName: EventName.CLICK_EDIT_SAVE)
                 }
                 else {
                     AlertManager.showAlert(on: self,
@@ -463,6 +499,7 @@ final class EditViewController: UIViewController {
             }
         } else {
             editView.editButton.isEnabled = false
+            self.sendAmpliLog(eventName: EventName.CLICK_EDIT_EDITSTART)
         }
         
         editView.portfolioCollectionView.reloadData()
@@ -505,11 +542,13 @@ extension EditViewController: UICollectionViewDataSource {
             
             cell.uploadAction = { [weak self] in
                 self?.setPortfolio()
+                self?.sendAmpliLog(eventName: EventName.CLICK_EDIT_PORTFOLIO)
             }
             
             cell.cancelAction = { [weak self] in
                 guard let self = self, let manager = self.portfolioManager, indexPath.row < manager.portfolioItems.count else { return }
                 manager.portfolioItems.remove(at: indexPath.row)
+                self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PORTFOLIO_DELETE)
                 self.isPortfolioFilled = !manager.portfolioItems.isEmpty
                 collectionView.reloadData()
                 self.checkForChanges()
@@ -533,7 +572,7 @@ extension EditViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
             cell.isTapped = tappedStates[indexPath.row]
-            cell.config(num: indexPath.item)
+            cell.config(purpose: ProfilePurpose.allCases[indexPath.row])
             cell.isEditing = isEditEnable
             cell.setAddTarget()
             cell.tapAction = {
@@ -592,6 +631,7 @@ extension EditViewController: PHPickerViewControllerDelegate {
 extension EditViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         activeTextField = textView
+        self.sendAmpliLog(eventName: .CLICK_EDIT_DESCRIPTION)
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -651,6 +691,18 @@ extension EditViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
         
+        if textField == editView.instaTextField {
+            self.sendAmpliLog(eventName: .CLICK_EDIT_INSTA)
+        }
+        
+        else if textField == editView.websiteTextField {
+            self.sendAmpliLog(eventName: .CLICK_EDIT_WEB)
+        }
+        
+        else if textField == editView.nameTextField {
+            self.sendAmpliLog(eventName: .CLICK_EDIT_NAME)
+        }
+        
         if textField == editView.nationalityTextField {
             editView.toggleSaveButtonVisibility(false)
         }
@@ -706,6 +758,24 @@ extension EditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
             let range = NSRange(location: 0, length: string.utf16.count)
             let isMatch = regex?.firstMatch(in: string, options: [], range: range) != nil
             return isMatch
+        }
+    }
+}
+
+extension EditViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if let collectionView = scrollView as? UICollectionView, collectionView.tag == 0 {
+            let pageWidth = scrollView.frame.width
+            let currentPage = Int(scrollView.contentOffset.x / pageWidth)
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let currentTime = Date()
+        if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
+            self.sendAmpliLog(eventName: EventName.SCROLL_EDIT)
+            lastScrollLogTime = currentTime
         }
     }
 }

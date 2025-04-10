@@ -10,34 +10,20 @@ import UIKit
 import SnapKit
 import Then
 
-final class ProfilePurposeCollectionViewCell: UICollectionViewCell {
+final class ProfilePurposeCollectionViewCell: UICollectionViewCell, EditAmplitudeSender {
     var tapAction: (() -> Void) = {}
     
-    var num = 0
+    var purpose: ProfilePurpose?
     var isTapped = false {
         didSet {
-            self.backgroundColor = isTapped ? colorArray[num] : (isEditing ? .ctwhite : .clear)
+            self.backgroundColor = isTapped ? purpose?.color : (isEditing ? .ctwhite : .clear)
         }
     }
     var isEditing = false {
         didSet {
-            self.backgroundColor = isTapped ? colorArray[num] : (isEditing ? .ctwhite : .clear)
+            self.backgroundColor = isTapped ? purpose?.color : (isEditing ? .ctwhite : .clear)
         }
     }
-    
-    private let purposeList = [
-        StringLiterals.Onboarding.Purpose.getalong,
-        StringLiterals.Onboarding.Purpose.collaborate,
-        StringLiterals.Onboarding.Purpose.makenew,
-        StringLiterals.Onboarding.Purpose.art,
-        StringLiterals.Onboarding.Purpose.group
-    ]
-    
-    private let colorArray: [UIColor] = [.ctsubred,
-                                 .ctsubpink,
-                                 .ctsubblue2,
-                                 .ctsubyellow2,
-                                 .ctsubgreen1]
     
     let purposeLabel = UILabel()
     
@@ -80,10 +66,10 @@ final class ProfilePurposeCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func config(num: Int) {
-        self.num = num
-        self.backgroundColor = isTapped ? colorArray[num] : (isEditing ? .ctwhite : .clear)
-        purposeLabel.text = purposeList[num]
+    func config(purpose: ProfilePurpose) {
+        self.purpose = purpose
+        self.backgroundColor = isTapped ? purpose.color : (isEditing ? .ctwhite : .clear)
+        purposeLabel.text = purpose.displayName
     }
     
     /// Edit 화면에서 필요한 Target
@@ -97,6 +83,7 @@ final class ProfilePurposeCollectionViewCell: UICollectionViewCell {
         if isEditing {
             isTapped.toggle()
             tapAction()
+            self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PURPOSE)
         }
     }
 }

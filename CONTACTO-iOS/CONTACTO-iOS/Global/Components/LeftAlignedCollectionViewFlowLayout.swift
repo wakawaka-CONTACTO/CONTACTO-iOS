@@ -10,6 +10,13 @@ import UIKit
 class LeftAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForElements(in rect: CGRect) ->  [UICollectionViewLayoutAttributes]? {
         let attributes = super.layoutAttributesForElements(in: rect)
+        
+        // 가로 스크롤인 경우는 기본 레이아웃 그대로 사용
+        if scrollDirection == .horizontal {
+            return attributes
+        }
+        
+        // 세로 스크롤일 때만 왼쪽 정렬 적용
         var leftMargin = sectionInset.left
         var maxY: CGFloat = -1.0
         

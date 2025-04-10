@@ -10,10 +10,13 @@ import UIKit
 import SnapKit
 import Then
 
-final class ChatListViewController: BaseViewController {
+final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     var chatRoomListData: [ChatListResponseDTO] = []
     let chatListView = ChatListView()
     let chatEmptyView = ChatEmptyView()
+    
+    private var lastScrollLogTime: Date?
+    private let scrollLogInterval: TimeInterval = 3.0
     
     private var hasNext = true
     private var currentPage = 0
@@ -35,6 +38,7 @@ final class ChatListViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.sendAmpliLog(eventName: EventName.VIEW_CHAT)
         currentPage = 0
         chatRoomListData = []
         hasNext = true
@@ -180,6 +184,12 @@ extension ChatListViewController: UICollectionViewDelegate {
                     }
                 }
             }
+        }
+        
+        let currentTime = Date()
+        if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
+            self.sendAmpliLog(eventName: EventName.SCROLL_CHAT)
+            lastScrollLogTime = currentTime
         }
     }
 }

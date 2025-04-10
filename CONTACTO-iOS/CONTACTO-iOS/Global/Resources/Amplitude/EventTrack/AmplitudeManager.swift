@@ -9,9 +9,9 @@ import Foundation
 import AmplitudeSwift
 
 public struct AmplitudeManager{
-    static public var amplitude: Amplitude!
+    static var amplitude: Amplitude!
     
-    private init(){}
+    private init(){ }
 }
 
 extension Amplitude {
@@ -21,7 +21,9 @@ extension Amplitude {
             "view": eventInfo.eventView.rawValue,
             "trigger": eventInfo.trigger
         ]
+#if DEBUG
         print("[LOG] amplitude track \(properties)")
+#endif
         AmplitudeManager.amplitude.track(eventType: eventType, eventProperties: properties)
     }
     
@@ -36,10 +38,19 @@ extension Amplitude {
                 eventProps[key] = value
             }
         }
-        
+#if DEBUG
+        print("[LOG] amplitude track \(properties)")
+#endif
         AmplitudeManager.amplitude.track(
             eventType: eventInfo.eventName.rawValue,
             eventProperties: eventProps
         )
     }
+}
+
+extension ISO8601DateFormatter {
+    static let shared: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        return formatter
+    }()
 }

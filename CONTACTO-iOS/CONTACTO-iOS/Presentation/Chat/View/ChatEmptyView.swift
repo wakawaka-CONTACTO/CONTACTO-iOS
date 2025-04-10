@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class ChatEmptyView: BaseView {
+final class ChatEmptyView: BaseView, ChatAmplitudeSender {
     
     // 추후 연결 시 폰트 및 레이아웃 확인 필요
 
@@ -36,6 +36,8 @@ final class ChatEmptyView: BaseView {
             $0.numberOfLines = 0
             $0.textAlignment = .center
         }
+        
+        self.sendAmpliLog(eventName: EventName.VIEW_EMPTY)
     }
     
     override func setLayout() {
