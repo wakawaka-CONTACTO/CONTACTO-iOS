@@ -207,6 +207,8 @@ extension EventName {
             return "채팅방 + 버튼 클릭 시"
         case .CLICK_CHATROOM_SEND:
             return "채팅방 보내기 버튼 눌렀을 때"
+        case .CLICK_CHATROOM_PROFILE:
+            return "채팅방 화면 안에서 프로필을 눌렀을 떄"
         case .CLICK_CHATROOM_TRANS_ON:
             return "채팅방 번역 on"
         case .CLICK_CHATROOM_TRANS_OFF:
