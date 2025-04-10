@@ -156,6 +156,7 @@ final class LoginView: BaseView, LoginAmplitudeSender {
         }
         
         forgetEmailButton.snp.makeConstraints {
+            $0.top.equalTo(continueButton.snp.bottom).offset(15.adjustedHeight)
             $0.center.equalTo(forgetPwButton)
         }
         
@@ -276,7 +277,7 @@ final class LoginView: BaseView, LoginAmplitudeSender {
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.sendCode
             mainTextField.isError = false
-            forgetEmailButton.isHidden = true
+            forgetEmailButton.isHidden = false
             explain.text = ""
             
         case .findEmail:
