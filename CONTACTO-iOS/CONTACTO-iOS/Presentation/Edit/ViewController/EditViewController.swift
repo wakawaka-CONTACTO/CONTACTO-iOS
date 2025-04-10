@@ -42,7 +42,8 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
     }
     
     private var lastScrollLogTime: Date?
-    private let scrollLogInterval: TimeInterval = 3.0
+    private let scrollLogInterval: TimeInterval = 2.0
+    private var isInitializing: Bool = true
     
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
         didSet {
@@ -130,6 +131,11 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
         if isEditEnable {
             wasEditEnabled = true
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isInitializing = false
     }
     
     // MARK: - UI Setup
@@ -809,6 +815,8 @@ extension EditViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if isInitializing { return }
+        
         let currentTime = Date()
         if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
             self.sendAmpliLog(eventName: EventName.SCROLL_EDIT)
