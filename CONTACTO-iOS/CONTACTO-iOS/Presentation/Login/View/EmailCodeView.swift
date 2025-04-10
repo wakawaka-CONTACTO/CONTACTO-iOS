@@ -38,8 +38,8 @@ final class EmailCodeView: BaseView, LoginAmplitudeSender {
     }
         
     public func setStatus(){
-        explainContents = ""
-        explain.text = explainContents
+        explainContents = "IF you can’t see it, please check your spam folder."
+        explain.text = explainContents.uppercased()
     }
     
     override func setStyle() {
