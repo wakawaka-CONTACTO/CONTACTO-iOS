@@ -433,12 +433,6 @@ extension LoginViewController {
                 completion(true)
                 
             case .failure(let error):
-                if error.statusCode == 404 {
-                    self.isExistEmail = false
-                    completion(true)
-                    return
-                }
-                
                 // 그 외 에러
                 if let data = error.data,
                    let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
