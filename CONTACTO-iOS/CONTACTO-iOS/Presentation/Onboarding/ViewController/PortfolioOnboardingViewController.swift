@@ -17,6 +17,15 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
     private let portfolioOnboardingView = PortfolioOnboardingView()
     private var isLoading = false
     
+    // 로딩 인디케이터 추가
+    private var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.backgroundColor = UIColor(white: 0, alpha: 0.3)
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     var portfolioItems: [UIImage] = [] {
         didSet {
             portfolioOnboardingView.nextButton.isEnabled = (!portfolioItems.isEmpty)
@@ -43,7 +52,36 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
         portfolioOnboardingView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
     
+    override func setLayout() {
+        view.addSubviews(portfolioOnboardingView)
+        
+        portfolioOnboardingView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        // 로딩 인디케이터 레이아웃 추가
+        view.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            activityIndicator.widthAnchor.constraint(equalTo: view.widthAnchor),
+            activityIndicator.heightAnchor.constraint(equalTo: view.heightAnchor)
+        ])
+    }
+    
+    // 로딩 인디케이터 제어 메서드 추가
+    private func showLoadingIndicator() {
+        activityIndicator.startAnimating()
+        view.isUserInteractionEnabled = false
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.stopAnimating()
+        view.isUserInteractionEnabled = true
+    }
+    
     @objc private func nextButtonTapped() {
+        showLoadingIndicator()
         isLoading = true
         portfolioOnboardingView.nextButton.isEnabled = false
         UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
@@ -52,9 +90,11 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
         let portfolio_count = UserInfo.shared.portfolioImageUrl.count
         sendAmpliLog(eventName: EventName.CLICK_ONBOARDING6_NEXT, properties: ["portfolio_count" : portfolio_count])
         
-        Messaging.messaging().token { firebaseToken, error in
+        Messaging.messaging().token { [weak self] firebaseToken, error in
+            guard let self = self else { return }
             guard let firebaseToken = firebaseToken else {
                 print("❌ FCM 토큰 가져오기 실패")
+                self.hideLoadingIndicator()
                 return
             }
 
@@ -77,6 +117,7 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
 
             self.signup(bodyDTO: bodyData) { success in
                 self.isLoading = false
+                self.hideLoadingIndicator()
                 if success {
                     let mainTabBarViewController = MainTabBarViewController()
                     mainTabBarViewController.homeViewController.isFirst = true
@@ -104,14 +145,6 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
     
     private func setCollectionView() {
         portfolioOnboardingView.portfolioCollectionView.register(PortfolioCollectionViewCell.self, forCellWithReuseIdentifier: PortfolioCollectionViewCell.className)
-    }
-    
-    override func setLayout() {
-        view.addSubviews(portfolioOnboardingView)
-        
-        portfolioOnboardingView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
     }
     
     func setPortfolio() {
