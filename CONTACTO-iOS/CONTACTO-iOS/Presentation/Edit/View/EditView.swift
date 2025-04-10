@@ -17,7 +17,7 @@ final class EditView: BaseView, EditAmplitudeSender {
     
     let scrollView = UIScrollView()
     private let contentsView = UIView()
-    private let editLabel = UILabel()
+    let editLabel = UILabel()
     private let editLineView = UIView()
     let previewButton = UIButton()
     

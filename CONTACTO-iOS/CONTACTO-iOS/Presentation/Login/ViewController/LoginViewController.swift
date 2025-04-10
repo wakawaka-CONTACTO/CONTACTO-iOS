@@ -246,6 +246,8 @@ extension LoginViewController {
             self.sendAmpliLog(eventName: EventName.CLICK_LOGIN_NEEDHELP)
         } else if loginView.state == .emailError{
             self.sendAmpliLog(eventName: EventName.CLICK_NOACCOUNT_FORGET)
+        } else {
+            self.sendAmpliLog(eventName: EventName.CLICK_SEND_CODE_FORGET)
         }
         loginView.setLoginState(state: .emailForget)
     }

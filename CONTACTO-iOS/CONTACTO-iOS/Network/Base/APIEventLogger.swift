@@ -27,13 +27,19 @@ final class APIEventLogger: EventMonitor {
     
     func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
         #if DEBUG
-        print("===========================🛰 NETWORK Response LOG===========================")
-        print(
-            "URL: " + (request.request?.url?.absoluteString ?? "") + "\n"
-            + "Result: " + "\(response.result)" + "\n"
-            + "StatusCode: " + "\(response.response?.statusCode ?? 0)" + "\n"
-            + "Data: \(response.data?.toPrettyPrintedString ?? "")"
-        )
+        switch response.result {
+        case .failure:
+            print("===========================🛰 NETWORK Response LOG===========================")
+            print(
+                "URL: " + (request.request?.url?.absoluteString ?? "") + "\n"
+                + "Result: " + "\(response.result)" + "\n"
+                + "StatusCode: " + "\(response.response?.statusCode ?? 0)" + "\n"
+                + "Data: \(response.data?.toPrettyPrintedString ?? "")"
+            )
+            
+        default:
+            break
+        }
         #endif
     }
 }
