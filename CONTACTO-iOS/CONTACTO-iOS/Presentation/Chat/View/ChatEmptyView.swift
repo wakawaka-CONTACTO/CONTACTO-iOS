@@ -36,8 +36,6 @@ final class ChatEmptyView: BaseView, ChatAmplitudeSender {
             $0.numberOfLines = 0
             $0.textAlignment = .center
         }
-        
-        self.sendAmpliLog(eventName: EventName.VIEW_EMPTY)
     }
     
     override func setLayout() {

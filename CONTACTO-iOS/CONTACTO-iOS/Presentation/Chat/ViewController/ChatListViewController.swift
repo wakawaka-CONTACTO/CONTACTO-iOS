@@ -39,7 +39,6 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.sendAmpliLog(eventName: EventName.VIEW_CHAT)
         currentPage = 0
         chatRoomListData = []
         hasNext = true
@@ -52,6 +51,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         // 화면이 나타날 때마다 데이터 새로 로드
         refreshChatList()
         isInitializing = false
+        self.sendAmpliLog(eventName: EventName.VIEW_CHAT)
     }
     
     override func setNavigationBar() {
@@ -92,6 +92,10 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
             self.chatListView.isHidden = self.chatRoomListData.isEmpty
             self.chatEmptyView.isHidden = !self.chatRoomListData.isEmpty
             self.isFirstLoad = false
+            
+            if self.chatRoomListData.isEmpty {
+                self.sendAmpliLog(eventName: EventName.VIEW_EMPTY)
+            }
             
             // 읽지 않은 메시지가 있는지 확인하고 탭바 아이콘 업데이트
             self.updateTabBarIcon()
