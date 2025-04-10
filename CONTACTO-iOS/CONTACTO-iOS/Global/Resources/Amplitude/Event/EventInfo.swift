@@ -28,6 +28,7 @@ public enum EventView: String {
     case EDIT = "편집"
     case INFO = "인포"
     case PUSH = "푸시 알림"
+    case NAV = "네비게이터"
 }
 
 public enum EventName: String {

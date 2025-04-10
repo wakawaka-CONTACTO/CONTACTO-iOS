@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class MainTabBarViewController: UITabBarController {
+final class MainTabBarViewController: UITabBarController, EventAmplitudeSender {
     
     private var tabsList: [UIViewController] = []
     
@@ -135,6 +135,7 @@ final class MainTabBarViewController: UITabBarController {
 extension MainTabBarViewController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         print("TabBar: 탭 선택됨 - 인덱스: \(tabBarController.selectedIndex)")
+        self.sendAmpliLog(eventName: EventName.VIEW_EDIT)
         
         // 채팅 탭(인덱스 1)이 선택되었을 때 데이터 새로고침
         if tabBarController.selectedIndex == 1, let navController = viewController as? UINavigationController,
