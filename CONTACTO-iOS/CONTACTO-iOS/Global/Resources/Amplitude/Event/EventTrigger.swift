@@ -236,10 +236,15 @@ extension EventName {
             return "로그아웃 버튼 선택 후 no 선택 시"
         case .CLICK_INFO_DELETE:
             return "계정 삭제 버튼 눌렀을 때"
-        case .CLICK_INFO_DELETE_YES:
-            return "계정 삭제 Yes"
-        case .CLICK_INFO_DELETE_NO:
-            return "계정 삭제 No"
+            
+        case .CLICK_INFO_DELETE1_YES:
+            return "계정 삭제 버튼 선택 후 첫번째 팝업에서 [Yes] 선택 시"
+        case .CLICK_INFO_DELETE2_YES:
+            return "계정 삭제 버튼 선택 후 두번째 팝업에서 [Delete] 선택 시"
+        case .CLICK_INFO_DELETE1_NO:
+            return "계정 삭제 버튼 선택 후 첫번째 팝업에서 [Not, yet] 선택 시"
+        case .CLICK_INFO_DELETE2_NO:
+            return "계정 삭제 버튼 선택 후 두번째 팝업에서 [Cancel] 선택 시"
 
         default:
             return "unknown"

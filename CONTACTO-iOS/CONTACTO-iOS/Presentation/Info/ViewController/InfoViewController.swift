@@ -95,7 +95,6 @@ extension InfoViewController {
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         
         let cancel = UIAlertAction(title: StringLiterals.Info.Alert.Logout.no, style: .cancel){ cancel in
-            print("취소 버튼이 눌렸습니다.")
             self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_NO)
         }
         
@@ -133,13 +132,12 @@ extension InfoViewController {
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         
         let notYet = UIAlertAction(title: StringLiterals.Info.Alert.Delete.notYet, style: .default){ action in
-            print("취소 버튼이 눌렸습니다.")
-            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE_NO)
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE1_NO)
         }
         
         let yes = UIAlertAction(title: StringLiterals.Info.Alert.Delete.yes, style: .destructive){ cancel in
             self.showFinalDeleteConfirmation()
-            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE_YES)
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE1_YES)
         }
         
         alert.addAction(notYet)
@@ -154,6 +152,7 @@ extension InfoViewController {
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         
         let delete = UIAlertAction(title: StringLiterals.Info.Alert.Delete.delete, style: .destructive) { _ in
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE2_YES)
             self.deleteMe { _ in
                 KeychainHandler.shared.accessToken.removeAll()
                 KeychainHandler.shared.refreshToken.removeAll()
@@ -164,7 +163,9 @@ extension InfoViewController {
             }
         }
         
-        let cancle = UIAlertAction(title: StringLiterals.Info.Alert.Delete.cancel, style: .cancel)
+        let cancle = UIAlertAction(title: StringLiterals.Info.Alert.Delete.cancel, style: .cancel){ action in
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE2_NO)
+        }
         
         alert.addAction(delete)
         alert.addAction(cancle)
