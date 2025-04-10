@@ -17,8 +17,8 @@ final class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
-        changeColor()
         checkVersionTask()
+        changeColor()
     }
     
     private func setUI() {
@@ -62,8 +62,8 @@ final class SplashViewController: UIViewController {
                 if update {
                     debugPrint("This App is old version")
                     DispatchQueue.main.async {
-                        let alert = UIAlertController(title: "업데이트가 필요합니다", message: "", preferredStyle: UIAlertController.Style.alert)
-                        let okAction = UIAlertAction(title: "확인", style: .default, handler : { _ in
+                        let alert = UIAlertController(title: "New Version Available", message: "For your usability,\nupdate your CONTACTO!", preferredStyle: UIAlertController.Style.alert)
+                        let okAction = UIAlertAction(title: "Update", style: .default, handler : { _ in
                             AppVersionCheck.appUpdate()
                         })
                         alert.addAction(okAction)
