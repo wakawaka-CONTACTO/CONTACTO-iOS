@@ -17,6 +17,7 @@ final class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
+        checkVersionTask()
         changeColor()
     }
     
@@ -47,5 +48,53 @@ final class SplashViewController: UIViewController {
         UIView.animate(withDuration: 2, animations: {
             self.view.backgroundColor = .ctblack
         })
+    }
+    
+    func checkVersionTask() {
+        _ = try? AppVersionCheck.isUpdateAvailable { [weak self] (update, error) in
+            guard let self = self else { return }
+            if let error = error {
+                debugPrint("checkVersionTask err : \(error)")
+                // 에러 발생 시 2.5초 후 다음 화면으로 전환
+                self.navigateToNextScreen()
+                return
+            } else if let update = update {
+                if update {
+                    debugPrint("This App is old version")
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController(title: "New Version Available", message: "For your usability,\nupdate your CONTACTO!", preferredStyle: UIAlertController.Style.alert)
+                        let okAction = UIAlertAction(title: "Update", style: .default, handler : { _ in
+                            AppVersionCheck.appUpdate()
+                        })
+                        alert.addAction(okAction)
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                    return
+                } else {
+                    debugPrint("This App is latest version")
+                    // 최신 버전일 경우 2.5초 후 다음 화면으로 전환
+                    self.navigateToNextScreen()
+                    return
+                }
+            }
+        }
+    }
+    
+    /// 다음 화면으로 전환하는 메서드
+    private func navigateToNextScreen() {
+        // 애니메이션이 완료될 시점(2초)에 맞춰 화면 전환
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            var nextViewController: UIViewController
+            
+            if KeychainHandler.shared.accessToken.isEmpty {
+                nextViewController = LoginViewController()
+            } else {
+                nextViewController = MainTabBarViewController()
+            }
+            
+            let navigationController = UINavigationController(rootViewController: nextViewController)
+            UIApplication.shared.windows.first?.rootViewController = navigationController
+            UIApplication.shared.windows.first?.makeKeyAndVisible()
+        }
     }
 }
