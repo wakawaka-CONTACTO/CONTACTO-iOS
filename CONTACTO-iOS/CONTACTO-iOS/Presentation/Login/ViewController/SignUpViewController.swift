@@ -21,6 +21,17 @@ final class SignUpViewController: UIViewController, LoginAmplitudeSender {
     var confirmPw = ""
     var authCode = ""
     var nationality = ""
+    private var failCount: Int = 0
+    
+    public func isFirst() -> Bool{
+        if self.failCount == 0 {
+            return true
+        }
+        return false
+    }
+    public func retry() {
+        self.failCount += 1
+    }
     
     weak var delegate: EmailCodeViewDelegate?
 
@@ -120,6 +131,18 @@ final class SignUpViewController: UIViewController, LoginAmplitudeSender {
 extension SignUpViewController {
     @objc private func sendCode() {
         self.signUpView.continueButton.isEnabled = false
+        if self.signUpView.isHidden == false {
+            self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
+        }
+        
+        if self.isFirst() == true{
+            self.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE, properties: ["sendcode_view": "signup"])
+            self.retry()
+        } else {
+            self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_RESEND)
+            self.retry()
+        }
+        
         NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: EmailSendPurpose.signup)) { result in DispatchQueue.main.async {
             switch result{
             case .success:
@@ -166,6 +189,7 @@ extension SignUpViewController {
     }
     
     @objc private func codeVerifyButtonTapped() {
+        self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT)
         emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
             if response {
                 self.signUpView.isHidden = true
@@ -182,7 +206,6 @@ extension SignUpViewController {
         UserInfo.shared.email = self.email
         UserInfo.shared.password = self.pw
         
-        self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
         let nameOnboardingViewController = NameOnboardingViewController()
         view.window?.rootViewController = UINavigationController(rootViewController: nameOnboardingViewController)
     }

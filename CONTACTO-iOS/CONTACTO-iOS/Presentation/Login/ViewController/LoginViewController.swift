@@ -27,7 +27,18 @@ final class LoginViewController: UIViewController, LoginAmplitudeSender{
     var isExistEmail = false
     var purpose =  EmailSendPurpose.signup
     weak var delegate: EmailCodeViewDelegate?
-        
+    private var failCount: Int = 0
+    
+    public func isFirst() -> Bool{
+        if self.failCount == 0 {
+            return true
+        }
+        return false
+    }
+    public func retry() {
+        self.failCount += 1
+    }
+    
     // 로딩 인디케이터: 전체 화면 오버레이
     private var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
@@ -40,6 +51,7 @@ final class LoginViewController: UIViewController, LoginAmplitudeSender{
     init() {
         self.loginView = LoginView(state: .email)
         super.init(nibName: nil, bundle: nil)
+        failCount = 0
     }
     
     required init?(coder: NSCoder) {
@@ -204,7 +216,7 @@ extension LoginViewController {
                 self.loginView.mainTextField.changePlaceholderColor(forPlaceHolder: self.decodeEmail, forColor: .ctgray2)
         }
         case .pwForget:
-            self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT)
+            self.sendAmpliLog(eventName: EventName.CLICK_SEND_CODE_CONTINUE)
             emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
                 if self.isExistEmail {
                     self.sendCode()
@@ -230,21 +242,22 @@ extension LoginViewController {
     @objc func helpEmailButtonTapped() {
         loginView.mainTextField.text = ""
         self.decodeEmail = ""
-        if loginView.state == .email || loginView.state == .emailError {
-            self.sendAmpliLog(eventName: EventName.CLICK_SEND_CODE_FORGET)
+        if loginView.state == .email {
+            self.sendAmpliLog(eventName: EventName.CLICK_LOGIN_NEEDHELP)
+        } else if loginView.state == .emailError{
+            self.sendAmpliLog(eventName: EventName.CLICK_NOACCOUNT_FORGET)
         }
         loginView.setLoginState(state: .emailForget)
-        self.sendAmpliLog(eventName: EventName.CLICK_NOACCOUNT_FORGET)
     }
     
     @objc func helpPWButtonTapped() {
         loginView.mainTextField.text = ""
-        if loginView.state == .pwError {
+        if loginView.state == .email || loginView.state == .emailError{
+            self.sendAmpliLog(eventName: EventName.CLICK_LOGIN_NEEDHELP)
+        } else if loginView.state == .pwError {
             self.sendAmpliLog(eventName: EventName.CLICK_INCORRECT_FORGET)
         } else if loginView.state == .emailForget {
             self.sendAmpliLog(eventName: EventName.CLICK_INPUT_NAME_FORGET)
-        } else {
-            self.sendAmpliLog(eventName: EventName.CLICK_LOGIN_NEEDHELP)
         }
         loginView.setLoginState(state: .pwForget)
         
@@ -271,8 +284,8 @@ extension LoginViewController {
     }
     
     @objc private func sendCode() {
-        self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_RESEND)
         self.purpose = EmailSendPurpose.reset
+        self.dismissKeyboard()
         self.emailCodeView.startTimer()
         emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: self.purpose)) { _ in            self.loginView.isHidden = true
             self.emailCodeView.isHidden = false
@@ -332,7 +345,7 @@ extension LoginViewController {
                 KeychainHandler.shared.userID = String(data.userId)
                 KeychainHandler.shared.accessToken = data.accessToken
                 KeychainHandler.shared.refreshToken = data.refreshToken
-                AmplitudeManager.amplitude.setUserId(userId: String(data.userId))
+                UserIdentityManager.setUserId()
                 self.sendAmpliLog(eventName: EventName.SUCCESS_LOGIN)
                 completion(true)
             case .failure(let error):
@@ -377,6 +390,14 @@ extension LoginViewController {
     }
     
     private func emailSend(bodyDTO: EmailSendRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        if self.isFirst() == true{
+            self.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE, properties: ["sendcode_view": "forget password view"])
+            self.retry()
+        } else {
+            self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_RESEND)
+            self.retry()
+        }
+        
         NetworkService.shared.onboardingService.emailSend(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(_):
@@ -384,6 +405,7 @@ extension LoginViewController {
                 self.emailCodeView.startTimer()
                 completion(true)
             default:
+                self.retry()
                 completion(false)
             }
         }
@@ -393,6 +415,7 @@ extension LoginViewController {
         NetworkService.shared.onboardingService.emailCheck(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
+                self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT)
                 completion(data.isSuccess)
             default:
                 self.emailCodeView.setFail()

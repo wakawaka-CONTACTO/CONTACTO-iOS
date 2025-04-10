@@ -197,6 +197,7 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
             NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { response in
                 switch response {
                 case .success:
+                    UserIdentityManager.updateDetailProperty(data: bodyDTO)
                     completion(true)
                 default:
                     completion(false)
@@ -571,7 +572,7 @@ extension EditViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
             cell.isTapped = tappedStates[indexPath.row]
-            cell.config(num: indexPath.item)
+            cell.config(purpose: ProfilePurpose.allCases[indexPath.row])
             cell.isEditing = isEditEnable
             cell.setAddTarget()
             cell.tapAction = {
