@@ -174,7 +174,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
 
 extension HomeViewController {
     @objc private func profileButtonTapped() {
-        let detailProfileViewController = DetailProfileViewController()
+        let detailProfileViewController = DetailProfileViewController(from: .home)
         if isPreview {
             detailProfileViewController.portfolioData = self.previewPortfolioData
             detailProfileViewController.imagePreviewDummy = previewImages
@@ -371,10 +371,7 @@ extension HomeViewController {
                 KeychainHandler.shared.userName = data.username
                 KeychainHandler.shared.userID = String(data.id)
                 UserIdentityManager.myDetailProperty(data: data)
-                #if DEBUG
-                print("내 포트폴리오 데이터: \(data)")
-                KeychainHandler.shared.userName = "\(data.username), Debug"
-                #endif
+
             default:
                 #if DEBUG
                 print("내 포트폴리오 데이터를 가져오지 못함")

@@ -103,7 +103,6 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     }
     
     private func updateTabBarIcon() {
-        // 모든 채팅방에서 읽지 않은 메시지가 있는지 확인
         let hasUnreadMessages = chatRoomListData.contains { $0.unreadMessageCount > 0 }
         
         // 상태 변경을 메인 탭바에 알림
@@ -132,6 +131,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         chatRoomViewController.chatRoomTitle = chatRoomListData[indexPath.row].title
         chatRoomViewController.chatRoomThumbnail = chatRoomListData[indexPath.row].chatRoomThumbnail ?? ""
         self.navigationController?.pushViewController(chatRoomViewController, animated: true)
+        self.sendAmpliLog(eventName: EventName.CLICK_CHAT)
     }
     
     @objc private func refreshChatList() {

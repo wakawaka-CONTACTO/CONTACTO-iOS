@@ -13,6 +13,18 @@ import Then
 
 final class DetailProfileViewController: BaseViewController, DetailAmplitudeSender {
     
+    enum From {
+        case home
+        case chatroom
+    }
+    
+    private var from: From = .home
+    
+    convenience init(from: From) {
+        self.init()
+        self.from = from
+    }
+    
     var imageArray: [String] = []
     var imagePreviewDummy: [UIImage] = []
     var currentNum = 0 {
@@ -39,6 +51,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setData()
+        self.sendAmpliLog(eventName: EventName.VIEW_DETAIL, properties: ["from": from == .home ? "home" : "chatroom"])
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -293,8 +306,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         let reportReasons = StringLiterals.Home.Report.ReportReasons.allCases
         for (index, reason) in reportReasons.enumerated() {
             let action = UIAlertAction(title: reason, style: .default) { _ in
-                print("User reported for reason at index \(index): \(reason)")
-                self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_YES)
+                self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_YES, properties: ["report_name" : reason])
 
                 self.reportUser(bodyDTO: ReportRequestBodyDTO(reportedUserId: self.portfolioData.id, reportReasonIdx: index)) { success in
                     DispatchQueue.main.async {
