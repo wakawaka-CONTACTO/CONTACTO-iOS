@@ -418,7 +418,7 @@ extension ChatRoomViewController {
     }
     
     @objc private func profileImageButtonTapped() {
-        let detailProfileViewController = DetailProfileViewController()
+        let detailProfileViewController = DetailProfileViewController(from: .chatroom)
         detailProfileViewController.userId = otherUserId
         detailProfileViewController.isFromChat = true
         self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_PROFILE)

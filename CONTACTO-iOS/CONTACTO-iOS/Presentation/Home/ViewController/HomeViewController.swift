@@ -174,7 +174,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
 
 extension HomeViewController {
     @objc private func profileButtonTapped() {
-        let detailProfileViewController = DetailProfileViewController()
+        let detailProfileViewController = DetailProfileViewController(from: .home)
         if isPreview {
             detailProfileViewController.portfolioData = self.previewPortfolioData
             detailProfileViewController.imagePreviewDummy = previewImages

@@ -13,6 +13,18 @@ import Then
 
 final class DetailProfileViewController: BaseViewController, DetailAmplitudeSender {
     
+    enum From {
+        case home
+        case chatroom
+    }
+    
+    private var from: From = .home
+    
+    convenience init(from: From) {
+        self.init()
+        self.from = from
+    }
+    
     var imageArray: [String] = []
     var imagePreviewDummy: [UIImage] = []
     var currentNum = 0 {
@@ -39,7 +51,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setData()
-        self.sendAmpliLog(eventName: EventName.VIEW_DETAIL)
+        self.sendAmpliLog(eventName: EventName.VIEW_DETAIL, properties: ["from": from == .home ? "home" : "chatroom"])
     }
     
     override func viewWillDisappear(_ animated: Bool) {
