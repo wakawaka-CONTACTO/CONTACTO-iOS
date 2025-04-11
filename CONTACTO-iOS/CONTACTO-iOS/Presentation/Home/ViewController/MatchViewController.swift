@@ -89,6 +89,7 @@ extension MatchViewController {
                     "yourLabel": matchData?.yourLabel ?? ""
                 ]
             )
+            self.sendAmpliLog(eventName: EventName.CLICK_MATCH_SEND, properties: ["message_text" : selectedGreetings])
             self.dismiss(animated: true)
         }
     }
