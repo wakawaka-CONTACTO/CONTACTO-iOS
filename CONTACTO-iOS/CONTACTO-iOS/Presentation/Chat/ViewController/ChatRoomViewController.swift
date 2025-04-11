@@ -51,6 +51,7 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
         self.setData()
         self.registerSocket()
         self.sendAmpliLog(eventName: EventName.VIEW_CHATROOM)
+        self.isInitializing = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -118,7 +119,6 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        isInitializing = false
     }
     
     private func setCollectionView() {
