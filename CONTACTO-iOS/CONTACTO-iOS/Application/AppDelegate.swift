@@ -106,33 +106,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                     chatRoomViewController.participants = data.participants
                     chatRoomViewController.chatList = data.messages
                     
-                    // 현재 활성화된 Scene 찾기
-                    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-                    
-                    // SceneDelegate 찾기
-                    guard let sceneDelegate = windowScene.delegate as? SceneDelegate else { return }
-                    
-                    // Window 찾기
-                    guard let window = sceneDelegate.window else { return }
-                    
-                    // RootViewController 찾기
-                    guard let rootViewController = window.rootViewController else { return }
-                    
-                    // TabBarController 찾기
-                    var tabBarController: UITabBarController?
-                    
-                    // 현재 rootViewController가 TabBarController인 경우
-                    if let tabBar = rootViewController as? UITabBarController {
-                        tabBarController = tabBar
-                    }
-                    // NavigationController 안에 TabBarController가 있는 경우
-                    else if let navigationController = rootViewController as? UINavigationController,
-                            let tabBar = navigationController.viewControllers.first as? UITabBarController {
-                        tabBarController = tabBar
-                    }
-                    
-                    guard let tabBar = tabBarController else { return }
-                    
                     tabBar.selectedIndex = 1 // 채팅 탭으로 이동
                     
                     // NavigationController 찾기
