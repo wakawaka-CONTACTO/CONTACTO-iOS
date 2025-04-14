@@ -17,9 +17,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         let rootViewController = SplashViewController()
         let navigationController = UINavigationController(rootViewController: rootViewController)
-        if let userInfo = connectionOptions.notificationResponse?.notification.request.content.userInfo {
-                handleNotification(userInfo)
-        }
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         self.window = window
@@ -52,42 +49,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-    
-    func handleNotification(_ userInfo: [AnyHashable: Any]) {
-        guard let type = userInfo["type"] as? String else { return }
-
-        if type == "chat", let chatRoomId = userInfo["chatRoomId"] as? String {
-            navigateToChatRoom(chatRoomId)
-        }
-    }
-
-    func navigateToChatRoom(_ chatRoomId: String) {
-        guard let roomId = Int(chatRoomId) else { return }
-        
-        NetworkService.shared.chatService.chatRoomMessage(roomId: roomId) { [weak self] response in
-            switch response {
-            case .success(let data):
-                DispatchQueue.main.async {
-                    let chatRoomViewController = ChatRoomViewController()
-                    chatRoomViewController.chatRoomId = data.id
-                    chatRoomViewController.chatRoomTitle = data.title
-                    chatRoomViewController.chatRoomThumbnail = data.chatRoomThumbnail
-                    chatRoomViewController.participants = data.participants
-                    chatRoomViewController.chatList = data.messages
-                    
-                    if let tabBarController = self?.window?.rootViewController as? UITabBarController {
-                        tabBarController.selectedIndex = 1 // 채팅 탭으로 이동
-                        if let navigationController = tabBarController.selectedViewController as? UINavigationController {
-                            navigationController.pushViewController(chatRoomViewController, animated: true)
-                        }
-                    }
-                }
-            default:
-                print("채팅방 데이터를 가져오는데 실패했습니다.")
-            }
-        }
-    }
-
-
 }
 
