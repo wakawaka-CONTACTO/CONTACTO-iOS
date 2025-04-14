@@ -13,7 +13,7 @@ import AmplitudeSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         
@@ -76,20 +76,57 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        if let meetingID = userInfo["MEETING_ID"] as? String, let userID = userInfo["USER_ID"] as? String {
-            switch response.actionIdentifier {
-            case "ACCEPT_ACTION":
-                print("Accept action - meetingID: \(meetingID), userID: \(userID)")
-                UserIdentityManager.agreePushNotification(isAgree: true)
-            case "DECLINE_ACTION":
-                print("Decline action - meetingID: \(meetingID), userID: \(userID)")
-                UserIdentityManager.agreePushNotification(isAgree: false)
-            default:
-                break
-            }
-        }
+        self.handleNotification(userInfo)
         completionHandler()
     }
+    func handleNotification(_ userInfo: [AnyHashable: Any]) {
+        guard let type = userInfo["type"] as? String else { return }
+
+        switch type {
+        case "chat":
+            if let chatRoomId = userInfo["chatRoomId"] as? String {
+                navigateToChatRoom(chatRoomId)
+            }
+        default:
+            break
+        }
+    }
+    
+    func navigateToChatRoom(_ chatRoomId: String) {
+        guard let roomId = Int(chatRoomId) else { return }
+        
+        NetworkService.shared.chatService.chatRoomMessage(roomId: roomId) { [weak self] response in
+            switch response {
+            case .success(let data):
+                DispatchQueue.main.async {
+                    let chatRoomViewController = ChatRoomViewController()
+                    chatRoomViewController.chatRoomId = data.id
+                    chatRoomViewController.chatRoomTitle = data.title
+                    chatRoomViewController.chatRoomThumbnail = data.chatRoomThumbnail
+                    chatRoomViewController.participants = data.participants
+                    chatRoomViewController.chatList = data.messages
+                    
+                    // TabBarController 찾기
+                    var tabBarController: UITabBarController?
+                    
+                    guard let tabBar = tabBarController else { return }
+                    
+                    tabBar.selectedIndex = 1 // 채팅 탭으로 이동
+                    
+                    // NavigationController 찾기
+                    guard let navigationController = tabBar.selectedViewController as? UINavigationController else { return }
+                    
+                    // TabBar 숨기기
+                    tabBar.tabBar.isHidden = true
+                    
+                    navigationController.pushViewController(chatRoomViewController, animated: true)
+                }
+            default:
+                print("채팅방 데이터를 가져오는데 실패했습니다.")
+            }
+        }
+    }
+
 }
 
 extension AppDelegate: MessagingDelegate {
