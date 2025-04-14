@@ -250,7 +250,14 @@ extension EventName {
             return "계정 삭제 버튼 선택 후 첫번째 팝업에서 [Not, yet] 선택 시"
         case .CLICK_INFO_DELETE2_NO:
             return "계정 삭제 버튼 선택 후 두번째 팝업에서 [Cancel] 선택 시"
-
+            
+        case .RECEIVE_PUSH:
+            return "푸시 알림을 받을 때"
+        case .CLICK_PUSH:
+            return "푸시 알림을 클릭할 때"
+        case .UPDATE_DEVICE_TOKEN:
+            return "Device Token Update"
+            
         default:
             return "unknown"
         }
