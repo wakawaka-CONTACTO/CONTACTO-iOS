@@ -27,6 +27,9 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
     
     private var isFromTalentVC = false
     
+    // 탭 이동 시 수정 상태 유지를 위한 변수
+    private var wasEditEnabled = false
+    
     private func scheduleChangeDetection() {
         changeDetectionTimer?.invalidate()
         changeDetectionTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { [weak self] _ in
@@ -40,6 +43,7 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
     
     private var lastScrollLogTime: Date?
     private let scrollLogInterval: TimeInterval = 3.0
+    private var isInitializing: Bool = true
     
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
         didSet {
@@ -96,24 +100,41 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
         if let username = portfolioManager?.currentData.username {
             UserDefaults.standard.set(username, forKey: "username")
         }
-        
-        self.sendAmpliLog(eventName: EventName.VIEW_EDIT)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.sendAmpliLog(eventName: EventName.VIEW_EDIT)
         setNavigationBar()
         addKeyboardNotifications()
         if !isFromTalentVC {
-            isEditEnable = false
-            editView.toggleEditMode(false)
-            setData()
+            if wasEditEnabled {
+                // 탭 이동 후 복귀 시 이전 수정 모드 상태 복원
+                isEditEnable = true
+                editView.toggleEditMode(true)
+                wasEditEnabled = false
+            } else {
+                // 최초 로드 또는 수정 모드가 아니었던 경우
+                isEditEnable = false
+                editView.toggleEditMode(false)
+                setData()
+            }
         }
         isFromTalentVC = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         removeKeyboardNotifications()
+        
+        // 탭 전환 시 수정 모드 상태 저장
+        if isEditEnable {
+            wasEditEnabled = true
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isInitializing = false
     }
     
     // MARK: - UI Setup
@@ -144,6 +165,10 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
         editView.talentEditButton.addTarget(self, action: #selector(talentEditButtonTapped), for: .touchUpInside)
         editView.editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         editView.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(editProfileLabelTapped))
+        editView.editLabel.isUserInteractionEnabled = true
+        editView.editLabel.addGestureRecognizer(tapGesture)
     }
     
     private func setDelegate() {
@@ -181,6 +206,7 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
             NetworkService.shared.editService.editMyPort(bodyDTO: bodyDTO) { response in
                 switch response {
                 case .success:
+                    UserIdentityManager.updateDetailProperty(data: bodyDTO)
                     completion(true)
                 default:
                     completion(false)
@@ -488,6 +514,39 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
         editView.portfolioCollectionView.reloadData()
         editView.purposeCollectionView.reloadData()
     }
+    
+    @objc private func editProfileLabelTapped() {
+        self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PROFILE_EDIT)
+
+        if isEditEnable {
+            showUnsavedChangesAlert()
+        }
+    }
+    
+    private func showUnsavedChangesAlert() {
+        AlertManager.showAlertWithTwoButtons(
+            on: self,
+            title: "변경사항 저장",
+            message: "변경사항을 저장하지 않고 나가시겠습니까?",
+            confirmTitle: "예",
+            cancelTitle: "아니오",
+            confirmAction: { [weak self] in
+                guard let self = self else { return }
+                // 변경사항 초기화
+                self.portfolioManager = nil
+                self.setData()
+                self.isEditEnable = false
+                self.editView.toggleEditMode(false)
+                self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PROFILE_EDIT)
+            },
+            cancelAction: { [weak self] in
+                guard let self = self else { return }
+                // 현재 상태 유지
+                self.isEditEnable = true
+                self.editView.toggleEditMode(true)
+            }
+        )
+    }
 }
 
 // MARK: - UICollectionView Delegate & DataSource
@@ -555,7 +614,7 @@ extension EditViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
             cell.isTapped = tappedStates[indexPath.row]
-            cell.config(num: indexPath.item)
+            cell.config(purpose: ProfilePurpose.allCases[indexPath.row])
             cell.isEditing = isEditEnable
             cell.setAddTarget()
             cell.tapAction = {
@@ -755,6 +814,8 @@ extension EditViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if isInitializing { return }
+        
         let currentTime = Date()
         if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
             self.sendAmpliLog(eventName: EventName.SCROLL_EDIT)

@@ -38,7 +38,8 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
     
     private var lastScrollLogTime: Date?
     private let scrollLogInterval: TimeInterval = 3.0
-    
+    private var isInitializing: Bool = true
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
@@ -50,19 +51,17 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
         self.setData()
         self.registerSocket()
         self.sendAmpliLog(eventName: EventName.VIEW_CHATROOM)
+        self.isInitializing = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        print("ChatRoom: viewWillDisappear - 채팅방 나가기")
-        
+                
         // 정상적인 종료를 위한 과정 추가
         if isConnected {
             // 먼저 구독 해제
             socketClient.unsubscribe(destination: "/topic/\(chatRoomId)")
             print("ChatRoom: 소켓 구독 해제 - roomId: \(chatRoomId)")
-            self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_BACK)
             
             // 약간의 지연 후 연결 종료
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
@@ -116,6 +115,10 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
         chatRoomView.chatRoomCollectionView.delegate = self
         chatRoomView.chatRoomCollectionView.dataSource = self
         chatRoomView.messageTextView.delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     private func setCollectionView() {
@@ -411,12 +414,14 @@ extension ChatRoomViewController {
     @objc private func backButtonTapped() {
         print("ChatRoom: 뒤로가기 버튼 클릭")
         self.navigationController?.popViewController(animated: true)
+        self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_BACK)
     }
     
     @objc private func profileImageButtonTapped() {
-        let detailProfileViewController = DetailProfileViewController()
+        let detailProfileViewController = DetailProfileViewController(from: .chatroom)
         detailProfileViewController.userId = otherUserId
         detailProfileViewController.isFromChat = true
+        self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_PROFILE)
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
     
@@ -482,6 +487,7 @@ extension ChatRoomViewController {
                 chatRoomView.chatRoomCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
             }
         }
+        if isInitializing { return }
         let currentTime = Date()
         if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
             self.sendAmpliLog(eventName: EventName.SCROLL_CHATROOM)

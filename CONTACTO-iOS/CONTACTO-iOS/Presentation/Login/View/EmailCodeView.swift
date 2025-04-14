@@ -38,8 +38,8 @@ final class EmailCodeView: BaseView, LoginAmplitudeSender {
     }
         
     public func setStatus(){
-        explainContents = ""
-        explain.text = explainContents
+        explainContents = "IF you can’t see it, please check your spam folder."
+        explain.text = explainContents.uppercased()
     }
     
     override func setStyle() {
@@ -172,7 +172,6 @@ final class EmailCodeView: BaseView, LoginAmplitudeSender {
     
     override func setAddTarget() {
         backButton.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
-        self.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE)
     }
     
     @objc private func backButtonDidTap() {

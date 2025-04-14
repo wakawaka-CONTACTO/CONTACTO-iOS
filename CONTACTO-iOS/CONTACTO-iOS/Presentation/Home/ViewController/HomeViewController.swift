@@ -174,7 +174,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
 
 extension HomeViewController {
     @objc private func profileButtonTapped() {
-        let detailProfileViewController = DetailProfileViewController()
+        let detailProfileViewController = DetailProfileViewController(from: .home)
         if isPreview {
             detailProfileViewController.portfolioData = self.previewPortfolioData
             detailProfileViewController.imagePreviewDummy = previewImages
@@ -370,10 +370,8 @@ extension HomeViewController {
                 self?.previewPortfolioData = data
                 KeychainHandler.shared.userName = data.username
                 KeychainHandler.shared.userID = String(data.id)
-                #if DEBUG
-                print("내 포트폴리오 데이터: \(data)")
-                KeychainHandler.shared.userName = "\(data.username), Debug"
-                #endif
+                UserIdentityManager.myDetailProperty(data: data)
+
             default:
                 #if DEBUG
                 print("내 포트폴리오 데이터를 가져오지 못함")
@@ -393,6 +391,7 @@ extension HomeViewController {
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
                 self.animateImage(status: true)
             }
+            UserIdentityManager.homeYes()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_YES)
         } else {
             self.animateImage(status: true)
@@ -410,6 +409,7 @@ extension HomeViewController {
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
                 self.animateImage(status: false)
             }
+            UserIdentityManager.homeNo()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_NO)
         } else {
             self.animateImage(status: false)
@@ -481,7 +481,7 @@ extension HomeViewController {
                 yourImageURL: recommendedPortfolios[recommendedPortfolioIdx].portfolioImageUrl.first ?? "",
                 chatRoomId: chatRoomId
             )
-            
+            UserIdentityManager.chatroom()
             self.present(matchViewController, animated: true)
         }
     }

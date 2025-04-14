@@ -13,6 +13,18 @@ import Then
 
 final class DetailProfileViewController: BaseViewController, DetailAmplitudeSender {
     
+    enum From {
+        case home
+        case chatroom
+    }
+    
+    private var from: From = .home
+    
+    convenience init(from: From) {
+        self.init()
+        self.from = from
+    }
+    
     var imageArray: [String] = []
     var imagePreviewDummy: [UIImage] = []
     var currentNum = 0 {
@@ -29,6 +41,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     private var talentData: [TalentInfo] = []
     private var lastScrollLogTime: Date?
     private let scrollLogInterval: TimeInterval = 3.0
+    private var isInitializing = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,11 +51,17 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setData()
+        self.sendAmpliLog(eventName: EventName.VIEW_DETAIL, properties: ["from": from == .home ? "home" : "chatroom"])
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BACK)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isInitializing = false
     }
     
     override func setNavigationBar() {
@@ -287,8 +306,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         let reportReasons = StringLiterals.Home.Report.ReportReasons.allCases
         for (index, reason) in reportReasons.enumerated() {
             let action = UIAlertAction(title: reason, style: .default) { _ in
-                print("User reported for reason at index \(index): \(reason)")
-                self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_YES)
+                self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_YES, properties: ["report_name" : reason])
 
                 self.reportUser(bodyDTO: ReportRequestBodyDTO(reportedUserId: self.portfolioData.id, reportReasonIdx: index)) { success in
                     DispatchQueue.main.async {
@@ -377,7 +395,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
             cell.isTapped = true
-            cell.config(num: isPreview ? portfolioData.userPurposes[indexPath.row] : portfolioData.userPurposes[indexPath.row])
+            cell.config(purpose: ProfilePurpose.allCases[isPreview ? portfolioData.userPurposes[indexPath.row] : portfolioData.userPurposes[indexPath.row]])
             return cell
         default:
             return UICollectionViewCell()
@@ -423,6 +441,7 @@ extension DetailProfileViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if isInitializing { return }
         let currentTime = Date()
         if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
             self.sendAmpliLog(eventName: EventName.SCROLL_DETAIL)
