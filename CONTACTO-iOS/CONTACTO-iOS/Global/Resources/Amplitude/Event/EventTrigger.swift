@@ -258,6 +258,8 @@ extension EventName {
         case .UPDATE_DEVICE_TOKEN:
             return "Device Token Update"
             
+        case .NONE_CASE:
+            return "존재하지 않는 이벤트일 때"
         default:
             return "unknown"
         }

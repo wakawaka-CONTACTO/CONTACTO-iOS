@@ -146,4 +146,5 @@ public enum EventName: String {
     case RECEIVE_PUSH
     case CLICK_PUSH
     case UPDATE_DEVICE_TOKEN
+    case NONE_CASE
 }

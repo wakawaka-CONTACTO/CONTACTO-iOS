@@ -72,7 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate : UNUserNotificationCenterDelegate, AlarmAmplitudeSender {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
             completionHandler([.banner, .list, .sound])
-        self.sendAmpliLog(eventName: EventName.RECEIVE_PUSH, properties: ["push_title" : UNNotificationPresentationOptions.banner])
+        self.sendAmpliLog(eventName: EventName.RECEIVE_PUSH, properties: ["push_title" : notification.title.])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -83,7 +83,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate, AlarmAmplitudeSender {
     
     func handleNotification(_ userInfo: [AnyHashable: Any]) {
         guard let type = userInfo["type"] as? String else { return }
-        self.sendAmpliLog(eventName: EventName.CLICK_EDIT_TALENT, properties: ["push_title" : type])
+        
+        self.sendAmpliLog(eventName: EventName.CLICK_PUSH, properties: ["push_title" : userInfo["title"], "push_message" : userInfo["body"]])
 
         switch type {
         case "chat":
