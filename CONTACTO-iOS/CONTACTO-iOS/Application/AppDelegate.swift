@@ -106,6 +106,11 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                     chatRoomViewController.participants = data.participants
                     chatRoomViewController.chatList = data.messages
                     
+                    // TabBarController 찾기
+                    var tabBarController: UITabBarController?
+                    
+                    guard let tabBar = tabBarController else { return }
+                    
                     tabBar.selectedIndex = 1 // 채팅 탭으로 이동
                     
                     // NavigationController 찾기
