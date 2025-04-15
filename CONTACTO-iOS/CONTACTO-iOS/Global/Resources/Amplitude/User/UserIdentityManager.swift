@@ -39,7 +39,7 @@ public struct UserIdentityManager{
         identity.set(property: "user_web", value: data.webUrl)
         identity.set(property: "user_nationality", value: data.nationality)
 
-        identity.set(property: "user_talent", value: data.userTalents)
+        identity.set(property: "user_talent", value: data.userTalents.map { $0.talentType })
         identity.set(property: "user_purpose", value: data.userPurposes.map { ProfilePurpose(rawValue: $0)?.displayName ?? "" })
         identity.set(property: "user_portfolio_count", value: data.userPortfolio?.portfolioImageUrl.count)
         
@@ -58,7 +58,7 @@ public struct UserIdentityManager{
         identity.set(property: "user_web", value: data.webUrl)
         identity.set(property: "user_nationality", value: data.nationality)
 
-        identity.set(property: "user_talent", value: data.userTalents)
+        identity.set(property: "user_talent", value: data.userTalents.map { Talent(rawValue: $0)?.info.displayName ?? ""})
         identity.set(property: "user_purpose", value: data.userPurposes.map { ProfilePurpose(rawValue: $0)?.displayName ?? "" })
         identity.set(property: "user_portfolio_count", value: (data.existedImageUrl?.count ?? 0) + (data.newPortfolioImages?.count ?? 0))
         
