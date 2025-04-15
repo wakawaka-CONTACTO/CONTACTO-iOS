@@ -412,8 +412,8 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
     // MARK: - Button Actions
     @objc private func previewButtonTapped() {
         self.sendAmpliLog(eventName: EventName.CLICK_EDIT_PREVIEW)
-        let previewVC = HomeViewController()
-        previewVC.isPreview = true
+        let previewVC = HomeViewController(isPreview: true)
+
         if let manager = portfolioManager {
             previewVC.currentUserId = manager.currentData.id
             previewVC.previewPortfolioData = manager.currentData
