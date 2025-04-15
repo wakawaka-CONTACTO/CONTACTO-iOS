@@ -141,4 +141,10 @@ public enum EventName: String {
     case CLICK_INFO_DELETE2_YES
     case CLICK_INFO_DELETE1_NO
     case CLICK_INFO_DELETE2_NO
+    
+    // Push
+    case RECEIVE_PUSH
+    case CLICK_PUSH
+    case UPDATE_DEVICE_TOKEN
+    case NONE_CASE
 }

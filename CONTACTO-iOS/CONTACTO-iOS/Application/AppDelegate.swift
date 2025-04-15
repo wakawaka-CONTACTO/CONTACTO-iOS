@@ -69,9 +69,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-extension AppDelegate : UNUserNotificationCenterDelegate {
+extension AppDelegate : UNUserNotificationCenterDelegate, AlarmAmplitudeSender {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
             completionHandler([.banner, .list, .sound])
+        let userInfo = notification.request.content.userInfo
+
+        sendAlarmAmplitude(userInfo, eventName: EventName.RECEIVE_PUSH)
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -79,8 +82,11 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         self.handleNotification(userInfo)
         completionHandler()
     }
+    
     func handleNotification(_ userInfo: [AnyHashable: Any]) {
         guard let type = userInfo["type"] as? String else { return }
+        
+        sendAlarmAmplitude(userInfo, eventName: EventName.CLICK_PUSH)
 
         switch type {
         case "chat":
@@ -89,6 +95,30 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             }
         default:
             break
+        }
+    }
+    
+    private func sendAlarmAmplitude(_ userInfo: [AnyHashable: Any], eventName: EventName) {
+        if let aps = userInfo["aps"] as? [String: Any],
+           let alert = aps["alert"] as? [String: Any] {
+            let title = alert["title"] as? String ?? "No title"
+            let body = alert["body"] as? String ?? "No body"
+                
+            self.sendAmpliLog(
+                eventName: eventName,
+                properties: [
+                    "push_title": title,
+                    "push_message": body
+                ]
+            )
+        } else {
+            self.sendAmpliLog(
+                eventName: eventName,
+                properties: [
+                    "push_title": "No alert data",
+                    "push_message": "No alert data"
+                ]
+            )
         }
     }
     

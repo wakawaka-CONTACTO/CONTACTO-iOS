@@ -39,7 +39,7 @@ extension Amplitude {
             }
         }
 #if DEBUG
-        print("[LOG] amplitude track \(properties)")
+        print("[LOG] amplitude track \(eventProps)")
 #endif
         AmplitudeManager.amplitude.track(
             eventType: eventInfo.eventName.rawValue,
