@@ -81,7 +81,7 @@ public enum EventName: String {
     // Detail
     case VIEW_DETAIL
     case SCROLL_DETAIL
-    case CLICK_DETAIL_BACK
+    case CLICK_DETAIL_CANCEL
     case CLICK_DETAIL_INSTA
     case CLICK_DETAIL_WEB
     case CLICK_DETAIL_BLOCK_YES
