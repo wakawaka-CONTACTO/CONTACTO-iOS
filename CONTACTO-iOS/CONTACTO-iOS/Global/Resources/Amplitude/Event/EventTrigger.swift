@@ -134,10 +134,6 @@ extension EventName {
         case .CLICK_HOME_REVERT:
             return "되돌리기 버튼 눌렀을 때"
             
-            
-        case .SUCCESS_LOGIN:
-            return "Login 성공"
-            
         case .VIEW_DETAIL:
             return "디테일 화면"
         case .SCROLL_DETAIL:

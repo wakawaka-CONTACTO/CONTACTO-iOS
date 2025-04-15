@@ -74,10 +74,7 @@ public enum EventName: String {
     case CLICK_HOME_YES
     case CLICK_HOME_NO
     case CLICK_HOME_REVERT
-    
-    case SUCCESS_LOGIN
-    case TEST
-    
+        
     // Detail
     case VIEW_DETAIL
     case SCROLL_DETAIL

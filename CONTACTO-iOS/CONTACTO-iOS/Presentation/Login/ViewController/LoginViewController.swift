@@ -348,7 +348,6 @@ extension LoginViewController {
                 KeychainHandler.shared.accessToken = data.accessToken
                 KeychainHandler.shared.refreshToken = data.refreshToken
                 UserIdentityManager.setUserId()
-                self.sendAmpliLog(eventName: EventName.SUCCESS_LOGIN)
                 completion(true)
             case .failure(let error):
                 if let data = error.data,
