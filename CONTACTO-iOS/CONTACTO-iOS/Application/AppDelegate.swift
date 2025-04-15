@@ -72,7 +72,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate : UNUserNotificationCenterDelegate, AlarmAmplitudeSender {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
             completionHandler([.banner, .list, .sound])
-        self.sendAmpliLog(eventName: EventName.RECEIVE_PUSH, properties: ["push_title" : notification.date.description])
+        let userInfo = notification.request.content.userInfo
+
+        sendAlarmAmplitude(userInfo, eventName: EventName.RECEIVE_PUSH)
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -84,7 +86,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate, AlarmAmplitudeSender {
     func handleNotification(_ userInfo: [AnyHashable: Any]) {
         guard let type = userInfo["type"] as? String else { return }
         
-        sendAlarmAmplitude(userInfo)
+        sendAlarmAmplitude(userInfo, eventName: EventName.CLICK_PUSH)
 
         switch type {
         case "chat":
@@ -96,30 +98,28 @@ extension AppDelegate : UNUserNotificationCenterDelegate, AlarmAmplitudeSender {
         }
     }
     
-    private func sendAlarmAmplitude(_ userInfo: [AnyHashable: Any]) {
+    private func sendAlarmAmplitude(_ userInfo: [AnyHashable: Any], eventName: EventName) {
         if let aps = userInfo["aps"] as? [String: Any],
-               let alert = aps["alert"] as? [String: Any] {
-                let title = alert["title"] as? String ?? ""
-                let body = alert["body"] as? String ?? ""
+           let alert = aps["alert"] as? [String: Any] {
+            let title = alert["title"] as? String ?? "No title"
+            let body = alert["body"] as? String ?? "No body"
                 
-                self.sendAmpliLog(
-                    eventName: EventName.CLICK_PUSH,
-                    properties: [
-                        "push_title": title,
-                        "push_message": body
-                    ]
-                )
-            } else {
-                // "aps.alert"가 없는 푸시(=배너가 뜨지 않는 '무음 푸시' 등)라면, 필요한 처리를 해주거나
-                // 혹은 기본값을 설정할 수 있습니다.
-                self.sendAmpliLog(
-                    eventName: EventName.CLICK_PUSH,
-                    properties: [
-                        "push_title": "No alert data",
-                        "push_message": "No alert data"
-                    ]
-                )
-            }
+            self.sendAmpliLog(
+                eventName: eventName,
+                properties: [
+                    "push_title": title,
+                    "push_message": body
+                ]
+            )
+        } else {
+            self.sendAmpliLog(
+                eventName: eventName,
+                properties: [
+                    "push_title": "No alert data",
+                    "push_message": "No alert data"
+                ]
+            )
+        }
     }
     
     func navigateToChatRoom(_ chatRoomId: String) {
