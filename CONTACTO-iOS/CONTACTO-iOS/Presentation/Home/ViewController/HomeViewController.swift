@@ -32,6 +32,11 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         }
     }
     
+    init(isPreview: Bool){
+        super.init(nibName: nil, bundle: nil)
+        self.isPreview = isPreview
+    }
+    
     var isMatch = false /// 매칭 여부
     var chatRoomId = 0
     
@@ -72,7 +77,6 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             name: Notification.Name("moveToChatRoomFromMatch"),
             object: nil
         )
-        self.sendAmpliLog(eventName: EventName.VIEW_HOME)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,7 +88,10 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             isFromProfile = false // 플래그 리셋
             return
         }
-        
+        if isPreview == false{
+            self.sendAmpliLog(eventName: EventName.VIEW_HOME)
+        }
+
         setData()
     }
     
@@ -283,6 +290,7 @@ extension HomeViewController {
                 if self.recommendedPortfolios.count == 0 {
                     self.homeView.isHidden = true
                     self.homeEmptyView.isHidden = false
+                    self.sendAmpliLog(eventName: EventName.VIEW_EMPTY)
                     return
                 }
                 self.recommendedPortfolioIdx = 0
@@ -293,7 +301,8 @@ extension HomeViewController {
             homeView.profileNameLabel.text = previewPortfolioData.username
             portfolioImageCount = previewPortfolioData.userPortfolio?.portfolioImageUrl.count ?? 0
             homeEmptyView.isHidden = true
-            self.sendAmpliLog(eventName: EventName.VIEW_HOME_EMPTY)
+            self.sendAmpliLog(eventName: EventName.VIEW_PREVIEW)
+            return
         }
     }
     
@@ -307,6 +316,7 @@ extension HomeViewController {
                         if self.recommendedPortfolios.count == 0 {
                             self.homeView.isHidden = true
                             self.homeEmptyView.isHidden = false
+                            self.sendAmpliLog(eventName: EventName.VIEW_HOME_EMPTY)
                             return
                         }
                     }

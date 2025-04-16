@@ -56,7 +56,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BACK)
+        self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_CANCEL)
     }
     
     override func viewDidAppear(_ animated: Bool) {
