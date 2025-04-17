@@ -11,12 +11,13 @@ import SafariServices
 import SnapKit
 import Then
 
-final class InfoViewController: BaseViewController {
+final class InfoViewController: BaseViewController, InfoAmplitudeSender {
     private let infoView = InfoView()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         checkMyPort { _ in }
+        self.sendAmpliLog(eventName: EventName.VIEW_INFO)
     }
     
     override func setNavigationBar() {
@@ -60,26 +61,31 @@ extension InfoViewController {
     @objc private func helpButtonTapped() {
         guard let url = URL(string: StringLiterals.URL.insta) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_HELP)
     }
     
     @objc private func guidelinesTapped() {
         guard let url = URL(string: StringLiterals.URL.guidelines) else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_COMMUNITY)
     }
     
     @objc private func cookieButtonTapped() {
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_PRIVACY)
     }
     
     @objc private func logoutButtonTapped() {
         self.setLogoutAlertController()
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT)
     }
     
     @objc private func deleteButtonTapped() {
         self.setDeleteAlertController()
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE)
     }
     
     private func setLogoutAlertController() {
@@ -89,17 +95,31 @@ extension InfoViewController {
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         
         let cancel = UIAlertAction(title: StringLiterals.Info.Alert.Logout.no, style: .cancel){ cancel in
-            print("취소 버튼이 눌렸습니다.")
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_NO)
         }
         
-        let success = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ action in
-            KeychainHandler.shared.accessToken.removeAll()
-            KeychainHandler.shared.refreshToken.removeAll()
-            guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-            sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+        let success = UIAlertAction(title: StringLiterals.Info.Alert.Logout.yes, style: .default){ [weak self] action in
+            guard let self = self else { return }
+            let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+            
+            NetworkService.shared.infoService.logout(deviceId: deviceId) { response in
+                switch response {
+                case .success:
+                    KeychainHandler.shared.accessToken.removeAll()
+                    KeychainHandler.shared.refreshToken.removeAll()
+
+                    AmplitudeManager.amplitude.flush()
+                    AmplitudeManager.amplitude.reset()
+                    self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_YES)
+                  
+                    guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                    sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                default:
+                    self.view.showToast(message: "로그아웃에 실패했습니다.")
+                }
+            }
         }
         
-        AmplitudeManager.amplitude.reset()
         alert.addAction(cancel)
         alert.addAction(success)
         present(alert, animated: true)
@@ -112,11 +132,12 @@ extension InfoViewController {
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         
         let notYet = UIAlertAction(title: StringLiterals.Info.Alert.Delete.notYet, style: .default){ action in
-            print("취소 버튼이 눌렸습니다.")
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE1_NO)
         }
         
         let yes = UIAlertAction(title: StringLiterals.Info.Alert.Delete.yes, style: .destructive){ cancel in
             self.showFinalDeleteConfirmation()
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE1_YES)
         }
         
         alert.addAction(notYet)
@@ -131,15 +152,20 @@ extension InfoViewController {
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         
         let delete = UIAlertAction(title: StringLiterals.Info.Alert.Delete.delete, style: .destructive) { _ in
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE2_YES)
             self.deleteMe { _ in
                 KeychainHandler.shared.accessToken.removeAll()
                 KeychainHandler.shared.refreshToken.removeAll()
+                AmplitudeManager.amplitude.flush()
+                AmplitudeManager.amplitude.reset()
                 guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
                 sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
             }
         }
         
-        let cancle = UIAlertAction(title: StringLiterals.Info.Alert.Delete.cancel, style: .cancel)
+        let cancle = UIAlertAction(title: StringLiterals.Info.Alert.Delete.cancel, style: .cancel){ action in
+            self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE2_NO)
+        }
         
         alert.addAction(delete)
         alert.addAction(cancle)

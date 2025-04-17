@@ -32,6 +32,11 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         }
     }
     
+    init(isPreview: Bool){
+        super.init(nibName: nil, bundle: nil)
+        self.isPreview = isPreview
+    }
+    
     var isMatch = false /// 매칭 여부
     var chatRoomId = 0
     
@@ -59,14 +64,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     let homeView = HomeView()
     let homeEmptyView = HomeEmptyView()
-    
-    private func setAmplitudeUserProperties(){
-        var metaProperties = UserPropertyMetadata(homeYesCount: 0, homeNoCount: 0, chatroomCount: 0, pushNotificationConsent: false) // todo 추후 값 수정하고 반영
-        let userProperty = UserPropertiesInfo.from(previewPortfolioData, metadata:
-                                                    metaProperties)
-        AmplitudeUserPropertySender.setUserProperties(user: userProperty)
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setPanAction()
@@ -79,8 +77,6 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             name: Notification.Name("moveToChatRoomFromMatch"),
             object: nil
         )
-        setAmplitudeUserProperties()
-        sendAmpliLog(eventName: EventName.VIEW_HOME)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,7 +88,10 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             isFromProfile = false // 플래그 리셋
             return
         }
-        
+        if isPreview == false{
+            self.sendAmpliLog(eventName: EventName.VIEW_HOME)
+        }
+
         setData()
     }
     
@@ -182,7 +181,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
 
 extension HomeViewController {
     @objc private func profileButtonTapped() {
-        let detailProfileViewController = DetailProfileViewController()
+        let detailProfileViewController = DetailProfileViewController(from: .home)
         if isPreview {
             detailProfileViewController.portfolioData = self.previewPortfolioData
             detailProfileViewController.imagePreviewDummy = previewImages
@@ -196,6 +195,7 @@ extension HomeViewController {
     }
     
     @objc private func handleBackTap(_ sender: UITapGestureRecognizer) {
+        guard !(recommendedPortfolios.isEmpty), !(portfolioImages.isEmpty) else { return }
         HapticService.impact(.light).run()
         
         if portfolioImageIdx > 0 { portfolioImageIdx -= 1 }
@@ -204,6 +204,7 @@ extension HomeViewController {
     }
     
     @objc private func handleNextTap(_ sender: UITapGestureRecognizer) {
+        guard !(recommendedPortfolios.isEmpty), !(portfolioImages.isEmpty) else { return }
         HapticService.impact(.light).run()
         
         if portfolioImageIdx >= portfolioImageCount - 1 { portfolioImageIdx = 0 }
@@ -289,6 +290,7 @@ extension HomeViewController {
                 if self.recommendedPortfolios.count == 0 {
                     self.homeView.isHidden = true
                     self.homeEmptyView.isHidden = false
+                    self.sendAmpliLog(eventName: EventName.VIEW_EMPTY)
                     return
                 }
                 self.recommendedPortfolioIdx = 0
@@ -299,7 +301,8 @@ extension HomeViewController {
             homeView.profileNameLabel.text = previewPortfolioData.username
             portfolioImageCount = previewPortfolioData.userPortfolio?.portfolioImageUrl.count ?? 0
             homeEmptyView.isHidden = true
-            self.sendAmpliLog(eventName: EventName.VIEW_HOME_EMPTY)
+            self.sendAmpliLog(eventName: EventName.VIEW_PREVIEW)
+            return
         }
     }
     
@@ -313,6 +316,7 @@ extension HomeViewController {
                         if self.recommendedPortfolios.count == 0 {
                             self.homeView.isHidden = true
                             self.homeEmptyView.isHidden = false
+                            self.sendAmpliLog(eventName: EventName.VIEW_HOME_EMPTY)
                             return
                         }
                     }
@@ -374,9 +378,10 @@ extension HomeViewController {
             switch response {
             case .success(let data):
                 self?.previewPortfolioData = data
-                #if DEBUG
-                print("내 포트폴리오 데이터: \(data)")
-                #endif
+                KeychainHandler.shared.userName = data.username
+                KeychainHandler.shared.userID = String(data.id)
+                UserIdentityManager.myDetailProperty(data: data)
+
             default:
                 #if DEBUG
                 print("내 포트폴리오 데이터를 가져오지 못함")
@@ -386,7 +391,7 @@ extension HomeViewController {
     }
     
     @objc private func yesButtonTapped() {
-        guard !isProcessing else { return }
+        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
         isProcessing = true
         
         if !isPreview {
@@ -396,6 +401,7 @@ extension HomeViewController {
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
                 self.animateImage(status: true)
             }
+            UserIdentityManager.homeYes()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_YES)
         } else {
             self.animateImage(status: true)
@@ -403,7 +409,7 @@ extension HomeViewController {
     }
     
     @objc private func noButtonTapped() {
-        guard !isProcessing else { return }
+        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
         isProcessing = true
         
         if !isPreview {
@@ -413,6 +419,7 @@ extension HomeViewController {
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
                 self.animateImage(status: false)
             }
+            UserIdentityManager.homeNo()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_NO)
         } else {
             self.animateImage(status: false)
@@ -420,7 +427,7 @@ extension HomeViewController {
     }
     
     @objc private func undoButtonTapped() {
-        guard !isProcessing else { return }
+        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
         isProcessing = true
         
         isUndo = true
@@ -484,7 +491,7 @@ extension HomeViewController {
                 yourImageURL: recommendedPortfolios[recommendedPortfolioIdx].portfolioImageUrl.first ?? "",
                 chatRoomId: chatRoomId
             )
-            
+            UserIdentityManager.chatroom()
             self.present(matchViewController, animated: true)
         }
     }

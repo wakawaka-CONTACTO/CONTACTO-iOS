@@ -10,16 +10,20 @@ import UIKit
 import SnapKit
 import Then
 
-final class ChatListViewController: BaseViewController {
+final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     var chatRoomListData: [ChatListResponseDTO] = []
     let chatListView = ChatListView()
     let chatEmptyView = ChatEmptyView()
+    
+    private var lastScrollLogTime: Date?
+    private let scrollLogInterval: TimeInterval = 3.0
     
     private var hasNext = true
     private var currentPage = 0
     private let pageSize = 10
     private var isFetching = false
     private var isFirstLoad = true
+    private var isInitializing = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +50,8 @@ final class ChatListViewController: BaseViewController {
         print("ChatList: viewDidAppear - 채팅 리스트 화면 표시됨")
         // 화면이 나타날 때마다 데이터 새로 로드
         refreshChatList()
+        isInitializing = false
+        self.sendAmpliLog(eventName: EventName.VIEW_CHAT)
     }
     
     override func setNavigationBar() {
@@ -87,13 +93,16 @@ final class ChatListViewController: BaseViewController {
             self.chatEmptyView.isHidden = !self.chatRoomListData.isEmpty
             self.isFirstLoad = false
             
+            if self.chatRoomListData.isEmpty {
+                self.sendAmpliLog(eventName: EventName.VIEW_EMPTY)
+            }
+            
             // 읽지 않은 메시지가 있는지 확인하고 탭바 아이콘 업데이트
             self.updateTabBarIcon()
         }
     }
     
     private func updateTabBarIcon() {
-        // 모든 채팅방에서 읽지 않은 메시지가 있는지 확인
         let hasUnreadMessages = chatRoomListData.contains { $0.unreadMessageCount > 0 }
         
         // 상태 변경을 메인 탭바에 알림
@@ -122,6 +131,7 @@ final class ChatListViewController: BaseViewController {
         chatRoomViewController.chatRoomTitle = chatRoomListData[indexPath.row].title
         chatRoomViewController.chatRoomThumbnail = chatRoomListData[indexPath.row].chatRoomThumbnail ?? ""
         self.navigationController?.pushViewController(chatRoomViewController, animated: true)
+        self.sendAmpliLog(eventName: EventName.CLICK_CHAT)
     }
     
     @objc private func refreshChatList() {
@@ -180,6 +190,12 @@ extension ChatListViewController: UICollectionViewDelegate {
                     }
                 }
             }
+        }
+        if isInitializing { return }
+        let currentTime = Date()
+        if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
+            self.sendAmpliLog(eventName: EventName.SCROLL_CHAT)
+            lastScrollLogTime = currentTime
         }
     }
 }

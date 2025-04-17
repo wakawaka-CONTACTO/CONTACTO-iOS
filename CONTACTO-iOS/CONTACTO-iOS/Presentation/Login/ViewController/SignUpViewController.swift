@@ -11,7 +11,7 @@ import SnapKit
 import Then
 import SafariServices
 
-final class SignUpViewController: UIViewController {
+final class SignUpViewController: UIViewController, LoginAmplitudeSender {
     
     let signUpView = SignUpView()
     let emailCodeView = EmailCodeView()
@@ -21,9 +21,19 @@ final class SignUpViewController: UIViewController {
     var confirmPw = ""
     var authCode = ""
     var nationality = ""
+    private var failCount: Int = 0
+    
+    public func isFirst() -> Bool{
+        if self.failCount == 0 {
+            return true
+        }
+        return false
+    }
+    public func retry() {
+        self.failCount += 1
+    }
     
     weak var delegate: EmailCodeViewDelegate?
-    let amplitude = LoginAmplitudeSender()
 
     var isPrivacyAgree = false {
         didSet {
@@ -101,7 +111,7 @@ final class SignUpViewController: UIViewController {
         emailCodeView.resendButton.addTarget(self, action: #selector(sendCode), for: .touchUpInside)
         
         setPWView.continueButton.addTarget(self, action: #selector(pwContinueButton), for: .touchUpInside)
-        amplitude.sendAmpliLog(eventName: EventName.VIEW_SIGNUP)
+        self.sendAmpliLog(eventName: EventName.VIEW_SIGNUP)
     }
     
     private func setDelegate() {
@@ -121,6 +131,18 @@ final class SignUpViewController: UIViewController {
 extension SignUpViewController {
     @objc private func sendCode() {
         self.signUpView.continueButton.isEnabled = false
+        if self.signUpView.isHidden == false {
+            self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
+        }
+        
+        if self.isFirst() == true{
+            self.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE, properties: ["sendcode_view": "signup"])
+            self.retry()
+        } else {
+            self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_RESEND)
+            self.retry()
+        }
+        
         NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: EmailSendPurpose.signup)) { result in DispatchQueue.main.async {
             switch result{
             case .success:
@@ -156,17 +178,18 @@ extension SignUpViewController {
     
     @objc private func privacyAgreeButtonTapped() {
         isPrivacyAgree.toggle()
-        amplitude.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_AGREE)
+        self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_AGREE)
     }
     
     @objc private func privacyAgreeDetailButtonTapped() {
-        amplitude.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_AGREE_DETAIL)
+        self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_AGREE_DETAIL)
         guard let url = URL(string: StringLiterals.URL.privacy) else { return }
         let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
     }
     
     @objc private func codeVerifyButtonTapped() {
+        self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT)
         emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
             if response {
                 self.signUpView.isHidden = true
@@ -183,7 +206,6 @@ extension SignUpViewController {
         UserInfo.shared.email = self.email
         UserInfo.shared.password = self.pw
         
-        amplitude.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
         let nameOnboardingViewController = NameOnboardingViewController()
         view.window?.rootViewController = UINavigationController(rootViewController: nameOnboardingViewController)
     }
@@ -311,6 +333,6 @@ extension SignUpViewController: EmailCodeViewDelegate {
         // 로그인 화면으로 이동
         let loginVC = LoginViewController()
         self.navigationController?.setViewControllers([loginVC], animated: false)
-        amplitude.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_BACK)
+        self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_BACK)
     }
 }

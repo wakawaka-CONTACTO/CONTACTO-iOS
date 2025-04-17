@@ -10,14 +10,14 @@ import UIKit
 import SnapKit
 import Then
 
-final class EditView: BaseView {
-    
+final class EditView: BaseView, EditAmplitudeSender {
+        
     private let topView = UIView()
     private let topImageView = UIImageView()
     
     let scrollView = UIScrollView()
     private let contentsView = UIView()
-    private let editLabel = UILabel()
+    let editLabel = UILabel()
     private let editLineView = UIView()
     let previewButton = UIButton()
     

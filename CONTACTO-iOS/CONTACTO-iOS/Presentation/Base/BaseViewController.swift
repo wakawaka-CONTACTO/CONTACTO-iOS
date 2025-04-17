@@ -44,6 +44,7 @@ class BaseViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationBar()
+        UserIdentityManager.setUserId()
     }
     
     // MARK: UI

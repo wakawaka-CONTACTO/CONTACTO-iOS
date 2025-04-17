@@ -12,7 +12,7 @@ import SnapKit
 import StompClientLib
 import Then
 
-final class ChatRoomViewController: BaseViewController {
+final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
     
     var content = ""
     var senderId = KeychainHandler.shared.userID
@@ -36,6 +36,10 @@ final class ChatRoomViewController: BaseViewController {
     private var isFetching = false
     private var isFirstLoad = true
     
+    private var lastScrollLogTime: Date?
+    private let scrollLogInterval: TimeInterval = 3.0
+    private var isInitializing: Bool = true
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
@@ -46,13 +50,13 @@ final class ChatRoomViewController: BaseViewController {
         self.addKeyboardNotifications()
         self.setData()
         self.registerSocket()
+        self.sendAmpliLog(eventName: EventName.VIEW_CHATROOM)
+        self.isInitializing = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        print("ChatRoom: viewWillDisappear - 채팅방 나가기")
-        
+                
         // 정상적인 종료를 위한 과정 추가
         if isConnected {
             // 먼저 구독 해제
@@ -95,7 +99,7 @@ final class ChatRoomViewController: BaseViewController {
     override func setAddTarget() {
         chatRoomView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         chatRoomView.profileImageButton.addTarget(self, action: #selector(profileImageButtonTapped), for: .touchUpInside)
-//        chatRoomView.plusButton.addTarget(self, action: #selector(plusButtonTappped), for: .touchUpInside)
+        chatRoomView.plusButton.addTarget(self, action: #selector(plusButtonTappped), for: .touchUpInside)
         chatRoomView.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
     }
     
@@ -111,6 +115,10 @@ final class ChatRoomViewController: BaseViewController {
         chatRoomView.chatRoomCollectionView.delegate = self
         chatRoomView.chatRoomCollectionView.dataSource = self
         chatRoomView.messageTextView.delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     private func setCollectionView() {
@@ -406,12 +414,14 @@ extension ChatRoomViewController {
     @objc private func backButtonTapped() {
         print("ChatRoom: 뒤로가기 버튼 클릭")
         self.navigationController?.popViewController(animated: true)
+        self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_BACK)
     }
     
     @objc private func profileImageButtonTapped() {
-        let detailProfileViewController = DetailProfileViewController()
+        let detailProfileViewController = DetailProfileViewController(from: .chatroom)
         detailProfileViewController.userId = otherUserId
         detailProfileViewController.isFromChat = true
+        self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_PROFILE)
         self.navigationController?.pushViewController(detailProfileViewController, animated: true)
     }
     
@@ -423,6 +433,7 @@ extension ChatRoomViewController {
         configuration.selection = .default
         self.present(picker, animated: true, completion: nil)
         picker.delegate = self
+        self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_PLUS)
     }
     
     @objc private func sendButtonTapped() {
@@ -448,6 +459,7 @@ extension ChatRoomViewController {
             createdAt: createdAt,
             readStatus: false)
         
+        self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_SEND)
         // 로컬 UI 업데이트
         chatList.append(newMessage)
         chatRoomView.chatRoomCollectionView.reloadData()
@@ -474,6 +486,12 @@ extension ChatRoomViewController {
             if indexPath.item < itemCount {
                 chatRoomView.chatRoomCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
             }
+        }
+        if isInitializing { return }
+        let currentTime = Date()
+        if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
+            self.sendAmpliLog(eventName: EventName.SCROLL_CHATROOM)
+            lastScrollLogTime = currentTime
         }
     }
     

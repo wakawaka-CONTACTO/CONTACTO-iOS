@@ -21,4 +21,29 @@ struct AlertManager {
         alertController.addAction(confirmAction)
         viewController.present(alertController, animated: true, completion: nil)
     }
+
+    static func showAlertWithTwoButtons(on viewController: UIViewController,
+                                       title: String,
+                                       message: String,
+                                       confirmTitle: String,
+                                       cancelTitle: String,
+                                       confirmAction: @escaping () -> Void,
+                                       cancelAction: @escaping () -> Void) {
+        let alertController = UIAlertController(title: title,
+                                                message: message,
+                                                preferredStyle: .alert)
+        
+        let confirmAction = UIAlertAction(title: confirmTitle, style: .default) { _ in
+            confirmAction()
+        }
+        
+        let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel) { _ in
+            cancelAction()
+        }
+        
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        
+        viewController.present(alertController, animated: true, completion: nil)
+    }
 }

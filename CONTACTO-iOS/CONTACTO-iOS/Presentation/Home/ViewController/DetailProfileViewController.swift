@@ -11,7 +11,19 @@ import Kingfisher
 import SnapKit
 import Then
 
-final class DetailProfileViewController: BaseViewController {
+final class DetailProfileViewController: BaseViewController, DetailAmplitudeSender {
+    
+    enum From {
+        case home
+        case chatroom
+    }
+    
+    private var from: From = .home
+    
+    convenience init(from: From) {
+        self.init()
+        self.from = from
+    }
     
     var imageArray: [String] = []
     var imagePreviewDummy: [UIImage] = []
@@ -27,6 +39,9 @@ final class DetailProfileViewController: BaseViewController {
     let detailProfileView = DetailProfileView()
     var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: Nationalities.NONE, webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
+    private var lastScrollLogTime: Date?
+    private let scrollLogInterval: TimeInterval = 3.0
+    private var isInitializing = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +51,17 @@ final class DetailProfileViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setData()
+        self.sendAmpliLog(eventName: EventName.VIEW_DETAIL, properties: ["from": from == .home ? "home" : "chatroom"])
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_CANCEL)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isInitializing = false
     }
     
     override func setNavigationBar() {
@@ -75,6 +101,7 @@ final class DetailProfileViewController: BaseViewController {
         detailProfileView.talentCollectionView.dataSource = self
         detailProfileView.purposeCollectionView.delegate = self
         detailProfileView.purposeCollectionView.dataSource = self
+        detailProfileView.scrollView.delegate = self
     }
     
     private func setCollectionView() {
@@ -158,7 +185,6 @@ final class DetailProfileViewController: BaseViewController {
         self.detailProfileView.talentCollectionView.reloadData()
         self.detailProfileView.purposeCollectionView.reloadData()
         
-        // 레이아웃이 완료된 후에 높이 계산
         DispatchQueue.main.async {
             self.resetCollectionViewLayout()
         }
@@ -195,6 +221,7 @@ final class DetailProfileViewController: BaseViewController {
         let id = portfolioData.instagramId
         let url = URL(string: "https://www.instagram.com/\(id)")!
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_INSTA)
     }
     
     @objc private func webButtonTapped() {
@@ -216,6 +243,7 @@ final class DetailProfileViewController: BaseViewController {
             }
             UIApplication.shared.open(chatURL, options: [:], completionHandler: nil)
         }
+        self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_WEB)
     }
     
     @objc private func popButtonTapped() {
@@ -231,8 +259,11 @@ final class DetailProfileViewController: BaseViewController {
             preferredStyle: .alert
         )
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_NO)
+        }
         let blockAction = UIAlertAction(title: "Block", style: .destructive) { _ in
+            self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_YES)
             self.blockUser(blockedUserId: self.portfolioData.id) { success in
                 DispatchQueue.main.async {
                     if success {
@@ -275,7 +306,8 @@ final class DetailProfileViewController: BaseViewController {
         let reportReasons = StringLiterals.Home.Report.ReportReasons.allCases
         for (index, reason) in reportReasons.enumerated() {
             let action = UIAlertAction(title: reason, style: .default) { _ in
-                print("User reported for reason at index \(index): \(reason)")
+                self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_YES, properties: ["report_name" : reason])
+
                 self.reportUser(bodyDTO: ReportRequestBodyDTO(reportedUserId: self.portfolioData.id, reportReasonIdx: index)) { success in
                     DispatchQueue.main.async {
                         if success {
@@ -303,7 +335,9 @@ final class DetailProfileViewController: BaseViewController {
             alert.addAction(action)
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_NO)
+        }
         alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
@@ -361,7 +395,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfilePurposeCollectionViewCell.className,
                 for: indexPath) as? ProfilePurposeCollectionViewCell else { return UICollectionViewCell() }
             cell.isTapped = true
-            cell.config(num: isPreview ? portfolioData.userPurposes[indexPath.row] : portfolioData.userPurposes[indexPath.row])
+            cell.config(purpose: ProfilePurpose.allCases[isPreview ? portfolioData.userPurposes[indexPath.row] : portfolioData.userPurposes[indexPath.row]])
             return cell
         default:
             return UICollectionViewCell()
@@ -403,7 +437,15 @@ extension DetailProfileViewController: UIScrollViewDelegate {
         if let collectionView = scrollView as? UICollectionView, collectionView.tag == 0 {
             let pageWidth = scrollView.frame.width
             let currentPage = Int(scrollView.contentOffset.x / pageWidth)
-            currentNum = currentPage
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if isInitializing { return }
+        let currentTime = Date()
+        if lastScrollLogTime == nil || currentTime.timeIntervalSince(lastScrollLogTime!) >= scrollLogInterval {
+            self.sendAmpliLog(eventName: EventName.SCROLL_DETAIL)
+            lastScrollLogTime = currentTime
         }
     }
 }

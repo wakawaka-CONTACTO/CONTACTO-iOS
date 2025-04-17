@@ -20,17 +20,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         self.window = window
-        var tabbarViewController: UIViewController = MainTabBarViewController()
-        
-        if KeychainHandler.shared.accessToken.isEmpty {
-            tabbarViewController = LoginViewController()
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-            let navigationController = UINavigationController(rootViewController: tabbarViewController)
-            
-            self.window?.rootViewController = navigationController
-        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -60,7 +49,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
-
 }
 

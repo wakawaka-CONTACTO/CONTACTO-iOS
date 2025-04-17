@@ -13,7 +13,7 @@ import AmplitudeSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         
@@ -33,8 +33,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           )
         
         UIApplication.shared.registerForRemoteNotifications()
-        let configuration = Configuration(apiKey: Config.amplitudeApiKey, autocapture: .appLifecycles)
+        let configuration = Configuration(apiKey: Config.amplitudeApiKey)
         AmplitudeManager.amplitude = Amplitude(configuration: configuration)
+        UserIdentityManager.setUserId()
+        
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            let isPushAgreed = settings.authorizationStatus == .authorized
+            
+            UserIdentityManager.agreePushNotification(isAgree: isPushAgreed)
+        }
         
         return true
     }
@@ -62,25 +69,115 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-extension AppDelegate : UNUserNotificationCenterDelegate {
+extension AppDelegate : UNUserNotificationCenterDelegate, AlarmAmplitudeSender {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
             completionHandler([.banner, .list, .sound])
+        let userInfo = notification.request.content.userInfo
+
+        sendAlarmAmplitude(userInfo, eventName: EventName.RECEIVE_PUSH)
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        if let meetingID = userInfo["MEETING_ID"] as? String, let userID = userInfo["USER_ID"] as? String {
-            switch response.actionIdentifier {
-            case "ACCEPT_ACTION":
-                print("Accept action - meetingID: \(meetingID), userID: \(userID)")
-            case "DECLINE_ACTION":
-                print("Decline action - meetingID: \(meetingID), userID: \(userID)")
-            default:
-                break
-            }
-        }
+        self.handleNotification(userInfo)
         completionHandler()
     }
+    
+    func handleNotification(_ userInfo: [AnyHashable: Any]) {
+        guard let type = userInfo["type"] as? String else { return }
+        
+        sendAlarmAmplitude(userInfo, eventName: EventName.CLICK_PUSH)
+
+        switch type {
+        case "chat":
+            if let chatRoomId = userInfo["chatRoomId"] as? String {
+                navigateToChatRoom(chatRoomId)
+            }
+        default:
+            break
+        }
+    }
+    
+    private func sendAlarmAmplitude(_ userInfo: [AnyHashable: Any], eventName: EventName) {
+        if let aps = userInfo["aps"] as? [String: Any],
+           let alert = aps["alert"] as? [String: Any] {
+            let title = alert["title"] as? String ?? "No title"
+            let body = alert["body"] as? String ?? "No body"
+                
+            self.sendAmpliLog(
+                eventName: eventName,
+                properties: [
+                    "push_title": title,
+                    "push_message": body
+                ]
+            )
+        } else {
+            self.sendAmpliLog(
+                eventName: eventName,
+                properties: [
+                    "push_title": "No alert data",
+                    "push_message": "No alert data"
+                ]
+            )
+        }
+    }
+    
+    func navigateToChatRoom(_ chatRoomId: String) {
+        guard let roomId = Int(chatRoomId) else { return }
+        
+        NetworkService.shared.chatService.chatRoomMessage(roomId: roomId) { [weak self] response in
+            switch response {
+            case .success(let data):
+                DispatchQueue.main.async {
+                    let chatRoomViewController = ChatRoomViewController()
+                    chatRoomViewController.chatRoomId = data.id
+                    chatRoomViewController.chatRoomTitle = data.title
+                    chatRoomViewController.chatRoomThumbnail = data.chatRoomThumbnail
+                    chatRoomViewController.participants = data.participants
+                    chatRoomViewController.chatList = data.messages
+                    // 현재 활성화된 Scene 찾기
+                    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+                    
+                    // SceneDelegate 찾기
+                    guard let sceneDelegate = windowScene.delegate as? SceneDelegate else { return }
+                    
+                    // Window 찾기
+                    guard let window = sceneDelegate.window else { return }
+                    
+                    // RootViewController 찾기
+                    guard let rootViewController = window.rootViewController else { return }
+                    
+                    // TabBarController 찾기
+                    var tabBarController: UITabBarController?
+                    
+                    // 현재 rootViewController가 TabBarController인 경우
+                    if let tabBar = rootViewController as? UITabBarController {
+                        tabBarController = tabBar
+                    }
+                    // NavigationController 안에 TabBarController가 있는 경우
+                    else if let navigationController = rootViewController as? UINavigationController,
+                            let tabBar = navigationController.viewControllers.first as? UITabBarController {
+                        tabBarController = tabBar
+                    }
+                                        
+                    guard let tabBar = tabBarController else { return }
+                    
+                    tabBar.selectedIndex = 1 // 채팅 탭으로 이동
+                    
+                    // NavigationController 찾기
+                    guard let navigationController = tabBar.selectedViewController as? UINavigationController else { return }
+                    
+                    // TabBar 숨기기
+                    tabBar.tabBar.isHidden = true
+                    
+                    navigationController.pushViewController(chatRoomViewController, animated: true)
+                }
+            default:
+                print("채팅방 데이터를 가져오는데 실패했습니다.")
+            }
+        }
+    }
+
 }
 
 extension AppDelegate: MessagingDelegate {

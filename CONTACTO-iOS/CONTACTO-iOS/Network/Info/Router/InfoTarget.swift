@@ -11,21 +11,21 @@ import Alamofire
 
 enum InfoTarget {
     case deleteMe
+    case logout(String)
 }
 
 extension InfoTarget: TargetType {
     var authorization: Authorization {
         switch self {
-        case .deleteMe:
+        case .deleteMe, .logout:
             return .authorization
         }
     }
     
     var headerType: HTTPHeaderType {
         switch self {
-        case .deleteMe:
+        case .deleteMe, .logout:
             return .hasToken
-            
         }
     }
     
@@ -33,7 +33,8 @@ extension InfoTarget: TargetType {
         switch self {
         case .deleteMe:
             return .delete
-            
+        case .logout:
+            return .post
         }
     }
     
@@ -41,6 +42,8 @@ extension InfoTarget: TargetType {
         switch self {
         case .deleteMe:
             return "/v1/users/me"
+        case .logout:
+            return "/v1/users/logout"
         }
     }
     
@@ -48,6 +51,8 @@ extension InfoTarget: TargetType {
         switch self {
         case .deleteMe:
             return .requestPlain
+        case .logout(let deviceId):
+            return .requestWithBody(["deviceId": deviceId])
         }
     }
 }

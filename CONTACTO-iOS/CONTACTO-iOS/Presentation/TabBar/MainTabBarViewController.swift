@@ -14,7 +14,7 @@ final class MainTabBarViewController: UITabBarController {
     
     private var tabsList: [UIViewController] = []
     
-    let homeViewController = HomeViewController()
+    let homeViewController = HomeViewController(isPreview: false)
     let chatViewController = ChatListViewController()
     let editViewController = EditViewController()
     let infoViewController = InfoViewController()
@@ -126,7 +126,6 @@ final class MainTabBarViewController: UITabBarController {
     
     @objc private func handleChatNotification(_ notification: Notification) {
         if let unreadCount = notification.userInfo?["hasUnreadMessages"] as? Bool {
-            print("TabBar: 채팅 알림 상태 업데이트 - 읽지 않은 메시지: \(unreadCount)")
             hasChatNotification = unreadCount
         }
     }
@@ -134,7 +133,6 @@ final class MainTabBarViewController: UITabBarController {
 
 extension MainTabBarViewController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        print("TabBar: 탭 선택됨 - 인덱스: \(tabBarController.selectedIndex)")
         
         // 채팅 탭(인덱스 1)이 선택되었을 때 데이터 새로고침
         if tabBarController.selectedIndex == 1, let navController = viewController as? UINavigationController,

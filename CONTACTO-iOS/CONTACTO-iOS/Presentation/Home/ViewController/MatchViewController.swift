@@ -89,12 +89,14 @@ extension MatchViewController {
                     "yourLabel": matchData?.yourLabel ?? ""
                 ]
             )
+            self.sendAmpliLog(eventName: EventName.CLICK_MATCH_SEND, properties: ["message_text" : selectedGreetings])
             self.dismiss(animated: true)
         }
     }
     
     @objc private func popButtonTapped() {
         self.dismiss(animated: true)
+        self.sendAmpliLog(eventName: EventName.CLICK_MATCH_CLOSE)
     }
     
     private func setData() {
@@ -132,6 +134,7 @@ extension MatchViewController: UICollectionViewDataSource {
             cell.selectButtonAction = {
                 HapticService.impact(.light).run()
                 self.greet.append(cell.num)
+                self.sendAmpliLog(eventName: EventName.CLICK_MATCH_MESSAGE, properties: ["message_text" : cell.greetLabel.text])
             }
             cell.deleteButton.isHidden = true
             return cell

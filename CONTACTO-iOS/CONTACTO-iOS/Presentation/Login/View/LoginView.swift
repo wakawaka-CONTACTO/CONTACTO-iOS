@@ -20,7 +20,7 @@ import Then
     case findEmail
 }
 
-final class LoginView: BaseView {
+final class LoginView: BaseView, LoginAmplitudeSender {
     
     var state = loginState.email
     
@@ -39,7 +39,6 @@ final class LoginView: BaseView {
         super.init(frame: CGRect())
         setLoginState(state: state)
     }
-    let amplitude = LoginAmplitudeSender()
 
     override func setAddTarget() {
         mainTextField.eyeButton.addTarget(self, action: #selector(eyeButtonTapped), for: .touchUpInside)
@@ -157,6 +156,7 @@ final class LoginView: BaseView {
         }
         
         forgetEmailButton.snp.makeConstraints {
+            $0.top.equalTo(continueButton.snp.bottom).offset(15.adjustedHeight)
             $0.center.equalTo(forgetPwButton)
         }
         
@@ -185,7 +185,7 @@ final class LoginView: BaseView {
         self.state = state
         switch state {
         case .email:
-            amplitude.sendAmpliLog(eventName: EventName.VIEW_LOGIN)
+            self.sendAmpliLog(eventName: EventName.VIEW_LOGIN)
             newAccountButton.isHidden = false
             helpButton.isHidden = false
             privacyButton.isHidden = false
@@ -201,7 +201,7 @@ final class LoginView: BaseView {
             mainTextField.eyeButton.isHidden = true
             
         case .emailError:
-            amplitude.sendAmpliLog(eventName: EventName.VIEW_NOACCOUNT)
+            self.sendAmpliLog(eventName: EventName.VIEW_NOACCOUNT)
             newAccountButton.isHidden = true
             helpButton.isHidden = false
             privacyButton.isHidden = false
@@ -218,7 +218,7 @@ final class LoginView: BaseView {
 
 
         case .pw:
-            amplitude.sendAmpliLog(eventName: EventName.VIEW_SET_PASSWORD)
+            self.sendAmpliLog(eventName: EventName.VIEW_SET_PASSWORD)
             newAccountButton.isHidden = true
             helpButton.isHidden = true
             privacyButton.isHidden = true
@@ -234,7 +234,7 @@ final class LoginView: BaseView {
             forgetEmailButton.isHidden = true
             
         case .pwError:
-            amplitude.sendAmpliLog(eventName: EventName.VIEW_INCORRECT)
+            self.sendAmpliLog(eventName: EventName.VIEW_INCORRECT)
             newAccountButton.isHidden = true
             helpButton.isHidden = true
             privacyButton.isHidden = true
@@ -250,7 +250,7 @@ final class LoginView: BaseView {
             forgetEmailButton.isHidden = true
             
         case .emailForget:
-            amplitude.sendAmpliLog(eventName: EventName.VIEW_INPUT_NAME)
+            self.sendAmpliLog(eventName: EventName.VIEW_INPUT_NAME)
             newAccountButton.isHidden = true
             helpButton.isHidden = true
             privacyButton.isHidden = true
@@ -266,7 +266,7 @@ final class LoginView: BaseView {
             explain.text = ""
             
         case .pwForget:
-            amplitude.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE)
+            self.sendAmpliLog(eventName: EventName.VIEW_SEND_CODE)
             newAccountButton.isHidden = true
             helpButton.isHidden = true
             privacyButton.isHidden = true
@@ -277,7 +277,7 @@ final class LoginView: BaseView {
             continueButton.isEnabled = false
             descriptionLabel.text = StringLiterals.Login.sendCode
             mainTextField.isError = false
-            forgetEmailButton.isHidden = true
+            forgetEmailButton.isHidden = false
             explain.text = ""
             
         case .findEmail:
