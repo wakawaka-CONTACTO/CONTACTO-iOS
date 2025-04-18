@@ -131,6 +131,8 @@ final class SignUpViewController: UIViewController, LoginAmplitudeSender {
 extension SignUpViewController {
     @objc private func sendCode() {
         self.signUpView.continueButton.isEnabled = false
+        self.dismissKeyboard()
+
         if self.signUpView.isHidden == false {
             self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
         }
