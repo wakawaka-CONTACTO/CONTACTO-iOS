@@ -27,8 +27,8 @@ final class APIEventLogger: EventMonitor {
     
     func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
         #if DEBUG
-        switch response.result {
-        case .failure:
+//        switch response.result {
+//        case .failure:
             print("===========================🛰 NETWORK Response LOG===========================")
             print(
                 "URL: " + (request.request?.url?.absoluteString ?? "") + "\n"
@@ -37,9 +37,9 @@ final class APIEventLogger: EventMonitor {
                 + "Data: \(response.data?.toPrettyPrintedString ?? "")"
             )
             
-        default:
-            break
-        }
+//        default:
+//            break
+//        }
         #endif
     }
 }
