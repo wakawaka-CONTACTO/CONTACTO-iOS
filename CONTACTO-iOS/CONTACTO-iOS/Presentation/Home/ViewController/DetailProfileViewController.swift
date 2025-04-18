@@ -437,6 +437,7 @@ extension DetailProfileViewController: UIScrollViewDelegate {
         if let collectionView = scrollView as? UICollectionView, collectionView.tag == 0 {
             let pageWidth = scrollView.frame.width
             let currentPage = Int(scrollView.contentOffset.x / pageWidth)
+            currentNum = currentPage
         }
     }
     
