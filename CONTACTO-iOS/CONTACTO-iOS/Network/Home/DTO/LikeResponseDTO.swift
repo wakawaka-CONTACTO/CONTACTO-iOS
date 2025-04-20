@@ -11,4 +11,5 @@ struct LikeResponseDTO: Codable {
     let userPortfolios: [PortfoliosResponseDTO]?
     let chatRoomId: Int?
     let matched: Bool
+    let likeCount: Int
 }

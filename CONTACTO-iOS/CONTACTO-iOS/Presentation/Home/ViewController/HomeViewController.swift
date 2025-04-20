@@ -366,7 +366,13 @@ extension HomeViewController {
             case .success(let data):
                 self?.isMatch = data.matched
                 self?.chatRoomId = data.chatRoomId ?? 0
+                self?.likeCount = data.likeCount
                 completion(true)
+            case .failure(let error):
+                if error.statusCode == 429 {
+                    self?.view.showToast(message: StringLiterals.Home.Main.dailyLikeLimit)
+                }
+                completion(false)
             default:
                 completion(false)
             }
@@ -398,8 +404,13 @@ extension HomeViewController {
             if !isUndo {
                 lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
             }
-            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
-                self.animateImage(status: true)
+            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { success in
+                if success {
+                    self.view.showToast(message: "오늘 \(self.likeCount)개의 좋아요를 보냈습니다.")
+                    self.animateImage(status: true)
+                } else {
+                    self.isProcessing = false
+                }
             }
             UserIdentityManager.homeYes()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_YES)
@@ -416,8 +427,12 @@ extension HomeViewController {
             if !isUndo {
                 lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
             }
-            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
-                self.animateImage(status: false)
+            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { success in
+                if success {
+                    self.animateImage(status: false)
+                } else {
+                    self.isProcessing = false
+                }
             }
             UserIdentityManager.homeNo()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_NO)
