@@ -20,6 +20,13 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     var isFromProfile = false /// 프로필에서 돌아왔는지 여부
     var hasCheckedMyPort = false /// 로그인한 사용자 프로필 조회 여부
+    var likeLimit = 0
+    var likeCount = 0 {
+        didSet {
+            debugPrint("likeCount 변경 됨: \(likeCount)")
+            homeView.yesButton.isEnabled = likeCount < likeLimit
+        }
+    }
     
     var isPreview = false /// edit의 preview 여부
     var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: Nationalities.NONE, webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: []) /// preview의 내 포폴 데이터
@@ -88,10 +95,10 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             isFromProfile = false // 플래그 리셋
             return
         }
-        if isPreview == false{
+        if isPreview == false {
+            likeLimit(completion: { _ in })
             self.sendAmpliLog(eventName: EventName.VIEW_HOME)
         }
-
         setData()
     }
     
@@ -353,6 +360,19 @@ extension HomeViewController {
             switch response {
             case .success(let data):
                 self?.recommendedPortfolios = data
+                completion(true)
+            default:
+                completion(false)
+            }
+        }
+    }
+    
+    private func likeLimit(completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.homeService.likeLimit { [weak self] response in
+            switch response {
+            case .success(let data):
+                self?.likeLimit = data.likeLimit
+                self?.likeCount = data.likeCount
                 completion(true)
             default:
                 completion(false)
