@@ -12,6 +12,7 @@ import Alamofire
 enum HomeTarget {
     case homeList
     case detailPort(_ userId: Int)
+    case likeLimit
     case likeOrDislike(_ bodyDTO: LikeRequestBodyDTO)
     case blockUser(_ blockedUserId: Int)
     case reportUser(_ bodyDTO: ReportRequestBodyDTO)
@@ -23,6 +24,8 @@ extension HomeTarget: TargetType {
         case .homeList:
             return .authorization
         case .detailPort(_):
+            return .authorization
+        case .likeLimit:
             return .authorization
         case .likeOrDislike(_):
             return .authorization
@@ -39,6 +42,8 @@ extension HomeTarget: TargetType {
             return .hasToken
         case .detailPort(_):
             return .hasToken
+        case .likeLimit:
+            return .hasToken
         case .likeOrDislike(_):
             return .hasToken
         case .blockUser(_):
@@ -53,6 +58,8 @@ extension HomeTarget: TargetType {
         case .homeList:
             return .get
         case .detailPort(_):
+            return .get
+        case .likeLimit:
             return .get
         case .likeOrDislike(_):
             return .post
@@ -69,6 +76,8 @@ extension HomeTarget: TargetType {
             return "/v1/users/portfolios"
         case .detailPort(let userId):
             return "/v1/users/portfolios/\(userId)"
+        case .likeLimit:
+            return "/v1/users/likes"
         case .likeOrDislike(_):
             return "/v1/users/likes"
         case .blockUser(let blockedUserId):
@@ -83,6 +92,8 @@ extension HomeTarget: TargetType {
         case .homeList:
             return .requestQuery(["page": 0, "size": 10])
         case .detailPort(_):
+            return .requestPlain
+        case .likeLimit:
             return .requestPlain
         case .likeOrDislike(let bodyDTO):
             return .requestWithBody(bodyDTO)
