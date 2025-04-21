@@ -367,7 +367,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
                 withReuseIdentifier: ProfileImageCollectionViewCell.className,
                 for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
             if !isPreview {
-                cell.portImageView.kfSetImage(url: imageArray[indexPath.row])
+                cell.portImageView.kfSetImage(url: imageArray[indexPath.row], width: Int(SizeLiterals.Screen.screenWidth))
             } else {
                 cell.portImageView.image = imagePreviewDummy[indexPath.row]
             }
