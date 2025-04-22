@@ -20,6 +20,13 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     var isFromProfile = false /// 프로필에서 돌아왔는지 여부
     var hasCheckedMyPort = false /// 로그인한 사용자 프로필 조회 여부
+    var likeLimit = 0
+    var likeCount = 0 {
+        didSet {
+            debugPrint("likeCount 변경 됨: \(likeCount)")
+            homeView.yesButton.isEnabled = likeCount < likeLimit
+        }
+    }
     
     var isPreview = false /// edit의 preview 여부
     var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: Nationalities.NONE, webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: []) /// preview의 내 포폴 데이터
@@ -88,10 +95,10 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             isFromProfile = false // 플래그 리셋
             return
         }
-        if isPreview == false{
+        if isPreview == false {
+            likeLimit(completion: { _ in })
             self.sendAmpliLog(eventName: EventName.VIEW_HOME)
         }
-
         setData()
     }
     
@@ -360,13 +367,32 @@ extension HomeViewController {
         }
     }
     
+    private func likeLimit(completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.homeService.likeLimit { [weak self] response in
+            switch response {
+            case .success(let data):
+                self?.likeLimit = data.likeLimit
+                self?.likeCount = data.likeCount
+                completion(true)
+            default:
+                completion(false)
+            }
+        }
+    }
+    
     private func likeOrDislike(bodyDTO: LikeRequestBodyDTO, completion: @escaping (Bool) -> Void) {
         NetworkService.shared.homeService.likeOrDislike(bodyDTO: bodyDTO) { [weak self] response in
             switch response {
             case .success(let data):
                 self?.isMatch = data.matched
                 self?.chatRoomId = data.chatRoomId ?? 0
+                self?.likeCount = data.likeCount
                 completion(true)
+            case .failure(let error):
+                if error.statusCode == 429 {
+                    self?.view.showToast(message: StringLiterals.Home.Main.dailyLikeLimit)
+                }
+                completion(false)
             default:
                 completion(false)
             }
@@ -398,8 +424,13 @@ extension HomeViewController {
             if !isUndo {
                 lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
             }
-            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
-                self.animateImage(status: true)
+            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { success in
+                if success {
+                    self.view.showToast(message: "오늘 \(self.likeCount)개의 좋아요를 보냈습니다.")
+                    self.animateImage(status: true)
+                } else {
+                    self.isProcessing = false
+                }
             }
             UserIdentityManager.homeYes()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_YES)
@@ -416,8 +447,12 @@ extension HomeViewController {
             if !isUndo {
                 lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
             }
-            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
-                self.animateImage(status: false)
+            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { success in
+                if success {
+                    self.animateImage(status: false)
+                } else {
+                    self.isProcessing = false
+                }
             }
             UserIdentityManager.homeNo()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_NO)

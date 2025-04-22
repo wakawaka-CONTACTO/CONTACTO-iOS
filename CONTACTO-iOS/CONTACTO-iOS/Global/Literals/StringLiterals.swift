@@ -104,6 +104,7 @@ enum StringLiterals {
             static let title = "Profile by"
             static let emptyTitle = "End\nAnd"
             static let emptyDescription = "You swipe all!\nNew Artist will come soon!"
+            static let dailyLikeLimit = "Daily like limit exceeded"
         }
         
         enum Profile {

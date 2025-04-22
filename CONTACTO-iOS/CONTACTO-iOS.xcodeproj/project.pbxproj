@@ -21,6 +21,7 @@
 		333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */; };
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
 		338F7E742DA3815300442048 /* AppVersionCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338F7E732DA3815300442048 /* AppVersionCheck.swift */; };
+		33907BC32DB51D3400ACE9D7 /* LikeLimitResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33907BC22DB51D3400ACE9D7 /* LikeLimitResponseDTO.swift */; };
 		AC991A1F2DA4E9FB00BDFF4F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AC991A1E2DA4E9FB00BDFF4F /* GoogleService-Info.plist */; };
 		ACAC3E1B2D8413640001B069 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */; };
 		ACAC3E1D2D8413640001B069 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */; };
@@ -187,6 +188,7 @@
 		333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockResponseDTO.swift; sourceTree = "<group>"; };
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		338F7E732DA3815300442048 /* AppVersionCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionCheck.swift; sourceTree = "<group>"; };
+		33907BC22DB51D3400ACE9D7 /* LikeLimitResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeLimitResponseDTO.swift; sourceTree = "<group>"; };
 		AC0EAA8E2D68451C00757EBD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AC991A1E2DA4E9FB00BDFF4F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ACFE3D1A2D9FDB0900F14592 /* DeviceTokenRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTokenRequestDTO.swift; sourceTree = "<group>"; };
@@ -545,6 +547,7 @@
 				C34C1F622CE3A02300F94BCD /* LikeResponseDTO.swift */,
 				333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */,
 				330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */,
+				33907BC22DB51D3400ACE9D7 /* LikeLimitResponseDTO.swift */,
 			);
 			name = Response;
 			sourceTree = "<group>";
@@ -1386,6 +1389,7 @@
 				C3E88C6F2C927830005A19BE /* OnboardingNextButton.swift in Sources */,
 				C32D06F72CE633340016F497 /* UIImageView+.swift in Sources */,
 				C33D741B2CDEF26200889B1B /* InfoTarget.swift in Sources */,
+				33907BC32DB51D3400ACE9D7 /* LikeLimitResponseDTO.swift in Sources */,
 				C33C65012CF9E262009FA2BD /* LoginBaseTextField.swift in Sources */,
 				C37A28DE2CB417BE004BC6AE /* EditViewController.swift in Sources */,
 				C33D73EA2CDEF14600889B1B /* HomeService.swift in Sources */,
