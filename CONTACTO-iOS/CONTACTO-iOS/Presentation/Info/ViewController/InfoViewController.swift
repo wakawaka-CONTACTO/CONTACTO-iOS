@@ -42,6 +42,7 @@ final class InfoViewController: BaseViewController, InfoAmplitudeSender {
         infoView.cookieButton.addTarget(self, action: #selector(cookieButtonTapped), for: .touchUpInside)
         infoView.logoutButton.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         infoView.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+        infoView.passwordButton.addTarget(self, action: #selector(passwordButtonTapped), for: .touchUpInside)
     }
     
     private func checkMyPort(completion: @escaping (Bool) -> Void) {
@@ -86,6 +87,26 @@ extension InfoViewController {
     @objc private func deleteButtonTapped() {
         self.setDeleteAlertController()
         self.sendAmpliLog(eventName: EventName.CLICK_INFO_DELETE)
+    }
+    
+    @objc private func passwordButtonTapped() {
+        let title = "Do you want to change your password?"
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        
+        let cancel = UIAlertAction(title: "No", style: .cancel)
+        let confirm = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
+            self?.navigateToResetPassword()
+        }
+        
+        alert.addAction(cancel)
+        alert.addAction(confirm)
+        present(alert, animated: true)
+    }
+    
+    private func navigateToResetPassword() {
+        let loginVC = LoginViewController()
+        loginVC.loginView.setLoginState(state: .pwForget)
+        self.navigationController?.pushViewController(loginVC, animated: true)
     }
     
     private func setLogoutAlertController() {
