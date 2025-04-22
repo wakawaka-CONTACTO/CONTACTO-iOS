@@ -137,42 +137,21 @@ extension SignUpViewController {
             self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
         }
         
-        if self.isFirst() == true{
-            self.sendAmpliLog(eventName: EventName.VIEW_EMAIL_CODE, properties: ["sendcode_view": "signup"])
-            self.retry()
-        } else {
-            self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_RESEND)
-            self.retry()
-        }
-        
-        NetworkService.shared.onboardingService.emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: EmailSendPurpose.signup)) { result in DispatchQueue.main.async {
-            switch result{
-            case .success:
-                self.signUpView.isHidden = true
-                self.emailCodeView.isHidden = false
-                self.setPWView.isHidden = true
-                self.emailCodeView.startTimer()
-                self.emailCodeView.setStatus()
-            case .failure(let error):
-                var errorMessage = "이메일 전송에 실패했습니다. 잠시후 다시 시도해주세요."
-                if let data = error.data,
-                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data){
-                    errorMessage = errorResponse.message
-                }
-                let alert = UIAlertController(title: "에러", message: errorMessage, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "확인", style: .default))
-                self.present(alert, animated: true, completion: nil)
-                self.signUpView.mainTextField.isError = true
-                self.signUpView.continueButton.isEnabled = true
-                self.emailCodeView.setFail()
-            default:
-                var errorMessage = "이메일 전송에 실패했습니다. 관리자에게 문의해주세요."
-                let alert = UIAlertController(title: "에러", message: errorMessage, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "확인", style: .default))
-                self.present(alert, animated: true, completion: nil)
-                self.signUpView.mainTextField.text = ""
-                self.signUpView.mainTextField.isError = true
-                self.signUpView.continueButton.isEnabled = true
+        EmailVerificationManager.shared.startVerification(
+            email: self.email,
+            purpose: .signup
+        ) { [weak self] success in
+            DispatchQueue.main.async {
+                if success {
+                    self?.signUpView.isHidden = true
+                    self?.emailCodeView.isHidden = false
+                    self?.setPWView.isHidden = true
+                    self?.emailCodeView.startTimer()
+                    self?.emailCodeView.setStatus()
+                } else {
+                    self?.signUpView.mainTextField.isError = true
+                    self?.signUpView.continueButton.isEnabled = true
+                    self?.emailCodeView.setFail()
                 }
             }
         }
@@ -192,14 +171,14 @@ extension SignUpViewController {
     
     @objc private func codeVerifyButtonTapped() {
         self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT)
-        emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
-            if response {
-                self.signUpView.isHidden = true
-                self.emailCodeView.isHidden = true
-                self.setPWView.isHidden = false
+        EmailVerificationManager.shared.verifyCode(authCode) { [weak self] success in
+            if success {
+                self?.signUpView.isHidden = true
+                self?.emailCodeView.isHidden = true
+                self?.setPWView.isHidden = false
             } else {
-                self.emailCodeView.underLineView.image = .imgUnderLineRed
-                self.emailCodeView.setFail()
+                self?.emailCodeView.underLineView.image = .imgUnderLineRed
+                self?.emailCodeView.setFail()
             }
         }
     }

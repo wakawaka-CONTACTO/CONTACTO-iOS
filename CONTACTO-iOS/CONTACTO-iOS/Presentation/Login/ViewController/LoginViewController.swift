@@ -273,27 +273,34 @@ extension LoginViewController {
 
     @objc private func codeVerifyButtonTapped() {
         self.sendAmpliLog(eventName: EventName.CLICK_SEND_CODE_CONTINUE)
-        emailCheck(bodyDTO: EmailCheckRequestBodyDTO(email: self.email, authCode: self.authCode)) { response in
-            if response {
-                self.loginView.isHidden = true
-                self.emailCodeView.isHidden = true
-                self.setPWView.isHidden = false
-                self.sendAmpliLog(eventName: EventName.VIEW_RESET_PASSWORD)
+        EmailVerificationManager.shared.verifyCode(self.authCode) { [weak self] success in
+            if success {
+                self?.loginView.isHidden = true
+                self?.emailCodeView.isHidden = true
+                self?.setPWView.isHidden = false
+                self?.sendAmpliLog(eventName: EventName.VIEW_RESET_PASSWORD)
             } else {
-                self.emailCodeView.underLineView.image = .imgUnderLineRed
+                self?.emailCodeView.underLineView.image = .imgUnderLineRed
             }
         }
     }
     
     @objc private func sendCode() {
-        self.purpose = EmailSendPurpose.reset
         self.dismissKeyboard()
         self.emailCodeView.startTimer()
-        emailSend(bodyDTO: EmailSendRequestBodyDTO(email: self.email, purpose: self.purpose)) { _ in            self.loginView.isHidden = true
-            self.emailCodeView.isHidden = false
-            self.setPWView.isHidden = true
+        
+        EmailVerificationManager.shared.startVerification(
+            email: self.email,
+            purpose: .resetPassword
+        ) { [weak self] success in
+            if success {
+                self?.loginView.isHidden = true
+                self?.emailCodeView.isHidden = false
+                self?.setPWView.isHidden = true
+            } else {
+                self?.emailCodeView.setFail()
+            }
         }
-        self.purpose = EmailSendPurpose.signup
     }
     
     @objc private func pwContinueButton() {

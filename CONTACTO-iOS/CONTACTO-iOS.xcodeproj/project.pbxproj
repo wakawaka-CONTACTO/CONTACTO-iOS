@@ -346,6 +346,11 @@
 			path = Amplitude;
 			sourceTree = "<group>";
 		};
+		26889EFC2DB731240022A3C1 /* Managers */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		26B59E7E2D96408A00B4E01B /* DTO */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = DTO;
@@ -995,6 +1000,7 @@
 		C3FD90532C913F890021D2BA /* Global */ = {
 			isa = PBXGroup;
 			children = (
+				26889EFC2DB731240022A3C1 /* Managers */,
 				C3E88C6D2C92781D005A19BE /* Components */,
 				C3FD90552C913FA10021D2BA /* Extensions */,
 				C3FD90562C913FAA0021D2BA /* Literals */,
@@ -1202,6 +1208,7 @@
 			fileSystemSynchronizedGroups = (
 				261111FB2D895D8000D481E2 /* PortfolioItem */,
 				263350202D9D352E00818CB9 /* Amplitude */,
+				26889EFC2DB731240022A3C1 /* Managers */,
 				26B59E7E2D96408A00B4E01B /* DTO */,
 				26BBF5E62D8432830089E60C /* Alert */,
 			);
