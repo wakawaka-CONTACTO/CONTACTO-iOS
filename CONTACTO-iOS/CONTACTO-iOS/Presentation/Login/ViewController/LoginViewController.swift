@@ -310,7 +310,7 @@ extension LoginViewController {
         // FCM 토큰 비동기 처리
         Messaging.messaging().token { firebaseToken, error in
             guard let firebaseToken = firebaseToken else {
-                self.view.showToast(message: "FCM 토큰을 가져올 수 없습니다")
+                self.view.showToast(message: "Failed to get FCM token")
                 return
             }
             
@@ -325,11 +325,11 @@ extension LoginViewController {
             
             self.updatePwd(bodyDTO: bodyDTO) { response in
                 if response {
-                    self.view.showToast(message: "Your Password is updated successfully!")
+                    self.view.showToast(message: "Your password has been updated successfully")
                     let loginVC = LoginViewController()
                     self.navigationController?.setViewControllers([loginVC], animated: false)
                 } else {
-                    self.view.showToast(message: "Something went wrong. Try Again")
+                    self.view.showToast(message: "Failed to update password. Please try again")
                 }
             }
         }
@@ -383,10 +383,11 @@ extension LoginViewController {
                 }
                 completion(true)
             case .failure(let error):
-                if error.statusCode == 404 {
+                if let data = error.data,
+                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
                     DispatchQueue.main.async {
-                        //self?.loginView.setLoginState(state: .emailForget)
-                        self?.view.showToast(message: "The user name does not exist.")
+                        let translatedMessage = ErrorCodeTranslator.shared.translate(errorResponse.code)
+                        self?.view.showToast(message: translatedMessage)
                         self?.loginView.mainTextField.isError = true
                     }
                 }
@@ -441,11 +442,11 @@ extension LoginViewController {
                 completion(true)
                 
             case .failure(let error):
-                // 그 외 에러
                 if let data = error.data,
                    let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
                     DispatchQueue.main.async {
-                        self.view.showToast(message: errorResponse.message)
+                        let translatedMessage = ErrorCodeTranslator.shared.translate(errorResponse.code)
+                        self.view.showToast(message: translatedMessage)
                     }
                 }
                 completion(false)
