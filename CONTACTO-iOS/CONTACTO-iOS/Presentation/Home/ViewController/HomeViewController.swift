@@ -339,7 +339,7 @@ extension HomeViewController {
     private func setPortImage() {
         if !isPreview {
             if portfolioImageIdx < portfolioImageCount {
-                homeView.portImageView.kfSetImage(url: portfolioImages[portfolioImageIdx])
+                homeView.portImageView.kfSetImage(url: portfolioImages[portfolioImageIdx], width: Int(SizeLiterals.Screen.screenWidth))
             }
         } else {
             if portfolioImageIdx < portfolioImageCount {
