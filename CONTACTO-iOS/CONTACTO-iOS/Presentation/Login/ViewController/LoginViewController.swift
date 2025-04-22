@@ -287,13 +287,13 @@ extension LoginViewController {
     
     @objc private func sendCode() {
         self.dismissKeyboard()
-        self.emailCodeView.startTimer()
         
         EmailVerificationManager.shared.startVerification(
             email: self.email,
             purpose: .resetPassword
         ) { [weak self] success in
             if success {
+                self?.emailCodeView.startTimer()
                 self?.loginView.isHidden = true
                 self?.emailCodeView.isHidden = false
                 self?.setPWView.isHidden = true
