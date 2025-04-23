@@ -230,7 +230,50 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
     }
 }
 
+extension UIImage {
+    func resized(to targetSize: CGSize) -> UIImage? {
+        // 원본 이미지의 비율 계산
+        let widthRatio = targetSize.width / size.width
+        let heightRatio = targetSize.height / size.height
+        let ratio = min(widthRatio, heightRatio)
+        
+        // 새로운 크기 계산 (원본 비율 유지)
+        let newSize = CGSize(
+            width: size.width * ratio,
+            height: size.height * ratio
+        )
+        
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        return renderer.image { context in
+            self.draw(in: CGRect(origin: .zero, size: newSize))
+        }
+    }
+    
+    func needsResizing(targetSize: CGSize) -> Bool {
+        return size.width > targetSize.width || size.height > targetSize.height
+    }
+}
+
 extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
+    private func processImage(_ image: UIImage) -> UIImage {
+        let screenSize = UIScreen.main.bounds.size
+        let targetSize = CGSize(
+            width: screenSize.width * 1.5,
+            height: screenSize.height * 1.5
+        )
+        
+        guard image.needsResizing(targetSize: targetSize),
+              let resizedImage = image.resized(to: targetSize) else {
+            return image
+        }
+        
+        return resizedImage
+    }
+    
+    private func canAddImage(_ image: UIImage) -> Bool {
+        return !portfolioItems.contains(where: { $0.isEqualTo(image) }) && portfolioItems.count < 10
+    }
+    
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         var addedImages: [UIImage?] = Array(repeating: nil, count: results.count)
@@ -238,11 +281,14 @@ extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
         
         for (index, result) in results.enumerated() {
             group.enter()
-            result.itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+            result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
+                guard let self = self else { return }
+                
                 DispatchQueue.main.async {
                     if let image = image as? UIImage {
-                        if !self.portfolioItems.contains(where: { $0.isEqualTo(image) }), self.portfolioItems.count < 10  {
-                            addedImages[index] = image
+                        let processedImage = self.processImage(image)
+                        if self.canAddImage(processedImage) {
+                            addedImages[index] = processedImage
                         }
                     }
                     group.leave()
@@ -250,7 +296,8 @@ extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
             }
         }
         
-        group.notify(queue: .main) {
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self else { return }
             let newImages = addedImages.compactMap { $0 }
             self.portfolioItems.append(contentsOf: newImages)
             self.portfolioOnboardingView.portfolioCollectionView.reloadData()
