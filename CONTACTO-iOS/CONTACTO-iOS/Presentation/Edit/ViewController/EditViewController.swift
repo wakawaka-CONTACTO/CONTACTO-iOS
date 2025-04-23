@@ -641,7 +641,18 @@ extension EditViewController: PHPickerViewControllerDelegate {
             result.itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 defer { group.leave() }
                 if let image = image as? UIImage {
-                    pickedImages.append(image)
+                    let screenSize = UIScreen.main.bounds.size
+                    let targetSize = CGSize(
+                        width: screenSize.width * 1.5,
+                        height: screenSize.height * 1.5
+                    )
+                    
+                    if image.needsResizing(targetSize: targetSize),
+                       let resizedImage = image.resized(to: targetSize) {
+                        pickedImages.append(resizedImage)
+                    } else {
+                        pickedImages.append(image)
+                    }
                 }
             }
         }
@@ -821,5 +832,29 @@ extension EditViewController: UIScrollViewDelegate {
             self.sendAmpliLog(eventName: EventName.SCROLL_EDIT)
             lastScrollLogTime = currentTime
         }
+    }
+}
+
+extension UIImage {
+    func resized(to targetSize: CGSize) -> UIImage? {
+        // 원본 이미지의 비율 계산
+        let widthRatio = targetSize.width / size.width
+        let heightRatio = targetSize.height / size.height
+        let ratio = min(widthRatio, heightRatio)
+        
+        // 새로운 크기 계산 (원본 비율 유지)
+        let newSize = CGSize(
+            width: size.width * ratio,
+            height: size.height * ratio
+        )
+        
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        return renderer.image { context in
+            self.draw(in: CGRect(origin: .zero, size: newSize))
+        }
+    }
+    
+    func needsResizing(targetSize: CGSize) -> Bool {
+        return size.width > targetSize.width || size.height > targetSize.height
     }
 }
