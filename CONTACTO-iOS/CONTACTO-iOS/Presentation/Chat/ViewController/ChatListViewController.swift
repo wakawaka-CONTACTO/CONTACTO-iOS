@@ -86,12 +86,21 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     }
     
     private func setData() {
+        let startTime = Date()
+        print("ChatList: UI 업데이트 시작 - 시간: \(startTime)")
         self.chatRoomList(isFirstLoad: true) { [weak self] _ in
             guard let self = self else { return }
+            
+            let renderStartTime = Date()
             self.chatListView.chatListCollectionView.reloadData()
             self.chatListView.isHidden = self.chatRoomListData.isEmpty
             self.chatEmptyView.isHidden = !self.chatRoomListData.isEmpty
             self.isFirstLoad = false
+            
+            let renderEndTime = Date()
+            let renderTimeInterval = renderEndTime.timeIntervalSince(renderStartTime)
+            let totalTimeInterval = renderEndTime.timeIntervalSince(startTime)
+            print("ChatList: UI 렌더링 완료 - 렌더링 시간: \(String(format: "%.3f", renderTimeInterval))초, 총 소요시간: \(String(format: "%.3f", totalTimeInterval))초")
             
             if self.chatRoomListData.isEmpty {
                 self.sendAmpliLog(eventName: EventName.VIEW_EMPTY)
@@ -149,12 +158,18 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         }
         isFetching = true
 
-        print("ChatList: API 호출 시작 - page: \(currentPage)")
+        let startTime = Date()
+        print("ChatList: API 호출 시작 - page: \(currentPage), 시간: \(startTime)")
         NetworkService.shared.chatService.chatRoomList(page: currentPage, size: pageSize) { [weak self] response in
             guard let self = self else { return }
+            
+            let endTime = Date()
+            let timeInterval = endTime.timeIntervalSince(startTime)
+            print("ChatList: API 응답 완료 - page: \(currentPage), 소요시간: \(String(format: "%.3f", timeInterval))초")
 
             switch response {
             case .success(let data):
+                let dataProcessingStartTime = Date()
                 if isFirstLoad {
                     self.chatRoomListData = data.content
                     print("ChatList: 첫 로드 데이터 개수 - \(data.content.count)")
@@ -166,6 +181,11 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
                 self.hasNext = data.hasNext
                 self.currentPage += 1
                 self.isFetching = false
+                
+                let dataProcessingEndTime = Date()
+                let dataProcessingTime = dataProcessingEndTime.timeIntervalSince(dataProcessingStartTime)
+                print("ChatList: 데이터 처리 시간 - \(String(format: "%.3f", dataProcessingTime))초")
+                
                 completion(true)
             default:
                 print("ChatList: API 호출 실패")
