@@ -3,7 +3,7 @@ name: CONTACTO iOS Issue
 about: This is an Issue of CONTACTO iOS.
 title: ''
 labels: ''
-assignees: chaentopia
+assignees:
 
 ---
 
