@@ -274,13 +274,17 @@ extension LoginViewController {
     @objc private func codeVerifyButtonTapped() {
         self.sendAmpliLog(eventName: EventName.CLICK_SEND_CODE_CONTINUE)
         EmailVerificationManager.shared.verifyCode(self.authCode) { [weak self] success in
-            if success {
-                self?.loginView.isHidden = true
-                self?.emailCodeView.isHidden = true
-                self?.setPWView.isHidden = false
-                self?.sendAmpliLog(eventName: EventName.VIEW_RESET_PASSWORD)
-            } else {
-                self?.emailCodeView.underLineView.image = .imgUnderLineRed
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                if success {
+                    self.loginView.isHidden = true
+                    self.emailCodeView.isHidden = true
+                    self.setPWView.isHidden = false
+                    self.sendAmpliLog(eventName: EventName.VIEW_RESET_PASSWORD)
+                } else {
+                    self.emailCodeView.underLineView.image = .imgUnderLineRed
+                    self.emailCodeView.setFail()
+                }
             }
         }
     }
@@ -295,10 +299,12 @@ extension LoginViewController {
             if success {
                 self?.emailCodeView.startTimer()
                 self?.loginView.isHidden = true
+                self?.emailCodeView.setStatus()
                 self?.emailCodeView.isHidden = false
                 self?.setPWView.isHidden = true
             } else {
-                self?.emailCodeView.setFail()
+                self?.loginView.mainTextField.isError = true
+                self?.loginView.continueButton.isEnabled = true
             }
         }
     }
