@@ -303,6 +303,61 @@ final class EditViewController: UIViewController, EditAmplitudeSender, CropImage
         }
     }
     
+    func cropImageViewController(_ controller: CropImageViewController, didCrop image: UIImage) {
+        let screenSize = UIScreen.main.bounds.size
+        let targetSize = CGSize(
+            width: screenSize.width * 1.5,
+            height: screenSize.height * 1.5
+        )
+        
+        // 크롭된 이미지를 리사이징
+        let resizedImage: UIImage
+        if image.needsResizing(targetSize: targetSize),
+           let tempResizedImage = image.resized(to: targetSize) {
+            resizedImage = tempResizedImage
+        } else {
+            resizedImage = image
+        }
+        
+        // 리사이징된 이미지를 포트폴리오에 추가
+        addPortfolioItem(image: resizedImage)
+        
+        // 다음 이미지가 있으면 크롭 화면 표시
+        if !pendingImages.isEmpty {
+            let nextImage = pendingImages.removeFirst()
+            let cropVC = CropImageViewController()
+            cropVC.delegate = self
+            cropVC.imageToCrop = nextImage
+            cropVC.isLastImage = pendingImages.isEmpty
+            
+            // 현재 뷰 컨트롤러가 이미 dismiss된 상태이므로, 새로운 크롭 화면을 표시
+            DispatchQueue.main.async { [weak self] in
+                self?.present(cropVC, animated: true)
+            }
+        } else {
+            // 모든 이미지 크롭이 완료되면 현재 크롭 화면을 닫음
+            controller.dismiss(animated: true)
+        }
+    }
+    
+    func cropImageViewControllerDidCancel(_ controller: CropImageViewController) {
+        // 크롭 취소 시 이미지 선택 화면으로 돌아가기
+        controller.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            self.setPortfolio()
+        }
+    }
+    
+    private func addPortfolioItem(image: UIImage) {
+        guard let manager = self.portfolioManager else { return }
+        let newItem = PortfolioItem(isExistedSource: false, url: nil, image: image)
+        manager.portfolioItems.append(newItem)
+        
+        self.isPortfolioFilled = !(manager.portfolioItems.isEmpty)
+        self.editView.portfolioCollectionView.reloadData()
+        self.checkForChanges()
+    }
+    
     func setPortfolio() {
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 10 - (portfolioManager?.portfolioItems.count ?? 0)
@@ -548,54 +603,15 @@ final class EditViewController: UIViewController, EditAmplitudeSender, CropImage
         )
     }
     
-    func cropImageViewController(_ controller: CropImageViewController, didCrop image: UIImage) {
-        let screenSize = UIScreen.main.bounds.size
-        let targetSize = CGSize(
-            width: screenSize.width * 1.5,
-            height: screenSize.height * 1.5
+    private func validateInputs() -> ValidationResult {
+        return ProfileDataValidator.validateProfile(
+            name: editView.nameTextField.text,
+            website: editView.websiteTextField.text,
+            purposes: portfolioManager?.currentData.userPurposes,
+            talents: portfolioManager?.currentData.userTalents,
+            nationality: portfolioManager?.currentData.nationality ?? Nationalities.NONE,
+            portfolioItemsCount: portfolioManager?.portfolioItems.count ?? 0
         )
-        
-        // 크롭된 이미지를 리사이징
-        let resizedImage: UIImage
-        if image.needsResizing(targetSize: targetSize),
-           let tempResizedImage = image.resized(to: targetSize) {
-            resizedImage = tempResizedImage
-        } else {
-            resizedImage = image
-        }
-        
-        // 리사이징된 이미지를 포트폴리오에 추가
-        addPortfolioItem(image: resizedImage)
-        
-        // 다음 이미지가 있으면 크롭 화면 표시
-        if !pendingImages.isEmpty {
-            let nextImage = pendingImages.removeFirst()
-            let cropVC = CropImageViewController()
-            cropVC.delegate = self
-            cropVC.imageToCrop = nextImage
-            present(cropVC, animated: true)
-        } else {
-            // 모든 이미지 크롭이 완료되면 현재 크롭 화면을 닫음
-            controller.dismiss(animated: true)
-        }
-    }
-    
-    func cropImageViewControllerDidCancel(_ controller: CropImageViewController) {
-        // 크롭 취소 시 이미지 선택 화면으로 돌아가기
-        controller.dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            self.setPortfolio()
-        }
-    }
-    
-    private func addPortfolioItem(image: UIImage) {
-        guard let manager = self.portfolioManager else { return }
-        let newItem = PortfolioItem(isExistedSource: false, url: nil, image: image)
-        manager.portfolioItems.append(newItem)
-        
-        self.isPortfolioFilled = !(manager.portfolioItems.isEmpty)
-        self.editView.portfolioCollectionView.reloadData()
-        self.checkForChanges()
     }
 }
 
@@ -712,6 +728,7 @@ extension EditViewController: PHPickerViewControllerDelegate {
             let cropVC = CropImageViewController()
             cropVC.delegate = self
             cropVC.imageToCrop = firstImage
+            cropVC.isLastImage = self.pendingImages.isEmpty
             self.present(cropVC, animated: true)
         }
     }
@@ -738,17 +755,6 @@ extension EditViewController: UITextViewDelegate {
             self.portfolioManager?.currentData.description = text
         }
         scheduleChangeDetection()
-    }
-    
-    private func validateInputs() -> ValidationResult {
-        return ProfileDataValidator.validateProfile(
-            name: editView.nameTextField.text,
-            website: editView.websiteTextField.text,
-            purposes: portfolioManager?.currentData.userPurposes,
-            talents: portfolioManager?.currentData.userTalents,
-            nationality: portfolioManager?.currentData.nationality ?? Nationalities.NONE,
-            portfolioItemsCount: portfolioManager?.portfolioItems.count ?? 0
-        )
     }
 }
 

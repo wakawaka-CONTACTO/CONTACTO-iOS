@@ -21,6 +21,8 @@ protocol CropImageViewControllerDelegate: AnyObject {
 final class CropImageViewController: UIViewController {
     weak var delegate: CropImageViewControllerDelegate?
     var imageToCrop: UIImage!
+    var nextImage: UIImage?
+    var isLastImage: Bool = true
 
     private let cropView = CropImageView()
     private var panGesture: UIPanGestureRecognizer!
@@ -133,7 +135,18 @@ final class CropImageViewController: UIViewController {
                          height: frame.size.height/scale)
         if let croppedCG = cgImage.cropping(to: rect) {
             let cropped = UIImage(cgImage: croppedCG, scale: image.scale, orientation: image.imageOrientation)
-            delegate?.cropImageViewController(self, didCrop: cropped)
+            
+            // delegate 메서드를 호출하기 전에 dismiss를 먼저 실행
+            if !isLastImage {
+                dismiss(animated: true) { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.cropImageViewController(self, didCrop: cropped)
+                }
+            } else {
+                delegate?.cropImageViewController(self, didCrop: cropped)
+            }
         }
     }
+    
+    
 }
