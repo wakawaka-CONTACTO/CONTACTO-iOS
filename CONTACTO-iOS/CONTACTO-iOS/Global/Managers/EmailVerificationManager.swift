@@ -99,7 +99,7 @@ final class EmailVerificationManager {
                 }
             case _:
                 self?.failCount += 1
-                completion(false, "알 수 없는 오류가 발생했습니다.")                
+                completion(false, "알 수 없는 오류가 발생했습니다.")
             }
         }
     }
