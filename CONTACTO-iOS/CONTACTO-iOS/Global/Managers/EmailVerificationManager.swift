@@ -10,7 +10,7 @@ import Foundation
 final class EmailVerificationManager {
     static let shared = EmailVerificationManager()
     
-    private init() {}
+    private let queue = DispatchQueue(label: "com.contacto.EmailVerificationManager")
     
     enum VerificationPurpose {
         case signup
@@ -28,9 +28,11 @@ final class EmailVerificationManager {
     }
     
     func startVerification(email: String, purpose: VerificationPurpose, completion: @escaping (Bool, String?) -> Void) {
-        self.email = email
-        self.currentPurpose = purpose
-        self.failCount = 0
+        queue.sync {
+            self.email = email
+            self.currentPurpose = purpose
+            self.failCount = 0
+        }
         
         sendVerificationEmail(completion: completion)
     }
