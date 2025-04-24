@@ -11,8 +11,6 @@ import PhotosUI
 import SnapKit
 import Then
 
-// editView.nationalityTextField.text = userInfo.nationality
-
 final class EditViewController: UIViewController, EditAmplitudeSender {
     
     private var portfolioManager: PortfolioManager?
