@@ -11,7 +11,7 @@ import PhotosUI
 import SnapKit
 import Then
 
-final class EditViewController: UIViewController, EditAmplitudeSender {
+final class EditViewController: UIViewController, EditAmplitudeSender, CropImageViewControllerDelegate {
     
     private var portfolioManager: PortfolioManager?
     
@@ -79,6 +79,8 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
     let editView = EditView()
     
     private let countries = Nationalities.allCases
+    
+    private var pendingImages: [UIImage] = []
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -545,6 +547,56 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
             }
         )
     }
+    
+    func cropImageViewController(_ controller: CropImageViewController, didCrop image: UIImage) {
+        let screenSize = UIScreen.main.bounds.size
+        let targetSize = CGSize(
+            width: screenSize.width * 1.5,
+            height: screenSize.height * 1.5
+        )
+        
+        // 크롭된 이미지를 리사이징
+        let resizedImage: UIImage
+        if image.needsResizing(targetSize: targetSize),
+           let tempResizedImage = image.resized(to: targetSize) {
+            resizedImage = tempResizedImage
+        } else {
+            resizedImage = image
+        }
+        
+        // 리사이징된 이미지를 포트폴리오에 추가
+        addPortfolioItem(image: resizedImage)
+        
+        // 다음 이미지가 있으면 크롭 화면 표시
+        if !pendingImages.isEmpty {
+            let nextImage = pendingImages.removeFirst()
+            let cropVC = CropImageViewController()
+            cropVC.delegate = self
+            cropVC.imageToCrop = nextImage
+            present(cropVC, animated: true)
+        } else {
+            // 모든 이미지 크롭이 완료되면 현재 크롭 화면을 닫음
+            controller.dismiss(animated: true)
+        }
+    }
+    
+    func cropImageViewControllerDidCancel(_ controller: CropImageViewController) {
+        // 크롭 취소 시 이미지 선택 화면으로 돌아가기
+        controller.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            self.setPortfolio()
+        }
+    }
+    
+    private func addPortfolioItem(image: UIImage) {
+        guard let manager = self.portfolioManager else { return }
+        let newItem = PortfolioItem(isExistedSource: false, url: nil, image: image)
+        manager.portfolioItems.append(newItem)
+        
+        self.isPortfolioFilled = !(manager.portfolioItems.isEmpty)
+        self.editView.portfolioCollectionView.reloadData()
+        self.checkForChanges()
+    }
 }
 
 // MARK: - UICollectionView Delegate & DataSource
@@ -631,49 +683,36 @@ extension EditViewController: UICollectionViewDataSource {
 extension EditViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
+        
+        guard let manager = self.portfolioManager else { return }
+        let currentCount = manager.portfolioItems.count
+        let availableSlots = max(0, 10 - currentCount)
+        
+        if results.count > availableSlots {
+            AlertManager.showAlert(on: self, message: "이미지는 최대 10장까지 업로드 가능합니다.")
+            return
+        }
+        
         let group = DispatchGroup()
-        var pickedImages: [UIImage] = []
+        pendingImages.removeAll()
         
         for result in results {
             group.enter()
-            result.itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+            result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
                 defer { group.leave() }
                 if let image = image as? UIImage {
-                    let screenSize = UIScreen.main.bounds.size
-                    let targetSize = CGSize(
-                        width: screenSize.width * 1.5,
-                        height: screenSize.height * 1.5
-                    )
-                    
-                    if image.needsResizing(targetSize: targetSize),
-                       let resizedImage = image.resized(to: targetSize) {
-                        pickedImages.append(resizedImage)
-                    } else {
-                        pickedImages.append(image)
-                    }
+                    self?.pendingImages.append(image)
                 }
             }
         }
         
-        group.notify(queue: .main) {
-            guard let manager = self.portfolioManager else { return }
-            let currentCount = manager.portfolioItems.count
-            let availableSlots = max(0, 10 - currentCount)
-            
-            if pickedImages.count > availableSlots {
-                AlertManager.showAlert(on: self, message: "이미지는 최대 10장까지 업로드 가능합니다.")
-                pickedImages = Array(pickedImages.prefix(availableSlots))
-            }
-            
-            // 제한된 갯수만큼 이미지 추가
-            for image in pickedImages {
-                let newItem = PortfolioItem(isExistedSource: false, url: nil, image: image)
-                manager.portfolioItems.append(newItem)
-            }
-            
-            self.isPortfolioFilled = !(manager.portfolioItems.isEmpty)
-            self.editView.portfolioCollectionView.reloadData()
-            self.checkForChanges()
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self, !self.pendingImages.isEmpty else { return }
+            let firstImage = self.pendingImages.removeFirst()
+            let cropVC = CropImageViewController()
+            cropVC.delegate = self
+            cropVC.imageToCrop = firstImage
+            self.present(cropVC, animated: true)
         }
     }
 }
