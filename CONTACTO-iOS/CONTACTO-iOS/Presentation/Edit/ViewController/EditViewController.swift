@@ -327,8 +327,7 @@ final class EditViewController: UIViewController, EditAmplitudeSender, CropImage
             let nextImage = pendingImages.removeFirst()
             let cropVC = CropImageViewController()
             cropVC.delegate = self
-            cropVC.imageToCrop = nextImage
-            cropVC.isLastImage = pendingImages.isEmpty
+            cropVC.imagesToCrop = [nextImage]
             
             // 현재 뷰 컨트롤러가 이미 dismiss된 상태이므로, 새로운 크롭 화면을 표시
             DispatchQueue.main.async { [weak self] in
@@ -727,8 +726,7 @@ extension EditViewController: PHPickerViewControllerDelegate {
             let firstImage = self.pendingImages.removeFirst()
             let cropVC = CropImageViewController()
             cropVC.delegate = self
-            cropVC.imageToCrop = firstImage
-            cropVC.isLastImage = self.pendingImages.isEmpty
+            cropVC.imagesToCrop = [firstImage]
             self.present(cropVC, animated: true)
         }
     }
