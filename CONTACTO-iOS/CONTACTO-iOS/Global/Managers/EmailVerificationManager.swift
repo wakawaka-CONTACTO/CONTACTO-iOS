@@ -63,7 +63,7 @@ final class EmailVerificationManager {
         }
     }
     
-    func resendVerificationEmail(completion: @escaping (Bool, String?) -> Void) {
+    private func resendVerificationEmail(completion: @escaping (Bool, String?) -> Void) {
         failCount += 1
         sendVerificationEmail(completion: completion)
     }
