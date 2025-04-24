@@ -74,6 +74,18 @@ final class CropImageView: UIView {
             make.centerY.equalTo(cancelButton)
             make.height.equalTo(44)
         }
+        
+        layoutIfNeeded()
+        updateOverlayMask()
+    }
+    
+    /// 화면 레이아웃이 끝난 직후에 호출됩니다.
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // Autolayout 결과가 반영된 후 각 뷰의 frame이 확정되므로
+        overlayView.layoutIfNeeded()
+        cropAreaView.layoutIfNeeded()
+        updateOverlayMask()
     }
 
     /// Updates the mask overlay around the crop area
