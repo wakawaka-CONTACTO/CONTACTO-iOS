@@ -140,7 +140,7 @@ extension SignUpViewController {
         EmailVerificationManager.shared.startVerification(
             email: self.email,
             purpose: .signup
-        ) { [weak self] success in
+        ) { [weak self] success, _ in
             DispatchQueue.main.async {
                 if success {
                     self?.signUpView.isHidden = true
@@ -171,7 +171,7 @@ extension SignUpViewController {
     
     @objc private func codeVerifyButtonTapped() {
         self.sendAmpliLog(eventName: EventName.CLICK_EMAIL_CODE_NEXT)
-        EmailVerificationManager.shared.verifyCode(authCode) { [weak self] success in
+        EmailVerificationManager.shared.verifyCode(authCode) { [weak self] success, _ in
             if success {
                 self?.signUpView.isHidden = true
                 self?.emailCodeView.isHidden = true

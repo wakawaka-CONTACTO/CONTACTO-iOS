@@ -273,7 +273,7 @@ extension LoginViewController {
 
     @objc private func codeVerifyButtonTapped() {
         self.sendAmpliLog(eventName: EventName.CLICK_SEND_CODE_CONTINUE)
-        EmailVerificationManager.shared.verifyCode(self.authCode) { [weak self] success in
+        EmailVerificationManager.shared.verifyCode(self.authCode) { [weak self] success, _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 if success {
@@ -295,7 +295,7 @@ extension LoginViewController {
         EmailVerificationManager.shared.startVerification(
             email: self.email,
             purpose: .resetPassword
-        ) { [weak self] success in
+        ) { [weak self] success, _ in
             if success {
                 self?.emailCodeView.startTimer()
                 self?.loginView.isHidden = true

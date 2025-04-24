@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 final class EmailVerificationManager {
     static let shared = EmailVerificationManager()
@@ -28,7 +27,7 @@ final class EmailVerificationManager {
         return failCount == 0
     }
     
-    func startVerification(email: String, purpose: VerificationPurpose, completion: @escaping (Bool) -> Void) {
+    func startVerification(email: String, purpose: VerificationPurpose, completion: @escaping (Bool, String?) -> Void) {
         self.email = email
         self.currentPurpose = purpose
         self.failCount = 0
@@ -36,7 +35,7 @@ final class EmailVerificationManager {
         sendVerificationEmail(completion: completion)
     }
     
-    func verifyCode(_ code: String, completion: @escaping (Bool) -> Void) {
+    func verifyCode(_ code: String, completion: @escaping (Bool, String?) -> Void) {
         self.authCode = code
         
         NetworkService.shared.onboardingService.emailCheck(
@@ -44,22 +43,32 @@ final class EmailVerificationManager {
         ) { [weak self] response in
             switch response {
             case .success(let data):
-                completion(data.isSuccess)
-            default:
+                completion(data.isSuccess, nil)
+            case .failure(let error):
+                if let data = error.data,
+                   let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
+                    let translatedMessage = ErrorCodeTranslator.shared.translate(errorResponse.code)
+                    self?.failCount += 1
+                    completion(false, translatedMessage)
+                } else {
+                    self?.failCount += 1
+                    completion(false, "알 수 없는 오류가 발생했습니다.")
+                }
+            case _:
                 self?.failCount += 1
-                completion(false)
+                completion(false, "알 수 없는 오류가 발생했습니다.")
             }
         }
     }
     
-    func resendVerificationEmail(completion: @escaping (Bool) -> Void) {
+    func resendVerificationEmail(completion: @escaping (Bool, String?) -> Void) {
         failCount += 1
         sendVerificationEmail(completion: completion)
     }
     
-    private func sendVerificationEmail(completion: @escaping (Bool) -> Void) {
+    private func sendVerificationEmail(completion: @escaping (Bool, String?) -> Void) {
         guard let purpose = currentPurpose else {
-            completion(false)
+            completion(false, "인증 목적이 설정되지 않았습니다.")
             return
         }
         
@@ -77,23 +86,20 @@ final class EmailVerificationManager {
         ) { [weak self] response in
             switch response {
             case .success:
-                completion(true)
+                completion(true, nil)
             case .failure(let error):
                 if let data = error.data,
                    let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
-                    DispatchQueue.main.async {
-                        if let window = UIApplication.shared.windows.first,
-                           let rootViewController = window.rootViewController {
-                            let translatedMessage = ErrorCodeTranslator.shared.translate(errorResponse.code)
-                            rootViewController.showToast(message: translatedMessage)
-                        }
-                    }
+                    let translatedMessage = ErrorCodeTranslator.shared.translate(errorResponse.code)
+                    self?.failCount += 1
+                    completion(false, translatedMessage)
+                } else {
+                    self?.failCount += 1
+                    completion(false, "알 수 없는 오류가 발생했습니다.")
                 }
+            case _:
                 self?.failCount += 1
-                completion(false)
-            default:
-                self?.failCount += 1
-                completion(false)
+                completion(false, "알 수 없는 오류가 발생했습니다.")                
             }
         }
     }
