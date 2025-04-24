@@ -31,6 +31,16 @@ final class CropImageView: UIView {
     }
     let cancelButton = UIButton(type: .system).then { $0.setTitle("Cancel", for: .normal) }
     let cropButton = UIButton(type: .system).then { $0.setTitle("Crop", for: .normal) }
+    
+    // 회전 버튼들
+    let rotateLeftButton = UIButton(type: .system).then {
+        $0.setImage(UIImage(systemName: "rotate.left"), for: .normal)
+        $0.tintColor = .white
+    }
+    let rotateRightButton = UIButton(type: .system).then {
+        $0.setImage(UIImage(systemName: "rotate.right"), for: .normal)
+        $0.tintColor = .white
+    }
 
     // MARK: Initialization
     override init(frame: CGRect) {
@@ -44,7 +54,7 @@ final class CropImageView: UIView {
 
     private func setupSubviews() {
         backgroundColor = .black
-        addSubviews(imageView, overlayView, cropAreaView, ratioControl, cancelButton, cropButton)
+        addSubviews(imageView, overlayView, cropAreaView, ratioControl, cancelButton, cropButton, rotateLeftButton, rotateRightButton)
         setupConstraints()
     }
 
@@ -73,6 +83,16 @@ final class CropImageView: UIView {
             make.trailing.equalToSuperview().inset(16)
             make.centerY.equalTo(cancelButton)
             make.height.equalTo(44)
+        }
+        rotateLeftButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(16)
+            make.top.equalTo(safeAreaLayoutGuide).inset(16)
+            make.size.equalTo(44)
+        }
+        rotateRightButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(16)
+            make.top.equalTo(safeAreaLayoutGuide).inset(16)
+            make.size.equalTo(44)
         }
         
         layoutIfNeeded()

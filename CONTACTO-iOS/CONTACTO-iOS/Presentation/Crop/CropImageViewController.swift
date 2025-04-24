@@ -37,6 +37,9 @@ final class CropImageViewController: UIViewController {
         return currentIndex == imagesToCrop.count - 1
     }
     
+    // 현재 회전 각도 (90도 단위)
+    private var currentRotation: CGFloat = 0
+    
     // 뷰 & 제스처
     private let cropView = CropImageView()
     private var panGesture: UIPanGestureRecognizer!
@@ -59,6 +62,8 @@ final class CropImageViewController: UIViewController {
         cropView.ratioControl.addTarget(self, action: #selector(ratioChanged), for: .valueChanged)
         cropView.cancelButton.addTarget(self, action: #selector(cancelTapped),   for: .touchUpInside)
         cropView.cropButton.addTarget(self,   action: #selector(cropTapped),     for: .touchUpInside)
+        cropView.rotateLeftButton.addTarget(self, action: #selector(rotateLeftTapped), for: .touchUpInside)
+        cropView.rotateRightButton.addTarget(self, action: #selector(rotateRightTapped), for: .touchUpInside)
         
         // pan/pinch 제스처 설정
         setupGestures()
@@ -201,9 +206,57 @@ final class CropImageViewController: UIViewController {
             dismiss(animated: true)
         }
     }
+
+    // MARK: - 회전 관련 메서드
+    @objc private func rotateLeftTapped() {
+        rotateImage(degrees: -90)
+    }
+    
+    @objc private func rotateRightTapped() {
+        rotateImage(degrees: 90)
+    }
+    
+    private func rotateImage(degrees: CGFloat) {
+        currentRotation += degrees
+        if currentRotation >= 360 { currentRotation -= 360 }
+        if currentRotation < 0 { currentRotation += 360 }
+        
+        let rotatedImage = imageToCrop.rotated(by: degrees)
+        imageToCrop = rotatedImage
+        cropView.imageView.image = rotatedImage
+        
+        // 회전 후 크롭 영역 재설정
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.imageViewFrame = self.cropView.imageView.frame
+            self.cropView.updateOverlayMask()
+        }
+    }
 }
 
 // 이 파일에 dragResize가 필요하다면, 그대로 붙여넣으세요.
 // private func dragResize(…)
 // …
+
+// MARK: - UIImage Extension
+extension UIImage {
+    func rotated(by degrees: CGFloat) -> UIImage {
+        let radians = degrees * .pi / 180
+        let rotatedSize = CGRect(origin: .zero, size: size)
+            .applying(CGAffineTransform(rotationAngle: radians))
+            .integral.size
+        
+        UIGraphicsBeginImageContext(rotatedSize)
+        if let context = UIGraphicsGetCurrentContext() {
+            context.translateBy(x: rotatedSize.width / 2, y: rotatedSize.height / 2)
+            context.rotate(by: radians)
+            draw(in: CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height))
+            
+            let rotatedImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return rotatedImage ?? self
+        }
+        return self
+    }
+}
 
