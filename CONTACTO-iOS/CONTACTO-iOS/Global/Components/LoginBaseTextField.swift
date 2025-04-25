@@ -58,6 +58,7 @@ extension LoginBaseTextField {
             $0.textAlignment = .center
             $0.backgroundColor = .ctwhite
             $0.autocapitalizationType = .none
+            $0.autocorrectionType = .no
             $0.returnKeyType = .done
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
         }
