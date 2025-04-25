@@ -12,10 +12,11 @@ import SnapKit
 import Then
 import FirebaseMessaging
 
-final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmplitudeSender {
+final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmplitudeSender, CropImageViewControllerDelegate {
     
     private let portfolioOnboardingView = PortfolioOnboardingView()
     private var isLoading = false
+    private var pendingImages: [UIImage] = []
     
     // 로딩 인디케이터 추가
     private var activityIndicator: UIActivityIndicatorView = {
@@ -151,12 +152,63 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
         guard !isLoading else { return }
         
         var configuration = PHPickerConfiguration()
-        lazy var picker = PHPickerViewController(configuration: configuration)
         configuration.selectionLimit = 10 - portfolioItems.count
         configuration.filter = .any(of: [.images])
         configuration.selection = .ordered
-        self.present(picker, animated: true, completion: nil)
+        let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self
+        self.present(picker, animated: true, completion: nil)
+    }
+    
+    func cropImageViewController(_ controller: CropImageViewController, didCrop image: UIImage) {
+        let screenSize = UIScreen.main.bounds.size
+        let targetSize = CGSize(
+            width: screenSize.width * 1.5,
+            height: screenSize.height * 1.5
+        )
+        
+        // 크롭된 이미지를 리사이징
+        let resizedImage: UIImage
+        if image.needsResizing(targetSize: targetSize),
+           let tempResizedImage = image.resized(to: targetSize) {
+            resizedImage = tempResizedImage
+        } else {
+            resizedImage = image
+        }
+        
+        // 리사이징된 이미지를 포트폴리오에 추가
+        if canAddImage(resizedImage) {
+            portfolioItems.append(resizedImage)
+            portfolioOnboardingView.portfolioCollectionView.reloadData()
+        }
+        
+        // 다음 이미지가 있으면 크롭 화면 표시
+        if !pendingImages.isEmpty {
+            let nextImage = pendingImages.removeFirst()
+            let cropVC = CropImageViewController()
+            cropVC.delegate = self
+            cropVC.imagesToCrop = [nextImage]
+            
+            // 현재 뷰 컨트롤러가 이미 dismiss된 상태이므로, 새로운 크롭 화면을 표시
+            DispatchQueue.main.async { [weak self] in
+                self?.present(cropVC, animated: true)
+            }
+        } else {
+            // 모든 이미지 크롭이 완료되면 현재 크롭 화면을 닫음
+            controller.dismiss(animated: true)
+        }
+    }
+    
+    func cropImageViewControllerDidCancel(_ controller: CropImageViewController) {
+        // 크롭 취소 시 이미지 선택 화면으로 돌아가기
+        controller.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            self.setPortfolio()
+        }
+    }
+    
+    private func canAddImage(_ image: UIImage) -> Bool {
+        return !portfolioItems.contains(where: { $0.isEqualTo(image) }) && portfolioItems.count < 10
     }
     
     private func signup(bodyDTO: SignUpRequestBodyDTO,completion: @escaping (Bool) -> Void) {
@@ -231,52 +283,37 @@ extension PortfolioOnboardingViewController: UICollectionViewDataSource {
 }
 
 extension PortfolioOnboardingViewController: PHPickerViewControllerDelegate {
-    private func processImage(_ image: UIImage) -> UIImage {
-        let screenSize = UIScreen.main.bounds.size
-        let targetSize = CGSize(
-            width: screenSize.width * 1.5,
-            height: screenSize.height * 1.5
-        )
-        
-        guard image.needsResizing(targetSize: targetSize),
-              let resizedImage = image.resized(to: targetSize) else {
-            return image
-        }
-        
-        return resizedImage
-    }
-    
-    private func canAddImage(_ image: UIImage) -> Bool {
-        return !portfolioItems.contains(where: { $0.isEqualTo(image) }) && portfolioItems.count < 10
-    }
-    
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
-        var addedImages: [UIImage?] = Array(repeating: nil, count: results.count)
-        let group = DispatchGroup()
         
-        for (index, result) in results.enumerated() {
+        let currentCount = portfolioItems.count
+        let availableSlots = max(0, 10 - currentCount)
+        
+        if results.count > availableSlots {
+            AlertManager.showAlert(on: self, message: "이미지는 최대 10장까지 업로드 가능합니다.")
+            return
+        }
+        
+        let group = DispatchGroup()
+        pendingImages.removeAll()
+        
+        for result in results {
             group.enter()
             result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
-                guard let self = self else { return }
-                
-                DispatchQueue.main.async {
-                    if let image = image as? UIImage {
-                        let processedImage = self.processImage(image)
-                        if self.canAddImage(processedImage) {
-                            addedImages[index] = processedImage
-                        }
-                    }
-                    group.leave()
+                defer { group.leave() }
+                if let image = image as? UIImage {
+                    self?.pendingImages.append(image)
                 }
             }
         }
         
         group.notify(queue: .main) { [weak self] in
-            guard let self = self else { return }
-            let newImages = addedImages.compactMap { $0 }
-            self.portfolioItems.append(contentsOf: newImages)
-            self.portfolioOnboardingView.portfolioCollectionView.reloadData()
+            guard let self = self, !self.pendingImages.isEmpty else { return }
+            let firstImage = self.pendingImages.removeFirst()
+            let cropVC = CropImageViewController()
+            cropVC.delegate = self
+            cropVC.imagesToCrop = [firstImage]
+            self.present(cropVC, animated: true)
         }
     }
 }
