@@ -21,6 +21,7 @@
 		333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */; };
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
 		338F7E742DA3815300442048 /* AppVersionCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338F7E732DA3815300442048 /* AppVersionCheck.swift */; };
+		AC2F4F812DBA3B98000EB807 /* PromotionPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2F4F7F2DBA3B98000EB807 /* PromotionPopupView.swift */; };
 		AC991A1F2DA4E9FB00BDFF4F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AC991A1E2DA4E9FB00BDFF4F /* GoogleService-Info.plist */; };
 		ACAC3E1B2D8413640001B069 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */; };
 		ACAC3E1D2D8413640001B069 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */; };
@@ -188,6 +189,7 @@
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		338F7E732DA3815300442048 /* AppVersionCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionCheck.swift; sourceTree = "<group>"; };
 		AC0EAA8E2D68451C00757EBD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		AC2F4F7F2DBA3B98000EB807 /* PromotionPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotionPopupView.swift; sourceTree = "<group>"; };
 		AC991A1E2DA4E9FB00BDFF4F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ACFE3D1A2D9FDB0900F14592 /* DeviceTokenRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTokenRequestDTO.swift; sourceTree = "<group>"; };
 		ACFE3D1D2D9FDB0900F14592 /* AlarmTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTarget.swift; sourceTree = "<group>"; };
@@ -391,6 +393,14 @@
 				19F102294D75A8C826FC5EB2 /* Pods-CONTACTO-iOS.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		AC2F4F802DBA3B98000EB807 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				AC2F4F7F2DBA3B98000EB807 /* PromotionPopupView.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 		ACFE3D1B2D9FDB0900F14592 /* Request */ = {
@@ -1082,6 +1092,7 @@
 				C35E264E2C9D6F3E00B197CB /* Chat */,
 				C37A28DB2CB417A0004BC6AE /* Edit */,
 				C3F574FA2CC4094D00440D98 /* Info */,
+				AC2F4F802DBA3B98000EB807 /* Common */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -1380,6 +1391,7 @@
 				C33D73C32CDEEE1C00889B1B /* TargetType.swift in Sources */,
 				C33D73EE2CDEF15800889B1B /* ChatService.swift in Sources */,
 				C33D74002CDEF1C900889B1B /* MyDetailResponseDTO.swift in Sources */,
+				AC2F4F812DBA3B98000EB807 /* PromotionPopupView.swift in Sources */,
 				C35E265A2C9D733500B197CB /* ChatListCollectionViewCell.swift in Sources */,
 				C33D73F72CDEF19000889B1B /* PortfoliosResponseDTO.swift in Sources */,
 				C35E26542C9D6F6900B197CB /* ChatListView.swift in Sources */,
