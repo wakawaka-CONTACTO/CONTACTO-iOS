@@ -182,6 +182,7 @@ enum StringLiterals {
         static let editButton = "EDIT START"
         static let saveButton = "SAVE"
         static let doneButton = "Done"
+        static let duplicateUserName = "That username is already taken.\nTry another one."
     }
     
     enum Info {

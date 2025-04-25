@@ -206,6 +206,15 @@ final class EditViewController: UIViewController, EditAmplitudeSender {
                 case .success:
                     UserIdentityManager.updateDetailProperty(data: bodyDTO)
                     completion(true)
+                case .failure(let error):
+                    if error.statusCode == 409 {
+                        AlertManager.showAlert(on: self,
+                                               message: StringLiterals.Edit.duplicateUserName) {
+                            self.isEditEnable = true
+                            self.editView.toggleEditMode(self.isEditEnable)
+                        }
+                    }
+                    completion(false)
                 default:
                     completion(false)
                 }
