@@ -57,6 +57,7 @@ enum StringLiterals {
             static let title = "LET ME KNOW\nYOUR NAME"
             static let description = "BRAND NAME, PEN NAME, ARTIST NAME ETC..."
             static let example = "ex. CONTACTO"
+            static let duplicate = "THIS NAME IS ALREADY TAKEN. MAYBE TRY A DIFFERENT ONE?"
         }
         
         enum Purpose {
