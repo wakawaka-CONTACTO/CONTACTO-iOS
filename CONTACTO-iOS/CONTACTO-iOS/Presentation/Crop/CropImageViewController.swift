@@ -121,20 +121,28 @@ final class CropImageViewController: UIViewController {
     }
 
     // MARK: - Pan 제스처 (이동)
-    @objc private func handlePan(_ gr: UIPanGestureRecognizer) {
-        let translation = gr.translation(in: cropView)
-        let area = cropView.cropAreaView
-        var center = CGPoint(x: area.center.x + translation.x,
-                             y: area.center.y + translation.y)
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: cropView)
+        let newCenter = CGPoint(x: cropView.cropAreaView.center.x + translation.x,
+                                y: cropView.cropAreaView.center.y + translation.y)
         
-        // 이미지뷰 내부로만
-        let halfW = area.bounds.width  / 2
-        let halfH = area.bounds.height / 2
-        center.x = max(imageViewFrame.minX + halfW, min(center.x, imageViewFrame.maxX - halfW))
-        center.y = max(imageViewFrame.minY + halfH, min(center.y, imageViewFrame.maxY - halfH))
+        // 이미지의 실제 표시 영역 가져오기
+        let imageFrame = cropView.imageDisplayFrame()
         
-        area.center = center
-        gr.setTranslation(.zero, in: cropView)
+        // 크롭 영역이 이미지 표시 영역을 벗어나지 않도록 제한
+        let minX = imageFrame.minX + cropView.cropAreaView.frame.width/2
+        let maxX = imageFrame.maxX - cropView.cropAreaView.frame.width/2
+        let minY = imageFrame.minY + cropView.cropAreaView.frame.height/2
+        let maxY = imageFrame.maxY - cropView.cropAreaView.frame.height/2
+        
+        // 새로운 중심점이 이미지 표시 영역 내에 있도록 제한
+        let constrainedCenter = CGPoint(
+            x: min(maxX, max(minX, newCenter.x)),
+            y: min(maxY, max(minY, newCenter.y))
+        )
+        
+        cropView.cropAreaView.center = constrainedCenter
+        gesture.setTranslation(.zero, in: cropView)
         cropView.updateOverlayMask()
     }
 

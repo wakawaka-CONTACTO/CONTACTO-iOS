@@ -149,6 +149,33 @@ final class CropImageView: UIView {
         layoutIfNeeded()
         updateOverlayMask()
     }
+
+    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        guard ratioControl.selectedSegmentIndex == ratioOptions.firstIndex(of: "Free") else { return }
+        
+        let translation = gesture.translation(in: self)
+        let newCenter = CGPoint(x: cropAreaView.center.x + translation.x,
+                              y: cropAreaView.center.y + translation.y)
+        
+        // 이미지의 실제 표시 영역 가져오기
+        let imageFrame = imageDisplayFrame()
+        
+        // 크롭 영역이 이미지 표시 영역을 벗어나지 않도록 제한
+        let minX = imageFrame.minX + cropAreaView.frame.width/2
+        let maxX = imageFrame.maxX - cropAreaView.frame.width/2
+        let minY = imageFrame.minY + cropAreaView.frame.height/2
+        let maxY = imageFrame.maxY - cropAreaView.frame.height/2
+        
+        // 새로운 중심점이 이미지 표시 영역 내에 있도록 제한
+        let constrainedCenter = CGPoint(
+            x: min(maxX, max(minX, newCenter.x)),
+            y: min(maxY, max(minY, newCenter.y))
+        )
+        
+        cropAreaView.center = constrainedCenter
+        gesture.setTranslation(.zero, in: self)
+        updateOverlayMask()
+    }
 }
 
 // CropImageView.swift 에 추가
@@ -168,4 +195,47 @@ extension CropImageView {
     let y = imageView.frame.minY + (ivSize.height - h) / 2
     return CGRect(x: x, y: y, width: w, height: h)
   }
+}
+
+extension CropImageView {
+    /// 이미지가 실제로 표시되는 영역의 CGRect를 반환
+    func imageDisplayFrame() -> CGRect {
+        guard let image = imageView.image else { return .zero }
+        
+        let imageSize = image.size
+        let viewSize = imageView.bounds.size
+        
+        // 이미지의 실제 표시 크기 계산
+        let scale = min(viewSize.width / imageSize.width,
+                       viewSize.height / imageSize.height)
+        let scaledWidth = imageSize.width * scale
+        let scaledHeight = imageSize.height * scale
+        
+        // 이미지가 중앙에 표시되도록 좌표 계산
+        let x = imageView.frame.minX + (viewSize.width - scaledWidth) / 2
+        let y = imageView.frame.minY + (viewSize.height - scaledHeight) / 2
+        
+        return CGRect(x: x, y: y, width: scaledWidth, height: scaledHeight)
+    }
+    
+    /// 주어진 좌표가 이미지 표시 영역 내에 있는지 확인
+    func isPointInImage(_ point: CGPoint) -> Bool {
+        return imageDisplayFrame().contains(point)
+    }
+    
+    /// 이미지 표시 영역 내의 좌표를 이미지 좌표계로 변환
+    func convertToImageCoordinates(_ point: CGPoint) -> CGPoint {
+        let displayFrame = imageDisplayFrame()
+        guard let image = imageView.image else { return .zero }
+        
+        // 이미지 표시 영역 내의 상대적 위치 계산
+        let relativeX = (point.x - displayFrame.minX) / displayFrame.width
+        let relativeY = (point.y - displayFrame.minY) / displayFrame.height
+        
+        // 이미지 좌표계로 변환
+        return CGPoint(
+            x: relativeX * image.size.width,
+            y: relativeY * image.size.height
+        )
+    }
 }
