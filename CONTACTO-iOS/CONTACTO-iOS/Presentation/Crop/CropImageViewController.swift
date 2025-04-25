@@ -16,6 +16,146 @@ protocol CropImageViewControllerDelegate: AnyObject {
     func cropImageViewControllerDidCancel(_ controller: CropImageViewController)
 }
 
+// MARK: - Constants
+private enum Constants {
+    static let minCropSize: CGFloat = 50
+    static let rotationStep: CGFloat = 90
+    static let fullRotation: CGFloat = 360
+}
+
+// MARK: - ImageProcessor
+private final class ImageProcessor {
+    static func crop(image: UIImage, cropFrame: CGRect, contentFrame: CGRect) -> UIImage {
+        // 1) 이미지뷰 좌표계 → 이미지 내부 좌표계 변환
+        let relativeFrame = CGRect(
+            x: cropFrame.minX - contentFrame.minX,
+            y: cropFrame.minY - contentFrame.minY,
+            width: cropFrame.width,
+            height: cropFrame.height
+        )
+        
+        // 2) 원본 이미지 픽셀 단위로 매핑하기 위한 스케일
+        let scaleX = image.size.width / contentFrame.width
+        let scaleY = image.size.height / contentFrame.height
+        
+        // 3) 픽셀 좌표계로 변환된 크롭 영역
+        let pixelCropRect = CGRect(
+            x: relativeFrame.minX * scaleX,
+            y: relativeFrame.minY * scaleY,
+            width: relativeFrame.width * scaleX,
+            height: relativeFrame.height * scaleY
+        )
+        
+        // 4) UIGraphicsImageRenderer로 새 이미지를 그립니다
+        let renderer = UIGraphicsImageRenderer(size: pixelCropRect.size)
+        return renderer.image { ctx in
+            image.draw(at: CGPoint(x: -pixelCropRect.minX,
+                                 y: -pixelCropRect.minY))
+        }
+    }
+}
+
+// MARK: - GestureHandler
+private final class GestureHandler {
+    private let cropView: CropImageView
+    private let imageViewFrame: CGRect
+    
+    init(cropView: CropImageView, imageViewFrame: CGRect) {
+        self.cropView = cropView
+        self.imageViewFrame = imageViewFrame
+    }
+    
+    func handlePan(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: cropView)
+        let newCenter = CGPoint(
+            x: cropView.cropAreaView.center.x + translation.x,
+            y: cropView.cropAreaView.center.y + translation.y
+        )
+        
+        let imageFrame = cropView.imageDisplayFrame()
+        let constrainedCenter = constrainCenter(
+            newCenter: newCenter,
+            imageFrame: imageFrame,
+            cropAreaSize: cropView.cropAreaView.frame.size
+        )
+        
+        cropView.cropAreaView.center = constrainedCenter
+        gesture.setTranslation(.zero, in: cropView)
+        cropView.updateOverlayMask()
+    }
+    
+    func handlePinch(_ gesture: UIPinchGestureRecognizer) {
+        let scale = gesture.scale
+        let area = cropView.cropAreaView
+        
+        let newSize = calculateNewSize(
+            currentSize: area.frame.size,
+            scale: scale
+        )
+        
+        let imageFrame = cropView.imageDisplayFrame()
+        let center = area.center
+        
+        let newFrame = CGRect(
+            x: center.x - newSize.width/2,
+            y: center.y - newSize.height/2,
+            width: newSize.width,
+            height: newSize.height
+        )
+        
+        if shouldApplyScale(
+            scale: scale,
+            newFrame: newFrame,
+            imageFrame: imageFrame,
+            minSize: Constants.minCropSize
+        ) {
+            area.transform = area.transform.scaledBy(x: scale, y: scale)
+        }
+        
+        gesture.scale = 1
+        cropView.updateOverlayMask()
+    }
+    
+    private func constrainCenter(
+        newCenter: CGPoint,
+        imageFrame: CGRect,
+        cropAreaSize: CGSize
+    ) -> CGPoint {
+        let minX = imageFrame.minX + cropAreaSize.width/2
+        let maxX = imageFrame.maxX - cropAreaSize.width/2
+        let minY = imageFrame.minY + cropAreaSize.height/2
+        let maxY = imageFrame.maxY - cropAreaSize.height/2
+        
+        return CGPoint(
+            x: min(maxX, max(minX, newCenter.x)),
+            y: min(maxY, max(minY, newCenter.y))
+        )
+    }
+    
+    private func calculateNewSize(currentSize: CGSize, scale: CGFloat) -> CGSize {
+        return CGSize(
+            width: currentSize.width * scale,
+            height: currentSize.height * scale
+        )
+    }
+    
+    private func shouldApplyScale(
+        scale: CGFloat,
+        newFrame: CGRect,
+        imageFrame: CGRect,
+        minSize: CGFloat
+    ) -> Bool {
+        let isOutOfBounds = newFrame.minX < imageFrame.minX ||
+                           newFrame.maxX > imageFrame.maxX ||
+                           newFrame.minY < imageFrame.minY ||
+                           newFrame.maxY > imageFrame.maxY
+        
+        return (scale < 1.0 || !isOutOfBounds) &&
+               newFrame.width >= minSize &&
+               newFrame.height >= minSize
+    }
+}
+
 // MARK: - CropImageViewController
 /// 여러 장의 이미지를 순차적으로 크롭해서 델리게이트로 전달하는 컨트롤러
 final class CropImageViewController: UIViewController {
@@ -45,38 +185,34 @@ final class CropImageViewController: UIViewController {
     private var panGesture: UIPanGestureRecognizer!
     private var pinchGesture: UIPinchGestureRecognizer!
     private var imageViewFrame: CGRect = .zero
-
+    
+    private var gestureHandler: GestureHandler!
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         // 반드시 이미지가 하나 이상 세팅되어 있어야 함
         assert(!imagesToCrop.isEmpty, "imagesToCrop에 최소 한 장의 이미지를 넣어주세요.")
         
+        setupUI()
+        setupGestures()
+        setupInitialState()
+    }
+    
+    private func setupUI() {
         view.addSubview(cropView)
         cropView.snp.makeConstraints { $0.edges.equalToSuperview() }
-        
-        // 첫 이미지 표시
         cropView.imageView.image = imageToCrop
         
-        // 버튼·컨트롤 액션
+        setupButtonActions()
+    }
+    
+    private func setupButtonActions() {
         cropView.ratioControl.addTarget(self, action: #selector(ratioChanged), for: .valueChanged)
-        cropView.cancelButton.addTarget(self, action: #selector(cancelTapped),   for: .touchUpInside)
-        cropView.cropButton.addTarget(self,   action: #selector(cropTapped),     for: .touchUpInside)
+        cropView.cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
+        cropView.cropButton.addTarget(self, action: #selector(cropTapped), for: .touchUpInside)
         cropView.rotateLeftButton.addTarget(self, action: #selector(rotateLeftTapped), for: .touchUpInside)
         cropView.rotateRightButton.addTarget(self, action: #selector(rotateRightTapped), for: .touchUpInside)
-        
-        // pan/pinch 제스처 설정
-        setupGestures()
-        
-        // 초기 비율 적용
-        cropView.applyRatio(cropView.ratioOptions.first!)
-        
-        // imageView.frame을 저장해 두기
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.imageViewFrame = self.cropView.imageView.frame
-            self.cropView.updateOverlayMask()
-        }
     }
     
     private func setupGestures() {
@@ -85,8 +221,26 @@ final class CropImageViewController: UIViewController {
         
         cropView.cropAreaView.addGestureRecognizer(panGesture)
         cropView.cropAreaView.addGestureRecognizer(pinchGesture)
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.imageViewFrame = self.cropView.imageView.frame
+            self.gestureHandler = GestureHandler(
+                cropView: self.cropView,
+                imageViewFrame: self.imageViewFrame
+            )
+        }
     }
-
+    
+    private func setupInitialState() {
+        cropView.applyRatio(cropView.ratioOptions.first!)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.imageViewFrame = self.cropView.imageView.frame
+            self.cropView.updateOverlayMask()
+        }
+    }
+    
     // MARK: - Ratio 변경
     @objc private func ratioChanged() {
         let ratio = cropView.ratioOptions[cropView.ratioControl.selectedSegmentIndex]
@@ -120,75 +274,13 @@ final class CropImageViewController: UIViewController {
         }
     }
 
-    // MARK: - Pan 제스처 (이동)
+    // MARK: - Gesture Handlers
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: cropView)
-        let newCenter = CGPoint(x: cropView.cropAreaView.center.x + translation.x,
-                                y: cropView.cropAreaView.center.y + translation.y)
-        
-        // 이미지의 실제 표시 영역 가져오기
-        let imageFrame = cropView.imageDisplayFrame()
-        
-        // 크롭 영역이 이미지 표시 영역을 벗어나지 않도록 제한
-        let minX = imageFrame.minX + cropView.cropAreaView.frame.width/2
-        let maxX = imageFrame.maxX - cropView.cropAreaView.frame.width/2
-        let minY = imageFrame.minY + cropView.cropAreaView.frame.height/2
-        let maxY = imageFrame.maxY - cropView.cropAreaView.frame.height/2
-        
-        // 새로운 중심점이 이미지 표시 영역 내에 있도록 제한
-        let constrainedCenter = CGPoint(
-            x: min(maxX, max(minX, newCenter.x)),
-            y: min(maxY, max(minY, newCenter.y))
-        )
-        
-        cropView.cropAreaView.center = constrainedCenter
-        gesture.setTranslation(.zero, in: cropView)
-        cropView.updateOverlayMask()
+        gestureHandler.handlePan(gesture)
     }
-
-    // MARK: - Pinch 제스처 (확대/축소)
-    @objc private func handlePinch(_ gr: UIPinchGestureRecognizer) {
-        let scale = gr.scale
-        let area = cropView.cropAreaView
-        
-        // 현재 크롭 영역의 크기
-        let currentWidth = area.frame.width
-        let currentHeight = area.frame.height
-        
-        // 새로운 크기 계산
-        let newWidth = currentWidth * scale
-        let newHeight = currentHeight * scale
-        
-        // 이미지의 실제 표시 영역 가져오기
-        let imageFrame = cropView.imageDisplayFrame()
-        
-        // 크롭 영역의 중심점
-        let center = area.center
-        
-        // 새로운 크롭 영역의 프레임 계산
-        let newFrame = CGRect(
-            x: center.x - newWidth/2,
-            y: center.y - newHeight/2,
-            width: newWidth,
-            height: newHeight
-        )
-        
-        // 이미지 표시 영역을 벗어나는지 확인
-        let isOutOfBounds = newFrame.minX < imageFrame.minX ||
-                           newFrame.maxX > imageFrame.maxX ||
-                           newFrame.minY < imageFrame.minY ||
-                           newFrame.maxY > imageFrame.maxY
-        
-        // 최소 크기 제한
-        let minSize: CGFloat = 50
-        
-        // 축소는 항상 허용, 확대는 이미지 영역을 벗어나지 않는 경우에만 허용
-        if (scale < 1.0 || !isOutOfBounds) && newWidth >= minSize && newHeight >= minSize {
-            area.transform = area.transform.scaledBy(x: scale, y: scale)
-        }
-        
-        gr.scale = 1
-        cropView.updateOverlayMask()
+    
+    @objc private func handlePinch(_ gesture: UIPinchGestureRecognizer) {
+        gestureHandler.handlePinch(gesture)
     }
 
     // MARK: - 취소
@@ -198,65 +290,36 @@ final class CropImageViewController: UIViewController {
 
     // MARK: - 크롭 & 다음 이미지 처리
     @objc private func cropTapped() {
-        let image = imageToCrop            // 회전된 UIImage
-        let contentFrame = cropView.imageContentFrame()  // 실제 그려진 이미지 영역
-        let cropFrame    = cropView.cropAreaView.frame
-        
-        // 1) 이미지뷰 좌표계 → 이미지 내부 좌표계 변환
-        //    (cropFrame을 contentFrame 원점으로 옮김)
-        let relativeFrame = CGRect(
-          x: cropFrame.minX - contentFrame.minX,
-          y: cropFrame.minY - contentFrame.minY,
-          width: cropFrame.width,
-          height: cropFrame.height
+        let croppedImage = ImageProcessor.crop(
+            image: imageToCrop,
+            cropFrame: cropView.cropAreaView.frame,
+            contentFrame: cropView.imageContentFrame()
         )
         
-        // 2) 원본 이미지 픽셀 단위로 매핑하기 위한 스케일
-        let scaleX = image.size.width  / contentFrame.width
-        let scaleY = image.size.height / contentFrame.height
+        delegate?.cropImageViewController(self, didCrop: croppedImage)
         
-        // 3) 픽셀 좌표계로 변환된 크롭 영역
-        let pixelCropRect = CGRect(
-          x: relativeFrame.minX * scaleX,
-          y: relativeFrame.minY * scaleY,
-          width:  relativeFrame.width  * scaleX,
-          height: relativeFrame.height * scaleY
-        )
-        
-        // 4) UIGraphicsImageRenderer로 새 이미지를 그립니다
-        let renderer = UIGraphicsImageRenderer(size: pixelCropRect.size)
-        let cropped = renderer.image { ctx in
-          // -pixelCropRect.origin 만큼 원본 이미지를 이동시켜서 그리면
-          // 원하는 영역만 (0,0)~(w,h) 안에 출력됩니다.
-          image.draw(at: CGPoint(x: -pixelCropRect.minX,
-                                 y: -pixelCropRect.minY))
-        }
-        
-        // 5) 델리게이트 호출
-        delegate?.cropImageViewController(self, didCrop: cropped)
-
-        // (기존 next‐image 로직 그대로)
         if currentIndex < imagesToCrop.count - 1 {
-          // … 다음 이미지 세팅 …
+            currentIndex += 1
+            cropView.imageView.image = imageToCrop
+            setupInitialState()
         } else {
-          dismiss(animated: true)
+            dismiss(animated: true)
         }
     }
-
 
     // MARK: - 회전 관련 메서드
     @objc private func rotateLeftTapped() {
-        rotateImage(degrees: -90)
+        rotateImage(degrees: -Constants.rotationStep)
     }
     
     @objc private func rotateRightTapped() {
-        rotateImage(degrees: 90)
+        rotateImage(degrees: Constants.rotationStep)
     }
     
     private func rotateImage(degrees: CGFloat) {
         currentRotation += degrees
-        if currentRotation >= 360 { currentRotation -= 360 }
-        if currentRotation < 0 { currentRotation += 360 }
+        if currentRotation >= Constants.fullRotation { currentRotation -= Constants.fullRotation }
+        if currentRotation < 0 { currentRotation += Constants.fullRotation }
         
         let rotatedImage = imageToCrop.rotated(by: degrees)
         imageToCrop = rotatedImage
@@ -270,10 +333,6 @@ final class CropImageViewController: UIViewController {
         }
     }
 }
-
-// 이 파일에 dragResize가 필요하다면, 그대로 붙여넣으세요.
-// private func dragResize(…)
-// …
 
 // MARK: - UIImage Extension
 extension UIImage {
