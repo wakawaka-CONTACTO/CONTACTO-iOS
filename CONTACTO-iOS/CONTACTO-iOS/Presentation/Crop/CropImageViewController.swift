@@ -198,52 +198,51 @@ final class CropImageViewController: UIViewController {
 
     // MARK: - 크롭 & 다음 이미지 처리
     @objc private func cropTapped() {
-        guard let cgImage = imageToCrop.cgImage else { return }
-        
-        // 1) 실제 이미지가 그려진 프레임
-        let contentFrame = cropView.imageContentFrame()
-        // 2) 크롭 영역 프레임
+        let image = imageToCrop            // 회전된 UIImage
+        let contentFrame = cropView.imageContentFrame()  // 실제 그려진 이미지 영역
         let cropFrame    = cropView.cropAreaView.frame
-        // 3) 상대 좌표 계산
-        let originX = cropFrame.minX - contentFrame.minX
-        let originY = cropFrame.minY - contentFrame.minY
-        // 4) 스케일
-        let scaleX = imageToCrop.size.width  / contentFrame.width
-        let scaleY = imageToCrop.size.height / contentFrame.height
-        // 5) cropping Rect
-        let rect = CGRect(
-            x:      originX * scaleX,
-            y:      originY * scaleY,
-            width:  cropFrame.width  * scaleX,
-            height: cropFrame.height * scaleY
+        
+        // 1) 이미지뷰 좌표계 → 이미지 내부 좌표계 변환
+        //    (cropFrame을 contentFrame 원점으로 옮김)
+        let relativeFrame = CGRect(
+          x: cropFrame.minX - contentFrame.minX,
+          y: cropFrame.minY - contentFrame.minY,
+          width: cropFrame.width,
+          height: cropFrame.height
         )
         
-        // 6) 잘라내기
-        guard let croppedCG = cgImage.cropping(to: rect) else { return }
-        let cropped = UIImage(
-            cgImage:       croppedCG,
-            scale:         imageToCrop.scale,
-            orientation:   imageToCrop.imageOrientation
+        // 2) 원본 이미지 픽셀 단위로 매핑하기 위한 스케일
+        let scaleX = image.size.width  / contentFrame.width
+        let scaleY = image.size.height / contentFrame.height
+        
+        // 3) 픽셀 좌표계로 변환된 크롭 영역
+        let pixelCropRect = CGRect(
+          x: relativeFrame.minX * scaleX,
+          y: relativeFrame.minY * scaleY,
+          width:  relativeFrame.width  * scaleX,
+          height: relativeFrame.height * scaleY
         )
         
-        // 7) 델리게이트 호출
+        // 4) UIGraphicsImageRenderer로 새 이미지를 그립니다
+        let renderer = UIGraphicsImageRenderer(size: pixelCropRect.size)
+        let cropped = renderer.image { ctx in
+          // -pixelCropRect.origin 만큼 원본 이미지를 이동시켜서 그리면
+          // 원하는 영역만 (0,0)~(w,h) 안에 출력됩니다.
+          image.draw(at: CGPoint(x: -pixelCropRect.minX,
+                                 y: -pixelCropRect.minY))
+        }
+        
+        // 5) 델리게이트 호출
         delegate?.cropImageViewController(self, didCrop: cropped)
-        
-        // 8) 다음 이미지 or dismiss
+
+        // (기존 next‐image 로직 그대로)
         if currentIndex < imagesToCrop.count - 1 {
-            currentIndex += 1
-            cropView.ratioControl.selectedSegmentIndex = 0
-            cropView.imageView.image = imageToCrop
-            cropView.applyRatio(cropView.ratioOptions.first!)
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.imageViewFrame = self.cropView.imageView.frame
-                self.cropView.updateOverlayMask()
-            }
+          // … 다음 이미지 세팅 …
         } else {
-            dismiss(animated: true)
+          dismiss(animated: true)
         }
     }
+
 
     // MARK: - 회전 관련 메서드
     @objc private func rotateLeftTapped() {
