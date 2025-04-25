@@ -148,15 +148,45 @@ final class CropImageViewController: UIViewController {
 
     // MARK: - Pinch 제스처 (확대/축소)
     @objc private func handlePinch(_ gr: UIPinchGestureRecognizer) {
-        let scale    = gr.scale
-        let area     = cropView.cropAreaView
-        let newW     = area.bounds.width  * scale
-        let newH     = area.bounds.height * scale
+        let scale = gr.scale
+        let area = cropView.cropAreaView
         
-        // 이미지뷰 범위 내에서만 확대
-        if newW <= imageViewFrame.width && newH <= imageViewFrame.height {
+        // 현재 크롭 영역의 크기
+        let currentWidth = area.frame.width
+        let currentHeight = area.frame.height
+        
+        // 새로운 크기 계산
+        let newWidth = currentWidth * scale
+        let newHeight = currentHeight * scale
+        
+        // 이미지의 실제 표시 영역 가져오기
+        let imageFrame = cropView.imageDisplayFrame()
+        
+        // 크롭 영역의 중심점
+        let center = area.center
+        
+        // 새로운 크롭 영역의 프레임 계산
+        let newFrame = CGRect(
+            x: center.x - newWidth/2,
+            y: center.y - newHeight/2,
+            width: newWidth,
+            height: newHeight
+        )
+        
+        // 이미지 표시 영역을 벗어나는지 확인
+        let isOutOfBounds = newFrame.minX < imageFrame.minX ||
+                           newFrame.maxX > imageFrame.maxX ||
+                           newFrame.minY < imageFrame.minY ||
+                           newFrame.maxY > imageFrame.maxY
+        
+        // 최소 크기 제한
+        let minSize: CGFloat = 50
+        
+        // 축소는 항상 허용, 확대는 이미지 영역을 벗어나지 않는 경우에만 허용
+        if (scale < 1.0 || !isOutOfBounds) && newWidth >= minSize && newHeight >= minSize {
             area.transform = area.transform.scaledBy(x: scale, y: scale)
         }
+        
         gr.scale = 1
         cropView.updateOverlayMask()
     }
