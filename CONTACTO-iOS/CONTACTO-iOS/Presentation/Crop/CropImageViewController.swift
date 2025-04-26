@@ -46,14 +46,25 @@ private final class ImageProcessor {
             height: relativeFrame.height * scaleY
         )
         
-        // 4) UIGraphicsImageRenderer로 새 이미지를 그립니다
-        let renderer = UIGraphicsImageRenderer(size: pixelCropRect.size)
-        return renderer.image { ctx in
-            image.draw(at: CGPoint(x: -pixelCropRect.minX,
-                                 y: -pixelCropRect.minY))
+        let format = UIGraphicsImageRendererFormat.default()
+        format.scale = image.scale            // 원본 이미지 스케일 유지
+        let pointSize = CGSize(
+            width:  pixelCropRect.size.width  / image.scale,
+            height: pixelCropRect.size.height / image.scale
+        )
+        let renderer = UIGraphicsImageRenderer(size: pointSize, format: format)
+
+        let cropped = renderer.image { _ in
+            let drawOrigin = CGPoint(
+                x: -pixelCropRect.minX / image.scale,
+                y: -pixelCropRect.minY / image.scale
+            )
+            image.draw(at: drawOrigin)
+        }
+        
+        return cropped
         }
     }
-}
 
 // MARK: - GestureHandler
 private final class GestureHandler {
@@ -372,3 +383,9 @@ extension UIImage {
     }
 }
 
+extension CGSize {
+    static func / (lhs: CGSize, rhs: CGFloat) -> CGSize {
+        return CGSize(width: lhs.width  / rhs,
+                      height: lhs.height / rhs)
+    }
+}
