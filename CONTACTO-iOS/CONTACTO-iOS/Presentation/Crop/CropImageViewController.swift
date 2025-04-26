@@ -360,7 +360,7 @@ extension UIImage {
             .applying(CGAffineTransform(rotationAngle: radians))
             .integral.size
         
-        UIGraphicsBeginImageContext(rotatedSize)
+        UIGraphicsBeginImageContextWithOptions(rotatedSize, false, self.scale)
         if let context = UIGraphicsGetCurrentContext() {
             context.translateBy(x: rotatedSize.width / 2, y: rotatedSize.height / 2)
             context.rotate(by: radians)
