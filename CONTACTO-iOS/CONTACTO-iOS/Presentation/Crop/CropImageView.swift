@@ -29,7 +29,6 @@ final class CropImageView: UIView {
     let ratioOptions = ["1:1", "3:4", "4:3", "9:16", "16:9", "Fit"]
     lazy var ratioControl = UISegmentedControl(items: ratioOptions).then {
         $0.selectedSegmentIndex = 0
-        $0.addTarget(self, action: #selector(ratioChanged(_:)), for: .valueChanged)
     }
     @objc private func ratioChanged(_ sender: UISegmentedControl) {
         let selected = ratioOptions[sender.selectedSegmentIndex]
