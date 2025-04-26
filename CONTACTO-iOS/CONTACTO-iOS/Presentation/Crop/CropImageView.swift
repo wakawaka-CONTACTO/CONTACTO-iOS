@@ -25,7 +25,7 @@ final class CropImageView: UIView {
         $0.layer.borderWidth = 2
         $0.isUserInteractionEnabled = true
     }
-    let ratioOptions = ["1:1", "3:4", "4:3", "9:16", "16:9", "Fit", "Free"]
+    let ratioOptions = ["1:1", "3:4", "4:3", "9:16", "16:9", "Fit"]
     lazy var ratioControl = UISegmentedControl(items: ratioOptions).then {
         $0.selectedSegmentIndex = 0
     }
@@ -140,8 +140,8 @@ final class CropImageView: UIView {
                 make.height.equalTo(cropAreaView.snp.width).multipliedBy(9.0/16.0)
             case "Fit":
                 make.edges.equalTo(imageView).inset(8)
-            case "Free":
-                make.size.equalTo(cropAreaView.frame.size)
+//            case "Free":
+//                make.size.equalTo(cropAreaView.frame.size)
             default:
                 break
             }
@@ -151,7 +151,7 @@ final class CropImageView: UIView {
     }
 
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        guard ratioControl.selectedSegmentIndex == ratioOptions.firstIndex(of: "Free") else { return }
+//        guard ratioControl.selectedSegmentIndex == ratioOptions.firstIndex(of: "Free") else { return }
         
         let translation = gesture.translation(in: self)
         let newCenter = CGPoint(x: cropAreaView.center.x + translation.x,
