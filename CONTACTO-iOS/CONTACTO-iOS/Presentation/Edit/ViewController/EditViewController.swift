@@ -310,7 +310,6 @@ final class EditViewController: UIViewController, EditAmplitudeSender, CropImage
             height: screenSize.height * 1.5
         )
         
-        // 크롭된 이미지를 리사이징
         let resizedImage: UIImage
         if image.needsResizing(targetSize: targetSize),
            let tempResizedImage = image.resized(to: targetSize) {
@@ -319,23 +318,7 @@ final class EditViewController: UIViewController, EditAmplitudeSender, CropImage
             resizedImage = image
         }
         
-        // 리사이징된 이미지를 포트폴리오에 추가
         addPortfolioItem(image: resizedImage)
-        
-        // 다음 이미지가 있으면 크롭 화면 표시
-        guard let nextImage = pendingImages.first else {
-            controller.dismiss(animated: true)
-            return
-        }
-        pendingImages.removeFirst()
-        
-        controller.dismiss(animated: false) { [weak self] in
-            guard let self = self else { return }
-            let cropVC = CropImageViewController()
-            cropVC.delegate = self
-            cropVC.imagesToCrop = [nextImage]
-            self.present(cropVC, animated: true)
-        }
     }
     
     func cropImageViewControllerDidCancel(_ controller: CropImageViewController) {
@@ -708,8 +691,6 @@ extension EditViewController: PHPickerViewControllerDelegate {
         }
         
         let group = DispatchGroup()
-        pendingImages.removeAll()
-        
         for result in results {
             group.enter()
             result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
@@ -722,11 +703,11 @@ extension EditViewController: PHPickerViewControllerDelegate {
         
         group.notify(queue: .main) { [weak self] in
             guard let self = self, !self.pendingImages.isEmpty else { return }
-            let firstImage = self.pendingImages.removeFirst()
             let cropVC = CropImageViewController()
-            cropVC.delegate = self
-            cropVC.imagesToCrop = [firstImage]
-            self.present(cropVC, animated: true)
+            cropVC.imagesToCrop = self.pendingImages
+            cropVC.delegate     = self
+            present(cropVC, animated: true)
+            pendingImages.removeAll()  // 외부 반복 관리 지움
         }
     }
 }
