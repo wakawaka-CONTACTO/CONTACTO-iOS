@@ -14,27 +14,25 @@ final class APIEventLogger: EventMonitor {
     func requestDidFinish(_ request: Request) {
         #if DEBUG
         logger.log("===========================🛰 NETWORK Request LOG===========================")
-        logger.log(request.description)
+        logger.log("\(request.description)")
         
-        logger.log(
-            "URL: " + (request.request?.url?.absoluteString ?? "")  + "\n"
-            + "Method: " + (request.request?.httpMethod ?? "") + "\n"
-            + "Headers: " + "\(request.request?.allHTTPHeaderFields ?? [:])" + "\n"
-        )
-        logger.log("Authorization: " + (request.request?.headers["Authorization"] ?? ""))
-        logger.log("Body: " + (request.request?.httpBody?.toPrettyPrintedString ?? ""))
+        logger.log("URL: \(request.request?.url?.absoluteString ?? "")\n")
+        logger.log("Method: \(request.request?.httpMethod ?? "")\n")
+        logger.log("Headers: \(request.request?.allHTTPHeaderFields ?? [:])\n")
+        logger.log("Authorization: \(request.request?.headers["Authorization"] ?? "")")
+        logger.log("Body: \(request.request?.httpBody?.toPrettyPrintedString ?? "")")
         #endif
     }
     
     func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
         #if DEBUG
         logger.log("===========================🛰 NETWORK Response LOG===========================")
-        logger.log(
-                "URL: " + (request.request?.url?.absoluteString ?? "") + "\n"
-                + "Result: " + "\(response.result)" + "\n"
-                + "StatusCode: " + "\(response.response?.statusCode ?? 0)" + "\n"
-                + "Data: \(response.data?.toPrettyPrintedString ?? "")"
-            )
+        logger.log("URL: \(request.request?.url?.absoluteString ?? "")\n")
+        let value = response.result
+        let valueString = String(describing: value)
+        logger.log("Result: \(valueString)\n")
+        logger.log("StatusCode: \(response.response?.statusCode ?? 0)\n")
+        logger.log("Data: \(response.data?.toPrettyPrintedString ?? "")")
         #endif
     }
 }

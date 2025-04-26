@@ -191,12 +191,28 @@ final class CropImageViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 반드시 이미지가 하나 이상 세팅되어 있어야 함
-        assert(!imagesToCrop.isEmpty, "imagesToCrop에 최소 한 장의 이미지를 넣어주세요.")
-        
+        if imagesToCrop.isEmpty {
+            showErrorAndHideView(message: "이미지를 불러오는 데 실패했습니다.")
+            return
+        }
+        if imagesToCrop.count > 10 {
+            showErrorAndHideView(message: "최대 10개의 이미지까지 업로드 가능합니다.")
+            return
+        }
         setupUI()
         setupGestures()
         setupInitialState()
+    }
+    
+        private func showErrorAndHideView(message: String) {
+        let alert = UIAlertController(
+            title: nil,
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        present(alert, animated: true)
+        view.isHidden = true
     }
     
     private func setupUI() {

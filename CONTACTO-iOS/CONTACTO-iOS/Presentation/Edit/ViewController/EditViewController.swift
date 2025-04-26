@@ -323,19 +323,18 @@ final class EditViewController: UIViewController, EditAmplitudeSender, CropImage
         addPortfolioItem(image: resizedImage)
         
         // 다음 이미지가 있으면 크롭 화면 표시
-        if !pendingImages.isEmpty {
-            let nextImage = pendingImages.removeFirst()
+        guard let nextImage = pendingImages.first else {
+            controller.dismiss(animated: true)
+            return
+        }
+        pendingImages.removeFirst()
+        
+        controller.dismiss(animated: false) { [weak self] in
+            guard let self = self else { return }
             let cropVC = CropImageViewController()
             cropVC.delegate = self
             cropVC.imagesToCrop = [nextImage]
-            
-            // 현재 뷰 컨트롤러가 이미 dismiss된 상태이므로, 새로운 크롭 화면을 표시
-            DispatchQueue.main.async { [weak self] in
-                self?.present(cropVC, animated: true)
-            }
-        } else {
-            // 모든 이미지 크롭이 완료되면 현재 크롭 화면을 닫음
-            controller.dismiss(animated: true)
+            self.present(cropVC, animated: true)
         }
     }
     
