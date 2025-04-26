@@ -170,20 +170,16 @@ private final class GestureHandler {
 // MARK: - CropImageViewController
 /// 여러 장의 이미지를 순차적으로 크롭해서 델리게이트로 전달하는 컨트롤러
 final class CropImageViewController: UIViewController {
-    // 델리게이트
     weak var delegate: CropImageViewControllerDelegate?
     
-    // 순차 처리할 이미지 배열
     var imagesToCrop: [UIImage] = []
     private var currentIndex = 0
     
-    // 현재 크롭할 이미지
     var imageToCrop: UIImage {
         get { return imagesToCrop[currentIndex] }
         set { imagesToCrop[currentIndex] = newValue }
     }
     
-    // 마지막 이미지 여부
     var isLastImage: Bool {
         return currentIndex == imagesToCrop.count - 1
     }
@@ -191,7 +187,6 @@ final class CropImageViewController: UIViewController {
     // 현재 회전 각도 (90도 단위)
     private var currentRotation: CGFloat = 0
     
-    // 뷰 & 제스처
     private let cropView = CropImageView()
     private var panGesture: UIPanGestureRecognizer!
     private var pinchGesture: UIPinchGestureRecognizer!
@@ -301,7 +296,6 @@ final class CropImageViewController: UIViewController {
         }
     }
 
-    // MARK: - Gesture Handlers
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         gestureHandler.handlePan(gesture)
     }
@@ -310,12 +304,10 @@ final class CropImageViewController: UIViewController {
         gestureHandler.handlePinch(gesture)
     }
 
-    // MARK: - 취소
     @objc private func cancelTapped() {
         delegate?.cropImageViewControllerDidCancel(self)
     }
 
-    // MARK: - 크롭 & 다음 이미지 처리
     @objc private func cropTapped() {
         let croppedImage = ImageProcessor.crop(
             image: imageToCrop,
@@ -334,7 +326,6 @@ final class CropImageViewController: UIViewController {
         }
     }
 
-    // MARK: - 회전 관련 메서드
     @objc private func rotateLeftTapped() {
         rotateImage(degrees: -Constants.rotationStep)
     }

@@ -11,7 +11,6 @@ import SnapKit
 import Then
 
 // MARK: - CropImageView
-/// UIView responsible for displaying image, overlay, crop area, and ratio controls.
 final class CropImageView: UIView {
     // MARK: UI Elements
     let imageView = UIImageView().then {
@@ -39,7 +38,6 @@ final class CropImageView: UIView {
     let cancelButton = UIButton(type: .system).then { $0.setTitle("Cancel", for: .normal) }
     let cropButton = UIButton(type: .system).then { $0.setTitle("Crop", for: .normal) }
     
-    // 회전 버튼들
     let rotateLeftButton = UIButton(type: .system).then {
         $0.setImage(UIImage(systemName: "rotate.left"), for: .normal)
         $0.tintColor = .white
@@ -112,16 +110,13 @@ final class CropImageView: UIView {
         updateOverlayMask()
     }
     
-    /// 화면 레이아웃이 끝난 직후에 호출됩니다.
     override func layoutSubviews() {
         super.layoutSubviews()
-        // Autolayout 결과가 반영된 후 각 뷰의 frame이 확정되므로
         overlayView.layoutIfNeeded()
         cropAreaView.layoutIfNeeded()
         updateOverlayMask()
     }
 
-    /// Updates the mask overlay around the crop area
     func updateOverlayMask() {
         let path = UIBezierPath(rect: overlayView.bounds)
         let frameInOverlay = overlayView.convert(cropAreaView.frame, from: cropAreaView.superview)
@@ -131,7 +126,6 @@ final class CropImageView: UIView {
         overlayView.layer.mask = mask
     }
 
-    /// Applies the given aspect ratio selection to crop area constraints
     func applyRatio(_ ratio: String) {
         cropAreaView.snp.remakeConstraints { make in
             make.center.equalTo(imageView)
@@ -153,8 +147,6 @@ final class CropImageView: UIView {
                 make.height.equalTo(cropAreaView.snp.width).multipliedBy(9.0/16.0)
             case "Fit":
                 make.edges.equalTo(imageView).inset(8)
-//            case "Free":
-//                make.size.equalTo(cropAreaView.frame.size)
             default:
                 break
             }
@@ -164,13 +156,10 @@ final class CropImageView: UIView {
     }
 
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-//        guard ratioControl.selectedSegmentIndex == ratioOptions.firstIndex(of: "Free") else { return }
-        
         let translation = gesture.translation(in: self)
         let newCenter = CGPoint(x: cropAreaView.center.x + translation.x,
                               y: cropAreaView.center.y + translation.y)
         
-        // 이미지의 실제 표시 영역 가져오기
         let imageFrame = imageDisplayFrame()
         
         // 크롭 영역이 이미지 표시 영역을 벗어나지 않도록 제한
@@ -191,7 +180,6 @@ final class CropImageView: UIView {
     }
 }
 
-// CropImageView.swift 에 추가
 extension CropImageView {
   /// aspectFit된 이미지가 실제로 차지하는 CGRect를 반환
   func imageContentFrame() -> CGRect {

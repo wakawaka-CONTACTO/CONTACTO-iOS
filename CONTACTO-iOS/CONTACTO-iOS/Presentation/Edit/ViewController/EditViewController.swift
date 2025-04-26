@@ -568,7 +568,6 @@ final class EditViewController: UIViewController, EditAmplitudeSender, CropImage
             cancelTitle: "아니오",
             confirmAction: { [weak self] in
                 guard let self = self else { return }
-                // 변경사항 초기화
                 self.portfolioManager = nil
                 self.setData()
                 self.isEditEnable = false
