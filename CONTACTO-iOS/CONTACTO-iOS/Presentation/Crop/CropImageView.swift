@@ -63,8 +63,6 @@ final class CropImageView: UIView {
         addSubviews(imageView, overlayView, cropAreaView,
                     ratioControl, cancelButton, cropButton,
                     rotateLeftButton, rotateRightButton)
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        cropAreaView.addGestureRecognizer(pan)
         setupConstraints()
         applyRatio(ratioOptions[ratioControl.selectedSegmentIndex])
     }

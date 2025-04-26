@@ -42,6 +42,7 @@ final class EditViewController: UIViewController, EditAmplitudeSender, CropImage
     private var lastScrollLogTime: Date?
     private let scrollLogInterval: TimeInterval = 3.0
     private var isInitializing: Bool = true
+    private let serialQueue = DispatchQueue(label: "com.contacto.pendingImages")
     
     var tappedStates: [Bool] = Array(repeating: false, count: 5) {
         didSet {
@@ -692,9 +693,10 @@ extension EditViewController: PHPickerViewControllerDelegate {
         let group = DispatchGroup()
         for result in results {
             group.enter()
-            result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
+            result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, _) in
                 defer { group.leave() }
-                if let image = image as? UIImage {
+                guard let self = self, let image = image as? UIImage else { return }
+                serialQueue.async { [weak self] in
                     self?.pendingImages.append(image)
                 }
             }
