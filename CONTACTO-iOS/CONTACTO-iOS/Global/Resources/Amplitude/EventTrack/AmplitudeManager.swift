@@ -12,7 +12,7 @@ import os
 public struct AmplitudeManager{
     static var amplitude: Amplitude!
 #if DEBUG
-    let logger = Logger(subsystem: "com.contacto", category: "amplitude")
+    static let logger = Logger(subsystem: "com.contacto", category: "amplitude")
     #endif
     private init(){ }
 }
@@ -25,7 +25,7 @@ extension Amplitude {
             "trigger": eventInfo.trigger
         ]
 #if DEBUG
-        logger?.log(message: "[LOG] amplitude track \(properties)")
+        AmplitudeManager.logger.log("[LOG] amplitude track \(properties)")
 #endif
         AmplitudeManager.amplitude.track(eventType: eventType, eventProperties: properties)
     }
@@ -42,7 +42,7 @@ extension Amplitude {
             }
         }
 #if DEBUG
-        logger?.log(message: "[LOG] amplitude track \(eventProps)")
+        AmplitudeManager.logger.log("[LOG] amplitude track \(eventProps)")
 #endif
         AmplitudeManager.amplitude.track(
             eventType: eventInfo.eventName.rawValue,
