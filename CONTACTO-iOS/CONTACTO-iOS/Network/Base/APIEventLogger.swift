@@ -6,40 +6,35 @@
 //
 
 import Foundation
-
+import os
 import Alamofire
 
 final class APIEventLogger: EventMonitor {
+    let logger = Logger(subsystem: "com.contacto", category: "network")
     func requestDidFinish(_ request: Request) {
         #if DEBUG
-        print("===========================🛰 NETWORK Request LOG===========================")
-        print(request.description)
+        logger.log("===========================🛰 NETWORK Request LOG===========================")
+        logger.log(request.description)
         
-        print(
+        logger.log(
             "URL: " + (request.request?.url?.absoluteString ?? "")  + "\n"
             + "Method: " + (request.request?.httpMethod ?? "") + "\n"
             + "Headers: " + "\(request.request?.allHTTPHeaderFields ?? [:])" + "\n"
         )
-        print("Authorization: " + (request.request?.headers["Authorization"] ?? ""))
-        print("Body: " + (request.request?.httpBody?.toPrettyPrintedString ?? ""))
+        logger.log("Authorization: " + (request.request?.headers["Authorization"] ?? ""))
+        logger.log("Body: " + (request.request?.httpBody?.toPrettyPrintedString ?? ""))
         #endif
     }
     
     func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
         #if DEBUG
-//        switch response.result {
-//        case .failure:
-            print("===========================🛰 NETWORK Response LOG===========================")
-            print(
+        logger.log("===========================🛰 NETWORK Response LOG===========================")
+        logger.log(
                 "URL: " + (request.request?.url?.absoluteString ?? "") + "\n"
                 + "Result: " + "\(response.result)" + "\n"
                 + "StatusCode: " + "\(response.response?.statusCode ?? 0)" + "\n"
                 + "Data: \(response.data?.toPrettyPrintedString ?? "")"
             )
-            
-//        default:
-//            break
-//        }
         #endif
     }
 }
