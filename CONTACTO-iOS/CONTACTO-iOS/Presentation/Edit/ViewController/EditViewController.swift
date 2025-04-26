@@ -701,12 +701,13 @@ extension EditViewController: PHPickerViewControllerDelegate {
         }
         
         group.notify(queue: .main) { [weak self] in
-            guard let self = self, !self.pendingImages.isEmpty else { return }
-            let cropVC = CropImageViewController()
-            cropVC.imagesToCrop = self.pendingImages
-            cropVC.delegate     = self
-            present(cropVC, animated: true)
-            pendingImages.removeAll()  // 외부 반복 관리 지움
+          guard let self = self, !self.pendingImages.isEmpty else { return }
+          let images = self.pendingImages
+          let cropVC = CropImageViewController()
+          cropVC.imagesToCrop = images
+          cropVC.delegate     = self
+          self.present(cropVC, animated: true)
+          self.pendingImages.removeAll()
         }
     }
 }
