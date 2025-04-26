@@ -7,6 +7,8 @@
 
 import Foundation
 import UIKit
+import SnapKit
+import Then
 
 // MARK: - CropImageView
 /// UIView responsible for displaying image, overlay, crop area, and ratio controls.
@@ -28,6 +30,11 @@ final class CropImageView: UIView {
     let ratioOptions = ["1:1", "3:4", "4:3", "9:16", "16:9", "Fit"]
     lazy var ratioControl = UISegmentedControl(items: ratioOptions).then {
         $0.selectedSegmentIndex = 0
+        $0.addTarget(self, action: #selector(ratioChanged(_:)), for: .valueChanged)
+    }
+    @objc private func ratioChanged(_ sender: UISegmentedControl) {
+        let selected = ratioOptions[sender.selectedSegmentIndex]
+        applyRatio(selected)
     }
     let cancelButton = UIButton(type: .system).then { $0.setTitle("Cancel", for: .normal) }
     let cropButton = UIButton(type: .system).then { $0.setTitle("Crop", for: .normal) }
@@ -52,10 +59,16 @@ final class CropImageView: UIView {
         setupSubviews()
     }
 
+
     private func setupSubviews() {
         backgroundColor = .black
-        addSubviews(imageView, overlayView, cropAreaView, ratioControl, cancelButton, cropButton, rotateLeftButton, rotateRightButton)
+        addSubviews(imageView, overlayView, cropAreaView,
+                    ratioControl, cancelButton, cropButton,
+                    rotateLeftButton, rotateRightButton)
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        cropAreaView.addGestureRecognizer(pan)
         setupConstraints()
+        applyRatio(ratioOptions[ratioControl.selectedSegmentIndex])
     }
 
     private func setupConstraints() {
