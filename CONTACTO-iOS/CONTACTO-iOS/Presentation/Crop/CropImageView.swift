@@ -105,9 +105,6 @@ final class CropImageView: UIView {
             make.top.equalTo(safeAreaLayoutGuide).inset(16)
             make.size.equalTo(44)
         }
-        
-        layoutIfNeeded()
-        updateOverlayMask()
     }
     
     override func layoutSubviews() {
@@ -151,8 +148,7 @@ final class CropImageView: UIView {
                 break
             }
         }
-        layoutIfNeeded()
-        updateOverlayMask()
+        setNeedsLayout()
     }
 
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
