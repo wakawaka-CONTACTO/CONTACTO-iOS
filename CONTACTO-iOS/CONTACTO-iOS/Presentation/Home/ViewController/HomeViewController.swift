@@ -467,9 +467,22 @@ extension HomeViewController {
             if !isUndo {
                 lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
             }
-            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
-                self.animateImage(status: true)
+            
+            // UI 업데이트를 즉시 수행
+            self.animateImage(status: true)
+            
+            // 백그라운드에서 네트워크 요청 처리
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                guard let self = self else { return }
+                likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
+                    if self.isMatch {
+                        DispatchQueue.main.async {
+                            self.pushToMatch()
+                        }
+                    }
+                }
             }
+            
             UserIdentityManager.homeYes()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_YES)
         } else {
@@ -487,9 +500,22 @@ extension HomeViewController {
             if !isUndo {
                 lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
             }
-            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
-                self.animateImage(status: false)
+            
+            // UI 업데이트를 즉시 수행
+            self.animateImage(status: false)
+            
+            // 백그라운드에서 네트워크 요청 처리
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                guard let self = self else { return }
+                likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
+                    if self.isMatch {
+                        DispatchQueue.main.async {
+                            self.pushToMatch()
+                        }
+                    }
+                }
             }
+            
             UserIdentityManager.homeNo()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_NO)
         } else {
@@ -505,7 +531,18 @@ extension HomeViewController {
             isProcessing = true
             
             isUndo = true
-            self.recommendedPortfolioIdx -= 1
+            // 이전 프로필로 돌아가기
+            recommendedPortfolioIdx = max(0, recommendedPortfolioIdx - 1)
+            currentUserId = Int(recommendedPortfolios[recommendedPortfolioIdx].userId)
+            homeView.profileNameLabel.text = recommendedPortfolios[recommendedPortfolioIdx].username
+            portfolioImages = recommendedPortfolios[recommendedPortfolioIdx].portfolioImageUrl
+            portfolioImageCount = portfolioImages.count
+            portfolioImageIdx = 0
+            
+            // UI 업데이트
+            setPortImage()
+            homeView.pageCollectionView.reloadData()
+            
             self.animateImage(status: false)
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_REVERT)
         } else {
@@ -529,10 +566,6 @@ extension HomeViewController {
         UIView.animate(withDuration: 0.5, animations: {
             self.homeView.portView.transform = finalTransform
         }, completion: { _ in
-            if self.isMatch {
-                self.pushToMatch()
-            }
-            
             // 다음 카드를 위한 초기화
             self.homeView.portView.transform = .identity
             
@@ -545,8 +578,9 @@ extension HomeViewController {
             
             if !self.isUndo {
                 self.recommendedPortfolioIdx += 1
+                self.setProfile()
             }
-            self.setProfile()
+            
             self.isMatch = false
             if self.isUndo {
                 self.lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
