@@ -207,6 +207,13 @@ extension HomeViewController {
     }
     
     @objc private func handleBackTap(_ sender: UITapGestureRecognizer) {
+        if isPreview {
+            if portfolioImageIdx > 0 { portfolioImageIdx -= 1 }
+            else { portfolioImageIdx = portfolioImageCount - 1 }
+            self.sendAmpliLog(eventName: EventName.CLICK_HOME_BACK)
+            return
+        }
+        
         guard !(recommendedPortfolios.isEmpty), !(portfolioImages.isEmpty) else { return }
         HapticService.impact(.light).run()
         
@@ -216,6 +223,13 @@ extension HomeViewController {
     }
     
     @objc private func handleNextTap(_ sender: UITapGestureRecognizer) {
+        if isPreview {
+            if portfolioImageIdx >= portfolioImageCount - 1 { portfolioImageIdx = 0 }
+            else { portfolioImageIdx += 1 }
+            self.sendAmpliLog(eventName: EventName.CLICK_HOME_NEXT)
+            return
+        }
+        
         guard !(recommendedPortfolios.isEmpty), !(portfolioImages.isEmpty) else { return }
         HapticService.impact(.light).run()
         
@@ -350,7 +364,11 @@ extension HomeViewController {
         } else {
             homeView.profileNameLabel.text = previewPortfolioData.username
             portfolioImageCount = previewPortfolioData.userPortfolio?.portfolioImageUrl.count ?? 0
+            portfolioImageIdx = 0
+            homeView.isHidden = false
             homeEmptyView.isHidden = true
+            setPortImage()
+            homeView.pageCollectionView.reloadData()
             self.sendAmpliLog(eventName: EventName.VIEW_PREVIEW)
             return
         }
@@ -441,10 +459,11 @@ extension HomeViewController {
     }
     
     @objc private func yesButtonTapped() {
-        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
-        isProcessing = true
-        
+        guard !isProcessing else { return }
         if !isPreview {
+            guard !(recommendedPortfolios.isEmpty) else { return }
+            isProcessing = true
+            
             if !isUndo {
                 lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
             }
@@ -454,15 +473,17 @@ extension HomeViewController {
             UserIdentityManager.homeYes()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_YES)
         } else {
+            isProcessing = true
             self.animateImage(status: true)
         }
     }
     
     @objc private func noButtonTapped() {
-        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
-        isProcessing = true
-        
+        guard !isProcessing else { return }
         if !isPreview {
+            guard !(recommendedPortfolios.isEmpty) else { return }
+            isProcessing = true
+            
             if !isUndo {
                 lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
             }
@@ -472,18 +493,25 @@ extension HomeViewController {
             UserIdentityManager.homeNo()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_NO)
         } else {
+            isProcessing = true
             self.animateImage(status: false)
         }
     }
     
     @objc private func undoButtonTapped() {
-        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
-        isProcessing = true
-        
-        isUndo = true
-        self.recommendedPortfolioIdx -= 1
-        self.animateImage(status: false)
-        self.sendAmpliLog(eventName: EventName.CLICK_HOME_REVERT)
+        guard !isProcessing else { return }
+        if !isPreview {
+            guard !(recommendedPortfolios.isEmpty) else { return }
+            isProcessing = true
+            
+            isUndo = true
+            self.recommendedPortfolioIdx -= 1
+            self.animateImage(status: false)
+            self.sendAmpliLog(eventName: EventName.CLICK_HOME_REVERT)
+        } else {
+            // 프리뷰 모드에서는 undo 동작 없음
+            return
+        }
     }
     
     private func animateImage(status: Bool) {
@@ -507,17 +535,23 @@ extension HomeViewController {
             
             // 다음 카드를 위한 초기화
             self.homeView.portView.transform = .identity
+            
+            if self.isPreview {
+                // 프리뷰인 경우 애니메이션 이후 다시 초기 상태로만 돌리고 종료
+                self.isAnimating = false
+                self.isProcessing = false
+                return
+            }
+            
             if !self.isUndo {
                 self.recommendedPortfolioIdx += 1
             }
-            if !self.isPreview{
-                self.setProfile()
-                self.isMatch = false
-                if self.isUndo {
-                    self.lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
-                }
-                self.isUndo = false
+            self.setProfile()
+            self.isMatch = false
+            if self.isUndo {
+                self.lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
             }
+            self.isUndo = false
             self.isAnimating = false
             self.isProcessing = false
             self.portfolioImageIdx = 0
