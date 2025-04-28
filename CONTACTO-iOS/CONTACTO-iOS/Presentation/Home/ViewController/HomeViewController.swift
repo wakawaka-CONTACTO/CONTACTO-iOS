@@ -21,12 +21,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     var isFromProfile = false /// 프로필에서 돌아왔는지 여부
     var hasCheckedMyPort = false /// 로그인한 사용자 프로필 조회 여부
     var likeLimit = 0
-    var likeCount = 0 {
-        didSet {
-            debugPrint("likeCount 변경 됨: \(likeCount)")
-            homeView.yesButton.isEnabled = likeCount < likeLimit
-        }
-    }
+    var likeCount = 0
     
     var isPreview = false /// edit의 preview 여부
     var previewPortfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: Nationalities.NONE, webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: []) /// preview의 내 포폴 데이터
@@ -390,7 +385,15 @@ extension HomeViewController {
                 completion(true)
             case .failure(let error):
                 if error.statusCode == 429 {
-                    self?.view.showToast(message: StringLiterals.Home.Main.dailyLikeLimit)
+                    let alertController = UIAlertController(
+                        title: StringLiterals.Home.Main.dailyLikeLimitTitle,
+                        message: StringLiterals.Home.Main.dailyLikeLimitDesc,
+                        preferredStyle: .alert
+                    )
+                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(okAction)
+                    
+                    self?.present(alertController, animated: true, completion: nil)
                 }
                 completion(false)
             default:
@@ -426,7 +429,7 @@ extension HomeViewController {
             }
             likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { success in
                 if success {
-                    self.view.showToast(message: "오늘 \(self.likeCount)개의 좋아요를 보냈습니다.")
+//                    self.view.showToast(message: "오늘 \(self.likeCount)개의 좋아요를 보냈습니다.")
                     self.animateImage(status: true)
                 } else {
                     self.isProcessing = false
