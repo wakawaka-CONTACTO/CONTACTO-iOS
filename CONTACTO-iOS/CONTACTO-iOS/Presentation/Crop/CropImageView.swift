@@ -30,10 +30,6 @@ final class CropImageView: UIView {
     lazy var ratioControl = UISegmentedControl(items: ratioOptions).then {
         $0.selectedSegmentIndex = 0
     }
-    @objc private func ratioChanged(_ sender: UISegmentedControl) {
-        let selected = ratioOptions[sender.selectedSegmentIndex]
-        applyRatio(selected)
-    }
     let cancelButton = UIButton(type: .system).then { $0.setTitle("Cancel", for: .normal) }
     let cropButton = UIButton(type: .system).then { $0.setTitle("Crop", for: .normal) }
     
