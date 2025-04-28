@@ -52,7 +52,7 @@ final class HomeView: BaseView, HomeAmplitudeSender{
         }
         
         portImageView.do {
-            $0.contentMode = .scaleAspectFill
+            $0.contentMode = .scaleAspectFit
         }
         
         profileButton.do {

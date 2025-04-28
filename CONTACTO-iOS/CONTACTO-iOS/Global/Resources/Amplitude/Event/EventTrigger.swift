@@ -256,8 +256,8 @@ extension EventName {
             
         case .NONE_CASE:
             return "존재하지 않는 이벤트일 때"
-        default:
-            return "unknown"
+        case .FAIL_IMAGE_LOAD:
+            return "사용자가 선택한 이미지를 불러오지 못했을 때"
         }
     }
 }
