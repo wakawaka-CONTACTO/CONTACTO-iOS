@@ -680,36 +680,70 @@ extension EditViewController: UICollectionViewDataSource {
 extension EditViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
-        
+
         guard let manager = self.portfolioManager else { return }
         let currentCount = manager.portfolioItems.count
         let availableSlots = max(0, 10 - currentCount)
-        
+
         if results.count > availableSlots {
             AlertManager.showAlert(on: self, message: "이미지는 최대 10장까지 업로드 가능합니다.")
             return
         }
-        
+
         let group = DispatchGroup()
+        var loadedImages = [UIImage]()
+        var loadErrors = [Error]()
+
         for result in results {
             group.enter()
-            result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, _) in
-                defer { group.leave() }
-                guard let self = self, let image = image as? UIImage else { return }
-                serialQueue.async { [weak self] in
-                    self?.pendingImages.append(image)
+            
+            let itemProvider = result.itemProvider
+            
+            if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
+                    defer { group.leave() }
+                    
+                    if let error = error {
+                        loadErrors.append(error)
+                        print("이미지 로딩 실패: \(error.localizedDescription)")
+                        return
+                    }
+
+                    guard let image = image as? UIImage else {
+                        print("로드된 데이터가 UIImage가 아닙니다.")
+                        return
+                    }
+                    
+                    self?.serialQueue.async {
+                        loadedImages.append(image)
+                    }
                 }
+            } else {
+                group.leave()
+#if DEBUG
+                print("이 itemProvider는 UIImage를 로딩할 수 없습니다.")
+#endif
             }
         }
-        
+
         group.notify(queue: .main) { [weak self] in
-          guard let self = self, !self.pendingImages.isEmpty else { return }
-          let images = self.pendingImages
-          let cropVC = CropImageViewController()
-          cropVC.imagesToCrop = images
-          cropVC.delegate     = self
-          self.present(cropVC, animated: true)
-          self.pendingImages.removeAll()
+            guard let self = self else { return }
+
+            if !loadErrors.isEmpty {
+                AlertManager.showAlert(on: self, message: "일부 이미지를 불러오는 중 문제가 발생했습니다. iCloud에 있는 이미지는 기기로 다운로드한 뒤 다시 시도해주세요.")
+//                Amplitude.logEvent("image_load_fail", withEventProperties: ["reason": error.localizedDescription])
+                return
+            }
+
+            guard !loadedImages.isEmpty else {
+                AlertManager.showAlert(on: self, message: "일부 이미지를 불러오는 중 문제가 발생했습니다. iCloud에 있는 이미지는 기기로 다운로드한 뒤 다시 시도해주세요.")
+                return
+            }
+
+            let cropVC = CropImageViewController()
+            cropVC.imagesToCrop = loadedImages
+            cropVC.delegate     = self
+            self.present(cropVC, animated: true)
         }
     }
 }
