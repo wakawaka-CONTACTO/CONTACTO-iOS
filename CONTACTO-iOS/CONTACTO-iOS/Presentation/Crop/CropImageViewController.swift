@@ -198,11 +198,11 @@ final class CropImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if imagesToCrop.isEmpty {
-            showErrorAndHideView(message: "이미지를 불러오는 데 실패했습니다.")
+            showErrorAndHideView(message: "Failed to retrieve image.")
             return
         }
         if imagesToCrop.count > 10 {
-            showErrorAndHideView(message: "최대 10개의 이미지까지 업로드 가능합니다.")
+            showErrorAndHideView(message: "Up to 10 images can be uploaded.")
             return
         }
         setupUI()
@@ -216,7 +216,7 @@ final class CropImageViewController: UIViewController {
             message: message,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
         view.isHidden = true
     }
@@ -225,8 +225,13 @@ final class CropImageViewController: UIViewController {
         view.addSubview(cropView)
         cropView.snp.makeConstraints { $0.edges.equalToSuperview() }
         cropView.imageView.image = imageToCrop
-        
+        updateCropButtonTitle()
+
         setupButtonActions()
+    }
+    
+    private func updateCropButtonTitle() {
+        cropView.cropButton.setTitle(isLastImage ? "OK" : "NEXT (\(currentIndex+1)/\(imagesToCrop.count))", for: .normal)
     }
     
     private func setupButtonActions() {
@@ -321,6 +326,7 @@ final class CropImageViewController: UIViewController {
             currentIndex += 1
             cropView.imageView.image = imageToCrop
             setupInitialState()
+            updateCropButtonTitle()
         } else {
             dismiss(animated: true)
         }
