@@ -237,32 +237,70 @@ extension HomeViewController {
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         guard !isAnimating else { return }
         
-        let translation = gesture.translation(in: self.homeView.portView)
-        var transform = CGAffineTransform(translationX: offsetX, y: offsetY)
-        let rotationAngle = -translation.x * .pi / (180 * 10)
+        let translation = gesture.translation(in: self.view)
+        let xTranslation = translation.x
+        let yTranslation = max(translation.y * 0.2, 0)  // Y축 움직임 제한
+        let rotationAngle = min(max(xTranslation / self.view.frame.width * 0.8, -0.4), 0.4)  // 회전 각도 제한
         
-        self.homeView.portView.layer.anchorPoint = CGPoint(x: 0.5, y: -0.5)
-        transform = transform.rotated(by: rotationAngle)
-        self.homeView.portView.transform = transform
-        
-        if gesture.state == .ended {
-            let velocity = gesture.velocity(in: self.view)
-            if velocity.x > 500 {
-                yesButtonTapped()
-            } else if velocity.x < -500 {
-                noButtonTapped()
+        switch gesture.state {
+        case .began:
+            homeView.portView.layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+            
+        case .changed:
+            // 직접적인 변환 적용
+            let transform = CGAffineTransform(translationX: xTranslation, y: yTranslation)
+                .rotated(by: rotationAngle)
+            
+            homeView.portView.transform = transform
+            
+            // 진행 상태에 따라 버튼 강조 표시
+            if xTranslation > 0 {
+                let alpha = min(abs(xTranslation) / 100, 1.0)
+                homeView.noButton.alpha = 1.0
+                homeView.yesButton.alpha = 1.0 - (alpha * 0.5)
+            } else if xTranslation < 0 {
+                let alpha = min(abs(xTranslation) / 100, 1.0)
+                homeView.yesButton.alpha = 1.0
+                homeView.noButton.alpha = 1.0 - (alpha * 0.5)
             } else {
-                if rotationAngle < -0.1 {
-                    yesButtonTapped()
-                } else if rotationAngle > 0.1 {
-                    noButtonTapped()
-                } else {
-                    UIView.animate(withDuration: 1) {
-                        self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
-                        self.homeView.portView.transform = .identity
-                    }
-                }
+                homeView.noButton.alpha = 1.0
+                homeView.yesButton.alpha = 1.0
             }
+            
+        case .ended, .cancelled:
+            let velocity = gesture.velocity(in: self.view)
+            let shouldDismiss = (abs(xTranslation) > self.view.frame.width * 0.35) || (abs(velocity.x) > 800)
+            
+            if shouldDismiss {
+                // 카드를 화면 밖으로 애니메이션
+                let directionMultiplier: CGFloat = xTranslation > 0 ? 1 : -1
+                let throwDistance: CGFloat = directionMultiplier * 2 * self.view.frame.width
+                let finalTransform = CGAffineTransform(translationX: throwDistance, y: 100)
+                    .rotated(by: directionMultiplier * 0.5)
+                
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+                    self.homeView.portView.transform = finalTransform
+                    // 버튼 알파값 원래대로
+                    self.homeView.yesButton.alpha = 1.0
+                    self.homeView.noButton.alpha = 1.0
+                }, completion: { _ in
+                    // 스와이프 방향에 따라 좋아요/싫어요 처리
+                    if xTranslation > 0 {
+                        self.yesButtonTapped()
+                    } else {
+                        self.noButtonTapped()
+                    }
+                })
+            } else {
+                // 원래 위치로 돌아가기
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                    self.homeView.portView.transform = .identity
+                    self.homeView.yesButton.alpha = 1.0
+                    self.homeView.noButton.alpha = 1.0
+                })
+            }
+        default:
+            break
         }
     }
 
@@ -454,18 +492,20 @@ extension HomeViewController {
         
         HapticService.impact(.heavy).run()
         
-        var transform = CGAffineTransform(translationX: offsetX, y: offsetY)
+        // 버튼을 통한 선택 시 카드 애니메이션
+        let directionMultiplier: CGFloat = status ? 1 : -1
+        let throwDistance: CGFloat = directionMultiplier * 1.5 * self.view.frame.width
+        let finalTransform = CGAffineTransform(translationX: throwDistance, y: 100)
+            .rotated(by: directionMultiplier * 0.5)
         
-        UIView.animate(withDuration: 1) {
-            transform = transform.rotated(by: status ? -(CGFloat.pi * 0.5) : (CGFloat.pi * 0.5))
-            self.homeView.portView.layer.anchorPoint = self.newAnchorPoint
-            self.homeView.portView.transform = transform
-        } completion: { _ in
+        UIView.animate(withDuration: 0.5, animations: {
+            self.homeView.portView.transform = finalTransform
+        }, completion: { _ in
             if self.isMatch {
                 self.pushToMatch()
             }
             
-            self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
+            // 다음 카드를 위한 초기화
             self.homeView.portView.transform = .identity
             if !self.isUndo {
                 self.recommendedPortfolioIdx += 1
@@ -481,7 +521,7 @@ extension HomeViewController {
             self.isAnimating = false
             self.isProcessing = false
             self.portfolioImageIdx = 0
-        }
+        })
     }
     
     /// 쌍 방 매칭 되었을 때
