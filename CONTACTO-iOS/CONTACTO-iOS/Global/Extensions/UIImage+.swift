@@ -27,7 +27,9 @@ extension UIImage {
             height: size.height * ratio
         )
         
+        #if DEBUG
         print(">>>>>>> image resize >>>>>>>")
+        #endif
         
         let renderer = UIGraphicsImageRenderer(size: newSize)
         return renderer.image { context in
