@@ -163,28 +163,14 @@ final class CropImageView: UIView {
             y: min(maxY, max(minY, newCenter.y))
         )
         
-        cropAreaView.center = constrainedCenter
+        cropAreaView.snp.updateConstraints { make in
+            make.centerX.equalToSuperview().offset(constrainedCenter.x - imageFrame.midX)
+            make.centerY.equalToSuperview().offset(constrainedCenter.y - imageFrame.midY)
+        }
+        layoutIfNeeded()
         gesture.setTranslation(.zero, in: self)
         updateOverlayMask()
     }
-}
-
-extension CropImageView {
-  /// aspectFit된 이미지가 실제로 차지하는 CGRect를 반환
-  func imageContentFrame() -> CGRect {
-    guard let img = imageView.image else { return .zero }
-    let ivSize  = imageView.bounds.size
-    let imgSize = img.size
-    // 화면에 완전히 들어가도록 하는 스케일
-    let scale = min(ivSize.width / imgSize.width,
-                    ivSize.height / imgSize.height)
-    let w = imgSize.width  * scale
-    let h = imgSize.height * scale
-    // imageView.frame 기준으로 좌표 보정
-    let x = imageView.frame.minX + (ivSize.width  - w) / 2
-    let y = imageView.frame.minY + (ivSize.height - h) / 2
-    return CGRect(x: x, y: y, width: w, height: h)
-  }
 }
 
 extension CropImageView {

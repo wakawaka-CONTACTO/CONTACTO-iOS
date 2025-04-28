@@ -312,7 +312,7 @@ final class CropImageViewController: UIViewController {
         let croppedImage = ImageProcessor.crop(
             image: imageToCrop,
             cropFrame: cropView.cropAreaView.frame,
-            contentFrame: cropView.imageContentFrame()
+            contentFrame: cropView.imageDisplayFrame()
         )
         
         delegate?.cropImageViewController(self, didCrop: croppedImage)
