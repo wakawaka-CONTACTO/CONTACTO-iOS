@@ -531,18 +531,6 @@ extension HomeViewController {
             isProcessing = true
             
             isUndo = true
-            // 이전 프로필로 돌아가기
-            recommendedPortfolioIdx = max(0, recommendedPortfolioIdx - 1)
-            currentUserId = Int(recommendedPortfolios[recommendedPortfolioIdx].userId)
-            homeView.profileNameLabel.text = recommendedPortfolios[recommendedPortfolioIdx].username
-            portfolioImages = recommendedPortfolios[recommendedPortfolioIdx].portfolioImageUrl
-            portfolioImageCount = portfolioImages.count
-            portfolioImageIdx = 0
-            
-            // UI 업데이트
-            setPortImage()
-            homeView.pageCollectionView.reloadData()
-            
             self.animateImage(status: false)
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_REVERT)
         } else {
@@ -579,6 +567,16 @@ extension HomeViewController {
             if !self.isUndo {
                 self.recommendedPortfolioIdx += 1
                 self.setProfile()
+            } else {
+                // 되돌리기 시 이전 프로필 복원
+                self.recommendedPortfolioIdx = max(0, self.recommendedPortfolioIdx - 1)
+                self.currentUserId = Int(self.recommendedPortfolios[self.recommendedPortfolioIdx].userId)
+                self.homeView.profileNameLabel.text = self.recommendedPortfolios[self.recommendedPortfolioIdx].username
+                self.portfolioImages = self.recommendedPortfolios[self.recommendedPortfolioIdx].portfolioImageUrl
+                self.portfolioImageCount = self.portfolioImages.count
+                self.portfolioImageIdx = 0
+                self.setPortImage()
+                self.homeView.pageCollectionView.reloadData()
             }
             
             self.isMatch = false
@@ -588,7 +586,6 @@ extension HomeViewController {
             self.isUndo = false
             self.isAnimating = false
             self.isProcessing = false
-            self.portfolioImageIdx = 0
         })
     }
     
