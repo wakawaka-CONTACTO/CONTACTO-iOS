@@ -712,12 +712,16 @@ extension EditViewController: PHPickerViewControllerDelegate {
                     
                     if let error = error {
                         loadErrors.append(error)
+#if DEBUG
                         print("이미지 로딩 실패: \(error.localizedDescription)")
+#endif
                         return
                     }
 
                     guard let image = image as? UIImage else {
+#if DEBUG
                         print("로드된 데이터가 UIImage가 아닙니다.")
+#endif
                         return
                     }
                     
