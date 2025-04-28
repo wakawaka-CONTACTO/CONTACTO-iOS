@@ -681,12 +681,19 @@ extension EditViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
 
-        guard let manager = self.portfolioManager else { return }
+        self.activityIndicator.startAnimating()
+        view.addSubview(activityIndicator)
+
+        guard let manager = self.portfolioManager else {
+            self.activityIndicator.stopAnimating()
+            return
+        }
+
         let currentCount = manager.portfolioItems.count
         let availableSlots = max(0, 10 - currentCount)
 
         if results.count > availableSlots {
-            AlertManager.showAlert(on: self, message: "이미지는 최대 10장까지 업로드 가능합니다.")
+            AlertManager.showAlert(on: self, message: "최대 10장까지만 업로드할 수 있습니다.")
             return
         }
 
@@ -728,15 +735,13 @@ extension EditViewController: PHPickerViewControllerDelegate {
 
         group.notify(queue: .main) { [weak self] in
             guard let self = self else { return }
-
-            if !loadErrors.isEmpty {
-                AlertManager.showAlert(on: self, message: "일부 이미지를 불러오는 중 문제가 발생했습니다. iCloud에 있는 이미지는 기기로 다운로드한 뒤 다시 시도해주세요.")
-//                Amplitude.logEvent("image_load_fail", withEventProperties: ["reason": error.localizedDescription])
-                return
-            }
-
-            guard !loadedImages.isEmpty else {
-                AlertManager.showAlert(on: self, message: "일부 이미지를 불러오는 중 문제가 발생했습니다. iCloud에 있는 이미지는 기기로 다운로드한 뒤 다시 시도해주세요.")
+            
+            self.activityIndicator.stopAnimating()
+            self.activityIndicator.removeFromSuperview()
+            
+            if !loadErrors.isEmpty || loadedImages.isEmpty {
+                AlertManager.showAlert(on: self, message: "이미지를 불러오는 중 문제가 발생했습니다. iCloud 이미지를 다운로드한 뒤 다시 시도해주세요.")
+                self.sendAmpliLog(eventName: EventName.FAIL_IMAGE_LOAD)
                 return
             }
 
