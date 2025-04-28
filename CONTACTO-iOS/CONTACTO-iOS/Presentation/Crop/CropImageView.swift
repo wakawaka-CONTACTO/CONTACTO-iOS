@@ -203,15 +203,19 @@ extension CropImageView {
     func convertToImageCoordinates(_ point: CGPoint) -> CGPoint {
         let displayFrame = imageDisplayFrame()
         guard let image = imageView.image else { return .zero }
-        
+        guard displayFrame.width > 0, displayFrame.height > 0 else { return .zero }
+
         // 이미지 표시 영역 내의 상대적 위치 계산
         let relativeX = (point.x - displayFrame.minX) / displayFrame.width
         let relativeY = (point.y - displayFrame.minY) / displayFrame.height
         
+        let clampedX = max(0, min(1, relativeX))
+        let clampedY = max(0, min(1, relativeY))
+        
         // 이미지 좌표계로 변환
         return CGPoint(
-            x: relativeX * image.size.width,
-            y: relativeY * image.size.height
+            x: clampedX * image.size.width,
+            y: clampedY * image.size.height
         )
     }
 }
