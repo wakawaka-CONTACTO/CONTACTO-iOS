@@ -273,6 +273,7 @@ extension LoginViewController {
 
     @objc private func codeVerifyButtonTapped() {
         self.sendAmpliLog(eventName: EventName.CLICK_SEND_CODE_CONTINUE)
+        UserIdentityManager.setUserId(userId: self.email, status: "Lost");
         EmailVerificationManager.shared.verifyCode(self.authCode) { [weak self] success, _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }

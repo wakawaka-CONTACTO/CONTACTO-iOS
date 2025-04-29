@@ -15,9 +15,8 @@ public struct UserIdentityManager{
         AmplitudeManager.amplitude.setUserId(userId: userId)
     }
     
-    static func setUserId(userId: String) {
-        let identity = Identify()
-        let key = "Unknown \(userId)"
+    static func setUserId(userId: String, status: String) {
+        let key = "[\(status)] \(userId)"
         AmplitudeManager.amplitude.setUserId(userId: key)
     }
     
