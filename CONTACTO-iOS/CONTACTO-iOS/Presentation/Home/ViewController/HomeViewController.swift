@@ -94,6 +94,8 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         
         // 프리로딩 작업 취소 플래그 설정
         shouldCancelPreloading = true
+        
+        ImageManager.shared.cancelAllTasks()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -125,6 +127,8 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         
         // 프리로딩 작업 재개를 위해 플래그 초기화
         shouldCancelPreloading = false
+        
+        ImageManager.shared.resumePreloading()
     }
     
     override func didReceiveMemoryWarning() {
@@ -132,6 +136,8 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         
         // 현재 화면에 표시되지 않는 이미지 캐시 삭제
         imageCache.removeAllObjects()
+        
+        ImageManager.shared.clearCache()
     }
     
     deinit {
@@ -141,6 +147,8 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         
         // 캐시 정리
         imageCache.removeAllObjects()
+        
+        ImageManager.shared.clearAll()
     }
     
     override func setNavigationBar() {
@@ -444,37 +452,7 @@ extension HomeViewController {
         if !isPreview {
             if portfolioImageIdx < portfolioImageCount {
                 let imageUrl = portfolioImages[portfolioImageIdx]
-                
-                // 캐시된 이미지 확인
-                if let cachedImage = imageCache.object(forKey: imageUrl as NSString) {
-                    homeView.portImageView.image = cachedImage
-                    return
-                }
-                
-                // 캐시에 없는 경우 비동기적으로 로드
-                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                    guard let self = self else { return }
-                    
-                    let task = KingfisherManager.shared.retrieveImage(with: URL(string: imageUrl)!) { [weak self] result in
-                        guard let self = self else { return }
-                        
-                        switch result {
-                        case .success(let value):
-                            DispatchQueue.main.async {
-                                self.homeView.portImageView.image = value.image
-                                self.imageCache.setObject(value.image, forKey: imageUrl as NSString)
-                            }
-                        case .failure(let error):
-                            #if DEBUG
-                            print("이미지 로딩 실패: \(error)")
-                            #endif
-                        }
-                    }
-                    
-                    if let task = task {
-                        self.imageLoadingTasks.append(task)
-                    }
-                }
+                ImageManager.shared.loadImage(url: imageUrl, into: homeView.portImageView)
             }
         } else {
             if portfolioImageIdx < portfolioImageCount {
@@ -484,37 +462,8 @@ extension HomeViewController {
     }
     
     private func preloadNextImages() {
-        guard !isPreview, portfolioImageCount > 0, !shouldCancelPreloading else { return }
-        
-        // 다음 2개 이미지 프리로드
-        let nextIndices = [
-            (portfolioImageIdx + 1) % portfolioImageCount,
-            (portfolioImageIdx + 2) % portfolioImageCount
-        ]
-        
-        for index in nextIndices {
-            guard index < portfolioImages.count else { continue }
-            let imageUrl = portfolioImages[index]
-            
-            // 이미 캐시된 이미지는 건너뛰기
-            if imageCache.object(forKey: imageUrl as NSString) != nil { continue }
-            
-            preloadingQueue.async { [weak self] in
-                guard let self = self, !self.shouldCancelPreloading else { return }
-                
-                let task = KingfisherManager.shared.retrieveImage(with: URL(string: imageUrl)!) { [weak self] result in
-                    guard let self = self else { return }
-                    
-                    if case .success(let value) = result {
-                        self.imageCache.setObject(value.image, forKey: imageUrl as NSString)
-                    }
-                }
-                
-                if let task = task {
-                    self.imageLoadingTasks.append(task)
-                }
-            }
-        }
+        guard !isPreview, portfolioImageCount > 0 else { return }
+        ImageManager.shared.preloadImages(urls: portfolioImages, startIndex: portfolioImageIdx)
     }
     
     private func homeList(completion: @escaping (Bool) -> Void) {
