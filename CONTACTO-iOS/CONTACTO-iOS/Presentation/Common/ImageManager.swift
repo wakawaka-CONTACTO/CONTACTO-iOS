@@ -36,7 +36,17 @@ final class ImageManager {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             
-            let task = KingfisherManager.shared.retrieveImage(with: URL(string: url)!) { [weak self] result in
+            guard let imageURL = URL(string: url) else {
+                #if DEBUG
+                print("잘못된 URL 형식: \(url)")
+                #endif
+                DispatchQueue.main.async {
+                    completion?(nil)
+                }
+                return
+            }
+            
+            let task = KingfisherManager.shared.retrieveImage(with: imageURL) { [weak self] result in
                 guard let self = self else { return }
                 
                 switch result {
