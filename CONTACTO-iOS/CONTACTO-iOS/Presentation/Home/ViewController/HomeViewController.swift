@@ -51,6 +51,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     var portfolioImageIdx = 0 { /// 현재 보고 있는 포트폴리오 위치
         didSet {
             setPortImage()
+            preloadNextImages()
             homeView.pageCollectionView.reloadData()
         }
     }
@@ -64,6 +65,9 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     let homeView = HomeView()
     let homeEmptyView = HomeEmptyView()
+    
+    private var imageCache = NSCache<NSString, UIImage>()
+    private var preloadingQueue = DispatchQueue(label: "com.contacto.preloading", qos: .userInitiated)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -407,11 +411,67 @@ extension HomeViewController {
     private func setPortImage() {
         if !isPreview {
             if portfolioImageIdx < portfolioImageCount {
-                homeView.portImageView.kfSetImage(url: portfolioImages[portfolioImageIdx], width: Int(SizeLiterals.Screen.screenWidth))
+                let imageUrl = portfolioImages[portfolioImageIdx]
+                
+                // 캐시된 이미지 확인
+                if let cachedImage = imageCache.object(forKey: imageUrl as NSString) {
+                    homeView.portImageView.image = cachedImage
+                    return
+                }
+                
+                // 캐시에 없는 경우 비동기적으로 로드
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    guard let self = self else { return }
+                    
+                    KingfisherManager.shared.retrieveImage(with: URL(string: imageUrl)!) { [weak self] result in
+                        guard let self = self else { return }
+                        
+                        switch result {
+                        case .success(let value):
+                            DispatchQueue.main.async {
+                                self.homeView.portImageView.image = value.image
+                                self.imageCache.setObject(value.image, forKey: imageUrl as NSString)
+                            }
+                        case .failure(let error):
+                            #if DEBUG
+                            print("이미지 로딩 실패: \(error)")
+                            #endif
+                        }
+                    }
+                }
             }
         } else {
             if portfolioImageIdx < portfolioImageCount {
                 homeView.portImageView.image = previewImages[portfolioImageIdx]
+            }
+        }
+    }
+    
+    private func preloadNextImages() {
+        guard !isPreview, portfolioImageCount > 0 else { return }
+        
+        // 다음 2개 이미지 프리로드
+        let nextIndices = [
+            (portfolioImageIdx + 1) % portfolioImageCount,
+            (portfolioImageIdx + 2) % portfolioImageCount
+        ]
+        
+        for index in nextIndices {
+            guard index < portfolioImages.count else { continue }
+            let imageUrl = portfolioImages[index]
+            
+            // 이미 캐시된 이미지는 건너뛰기
+            if imageCache.object(forKey: imageUrl as NSString) != nil { continue }
+            
+            preloadingQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                // Kingfisher를 사용하여 이미지 프리로드
+                KingfisherManager.shared.retrieveImage(with: URL(string: imageUrl)!) { result in
+                    if case .success(let value) = result {
+                        self.imageCache.setObject(value.image, forKey: imageUrl as NSString)
+                    }
+                }
             }
         }
     }
