@@ -13,8 +13,12 @@ final class ImageManager {
     
     private let imageCache = NSCache<NSString, UIImage>()
     private let preloadingQueue = DispatchQueue(label: "com.contacto.preloading", qos: .userInitiated)
+    private let tasksQueue = DispatchQueue(label: "com.contacto.tasks", qos: .userInitiated)
     private var imageLoadingTasks: [DownloadTask] = []
     private var shouldCancelPreloading = false
+    
+    // 프리로드할 이미지 개수 설정
+    private let preloadCount = 2
     
     private init() {}
     
@@ -51,7 +55,9 @@ final class ImageManager {
             }
             
             if let task = task {
-                self.imageLoadingTasks.append(task)
+                self.tasksQueue.async {
+                    self.imageLoadingTasks.append(task)
+                }
             }
         }
     }
@@ -59,14 +65,10 @@ final class ImageManager {
     func preloadImages(urls: [String], startIndex: Int) {
         guard !shouldCancelPreloading, !urls.isEmpty else { return }
         
-        // 다음 2개 이미지 프리로드
-        let nextIndices = [
-            (startIndex + 1) % urls.count,
-            (startIndex + 2) % urls.count
-        ]
+        // 다음 이미지들 프리로드
+        let nextIndices = (1...preloadCount).map { (startIndex + $0) % urls.count }
         
         for index in nextIndices {
-            guard index < urls.count else { continue }
             let imageUrl = urls[index]
             
             // 이미 캐시된 이미지는 건너뛰기
@@ -75,7 +77,14 @@ final class ImageManager {
             preloadingQueue.async { [weak self] in
                 guard let self = self, !self.shouldCancelPreloading else { return }
                 
-                let task = KingfisherManager.shared.retrieveImage(with: URL(string: imageUrl)!) { [weak self] result in
+                guard let imageURL = URL(string: imageUrl) else {
+                    #if DEBUG
+                    print("잘못된 URL 형식: \(imageUrl)")
+                    #endif
+                    return
+                }
+                
+                let task = KingfisherManager.shared.retrieveImage(with: imageURL) { [weak self] result in
                     guard let self = self else { return }
                     
                     if case .success(let value) = result {
@@ -84,7 +93,9 @@ final class ImageManager {
                 }
                 
                 if let task = task {
-                    self.imageLoadingTasks.append(task)
+                    self.tasksQueue.async {
+                        self.imageLoadingTasks.append(task)
+                    }
                 }
             }
         }
@@ -93,9 +104,12 @@ final class ImageManager {
     // MARK: - Memory Management
     
     func cancelAllTasks() {
-        imageLoadingTasks.forEach { $0.cancel() }
-        imageLoadingTasks.removeAll()
-        shouldCancelPreloading = true
+        tasksQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.imageLoadingTasks.forEach { $0.cancel() }
+            self.imageLoadingTasks.removeAll()
+            self.shouldCancelPreloading = true
+        }
     }
     
     func resumePreloading() {
