@@ -176,6 +176,7 @@ extension SignUpViewController {
                 self?.signUpView.isHidden = true
                 self?.emailCodeView.isHidden = true
                 self?.setPWView.isHidden = false
+                self?.sendAmpliLog(eventName: EventName.VIEW_RESET_PASSWORD)
             } else {
                 self?.emailCodeView.underLineView.image = .imgUnderLineRed
                 self?.emailCodeView.setFail()
