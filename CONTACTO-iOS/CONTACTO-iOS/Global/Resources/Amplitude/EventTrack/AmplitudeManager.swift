@@ -10,11 +10,20 @@ import AmplitudeSwift
 import os
 
 public struct AmplitudeManager{
-    static var amplitude: Amplitude!
+    private static let configuration = Configuration(
+        apiKey: Config.amplitudeApiKey,
+        autocapture: [.sessions, .appLifecycles, .screenViews, .elementInteractions]
+    )
+    public static let amplitude = Amplitude(configuration: configuration)
+    private static var trackingUser: String!
+    
 #if DEBUG
     static let logger = Logger(subsystem: "com.contacto", category: "amplitude")
-    #endif
-    private init(){ }
+#endif
+    
+    static func setTrackingUser(device: String){
+        
+    }
 }
 
 extension Amplitude {
