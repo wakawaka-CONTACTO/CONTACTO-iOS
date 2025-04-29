@@ -19,6 +19,7 @@
 		33185B092D79A6A200B508A3 /* PageableResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B082D79A6A200B508A3 /* PageableResponse.swift */; };
 		33185B0B2D7B1E6B00B508A3 /* PageableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */; };
 		333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */; };
+		333BD1662DC0807B00A9C2E9 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333BD1652DC0807B00A9C2E9 /* ImageManager.swift */; };
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
 		338F7E742DA3815300442048 /* AppVersionCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338F7E732DA3815300442048 /* AppVersionCheck.swift */; };
 		AC2F4F812DBA3B98000EB807 /* PromotionPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2F4F7F2DBA3B98000EB807 /* PromotionPopupView.swift */; };
@@ -186,6 +187,7 @@
 		33185B082D79A6A200B508A3 /* PageableResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableResponse.swift; sourceTree = "<group>"; };
 		33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableRequest.swift; sourceTree = "<group>"; };
 		333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockResponseDTO.swift; sourceTree = "<group>"; };
+		333BD1652DC0807B00A9C2E9 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		338F7E732DA3815300442048 /* AppVersionCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionCheck.swift; sourceTree = "<group>"; };
 		AC0EAA8E2D68451C00757EBD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -403,6 +405,7 @@
 		AC2F4F802DBA3B98000EB807 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				333BD1652DC0807B00A9C2E9 /* ImageManager.swift */,
 				AC2F4F7F2DBA3B98000EB807 /* PromotionPopupView.swift */,
 			);
 			path = Common;
@@ -1460,6 +1463,7 @@
 				C3FD90592C9142880021D2BA /* adjust+.swift in Sources */,
 				C33D73D32CDEEEA300889B1B /* APIRequestLoader.swift in Sources */,
 				C33D74102CDEF21900889B1B /* ChatListResponseDTO.swift in Sources */,
+				333BD1662DC0807B00A9C2E9 /* ImageManager.swift in Sources */,
 				C3E6D90E2CFAC7B500D6ABDC /* SignUpView.swift in Sources */,
 				C33D73D72CDEEEBE00889B1B /* ContactoRequestInterceptor.swift in Sources */,
 				C3B95CF32C9C08B7002A4681 /* ProfileTalentCollectionViewCell.swift in Sources */,

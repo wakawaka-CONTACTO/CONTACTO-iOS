@@ -51,6 +51,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     var portfolioImageIdx = 0 { /// 현재 보고 있는 포트폴리오 위치
         didSet {
             setPortImage()
+            preloadNextImages()
             homeView.pageCollectionView.reloadData()
         }
     }
@@ -64,6 +65,11 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     let homeView = HomeView()
     let homeEmptyView = HomeEmptyView()
+    
+    private var imageCache = NSCache<NSString, UIImage>()
+    private var preloadingQueue = DispatchQueue(label: "com.contacto.preloading", qos: .userInitiated)
+    private var imageLoadingTasks: [DownloadTask] = []
+    private var shouldCancelPreloading = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +83,19 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             name: Notification.Name("moveToChatRoomFromMatch"),
             object: nil
         )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // 진행 중인 이미지 로딩 작업 취소
+        imageLoadingTasks.forEach { $0.cancel() }
+        imageLoadingTasks.removeAll()
+        
+        // 프리로딩 작업 취소 플래그 설정
+        shouldCancelPreloading = true
+        
+        ImageManager.shared.cancelAllTasks()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -105,6 +124,31 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             let popupView = PromotionPopupView(frame: self.view.bounds)
             self.view.addSubview(popupView)
         }
+        
+        // 프리로딩 작업 재개를 위해 플래그 초기화
+        shouldCancelPreloading = false
+        
+        ImageManager.shared.resumePreloading()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+        // 현재 화면에 표시되지 않는 이미지 캐시 삭제
+        imageCache.removeAllObjects()
+        
+        ImageManager.shared.clearCache()
+    }
+    
+    deinit {
+        // 진행 중인 이미지 로딩 작업 취소
+        imageLoadingTasks.forEach { $0.cancel() }
+        imageLoadingTasks.removeAll()
+        
+        // 캐시 정리
+        imageCache.removeAllObjects()
+        
+        ImageManager.shared.clearAll()
     }
     
     override func setNavigationBar() {
@@ -407,13 +451,19 @@ extension HomeViewController {
     private func setPortImage() {
         if !isPreview {
             if portfolioImageIdx < portfolioImageCount {
-                homeView.portImageView.kfSetImage(url: portfolioImages[portfolioImageIdx], width: Int(SizeLiterals.Screen.screenWidth))
+                let imageUrl = portfolioImages[portfolioImageIdx]
+                ImageManager.shared.loadImage(url: imageUrl, into: homeView.portImageView)
             }
         } else {
             if portfolioImageIdx < portfolioImageCount {
                 homeView.portImageView.image = previewImages[portfolioImageIdx]
             }
         }
+    }
+    
+    private func preloadNextImages() {
+        guard !isPreview, portfolioImageCount > 0 else { return }
+        ImageManager.shared.preloadImages(urls: portfolioImages, startIndex: portfolioImageIdx)
     }
     
     private func homeList(completion: @escaping (Bool) -> Void) {
