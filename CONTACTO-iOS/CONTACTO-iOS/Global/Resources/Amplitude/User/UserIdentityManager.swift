@@ -19,7 +19,6 @@ public struct UserIdentityManager{
         let identity = Identify()
         let key = "Unknown \(userId)"
         AmplitudeManager.amplitude.setUserId(userId: key)
-        
     }
     
     static func syncUserInfo() {

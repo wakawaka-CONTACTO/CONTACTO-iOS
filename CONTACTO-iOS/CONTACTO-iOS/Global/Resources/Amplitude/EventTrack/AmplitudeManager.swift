@@ -14,16 +14,20 @@ public struct AmplitudeManager{
         apiKey: Config.amplitudeApiKey,
         autocapture: [.sessions, .appLifecycles, .screenViews, .elementInteractions]
     )
-    public static let amplitude = Amplitude(configuration: configuration)
+    
+//    public static let amplitude = Amplitude(configuration: configuration)
+    public static let amplitude: Amplitude = {
+        let amp = Amplitude(configuration: configuration)
+        amp.setUserId(userId: "Unknown")
+        amp.identify(identify: Identify())
+        return amp
+    }()
+    
     private static var trackingUser: String!
     
 #if DEBUG
     static let logger = Logger(subsystem: "com.contacto", category: "amplitude")
 #endif
-    
-    static func setTrackingUser(device: String){
-        
-    }
 }
 
 extension Amplitude {
