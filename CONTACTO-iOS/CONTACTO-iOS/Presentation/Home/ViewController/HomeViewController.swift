@@ -68,6 +68,8 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     private var imageCache = NSCache<NSString, UIImage>()
     private var preloadingQueue = DispatchQueue(label: "com.contacto.preloading", qos: .userInitiated)
+    private var imageLoadingTasks: [DownloadTask] = []
+    private var shouldCancelPreloading = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,6 +83,17 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             name: Notification.Name("moveToChatRoomFromMatch"),
             object: nil
         )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // 진행 중인 이미지 로딩 작업 취소
+        imageLoadingTasks.forEach { $0.cancel() }
+        imageLoadingTasks.removeAll()
+        
+        // 프리로딩 작업 취소 플래그 설정
+        shouldCancelPreloading = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -109,6 +122,25 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             let popupView = PromotionPopupView(frame: self.view.bounds)
             self.view.addSubview(popupView)
         }
+        
+        // 프리로딩 작업 재개를 위해 플래그 초기화
+        shouldCancelPreloading = false
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+        // 현재 화면에 표시되지 않는 이미지 캐시 삭제
+        imageCache.removeAllObjects()
+    }
+    
+    deinit {
+        // 진행 중인 이미지 로딩 작업 취소
+        imageLoadingTasks.forEach { $0.cancel() }
+        imageLoadingTasks.removeAll()
+        
+        // 캐시 정리
+        imageCache.removeAllObjects()
     }
     
     override func setNavigationBar() {
@@ -423,7 +455,7 @@ extension HomeViewController {
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                     guard let self = self else { return }
                     
-                    KingfisherManager.shared.retrieveImage(with: URL(string: imageUrl)!) { [weak self] result in
+                    let task = KingfisherManager.shared.retrieveImage(with: URL(string: imageUrl)!) { [weak self] result in
                         guard let self = self else { return }
                         
                         switch result {
@@ -438,6 +470,10 @@ extension HomeViewController {
                             #endif
                         }
                     }
+                    
+                    if let task = task {
+                        self.imageLoadingTasks.append(task)
+                    }
                 }
             }
         } else {
@@ -448,7 +484,7 @@ extension HomeViewController {
     }
     
     private func preloadNextImages() {
-        guard !isPreview, portfolioImageCount > 0 else { return }
+        guard !isPreview, portfolioImageCount > 0, !shouldCancelPreloading else { return }
         
         // 다음 2개 이미지 프리로드
         let nextIndices = [
@@ -464,13 +500,18 @@ extension HomeViewController {
             if imageCache.object(forKey: imageUrl as NSString) != nil { continue }
             
             preloadingQueue.async { [weak self] in
-                guard let self = self else { return }
+                guard let self = self, !self.shouldCancelPreloading else { return }
                 
-                // Kingfisher를 사용하여 이미지 프리로드
-                KingfisherManager.shared.retrieveImage(with: URL(string: imageUrl)!) { result in
+                let task = KingfisherManager.shared.retrieveImage(with: URL(string: imageUrl)!) { [weak self] result in
+                    guard let self = self else { return }
+                    
                     if case .success(let value) = result {
                         self.imageCache.setObject(value.image, forKey: imageUrl as NSString)
                     }
+                }
+                
+                if let task = task {
+                    self.imageLoadingTasks.append(task)
                 }
             }
         }
