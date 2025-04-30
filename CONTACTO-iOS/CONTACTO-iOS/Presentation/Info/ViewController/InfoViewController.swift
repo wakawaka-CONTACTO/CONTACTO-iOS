@@ -126,17 +126,10 @@ extension InfoViewController {
             NetworkService.shared.infoService.logout(deviceId: deviceId) { response in
                 switch response {
                 case .success:
-                    KeychainHandler.shared.accessToken.removeAll()
-                    KeychainHandler.shared.refreshToken.removeAll()
-
-                    AmplitudeManager.amplitude.flush()
-                    AmplitudeManager.amplitude.reset()
-                    self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_YES)
-                  
-                    guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-                    sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                    self.handleLogout()
                 default:
-                    self.view.showToast(message: "로그아웃에 실패했습니다.")
+                    // 서버 통신 실패 시에도 로컬 로그아웃 처리
+                    self.handleLogout()
                 }
             }
         }
@@ -144,6 +137,17 @@ extension InfoViewController {
         alert.addAction(cancel)
         alert.addAction(success)
         present(alert, animated: true)
+    }
+    
+    private func handleLogout() {
+        KeychainHandler.shared.accessToken.removeAll()
+        KeychainHandler.shared.refreshToken.removeAll()
+        AmplitudeManager.amplitude.flush()
+        AmplitudeManager.amplitude.reset()
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_YES)
+        
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+        sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
     }
     
     private func setDeleteAlertController() {
