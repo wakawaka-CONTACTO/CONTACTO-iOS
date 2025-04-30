@@ -11,6 +11,7 @@ import Alamofire
 
 final class ContactoRequestInterceptor: RequestInterceptor {
     
+    private let syncQueue = DispatchQueue(label: "com.contacto.requestInterceptor.sync")
     private var isRefreshingToken = false
     private var requestsToRetry: [(RetryResult) -> Void] = []
     private let maxRetryCount = 2 // 요청별 최대 2번 재시도
@@ -96,40 +97,46 @@ final class ContactoRequestInterceptor: RequestInterceptor {
             #if DEBUG
             print("🔴 [Token] 401 에러 발생 - URL: \(urlString)")
             #endif
-            requestsToRetry.append(completion)
             
-            if !isRefreshingToken {
-                #if DEBUG
-                print("🔄 [Token] 토큰 재발급 시작")
-                #endif
-                isRefreshingToken = true
-                refreshToken { [weak self] isSuccess in
-                    guard let self = self else { return }
-                    
-                    self.isRefreshingToken = false
+            syncQueue.sync {
+                requestsToRetry.append(completion)
+                
+                if !isRefreshingToken {
                     #if DEBUG
-                    print("✅ [Token] 토큰 재발급 완료 - 성공: \(isSuccess)")
-                    
-                    if isSuccess {
-                        print("🔄 [Token] 실패했던 요청 재시도")
-                    } else {
-                        print("❌ [Token] 토큰 재발급 실패로 인한 로그아웃")
-                    }
+                    print("🔄 [Token] 토큰 재발급 시작")
                     #endif
-                    
-                    if isSuccess {
-                        self.requestsToRetry.forEach { $0(.retry) }
-                    } else {
-                        self.requestsToRetry.forEach { $0(.doNotRetry) }
-                        self.handleLogout()
+                    isRefreshingToken = true
+                    refreshToken { [weak self] isSuccess in
+                        guard let self = self else { return }
+                        
+                        self.syncQueue.async {
+                            self.isRefreshingToken = false
+                            #if DEBUG
+                            print("✅ [Token] 토큰 재발급 완료 - 성공: \(isSuccess)")
+                            
+                            if isSuccess {
+                                print("🔄 [Token] 실패했던 요청 재시도")
+                            } else {
+                                print("❌ [Token] 토큰 재발급 실패로 인한 로그아웃")
+                            }
+                            #endif
+                            
+                            if isSuccess {
+                                self.requestsToRetry.forEach { $0(.retry) }
+                            } else {
+                                self.requestsToRetry.forEach { $0(.doNotRetry) }
+                                self.handleLogout()
+                            }
+                            self.requestsToRetry.removeAll()
+                        }
                     }
-                    self.requestsToRetry.removeAll()
+                } else {
+                    #if DEBUG
+                    print("⏳ [Token] 이미 토큰 재발급 중 - 요청 대기")
+                    #endif
                 }
-            } else {
-                #if DEBUG
-                print("⏳ [Token] 이미 토큰 재발급 중 - 요청 대기")
-                #endif
             }
+            
         case 408, 504: // Request Timeout, Gateway Timeout
             #if DEBUG
             print("🔴 [Network] 타임아웃 발생 - URL: \(urlString)")
