@@ -13,8 +13,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
     
     private var isRefreshingToken = false
     private var requestsToRetry: [(RetryResult) -> Void] = []
-    private var retryCount = 0 // 전체 재시도 횟수 추적
-    private let maxRetryCount = 3 // 최대 재시도 횟수
+    private let maxRetryCount = 2 // 요청별 최대 2번 재시도
     
     func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         /// request 될 때마다 실행됨
@@ -31,17 +30,27 @@ final class ContactoRequestInterceptor: RequestInterceptor {
         completion(.success(urlRequest))
     }
     
-    private func handleNetworkError(completion: @escaping (RetryResult) -> Void) {
-        if retryCount == 0 {
-            DispatchQueue.main.async {
-                self.showNetworkErrorAlert()
-            }
+     /// 네트워크 에러 시, 요청 객체의 retryCount를 보고 결정
+    private func handleNetworkError(for request: Request, completion: @escaping (RetryResult) -> Void) {
+        // 첫 네트워크 에러 알림은 띄워주기
+        if request.retryCount == 0 {
+            #if DEBUG
+            print("🔄 [Network] 재시도 시작 - 현재 시도: \(request.retryCount + 1)/\(maxRetryCount + 1)")
+            #endif
+            DispatchQueue.main.async { self.showNetworkErrorAlert() }
+        } else {
+            #if DEBUG
+            print("🔄 [Network] 재시도 중 - 현재 시도: \(request.retryCount + 1)/\(maxRetryCount + 1)")
+            #endif
         }
         
-        if retryCount < maxRetryCount {
-            retryCount += 1
+        // 요청별 retryCount 활용
+        if request.retryCount < maxRetryCount {
             completion(.retryWithDelay(2.0))
         } else {
+            #if DEBUG
+            print("❌ [Network] 최대 재시도 횟수 도달 - 총 시도: \(request.retryCount + 1)회")
+            #endif
             completion(.doNotRetry)
         }
     }
@@ -53,6 +62,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
     }
     
     func retry(_ request: Request, for _: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+        // 네트워크 에러 (HTTP 응답 자체가 없는 경우)
         guard let response = request.task?.response as? HTTPURLResponse else {
             // 네트워크 연결 실패 처리
             if let afError = error as? AFError,
@@ -63,14 +73,14 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                     #if DEBUG
                     print("🔴 [Network] 네트워크 연결 실패 - 에러: \(urlError)")
                     #endif
-                    handleNetworkError(completion: completion)
+                    handleNetworkError(for: request, completion: completion)
                     return
                 default:
                     if urlError.code.rawValue == -1004 {
                         #if DEBUG
                         print("🔴 [Network] 서버 연결 실패 - 에러: \(urlError)")
                         #endif
-                        handleNetworkError(completion: completion)
+                        handleNetworkError(for: request, completion: completion)
                         return
                     }
                 }
@@ -124,13 +134,13 @@ final class ContactoRequestInterceptor: RequestInterceptor {
             #if DEBUG
             print("🔴 [Network] 타임아웃 발생 - URL: \(urlString)")
             #endif
-            handleNetworkError(completion: completion)
+            handleNetworkError(for: request, completion: completion)
             
         case 500...599: // 서버 에러
             #if DEBUG
             print("🔴 [Network] 서버 에러 발생 - 상태코드: \(response.statusCode)")
             #endif
-            handleNetworkError(completion: completion)
+            handleNetworkError(for: request, completion: completion)
             
         default:
             completion(.doNotRetry)
