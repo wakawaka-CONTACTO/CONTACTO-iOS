@@ -132,7 +132,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                 completion(.retryWithDelay(2.0))
             } else {
                 DispatchQueue.main.async {
-                    self.showNetworkErrorAlert()
+                    self.showNetworkErrorAlert(isNetworkError: true)
                 }
                 completion(.doNotRetry)
             }
@@ -148,7 +148,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                 completion(.retryWithDelay(2.0))
             } else {
                 DispatchQueue.main.async {
-                    self.showNetworkErrorAlert()
+                    self.showNetworkErrorAlert(isNetworkError: true)
                 }
                 completion(.doNotRetry)
             }
