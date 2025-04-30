@@ -22,7 +22,7 @@ enum StringLiterals {
         static let firstStepButton = "Go to First step"
         
         static let noAccountTitle = "No account found"
-        static let noAccountDesc = "There’s no CONTACTO account with the info you provided.\nplease input correct e-mail or click below help button.".uppercased()
+        static let noAccountDesc = "There's no CONTACTO account with the info you provided.\nplease input correct e-mail or click below help button.".uppercased()
         static let forgetEmailButton = "Forgot your E-mail?"
         
         static let incorrectPWTitle = "Incorrect password"
@@ -158,7 +158,7 @@ enum StringLiterals {
     enum Chat {
         enum Empty {
             static let title = "Not\nYet"
-            static let description = "If we find first match,\nWe’ll notice you on push."
+            static let description = "If we find first match,\nWe'll notice you on push."
         }
         
         enum Disclaimer {
@@ -201,7 +201,15 @@ enum StringLiterals {
                 static let logoutDescription = "Are you sure you want to\nlog out CONTACTO?"
                 static let yes = "Yes"
                 static let no = "No"
-                
+            }
+            
+            enum Session {
+                static let networkErrorTitle = "Network Error"
+                static let networkErrorMessage = "Connection unstable"
+                static let sessionExpiredTitle = "Session Expired"
+                static let sessionExpiredMessage = "Your session has expired.\nPlease sign in again to continue."
+                static let restart = "Restart"
+                static let cancel = "Cancel"
             }
             
             enum Delete {

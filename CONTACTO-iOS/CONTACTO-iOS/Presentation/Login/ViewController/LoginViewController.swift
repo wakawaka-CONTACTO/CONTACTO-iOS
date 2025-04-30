@@ -166,14 +166,16 @@ extension LoginViewController {
                 self.sendAmpliLog(eventName: EventName.CLICK_NOACCOUNT_CONTINUE)
             }
             emailExist(queryDTO: EmailExistRequestQueryDTO(email: loginView.mainTextField.text ?? "")) { _ in
-                if self.isExistEmail {
-                    self.loginView.mainTextField.text = ""
-                    self.loginView.setLoginState(state: .pw)
-                } else {
-                    self.loginView.setLoginState(state: .emailError)
+                DispatchQueue.main.async {
+                    if self.isExistEmail {
+                        self.loginView.mainTextField.text = ""
+                        self.loginView.setLoginState(state: .pw)
+                    } else {
+                        self.loginView.setLoginState(state: .emailError)
+                    }
+                    self.hideLoadingIndicator()
                 }
             }
-            hideLoadingIndicator()
         case .pw, .pwError:
             showLoadingIndicator()
             let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"

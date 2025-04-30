@@ -25,6 +25,10 @@ class APIRequestLoader<T: TargetType> {
         let cache = URLCache(memoryCapacity: cacheSize, diskCapacity: cacheSize, directory: nil)
         configuration.urlCache = cache
         
+        // 타임아웃 설정
+        configuration.timeoutIntervalForRequest = 30 // 30초
+        configuration.timeoutIntervalForResource = 60 // 60초
+        
         self.configuration = configuration
         self.apiLogger = apiLogger
         

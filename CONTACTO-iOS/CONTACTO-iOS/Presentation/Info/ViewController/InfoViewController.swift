@@ -123,27 +123,27 @@ extension InfoViewController {
             guard let self = self else { return }
             let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
             
-            NetworkService.shared.infoService.logout(deviceId: deviceId) { response in
-                switch response {
-                case .success:
-                    KeychainHandler.shared.accessToken.removeAll()
-                    KeychainHandler.shared.refreshToken.removeAll()
-
-                    AmplitudeManager.amplitude.flush()
-                    AmplitudeManager.amplitude.reset()
-                    self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_YES)
-                  
-                    guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-                    sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                default:
-                    self.view.showToast(message: "로그아웃에 실패했습니다.")
-                }
-            }
+            // 먼저 로컬 로그아웃 처리
+            self.handleLogout()
+            
+            // 그 후 서버에 로그아웃 요청 (성공/실패와 관계없이 무시)
+            NetworkService.shared.infoService.logout(deviceId: deviceId) { _ in }
         }
         
         alert.addAction(cancel)
         alert.addAction(success)
         present(alert, animated: true)
+    }
+    
+    private func handleLogout() {
+        KeychainHandler.shared.accessToken.removeAll()
+        KeychainHandler.shared.refreshToken.removeAll()
+        AmplitudeManager.amplitude.flush()
+        AmplitudeManager.amplitude.reset()
+        self.sendAmpliLog(eventName: EventName.CLICK_INFO_LOGOUT_YES)
+        
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+        sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
     }
     
     private func setDeleteAlertController() {
