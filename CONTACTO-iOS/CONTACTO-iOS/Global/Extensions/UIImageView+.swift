@@ -15,10 +15,10 @@ extension UIImageView {
             var queryItems = components?.queryItems ?? []
             
             if let width = width {
-                queryItems.append(URLQueryItem(name: "width", value: String(width)))
+                queryItems.append(URLQueryItem(name: "w", value: String(width)))
             }
             if let height = height {
-                queryItems.append(URLQueryItem(name: "height", value: String(height)))
+                queryItems.append(URLQueryItem(name: "h", value: String(height)))
             }
             
             components?.queryItems = queryItems
