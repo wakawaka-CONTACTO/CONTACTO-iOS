@@ -49,7 +49,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                         completion(.retryWithDelay(2.0))
                     } else {
                         DispatchQueue.main.async {
-                            self.showNetworkErrorAlert(isNetworkError: true)
+                            self.showNetworkErrorAlert()
                         }
                         completion(.doNotRetry)
                     }
@@ -66,7 +66,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                             completion(.retryWithDelay(2.0))
                         } else {
                             DispatchQueue.main.async {
-                                self.showNetworkErrorAlert(isNetworkError: true)
+                                self.showNetworkErrorAlert()
                             }
                             completion(.doNotRetry)
                         }
@@ -132,7 +132,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                 completion(.retryWithDelay(2.0))
             } else {
                 DispatchQueue.main.async {
-                    self.showNetworkErrorAlert(isNetworkError: true)
+                    self.showNetworkErrorAlert()
                 }
                 completion(.doNotRetry)
             }
@@ -148,7 +148,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                 completion(.retryWithDelay(2.0))
             } else {
                 DispatchQueue.main.async {
-                    self.showNetworkErrorAlert(isNetworkError: true)
+                    self.showNetworkErrorAlert()
                 }
                 completion(.doNotRetry)
             }
@@ -212,7 +212,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
         }
     }
     
-    func logout(isNetworkError: Bool = false) {
+    func logout() {
         #if DEBUG
         print("🚪 [Token] 로그아웃 처리 시작")
         #endif
@@ -220,8 +220,8 @@ final class ContactoRequestInterceptor: RequestInterceptor {
         DispatchQueue.main.async {
             // 알림창 표시
             let alert = UIAlertController(
-                title: isNetworkError ? StringLiterals.Info.Alert.Session.networkErrorTitle : StringLiterals.Info.Alert.Session.sessionExpiredTitle,
-                message: isNetworkError ? StringLiterals.Info.Alert.Session.networkErrorMessage : StringLiterals.Info.Alert.Session.sessionExpiredMessage,
+                title: StringLiterals.Info.Alert.Session.sessionExpiredTitle,
+                message: StringLiterals.Info.Alert.Session.sessionExpiredMessage,
                 preferredStyle: .alert
             )
             
@@ -240,15 +240,15 @@ final class ContactoRequestInterceptor: RequestInterceptor {
         }
     }
     
-    private func showNetworkErrorAlert(isNetworkError: Bool = false) {
+    private func showNetworkErrorAlert() {
         #if DEBUG
         print("🔴 [Network] 네트워크 오류 발생")
         #endif
         
         DispatchQueue.main.async {
             let alert = UIAlertController(
-                title: isNetworkError ? StringLiterals.Info.Alert.Session.networkErrorTitle : StringLiterals.Info.Alert.Session.sessionExpiredTitle,
-                message: isNetworkError ? StringLiterals.Info.Alert.Session.networkErrorMessage : StringLiterals.Info.Alert.Session.sessionExpiredMessage,
+                title: StringLiterals.Info.Alert.Session.networkErrorTitle,
+                message: StringLiterals.Info.Alert.Session.networkErrorMessage,
                 preferredStyle: .alert
             )
             
