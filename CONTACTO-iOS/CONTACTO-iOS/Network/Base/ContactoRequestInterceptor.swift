@@ -63,6 +63,15 @@ final class ContactoRequestInterceptor: RequestInterceptor {
     }
     
     func retry(_ request: Request, for _: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+        // GET 메소드가 아닌 경우 재시도하지 않음
+        if request.request?.httpMethod != "GET" {
+            #if DEBUG
+            print("⏭️ [Network] GET 메소드가 아니므로 재시도하지 않음 - 메소드: \(request.request?.httpMethod ?? "unknown")")
+            #endif
+            completion(.doNotRetry)
+            return
+        }
+        
         // 네트워크 에러 (HTTP 응답 자체가 없는 경우)
         guard let response = request.task?.response as? HTTPURLResponse else {
             // 네트워크 연결 실패 처리
