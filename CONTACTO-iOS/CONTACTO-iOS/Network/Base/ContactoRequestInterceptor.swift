@@ -43,14 +43,18 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                     print("🔴 [Network] 네트워크 연결 실패 - 에러: \(urlError)")
                     #endif
                     
+                    // 첫 요청 실패 시 토스트 메시지 표시
+                    if retryCount == 0 {
+                        DispatchQueue.main.async {
+                            self.showNetworkErrorAlert()
+                        }
+                    }
+                    
                     // 재시도 횟수 확인
                     if retryCount < maxRetryCount {
                         retryCount += 1
                         completion(.retryWithDelay(2.0))
                     } else {
-                        DispatchQueue.main.async {
-                            self.showNetworkErrorAlert()
-                        }
                         completion(.doNotRetry)
                     }
                     return
@@ -60,14 +64,18 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                         print("🔴 [Network] 서버 연결 실패 - 에러: \(urlError)")
                         #endif
                         
+                        // 첫 요청 실패 시 토스트 메시지 표시
+                        if retryCount == 0 {
+                            DispatchQueue.main.async {
+                                self.showNetworkErrorAlert()
+                            }
+                        }
+                        
                         // 재시도 횟수 확인
                         if retryCount < maxRetryCount {
                             retryCount += 1
                             completion(.retryWithDelay(2.0))
                         } else {
-                            DispatchQueue.main.async {
-                                self.showNetworkErrorAlert()
-                            }
                             completion(.doNotRetry)
                         }
                         return
@@ -126,14 +134,18 @@ final class ContactoRequestInterceptor: RequestInterceptor {
             print("🔴 [Network] 타임아웃 발생 - URL: \(urlString)")
             #endif
             
+            // 첫 요청 실패 시 토스트 메시지 표시
+            if retryCount == 0 {
+                DispatchQueue.main.async {
+                    self.showNetworkErrorAlert()
+                }
+            }
+            
             // 재시도 횟수 확인
             if retryCount < maxRetryCount {
                 retryCount += 1
                 completion(.retryWithDelay(2.0))
             } else {
-                DispatchQueue.main.async {
-                    self.showNetworkErrorAlert()
-                }
                 completion(.doNotRetry)
             }
             
@@ -142,14 +154,18 @@ final class ContactoRequestInterceptor: RequestInterceptor {
             print("🔴 [Network] 서버 에러 발생 - 상태코드: \(response.statusCode)")
             #endif
             
+            // 첫 요청 실패 시 토스트 메시지 표시
+            if retryCount == 0 {
+                DispatchQueue.main.async {
+                    self.showNetworkErrorAlert()
+                }
+            }
+            
             // 재시도 횟수 확인
             if retryCount < maxRetryCount {
                 retryCount += 1
                 completion(.retryWithDelay(2.0))
             } else {
-                DispatchQueue.main.async {
-                    self.showNetworkErrorAlert()
-                }
                 completion(.doNotRetry)
             }
             
@@ -246,29 +262,9 @@ final class ContactoRequestInterceptor: RequestInterceptor {
         #endif
         
         DispatchQueue.main.async {
-            let alert = UIAlertController(
-                title: StringLiterals.Info.Alert.Session.networkErrorTitle,
-                message: StringLiterals.Info.Alert.Session.networkErrorMessage,
-                preferredStyle: .alert
-            )
-            
-            // 앱 재시작
-            let restartAction = UIAlertAction(title: StringLiterals.Info.Alert.Session.restart, style: .destructive) { _ in
-                exit(0)
-            }
-            
-            // 현재 화면에서 계속 사용
-            let continueAction = UIAlertAction(title: StringLiterals.Info.Alert.Session.cancel, style: .default) { _ in
-                // 재시도 카운트 초기화
-                self.retryCount = 0
-            }
-            
-            alert.addAction(continueAction)
-            alert.addAction(restartAction)
-            
-            // 현재 보이는 화면에서 알림창 표시
-            if let topViewController = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController {
-                topViewController.present(alert, animated: true, completion: nil)
+            // 토스트 메시지 표시
+            if let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
+                window.showToast(message: StringLiterals.Info.Alert.Session.networkErrorMessage, position: .middle)
             }
         }
     }
