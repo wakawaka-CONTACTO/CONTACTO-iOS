@@ -205,9 +205,11 @@ enum StringLiterals {
             
             enum Session {
                 static let networkErrorTitle = "Network Error"
-                static let networkErrorMessage = "Please try again later."
+                static let networkErrorMessage = "Please check your connection\nand try again."
                 static let sessionExpiredTitle = "Session Expired"
-                static let sessionExpiredMessage = "Please try to log in again."
+                static let sessionExpiredMessage = "Your session has expired.\nPlease sign in again to continue."
+                static let restart = "Restart"
+                static let cancel = "Cancel"
             }
             
             enum Delete {

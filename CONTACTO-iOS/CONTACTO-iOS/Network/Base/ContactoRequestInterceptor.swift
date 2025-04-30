@@ -13,7 +13,8 @@ final class ContactoRequestInterceptor: RequestInterceptor {
     
     private var isRefreshingToken = false
     private var requestsToRetry: [(RetryResult) -> Void] = []
-    private var retryCount: [String: Int] = [:] // URL별 재시도 횟수 추적
+    private var retryCount = 0 // 전체 재시도 횟수 추적
+    private let maxRetryCount = 3 // 최대 재시도 횟수
     
     func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         /// request 될 때마다 실행됨
@@ -36,7 +37,6 @@ final class ContactoRequestInterceptor: RequestInterceptor {
             if let afError = error as? AFError,
                case .sessionTaskFailed(let sessionError) = afError,
                let urlError = sessionError as? URLError {
-                let urlString = request.request?.url?.absoluteString ?? "unknown"
                 switch urlError.code {
                 case .timedOut, .networkConnectionLost, .notConnectedToInternet, .cannotConnectToHost:
                     #if DEBUG
@@ -44,13 +44,12 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                     #endif
                     
                     // 재시도 횟수 확인
-                    let currentRetryCount = retryCount[urlString] ?? 0
-                    if currentRetryCount < 3 {
-                        retryCount[urlString] = currentRetryCount + 1
+                    if retryCount < maxRetryCount {
+                        retryCount += 1
                         completion(.retryWithDelay(2.0))
                     } else {
                         DispatchQueue.main.async {
-                            self.logout(isNetworkError: true)
+                            self.showNetworkErrorAlert(isNetworkError: true)
                         }
                         completion(.doNotRetry)
                     }
@@ -62,13 +61,12 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                         #endif
                         
                         // 재시도 횟수 확인
-                        let currentRetryCount = retryCount[urlString] ?? 0
-                        if currentRetryCount < 3 {
-                            retryCount[urlString] = currentRetryCount + 1
+                        if retryCount < maxRetryCount {
+                            retryCount += 1
                             completion(.retryWithDelay(2.0))
                         } else {
                             DispatchQueue.main.async {
-                                self.logout(isNetworkError: true)
+                                self.showNetworkErrorAlert(isNetworkError: true)
                             }
                             completion(.doNotRetry)
                         }
@@ -129,32 +127,32 @@ final class ContactoRequestInterceptor: RequestInterceptor {
             #endif
             
             // 재시도 횟수 확인
-            let currentRetryCount = retryCount[urlString] ?? 0
-            if currentRetryCount < 3 {
-                retryCount[urlString] = currentRetryCount + 1
+            if retryCount < maxRetryCount {
+                retryCount += 1
                 completion(.retryWithDelay(2.0))
             } else {
                 DispatchQueue.main.async {
-                    self.logout()
+                    self.showNetworkErrorAlert()
                 }
                 completion(.doNotRetry)
             }
+            
         case 500...599: // 서버 에러
             #if DEBUG
             print("🔴 [Network] 서버 에러 발생 - 상태코드: \(response.statusCode)")
             #endif
             
             // 재시도 횟수 확인
-            let currentRetryCount = retryCount[urlString] ?? 0
-            if currentRetryCount < 3 {
-                retryCount[urlString] = currentRetryCount + 1
+            if retryCount < maxRetryCount {
+                retryCount += 1
                 completion(.retryWithDelay(2.0))
             } else {
                 DispatchQueue.main.async {
-                    self.logout()
+                    self.showNetworkErrorAlert()
                 }
                 completion(.doNotRetry)
             }
+            
         default:
             completion(.doNotRetry)
         }
@@ -195,13 +193,21 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                 #if DEBUG
                 print("❌ [Token] reissue API 호출 실패 - 에러: \(error)")
                 #endif
-                self.logout()
+                // 토큰 재발급 실패 시 바로 로그아웃 처리
+                DispatchQueue.main.async {
+                    self.logout()
+                }
+                completion(false)
                 
             default:
                 #if DEBUG
                 print("❌ [Token] reissue API 호출 실패 - 알 수 없는 에러")
                 #endif
-                self.logout()
+                // 토큰 재발급 실패 시 바로 로그아웃 처리
+                DispatchQueue.main.async {
+                    self.logout()
+                }
+                completion(false)
             }
         }
     }
@@ -226,6 +232,39 @@ final class ContactoRequestInterceptor: RequestInterceptor {
             }
             
             alert.addAction(okAction)
+            
+            // 현재 보이는 화면에서 알림창 표시
+            if let topViewController = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController {
+                topViewController.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    private func showNetworkErrorAlert(isNetworkError: Bool = false) {
+        #if DEBUG
+        print("🔴 [Network] 네트워크 오류 발생")
+        #endif
+        
+        DispatchQueue.main.async {
+            let alert = UIAlertController(
+                title: isNetworkError ? StringLiterals.Info.Alert.Session.networkErrorTitle : StringLiterals.Info.Alert.Session.sessionExpiredTitle,
+                message: isNetworkError ? StringLiterals.Info.Alert.Session.networkErrorMessage : StringLiterals.Info.Alert.Session.sessionExpiredMessage,
+                preferredStyle: .alert
+            )
+            
+            // 앱 재시작
+            let restartAction = UIAlertAction(title: StringLiterals.Info.Alert.Session.restart, style: .destructive) { _ in
+                exit(0)
+            }
+            
+            // 현재 화면에서 계속 사용
+            let continueAction = UIAlertAction(title: StringLiterals.Info.Alert.Session.cancel, style: .default) { _ in
+                // 재시도 카운트 초기화
+                self.retryCount = 0
+            }
+            
+            alert.addAction(continueAction)
+            alert.addAction(restartAction)
             
             // 현재 보이는 화면에서 알림창 표시
             if let topViewController = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController {
