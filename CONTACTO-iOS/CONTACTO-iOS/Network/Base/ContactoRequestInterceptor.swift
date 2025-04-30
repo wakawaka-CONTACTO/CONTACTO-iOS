@@ -31,6 +31,27 @@ final class ContactoRequestInterceptor: RequestInterceptor {
         completion(.success(urlRequest))
     }
     
+    private func handleNetworkError(completion: @escaping (RetryResult) -> Void) {
+        if retryCount == 0 {
+            DispatchQueue.main.async {
+                self.showNetworkErrorAlert()
+            }
+        }
+        
+        if retryCount < maxRetryCount {
+            retryCount += 1
+            completion(.retryWithDelay(2.0))
+        } else {
+            completion(.doNotRetry)
+        }
+    }
+    
+    private func handleLogout() {
+        DispatchQueue.main.async {
+            self.logout()
+        }
+    }
+    
     func retry(_ request: Request, for _: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
         guard let response = request.task?.response as? HTTPURLResponse else {
             // 네트워크 연결 실패 처리
@@ -42,42 +63,14 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                     #if DEBUG
                     print("🔴 [Network] 네트워크 연결 실패 - 에러: \(urlError)")
                     #endif
-                    
-                    // 첫 요청 실패 시 토스트 메시지 표시
-                    if retryCount == 0 {
-                        DispatchQueue.main.async {
-                            self.showNetworkErrorAlert()
-                        }
-                    }
-                    
-                    // 재시도 횟수 확인
-                    if retryCount < maxRetryCount {
-                        retryCount += 1
-                        completion(.retryWithDelay(2.0))
-                    } else {
-                        completion(.doNotRetry)
-                    }
+                    handleNetworkError(completion: completion)
                     return
                 default:
                     if urlError.code.rawValue == -1004 {
                         #if DEBUG
                         print("🔴 [Network] 서버 연결 실패 - 에러: \(urlError)")
                         #endif
-                        
-                        // 첫 요청 실패 시 토스트 메시지 표시
-                        if retryCount == 0 {
-                            DispatchQueue.main.async {
-                                self.showNetworkErrorAlert()
-                            }
-                        }
-                        
-                        // 재시도 횟수 확인
-                        if retryCount < maxRetryCount {
-                            retryCount += 1
-                            completion(.retryWithDelay(2.0))
-                        } else {
-                            completion(.doNotRetry)
-                        }
+                        handleNetworkError(completion: completion)
                         return
                     }
                 }
@@ -118,9 +111,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                         self.requestsToRetry.forEach { $0(.retry) }
                     } else {
                         self.requestsToRetry.forEach { $0(.doNotRetry) }
-                        DispatchQueue.main.async {
-                            self.logout()
-                        }
+                        self.handleLogout()
                     }
                     self.requestsToRetry.removeAll()
                 }
@@ -133,41 +124,13 @@ final class ContactoRequestInterceptor: RequestInterceptor {
             #if DEBUG
             print("🔴 [Network] 타임아웃 발생 - URL: \(urlString)")
             #endif
-            
-            // 첫 요청 실패 시 토스트 메시지 표시
-            if retryCount == 0 {
-                DispatchQueue.main.async {
-                    self.showNetworkErrorAlert()
-                }
-            }
-            
-            // 재시도 횟수 확인
-            if retryCount < maxRetryCount {
-                retryCount += 1
-                completion(.retryWithDelay(2.0))
-            } else {
-                completion(.doNotRetry)
-            }
+            handleNetworkError(completion: completion)
             
         case 500...599: // 서버 에러
             #if DEBUG
             print("🔴 [Network] 서버 에러 발생 - 상태코드: \(response.statusCode)")
             #endif
-            
-            // 첫 요청 실패 시 토스트 메시지 표시
-            if retryCount == 0 {
-                DispatchQueue.main.async {
-                    self.showNetworkErrorAlert()
-                }
-            }
-            
-            // 재시도 횟수 확인
-            if retryCount < maxRetryCount {
-                retryCount += 1
-                completion(.retryWithDelay(2.0))
-            } else {
-                completion(.doNotRetry)
-            }
+            handleNetworkError(completion: completion)
             
         default:
             completion(.doNotRetry)
@@ -185,6 +148,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
             #if DEBUG
             print("❌ [Token] Refresh Token이 없음")
             #endif
+            handleLogout()
             completion(false)
             return
         }
@@ -209,20 +173,14 @@ final class ContactoRequestInterceptor: RequestInterceptor {
                 #if DEBUG
                 print("❌ [Token] reissue API 호출 실패 - 에러: \(error)")
                 #endif
-                // 토큰 재발급 실패 시 바로 로그아웃 처리
-                DispatchQueue.main.async {
-                    self.logout()
-                }
+                handleLogout()
                 completion(false)
                 
             default:
                 #if DEBUG
                 print("❌ [Token] reissue API 호출 실패 - 알 수 없는 에러")
                 #endif
-                // 토큰 재발급 실패 시 바로 로그아웃 처리
-                DispatchQueue.main.async {
-                    self.logout()
-                }
+                handleLogout()
                 completion(false)
             }
         }
