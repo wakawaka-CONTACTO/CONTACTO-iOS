@@ -123,15 +123,11 @@ extension InfoViewController {
             guard let self = self else { return }
             let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
             
-            NetworkService.shared.infoService.logout(deviceId: deviceId) { response in
-                switch response {
-                case .success:
-                    self.handleLogout()
-                default:
-                    // 서버 통신 실패 시에도 로컬 로그아웃 처리
-                    self.handleLogout()
-                }
-            }
+            // 먼저 로컬 로그아웃 처리
+            self.handleLogout()
+            
+            // 그 후 서버에 로그아웃 요청 (성공/실패와 관계없이 무시)
+            NetworkService.shared.infoService.logout(deviceId: deviceId) { _ in }
         }
         
         alert.addAction(cancel)
