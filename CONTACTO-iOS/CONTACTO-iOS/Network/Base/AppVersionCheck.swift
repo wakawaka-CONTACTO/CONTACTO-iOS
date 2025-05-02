@@ -41,12 +41,12 @@ class AppVersionCheck {
                 #endif
                 
                 // 앱스토어의 버전을 .을 기준으로 나눈 것
-                let splitMarketingVersion = version.split(separator: ".").map { $0 }
+                let splitMarketingVersion = version.split(separator: ".").map { Int($0) ?? 0 }
                 
                 // 현재 기기의 버전을 .을 기준으로 나눈 것
-                let splitCurrentProjectVersion = currentVersion.split(separator: ".").map { $0 }
+                let splitCurrentProjectVersion = currentVersion.split(separator: ".").map { Int($0) ?? 0 }
                 
-                if splitCurrentProjectVersion.count > 0 && splitMarketingVersion.count > 0 {
+                if splitCurrentProjectVersion.count > 1 && splitMarketingVersion.count > 1 {
                     // 현재 기기의 Major 버전이 앱스토어의 Major 버전보다 낮다면 업데이트 필요
                     if splitCurrentProjectVersion[0] < splitMarketingVersion[0] {
                         completion(true, nil)
