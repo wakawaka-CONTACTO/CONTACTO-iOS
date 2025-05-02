@@ -14,7 +14,7 @@ final class ChatEmptyView: BaseView, ChatAmplitudeSender {
     
     // 추후 연결 시 폰트 및 레이아웃 확인 필요
 
-    let titleLabel = UILabel()
+    let titleLabel = LineHeightLabel()
     let descriptionLabel = UILabel()
     
     override func setStyle() {
@@ -23,7 +23,7 @@ final class ChatEmptyView: BaseView, ChatAmplitudeSender {
         titleLabel.do {
             $0.text = StringLiterals.Chat.Empty.title
             $0.font = .fontContacto(.title6)
-            $0.asLineHeight(.title6)
+            $0.setLineHeight(.title6)
             $0.textColor = .ctblack
             $0.numberOfLines = 0
             $0.textAlignment = .center

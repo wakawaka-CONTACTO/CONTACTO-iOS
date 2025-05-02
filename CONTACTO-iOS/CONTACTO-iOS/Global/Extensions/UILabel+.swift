@@ -65,3 +65,25 @@ extension UILabel {
         attributedText = string
     }
 }
+
+/// UILabel을 상속한 커스텀 클래스로, 줄 높이가 있는 텍스트의 클리핑 문제를 해결
+class LineHeightLabel: UILabel {
+    
+    // 텍스트 렌더링 영역에 상하좌우 여백 추가
+    override func drawText(in rect: CGRect) {
+        // 상단과 하단에 추가 여백
+        let insets = UIEdgeInsets(top: 4, left: 0, bottom: 4, right: 0)
+        super.drawText(in: rect.inset(by: insets))
+    }
+    
+    // intrinsicContentSize를 오버라이드하여 추가 여백 반영
+    override var intrinsicContentSize: CGSize {
+        let size = super.intrinsicContentSize
+        return CGSize(width: size.width, height: size.height + 8) // 상하 여백(4+4) 추가
+    }
+    
+    // 줄 높이를 지정하는 편의 메서드 
+    func setLineHeight(_ fontStyle: FontLevel) {
+        self.asLineHeight(fontStyle)
+    }
+}

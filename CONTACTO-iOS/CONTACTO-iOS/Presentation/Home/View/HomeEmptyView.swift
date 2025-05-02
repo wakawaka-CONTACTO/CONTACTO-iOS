@@ -12,7 +12,7 @@ import Then
 
 final class HomeEmptyView: BaseView {
 
-    let titleLabel = UILabel()
+    let titleLabel = LineHeightLabel()
     let descriptionLabel = UILabel()
     
     override func setStyle() {
@@ -21,7 +21,7 @@ final class HomeEmptyView: BaseView {
         titleLabel.do {
             $0.text = StringLiterals.Home.Main.emptyTitle
             $0.font = .fontContacto(.title6)
-            $0.asLineHeight(.title6)
+            $0.setLineHeight(.title6)
             $0.textColor = .ctmainpink
             $0.numberOfLines = 0
             $0.textAlignment = .center
