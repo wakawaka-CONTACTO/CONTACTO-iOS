@@ -39,8 +39,30 @@ class AppVersionCheck {
                 #if DEBUG
                 print("앱스토어 버전: \(version)")
                 #endif
-                let needUpdate = currentVersion.compare(version,options: .numeric) == .orderedAscending
-                completion(needUpdate, nil)
+                
+                // 앱스토어의 버전을 .을 기준으로 나눈 것
+                let splitMarketingVersion = version.split(separator: ".").map { $0 }
+                
+                // 현재 기기의 버전을 .을 기준으로 나눈 것
+                let splitCurrentProjectVersion = currentVersion.split(separator: ".").map { $0 }
+                
+                if splitCurrentProjectVersion.count > 0 && splitMarketingVersion.count > 0 {
+                    // 현재 기기의 Major 버전이 앱스토어의 Major 버전보다 낮다면 업데이트 필요
+                    if splitCurrentProjectVersion[0] < splitMarketingVersion[0] {
+                        completion(true, nil)
+                    // 현재 기기의 Minor 버전이 앱스토어의 Minor 버전보다 낮다면 업데이트 필요
+                    } else if splitCurrentProjectVersion[1] < splitMarketingVersion[1] {
+                        completion(true, nil)
+                    // Patch의 버전이 다르거나 최신 버전이라면 업데이트 불필요
+                    } else {
+                        #if DEBUG
+                        print("현재 최신 버전입니다.")
+                        #endif
+                        completion(false, nil)
+                    }
+                } else {
+                    completion(false, nil)
+                }
             } catch {
                 completion(nil, error)
             }
