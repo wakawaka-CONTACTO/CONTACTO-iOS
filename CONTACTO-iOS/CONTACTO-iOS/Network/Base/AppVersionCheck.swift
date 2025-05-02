@@ -25,7 +25,9 @@ class AppVersionCheck {
             let url = URL(string: "http://itunes.apple.com/kr/lookup?bundleId=\(identifier)") else {
                 throw VersionError.invalidBundleInfo
             }
-        debugPrint("현재 설치된 앱 버전: \(currentVersion)")
+        #if DEBUG
+        print("현재 설치된 앱 버전: \(currentVersion)")
+        #endif
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             do {
                 if let error = error { throw error }
@@ -34,7 +36,9 @@ class AppVersionCheck {
                 guard let result = (json?["results"] as? [Any])?.first as? [String: Any], let version = result["version"] as? String else {
                     throw VersionError.invalidResponse
                 } // 앱스토어 버전 가져오기
-                debugPrint("앱스토어 버전: \(version)")
+                #if DEBUG
+                print("앱스토어 버전: \(version)")
+                #endif
                 let needUpdate = currentVersion.compare(version,options: .numeric) == .orderedAscending
                 completion(needUpdate, nil)
             } catch {
@@ -51,7 +55,9 @@ class AppVersionCheck {
         // UIApplication 은 Main Thread 에서 처리
         DispatchQueue.main.async {
             if let url = URL(string: "https://apps.apple.com/kr/app/\(appId)"), UIApplication.shared.canOpenURL(url) {
-                debugPrint("앱스토어 url: \(url)")
+                #if DEBUG
+                print("앱스토어 url: \(url)")
+                #endif
                 if #available(iOS 10.0, *) {
                     UIApplication.shared.open(url, options: [:], completionHandler: {_ in
                         UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
