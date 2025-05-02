@@ -80,7 +80,6 @@ final class PortfolioManager {
                 }
             }
         }
-        print("Nationality info for request: \(currentData.nationality)")
         
         return EditRequestBodyDTO(
             username: currentData.username.trimmingCharacters(in: .whitespacesAndNewlines),

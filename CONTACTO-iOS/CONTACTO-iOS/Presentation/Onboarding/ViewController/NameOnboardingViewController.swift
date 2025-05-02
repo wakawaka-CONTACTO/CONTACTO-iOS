@@ -104,9 +104,34 @@ extension NameOnboardingViewController {
             return
         }
         
-        UserInfo.shared.name = name
-        let purposeOnboardingViewController = PurposeOnboardingViewController()
-        self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+        // 이름 중복 확인
+        checkNameExists(bodyDTO: SignInHelpRequestBodyDTO(userName: name)) { isExists in
+            if isExists {
+                self.showDuplicateNameError()
+            } else {
+                UserInfo.shared.name = name
+                let purposeOnboardingViewController = PurposeOnboardingViewController()
+                self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+            }
+        }
+    }
+    
+    private func checkNameExists(bodyDTO: SignInHelpRequestBodyDTO, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.signHelp(bodyDTO: bodyDTO) { response in
+            switch response {
+            case .success(let data):
+                completion(true)
+            case .failure(let error):
+                if error.statusCode == 404 {
+                    debugPrint("유저가 존재하지 않습니다.")
+                    completion(false)
+                } else {
+                    completion(false)
+                }
+            default:
+                completion(false)
+            }
+        }
     }
     
     private func isValidName(_ name: String) -> Bool {
@@ -130,7 +155,16 @@ extension NameOnboardingViewController {
         }
     }
     
+    private func showDuplicateNameError() {
+        DispatchQueue.main.async {
+            self.nameOnboardingView.showErrorMessage(StringLiterals.Onboarding.Name.duplicate)
+        }
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // 텍스트 필드에 입력이 시작되면 에러 메시지 숨김
+        nameOnboardingView.hideErrorMessage()
+        
         let utf8Char = string.cString(using: .utf8)
         let isBackSpace = strcmp(utf8Char, "\\b")
         

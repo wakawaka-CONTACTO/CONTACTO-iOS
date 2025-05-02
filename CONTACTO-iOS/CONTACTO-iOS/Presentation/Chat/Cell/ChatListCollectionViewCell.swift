@@ -112,7 +112,7 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
     func configCell(data: ChatListResponseDTO) {
         nameLabel.text = data.title
         messageLabel.text = data.latestMessageContent
-        profileImageView.kfSetImage(url: data.chatRoomThumbnail)
+        profileImageView.kfSetImage(url: data.chatRoomThumbnail, width: 150)
         
         switch data.unreadMessageCount {
         case 0:

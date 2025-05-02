@@ -22,7 +22,7 @@ extension UIView {
         layer.cornerRadius = cornerRadius
     }
     
-    func showToast(message: String, at: CGFloat = 50) {
+    func showToast(message: String, position: ToastPosition = .top) {
         let toastLabel = UILabel()
         toastLabel.backgroundColor = UIColor(hex: "343A40", alpha: 0.5)
         toastLabel.textColor = .ctgray1
@@ -35,8 +35,17 @@ extension UIView {
         
         let toastWidth = 253.adjusted
         let toastHeight = 40.adjusted
+        
+        var yPosition: CGFloat
+        switch position {
+        case .top:
+            yPosition = 50.adjusted
+        case .middle:
+            yPosition = self.frame.size.height / 2 - toastHeight / 2
+        }
+        
         toastLabel.frame = CGRect(x: self.frame.size.width / 2 - toastWidth / 2,
-                                  y: at.adjusted,
+                                  y: yPosition,
                                   width: toastWidth,
                                   height: toastHeight)
         if let window = UIApplication.shared.keyWindow {
@@ -48,5 +57,10 @@ extension UIView {
         }, completion: {(isCompleted) in
             toastLabel.removeFromSuperview()
         })
+    }
+    
+    enum ToastPosition {
+        case top
+        case middle
     }
 }

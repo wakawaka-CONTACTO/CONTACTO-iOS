@@ -17,6 +17,7 @@ final class NameOnboardingView: BaseView {
     private let descriptionLabel = UILabel()
     let nameTextField = BaseTextField()
     let nextButton = OnboardingNextButton(count: 1)
+    let errorMessageLabel = UILabel()
     
     override func setStyle() {
         self.backgroundColor = .ctsubyellow1
@@ -57,6 +58,14 @@ final class NameOnboardingView: BaseView {
             $0.autocapitalizationType = .none
             $0.keyboardType = .asciiCapable
         }
+        
+        errorMessageLabel.do {
+            $0.text = ""
+            $0.textColor = .ctblack
+            $0.font = .fontContacto(.caption2)
+            $0.textAlignment = .center
+            $0.isHidden = true
+        }
     }
     
     override func setLayout() {
@@ -65,6 +74,7 @@ final class NameOnboardingView: BaseView {
                     titleLabel,
                     descriptionLabel,
                     nameTextField,
+                    errorMessageLabel,
                     nextButton)
         
         topBackgroundView.snp.makeConstraints {
@@ -93,9 +103,24 @@ final class NameOnboardingView: BaseView {
             $0.height.equalTo(34.adjustedHeight)
         }
         
+        errorMessageLabel.snp.makeConstraints {
+            $0.top.equalTo(nameTextField.snp.bottom).offset(8.adjustedHeight)
+            $0.centerX.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(16.adjustedWidth)
+        }
+        
         nextButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().inset(55.adjustedHeight)
         }
+    }
+    
+    func showErrorMessage(_ message: String) {
+        errorMessageLabel.text = message
+        errorMessageLabel.isHidden = false
+    }
+    
+    func hideErrorMessage() {
+        errorMessageLabel.isHidden = true
     }
 }

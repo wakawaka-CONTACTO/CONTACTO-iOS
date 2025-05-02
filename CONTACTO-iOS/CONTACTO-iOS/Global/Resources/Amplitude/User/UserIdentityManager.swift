@@ -15,6 +15,11 @@ public struct UserIdentityManager{
         AmplitudeManager.amplitude.setUserId(userId: userId)
     }
     
+    static func setUserId(userId: String, status: String) {
+        let key = "[\(status)] \(userId)"
+        AmplitudeManager.amplitude.setUserId(userId: key)
+    }
+    
     static func syncUserInfo() {
         let identity = Identify()
         identity.set(property: "user_email", value: UserInfo.shared.email)

@@ -7,11 +7,27 @@
 
 import Foundation
 import AmplitudeSwift
+import os
 
 public struct AmplitudeManager{
-    static var amplitude: Amplitude!
+    private static let configuration = Configuration(
+        apiKey: Config.amplitudeApiKey,
+        autocapture: [.sessions, .appLifecycles, .screenViews, .elementInteractions]
+    )
     
-    private init(){ }
+//    public static let amplitude = Amplitude(configuration: configuration)
+    public static let amplitude: Amplitude = {
+        let amp = Amplitude(configuration: configuration)
+        amp.setUserId(userId: "Unknown")
+        amp.identify(identify: Identify())
+        return amp
+    }()
+    
+    private static var trackingUser: String!
+    
+#if DEBUG
+    static let logger = Logger(subsystem: "com.contacto", category: "amplitude")
+#endif
 }
 
 extension Amplitude {
@@ -22,7 +38,7 @@ extension Amplitude {
             "trigger": eventInfo.trigger
         ]
 #if DEBUG
-        print("[LOG] amplitude track \(properties)")
+        AmplitudeManager.logger.log("[LOG] amplitude track \(properties)")
 #endif
         AmplitudeManager.amplitude.track(eventType: eventType, eventProperties: properties)
     }
@@ -39,7 +55,7 @@ extension Amplitude {
             }
         }
 #if DEBUG
-        print("[LOG] amplitude track \(eventProps)")
+        AmplitudeManager.logger.log("[LOG] amplitude track \(eventProps)")
 #endif
         AmplitudeManager.amplitude.track(
             eventType: eventInfo.eventName.rawValue,

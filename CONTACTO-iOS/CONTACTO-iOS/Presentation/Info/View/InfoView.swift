@@ -73,7 +73,7 @@ final class InfoView: BaseView {
             $0.setBackgroundColor(.ctgray3, for: .disabled)
             $0.setRoundBorder(borderColor: .ctblack, borderWidth: 1.5, cornerRadius: 0)
             $0.titleLabel?.font = .fontContacto(.button1)
-            $0.isEnabled = false
+            $0.isEnabled = true
             $0.titleLabel?.textAlignment = .left
         }
         

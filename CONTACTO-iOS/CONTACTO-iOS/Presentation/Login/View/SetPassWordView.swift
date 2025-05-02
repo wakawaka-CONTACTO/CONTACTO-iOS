@@ -24,7 +24,6 @@ final class SetPassWordView: BaseView, LoginAmplitudeSender {
     override func setAddTarget() {
         mainTextField.eyeButton.addTarget(self, action: #selector(mainEyeButtonTapped), for: .touchUpInside)
         confirmTextField.eyeButton.addTarget(self, action: #selector(confirmEyeButtonTapped), for: .touchUpInside)
-        self.sendAmpliLog(eventName: EventName.VIEW_SET_PASSWORD)
     }
     
     override func setStyle() {

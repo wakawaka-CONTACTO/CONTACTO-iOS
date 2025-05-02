@@ -51,6 +51,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     var portfolioImageIdx = 0 { /// 현재 보고 있는 포트폴리오 위치
         didSet {
             setPortImage()
+            preloadNextImages()
             homeView.pageCollectionView.reloadData()
         }
     }
@@ -64,6 +65,11 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     
     let homeView = HomeView()
     let homeEmptyView = HomeEmptyView()
+    
+    private var imageCache = NSCache<NSString, UIImage>()
+    private var preloadingQueue = DispatchQueue(label: "com.contacto.preloading", qos: .userInitiated)
+    private var imageLoadingTasks: [DownloadTask] = []
+    private var shouldCancelPreloading = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +83,19 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             name: Notification.Name("moveToChatRoomFromMatch"),
             object: nil
         )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // 진행 중인 이미지 로딩 작업 취소
+        imageLoadingTasks.forEach { $0.cancel() }
+        imageLoadingTasks.removeAll()
+        
+        // 프리로딩 작업 취소 플래그 설정
+        shouldCancelPreloading = true
+        
+        ImageManager.shared.cancelAllTasks()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -93,6 +112,43 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         }
 
         setData()
+        
+//        // 24시간 이내에 팝업을 닫은 적이 있는지 확인
+//        if let dismissDate = UserDefaults.standard.object(forKey: "PopupDismissDate") as? Date,
+//           dismissDate > Date() {
+//            return
+//        }
+//        
+//        // 프로모션 팝업 표시
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            let popupView = PromotionPopupView(frame: self.view.bounds)
+//            self.view.addSubview(popupView)
+//        }
+        
+        // 프리로딩 작업 재개를 위해 플래그 초기화
+        shouldCancelPreloading = false
+        
+        ImageManager.shared.resumePreloading()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+        // 현재 화면에 표시되지 않는 이미지 캐시 삭제
+        imageCache.removeAllObjects()
+        
+        ImageManager.shared.clearCache()
+    }
+    
+    deinit {
+        // 진행 중인 이미지 로딩 작업 취소
+        imageLoadingTasks.forEach { $0.cancel() }
+        imageLoadingTasks.removeAll()
+        
+        // 캐시 정리
+        imageCache.removeAllObjects()
+        
+        ImageManager.shared.clearAll()
     }
     
     override func setNavigationBar() {
@@ -195,6 +251,13 @@ extension HomeViewController {
     }
     
     @objc private func handleBackTap(_ sender: UITapGestureRecognizer) {
+        if isPreview {
+            if portfolioImageIdx > 0 { portfolioImageIdx -= 1 }
+            else { portfolioImageIdx = portfolioImageCount - 1 }
+            self.sendAmpliLog(eventName: EventName.CLICK_HOME_BACK)
+            return
+        }
+        
         guard !(recommendedPortfolios.isEmpty), !(portfolioImages.isEmpty) else { return }
         HapticService.impact(.light).run()
         
@@ -204,6 +267,13 @@ extension HomeViewController {
     }
     
     @objc private func handleNextTap(_ sender: UITapGestureRecognizer) {
+        if isPreview {
+            if portfolioImageIdx >= portfolioImageCount - 1 { portfolioImageIdx = 0 }
+            else { portfolioImageIdx += 1 }
+            self.sendAmpliLog(eventName: EventName.CLICK_HOME_NEXT)
+            return
+        }
+        
         guard !(recommendedPortfolios.isEmpty), !(portfolioImages.isEmpty) else { return }
         HapticService.impact(.light).run()
         
@@ -225,32 +295,70 @@ extension HomeViewController {
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         guard !isAnimating else { return }
         
-        let translation = gesture.translation(in: self.homeView.portView)
-        var transform = CGAffineTransform(translationX: offsetX, y: offsetY)
-        let rotationAngle = -translation.x * .pi / (180 * 10)
+        let translation = gesture.translation(in: self.view)
+        let xTranslation = translation.x
+        let yTranslation = max(translation.y * 0.2, 0)  // Y축 움직임 제한
+        let rotationAngle = min(max(xTranslation / self.view.frame.width * 0.8, -0.4), 0.4)  // 회전 각도 제한
         
-        self.homeView.portView.layer.anchorPoint = CGPoint(x: 0.5, y: -0.5)
-        transform = transform.rotated(by: rotationAngle)
-        self.homeView.portView.transform = transform
-        
-        if gesture.state == .ended {
-            let velocity = gesture.velocity(in: self.view)
-            if velocity.x > 500 {
-                yesButtonTapped()
-            } else if velocity.x < -500 {
-                noButtonTapped()
+        switch gesture.state {
+        case .began:
+            homeView.portView.layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+            
+        case .changed:
+            // 직접적인 변환 적용
+            let transform = CGAffineTransform(translationX: xTranslation, y: yTranslation)
+                .rotated(by: rotationAngle)
+            
+            homeView.portView.transform = transform
+            
+            // 진행 상태에 따라 버튼 강조 표시
+            if xTranslation > 0 {
+                let alpha = min(abs(xTranslation) / 100, 1.0)
+                homeView.noButton.alpha = 1.0
+                homeView.yesButton.alpha = 1.0 - (alpha * 0.5)
+            } else if xTranslation < 0 {
+                let alpha = min(abs(xTranslation) / 100, 1.0)
+                homeView.yesButton.alpha = 1.0
+                homeView.noButton.alpha = 1.0 - (alpha * 0.5)
             } else {
-                if rotationAngle < -0.1 {
-                    yesButtonTapped()
-                } else if rotationAngle > 0.1 {
-                    noButtonTapped()
-                } else {
-                    UIView.animate(withDuration: 1) {
-                        self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
-                        self.homeView.portView.transform = .identity
-                    }
-                }
+                homeView.noButton.alpha = 1.0
+                homeView.yesButton.alpha = 1.0
             }
+            
+        case .ended, .cancelled:
+            let velocity = gesture.velocity(in: self.view)
+            let shouldDismiss = (abs(xTranslation) > self.view.frame.width * 0.35) || (abs(velocity.x) > 800)
+            
+            if shouldDismiss {
+                // 카드를 화면 밖으로 애니메이션
+                let directionMultiplier: CGFloat = xTranslation > 0 ? 1 : -1
+                let throwDistance: CGFloat = directionMultiplier * 2 * self.view.frame.width
+                let finalTransform = CGAffineTransform(translationX: throwDistance, y: 100)
+                    .rotated(by: directionMultiplier * 0.5)
+                
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+                    self.homeView.portView.transform = finalTransform
+                    // 버튼 알파값 원래대로
+                    self.homeView.yesButton.alpha = 1.0
+                    self.homeView.noButton.alpha = 1.0
+                }, completion: { _ in
+                    // 스와이프 방향에 따라 좋아요/싫어요 처리
+                    if xTranslation > 0 {
+                        self.yesButtonTapped()
+                    } else {
+                        self.noButtonTapped()
+                    }
+                })
+            } else {
+                // 원래 위치로 돌아가기
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                    self.homeView.portView.transform = .identity
+                    self.homeView.yesButton.alpha = 1.0
+                    self.homeView.noButton.alpha = 1.0
+                })
+            }
+        default:
+            break
         }
     }
 
@@ -300,7 +408,11 @@ extension HomeViewController {
         } else {
             homeView.profileNameLabel.text = previewPortfolioData.username
             portfolioImageCount = previewPortfolioData.userPortfolio?.portfolioImageUrl.count ?? 0
+            portfolioImageIdx = 0
+            homeView.isHidden = false
             homeEmptyView.isHidden = true
+            setPortImage()
+            homeView.pageCollectionView.reloadData()
             self.sendAmpliLog(eventName: EventName.VIEW_PREVIEW)
             return
         }
@@ -339,13 +451,19 @@ extension HomeViewController {
     private func setPortImage() {
         if !isPreview {
             if portfolioImageIdx < portfolioImageCount {
-                homeView.portImageView.kfSetImage(url: portfolioImages[portfolioImageIdx])
+                let imageUrl = portfolioImages[portfolioImageIdx]
+                ImageManager.shared.loadImage(url: imageUrl, into: homeView.portImageView)
             }
         } else {
             if portfolioImageIdx < portfolioImageCount {
                 homeView.portImageView.image = previewImages[portfolioImageIdx]
             }
         }
+    }
+    
+    private func preloadNextImages() {
+        guard !isPreview, portfolioImageCount > 0 else { return }
+        ImageManager.shared.preloadImages(urls: portfolioImages, startIndex: portfolioImageIdx)
     }
     
     private func homeList(completion: @escaping (Bool) -> Void) {
@@ -391,49 +509,84 @@ extension HomeViewController {
     }
     
     @objc private func yesButtonTapped() {
-        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
-        isProcessing = true
-        
+        guard !isProcessing else { return }
         if !isPreview {
+            guard !(recommendedPortfolios.isEmpty) else { return }
+            isProcessing = true
+            
             if !isUndo {
                 lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
             }
-            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
-                self.animateImage(status: true)
+            
+            // UI 업데이트를 즉시 수행
+            self.animateImage(status: true)
+            
+            // 백그라운드에서 네트워크 요청 처리
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                guard let self = self else { return }
+                likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.like.rawValue)) { _ in
+                    if self.isMatch {
+                        DispatchQueue.main.async {
+                            self.pushToMatch()
+                        }
+                    }
+                }
             }
+            
             UserIdentityManager.homeYes()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_YES)
         } else {
+            isProcessing = true
             self.animateImage(status: true)
         }
     }
     
     @objc private func noButtonTapped() {
-        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
-        isProcessing = true
-        
+        guard !isProcessing else { return }
         if !isPreview {
+            guard !(recommendedPortfolios.isEmpty) else { return }
+            isProcessing = true
+            
             if !isUndo {
                 lastPortfolioUser = recommendedPortfolios[recommendedPortfolioIdx]
             }
-            likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
-                self.animateImage(status: false)
+            
+            // UI 업데이트를 즉시 수행
+            self.animateImage(status: false)
+            
+            // 백그라운드에서 네트워크 요청 처리
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                guard let self = self else { return }
+                likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
+                    if self.isMatch {
+                        DispatchQueue.main.async {
+                            self.pushToMatch()
+                        }
+                    }
+                }
             }
+            
             UserIdentityManager.homeNo()
             self.sendAmpliLog(eventName: EventName.CLICK_HOME_NO)
         } else {
+            isProcessing = true
             self.animateImage(status: false)
         }
     }
     
     @objc private func undoButtonTapped() {
-        guard !isProcessing, !(recommendedPortfolios.isEmpty) else { return }
-        isProcessing = true
-        
-        isUndo = true
-        self.recommendedPortfolioIdx -= 1
-        self.animateImage(status: false)
-        self.sendAmpliLog(eventName: EventName.CLICK_HOME_REVERT)
+        guard !isProcessing else { return }
+        if !isPreview {
+            guard !(recommendedPortfolios.isEmpty) else { return }
+            isProcessing = true
+            
+            isUndo = true
+            self.animateImage(status: false)
+            self.sendAmpliLog(eventName: EventName.CLICK_HOME_REVERT)
+        } else {
+            // 프리뷰 모드에서는 undo 동작 없음
+            return
+        }
     }
     
     private func animateImage(status: Bool) {
@@ -442,34 +595,48 @@ extension HomeViewController {
         
         HapticService.impact(.heavy).run()
         
-        var transform = CGAffineTransform(translationX: offsetX, y: offsetY)
+        // 버튼을 통한 선택 시 카드 애니메이션
+        let directionMultiplier: CGFloat = status ? 1 : -1
+        let throwDistance: CGFloat = directionMultiplier * 1.5 * self.view.frame.width
+        let finalTransform = CGAffineTransform(translationX: throwDistance, y: 100)
+            .rotated(by: directionMultiplier * 0.5)
         
-        UIView.animate(withDuration: 1) {
-            transform = transform.rotated(by: status ? -(CGFloat.pi * 0.5) : (CGFloat.pi * 0.5))
-            self.homeView.portView.layer.anchorPoint = self.newAnchorPoint
-            self.homeView.portView.transform = transform
-        } completion: { _ in
-            if self.isMatch {
-                self.pushToMatch()
+        UIView.animate(withDuration: 0.5, animations: {
+            self.homeView.portView.transform = finalTransform
+        }, completion: { _ in
+            // 다음 카드를 위한 초기화
+            self.homeView.portView.transform = .identity
+            
+            if self.isPreview {
+                // 프리뷰인 경우 애니메이션 이후 다시 초기 상태로만 돌리고 종료
+                self.isAnimating = false
+                self.isProcessing = false
+                return
             }
             
-            self.homeView.portView.layer.anchorPoint = self.oldAnchorPoint
-            self.homeView.portView.transform = .identity
             if !self.isUndo {
                 self.recommendedPortfolioIdx += 1
-            }
-            if !self.isPreview{
                 self.setProfile()
-                self.isMatch = false
-                if self.isUndo {
-                    self.lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
-                }
-                self.isUndo = false
+            } else {
+                // 되돌리기 시 이전 프로필 복원
+                self.recommendedPortfolioIdx = max(0, self.recommendedPortfolioIdx - 1)
+                self.currentUserId = Int(self.recommendedPortfolios[self.recommendedPortfolioIdx].userId)
+                self.homeView.profileNameLabel.text = self.recommendedPortfolios[self.recommendedPortfolioIdx].username
+                self.portfolioImages = self.recommendedPortfolios[self.recommendedPortfolioIdx].portfolioImageUrl
+                self.portfolioImageCount = self.portfolioImages.count
+                self.portfolioImageIdx = 0
+                self.setPortImage()
+                self.homeView.pageCollectionView.reloadData()
             }
+            
+            self.isMatch = false
+            if self.isUndo {
+                self.lastPortfolioUser = PortfoliosResponseDTO(portfolioId: 0, userId: 0, username: "", portfolioImageUrl: [])
+            }
+            self.isUndo = false
             self.isAnimating = false
             self.isProcessing = false
-            self.portfolioImageIdx = 0
-        }
+        })
     }
     
     /// 쌍 방 매칭 되었을 때

@@ -52,7 +52,7 @@ final class HomeView: BaseView, HomeAmplitudeSender{
         }
         
         portImageView.do {
-            $0.contentMode = .scaleAspectFill
+            $0.contentMode = .scaleAspectFit
         }
         
         profileButton.do {
@@ -134,7 +134,9 @@ final class HomeView: BaseView, HomeAmplitudeSender{
         }
         
         portImageView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.bottom.equalToSuperview()
+            $0.leading.trailing.equalTo(profileButton)
+            $0.centerX.equalToSuperview()
         }
         
         backView.snp.makeConstraints {
