@@ -558,11 +558,9 @@ extension HomeViewController {
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                 guard let self = self else { return }
                 likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
-                    if self.isMatch {
-                        DispatchQueue.main.async {
-                            self.pushToMatch()
-                        }
-                    }
+                    // dislike인 경우에는 매치가 되지 않아야 하므로 매치 확인 로직 제거
+                    // 서버에서 잘못된 응답을 주는 경우를 방지하기 위해 isMatch를 강제로 false로 설정
+                    self.isMatch = false
                 }
             }
             
