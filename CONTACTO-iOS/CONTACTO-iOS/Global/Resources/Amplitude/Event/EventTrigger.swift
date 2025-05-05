@@ -35,6 +35,10 @@ extension EventName {
             return "탤런트 입력 뷰에서 다음 버튼 클릭 시"
         case .CLICK_ONBOARDING6_NEXT:
             return "포트폴리오 입력 뷰에서 다음 버튼 클릭 시"
+            
+        case .ERROR:
+            return "요청 실패 시"
+            
         
             
         case .VIEW_LOGIN:

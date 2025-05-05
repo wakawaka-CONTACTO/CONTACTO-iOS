@@ -22,6 +22,8 @@ public enum EventName: String {
     case CLICK_ONBOARDING5_NEXT
     case VIEW_ONBOARDING6
     case CLICK_ONBOARDING6_NEXT
+    
+    case ERROR
         
     // Login
     case VIEW_LOGIN
