@@ -138,6 +138,19 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
                     DispatchQueue.main.async {
                         self.present(alertController, animated: true, completion: nil)
                     }
+                    // todo, bodyData logs
+                    self.sendAmpliLog(eventName: EventName.ERROR, properties:
+                                        [
+                                            "email": UserInfo.shared.email,
+                                            "name": UserInfo.shared.name,
+                                            "description": UserInfo.shared.description,
+                                            "instagramId": UserInfo.shared.instagramId,
+                                            "nationality": UserInfo.shared.nationality,
+                                            "webUrl": UserInfo.shared.webUrl,
+                                            "userPurposes": UserInfo.shared.userPurposes,
+                                            "userTalents": UserInfo.shared.userTalents
+                                        ]
+                    )
                 }
                 self.portfolioOnboardingView.nextButton.isEnabled = true
             }
