@@ -11,7 +11,7 @@ import AmplitudeSwift
 public struct UserIdentityManager{
     
     static func setUserId(){
-        let userId = "\(KeychainHandler.shared.userID) - \(KeychainHandler.shared.userName)"
+        let userId = "[\(KeychainHandler.shared.userID)] \(KeychainHandler.shared.userName)"
         AmplitudeManager.amplitude.setUserId(userId: userId)
     }
     
