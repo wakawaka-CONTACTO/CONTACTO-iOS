@@ -197,7 +197,8 @@ extension SignUpViewController {
     private func changePWButton() {
         if setPWView.conditionViewLetter.isSatisfied,
            setPWView.conditionViewSpecial.isSatisfied,
-           setPWView.conditionViewNum.isSatisfied, 
+           setPWView.conditionViewNum.isSatisfied,
+           setPWView.conditionViewAlphabet.isSatisfied,
             self.pw == self.confirmPw {
             setPWView.continueButton.isEnabled = true
         } else {
@@ -254,6 +255,7 @@ extension SignUpViewController: UITextFieldDelegate {
                 setPWView.conditionViewLetter.isSatisfied = text.isMinimumLength(textField.text ?? "")
                 setPWView.conditionViewSpecial.isSatisfied = text.containsSpecialCharacter(textField.text ?? "")
                 setPWView.conditionViewNum.isSatisfied = text.containsNumber(textField.text ?? "")
+                setPWView.conditionViewAlphabet.isSatisfied = text.containsAlphabet(textField.text ?? "")
                 
                 self.pw = textField.text ?? ""
                 changePWButton()
