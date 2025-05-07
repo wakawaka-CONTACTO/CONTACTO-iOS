@@ -15,7 +15,6 @@ public struct AmplitudeManager{
         autocapture: [.sessions, .appLifecycles, .screenViews, .elementInteractions]
     )
     
-//    public static let amplitude = Amplitude(configuration: configuration)
     public static let amplitude: Amplitude = {
         let amp = Amplitude(configuration: configuration)
         amp.setUserId(userId: "Unknown")

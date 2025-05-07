@@ -69,6 +69,7 @@ final class LoginViewController: UIViewController, LoginAmplitudeSender{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationBar()
+        UserIdentityManager.setUserId(userId: KeychainHandler.shared.userID, status: "UKNOWN")
     }
     
     // MARK: UI

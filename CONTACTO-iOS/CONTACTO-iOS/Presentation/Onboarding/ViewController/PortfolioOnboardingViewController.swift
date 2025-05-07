@@ -86,10 +86,17 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
         isLoading = true
         portfolioOnboardingView.nextButton.isEnabled = false
         UserInfo.shared.portfolioImageUrl = self.portfolioItems.compactMap { $0.jpegData(compressionQuality: 0.8) }
+        
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
         let deviceType = UIDevice.current.model
         let portfolio_count = UserInfo.shared.portfolioImageUrl.count
-        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING6_NEXT, properties: ["portfolio_count" : portfolio_count])
+        let totalImageSizeBytes = UserInfo.shared.portfolioImageUrl.reduce(0) { $0 + $1.count }
+        
+        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING6_NEXT, properties: [
+            "portfolio_count": portfolio_count,
+            "portfolio_total_size_bytes": totalImageSizeBytes
+        ])
+        
         
         Messaging.messaging().token { [weak self] firebaseToken, error in
             guard let self = self else { return }

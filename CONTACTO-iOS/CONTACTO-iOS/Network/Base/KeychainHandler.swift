@@ -43,7 +43,7 @@ struct KeychainHandler {
     
     var userID: String {
         get {
-            return KeychainWrapper.standard.string(forKey: userIDKey) ?? ""
+            return KeychainWrapper.standard.string(forKey: userIDKey) ?? "Unknown User ID"
         }
         set {
             KeychainWrapper.standard.set(newValue, forKey: userIDKey)
@@ -52,7 +52,7 @@ struct KeychainHandler {
     
     var userName: String {
         get {
-            return KeychainWrapper.standard.string(forKey: userNameKey) ?? ""
+            return KeychainWrapper.standard.string(forKey: userNameKey) ?? "Unknown User"
         }
         set {
             KeychainWrapper.standard.set(newValue, forKey: userNameKey)
