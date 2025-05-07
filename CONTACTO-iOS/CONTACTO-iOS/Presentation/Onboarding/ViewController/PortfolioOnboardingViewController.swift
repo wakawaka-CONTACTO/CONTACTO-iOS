@@ -116,7 +116,9 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
                 talent: UserInfo.shared.userTalents.map { TalentType(talentType: $0) },
                 images: UserInfo.shared.portfolioImageUrl)
 
-            self.signup(bodyDTO: bodyData) { success in
+            self.signup(bodyDTO: bodyData) { [weak self] success, errorMessage in
+                guard let self = self else { return }
+
                 self.isLoading = false
                 self.hideLoadingIndicator()
                 if success {
@@ -125,19 +127,11 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
                     self.navigationController?.pushViewController(mainTabBarViewController, animated: true)
                     
                 } else {
-                    let alertController = UIAlertController(
+                    AlertManager.showAlert(
+                        on: self,
                         title: "Error",
-                        message: "회원가입에 실패했습니다. 잠시 후 다시 시도해 주세요.",
-                        preferredStyle: .alert)
-
-                    let retryAction = UIAlertAction(title: "OK", style: .default) { _ in
-                        alertController.dismiss(animated: true, completion: nil)
-                    }
-
-                    alertController.addAction(retryAction)
-                    DispatchQueue.main.async {
-                        self.present(alertController, animated: true, completion: nil)
-                    }
+                        message: errorMessage ?? "잠시 후 다시 시도해주세요."
+                    )
                     // todo, bodyData logs
                     self.sendAmpliLog(eventName: EventName.ERROR, properties:
                                         [
@@ -224,17 +218,31 @@ final class PortfolioOnboardingViewController: BaseViewController, OnboadingAmpl
         return !portfolioItems.contains(where: { $0.isEqualTo(image) }) && portfolioItems.count < 10
     }
     
-    private func signup(bodyDTO: SignUpRequestBodyDTO,completion: @escaping (Bool) -> Void) {
+    private func signup(bodyDTO: SignUpRequestBodyDTO,completion: @escaping (Bool, String?) -> Void) {
         NetworkService.shared.onboardingService.signup(bodyDTO: bodyDTO) { response in
             switch response {
             case .success(let data):
                 KeychainHandler.shared.userID = String(data.userId)
                 KeychainHandler.shared.accessToken = data.accessToken
                 KeychainHandler.shared.refreshToken = data.refreshToken
-                completion(true)
+                completion(true, nil)
+            case .failure(let error):
+                // 서버에서 온 에러 메시지 추출
+                let reason = self.extractFirstErrorReason(from: error.data!)
+                completion(false, reason)
             default:
-                completion(false)
+                completion(false, "알 수 없는 오류가 발생했습니다.")
             }
+        }
+    }
+    private func extractFirstErrorReason(from data: Data) -> String? {
+        do {
+            let decoder = JSONDecoder()
+            let serverError = try decoder.decode(ServerErrorResponse.self, from: data)
+            return serverError.errors?.first?.reason ?? serverError.message
+        } catch {
+            print("Error decoding server error: \(error)")
+            return "오류가 발생했습니다. 잠시 후 다시 시도해주세요."
         }
     }
 }
