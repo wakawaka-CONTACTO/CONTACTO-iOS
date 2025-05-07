@@ -42,8 +42,9 @@ enum StringLiterals {
         static let setPW = "Set password"
         static let resetPW = "Reset password"
         static let condition1 = "at least 8 char.".uppercased()
-        static let condition2 = "at least 1 special char.".uppercased()
+        static let condition2 = "at least 1 special char. (only @, $, !, %, *, #, ?, &)".uppercased()
         static let condition3 = "at least 1 number".uppercased()
+        static let condition4 = "At least 1 Alphabet".uppercased()
         static let confirmPW = "confirm password"
         
         static let inputName = "Input your Profile name."

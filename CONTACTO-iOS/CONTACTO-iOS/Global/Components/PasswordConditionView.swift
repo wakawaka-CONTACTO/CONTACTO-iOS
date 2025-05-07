@@ -14,6 +14,7 @@ import Then
     case letter
     case special
     case num
+    case alphabet
 }
 
 final class PasswordConditionView: UIView {
@@ -89,6 +90,8 @@ extension PasswordConditionView {
             conditionLabel.text = StringLiterals.Login.condition2
         case .num:
             conditionLabel.text = StringLiterals.Login.condition3
+        case .alphabet:
+            conditionLabel.text = StringLiterals.Login.condition4
         }
     }
 }
