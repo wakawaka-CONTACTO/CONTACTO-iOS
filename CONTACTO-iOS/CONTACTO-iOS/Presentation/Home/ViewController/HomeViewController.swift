@@ -449,14 +449,30 @@ extension HomeViewController {
     }
     
     private func setPortImage() {
-        if !isPreview {
-            if portfolioImageIdx < portfolioImageCount {
-                let imageUrl = portfolioImages[portfolioImageIdx]
-                ImageManager.shared.loadImage(url: imageUrl, into: homeView.portImageView)
-            }
-        } else {
-            if portfolioImageIdx < portfolioImageCount {
+        guard !isPreview, portfolioImageIdx < portfolioImageCount else {
+            if isPreview {
                 homeView.portImageView.image = previewImages[portfolioImageIdx]
+            }
+            return
+        }
+
+        let imageUrl = portfolioImages[portfolioImageIdx]
+        ImageManager.shared.loadImage(url: imageUrl, into: homeView.portImageView) { [weak self] image in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                if let img = image {
+                    self.homeView.portImageView.image = img
+                } else {
+                    self.homeView.portImageView.image = UIImage(named: "placeholder")
+                    let alert = UIAlertController(title: "로드 실패",
+                                                  message: "포트폴리오 이미지를 불러오지 못했습니다.",
+                                                  preferredStyle: .alert)
+                    alert.addAction(.init(title: "확인", style: .default))
+                    self.present(alert, animated: true)
+                    
+                    // self.retryLoadImage()
+                }
             }
         }
     }

@@ -125,29 +125,42 @@ final class CropImageView: UIView {
         let ratio = ratioOptions[sender.selectedSegmentIndex]
         applyRatio(ratio)
     }
-
     private func layoutCropArea() {
-        guard imageView.image != nil else { return }
+        guard let _ = imageView.image else { return }
         let imgFrame = imageDisplayFrame()
-        let boxSize: CGSize
-        let margin: CGFloat = 8
+        
         if currentRatio == "Fit" {
-            boxSize = .zero
-        } else {
-            let parts = currentRatio.split(separator: ":").compactMap { Double($0) }
-            let ratioW = CGFloat(parts[0])
-            let ratioH = CGFloat(parts[1])
-            let scale = min(imgFrame.width / ratioW,
-                            imgFrame.height / ratioH)
-            boxSize = CGSize(width: ratioW * scale,
-                             height: ratioH * scale)
+            cropAreaView.isHidden = true
+            overlayView.isHidden = true
+            return
         }
+        
+        let comps = currentRatio.split(separator: ":")
+        guard comps.count == 2,
+              let w = Double(comps[0]), w > 0,
+              let h = Double(comps[1]), h > 0
+        else {
+            print("⚠️ Invalid ratio: \(currentRatio)")
+            applyRatio("Fit")
+            return
+        }
+        
+        let ratioW = CGFloat(w)
+        let ratioH = CGFloat(h)
+        let scale = min(imgFrame.width / ratioW,
+                        imgFrame.height / ratioH)
+        let boxSize = CGSize(width: ratioW * scale,
+                             height: ratioH * scale)
+        
+        cropAreaView.isHidden = false
+        overlayView.isHidden = false
         cropAreaView.frame = CGRect(
             x: imgFrame.midX - boxSize.width / 2,
             y: imgFrame.midY - boxSize.height / 2,
             width: boxSize.width,
             height: boxSize.height
         )
+        updateOverlayMask()
     }
 
     // MARK: Pan Gesture

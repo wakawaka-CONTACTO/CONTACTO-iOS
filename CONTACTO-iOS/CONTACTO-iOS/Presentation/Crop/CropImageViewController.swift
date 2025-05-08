@@ -31,28 +31,28 @@ private final class ImageProcessor {
             width: cropFrame.width,
             height: cropFrame.height
         )
-        // 2) Scale factors
         let scaleX = image.size.width / contentFrame.width
         let scaleY = image.size.height / contentFrame.height
         // 3) Pixel-based crop rect
-        let pixelRect = CGRect(
+        var pixelRect = CGRect(
             x: relativeFrame.minX * scaleX,
             y: relativeFrame.minY * scaleY,
             width: relativeFrame.width * scaleX,
             height: relativeFrame.height * scaleY
         )
+        
+        let imageBounds = CGRect(origin: .zero, size: image.size)
+        pixelRect = pixelRect.intersection(imageBounds)
+
         let format = UIGraphicsImageRendererFormat.default()
         format.scale = image.scale
-        let renderSize = CGSize(
-            width: pixelRect.width / image.scale,
-            height: pixelRect.height / image.scale
-        )
+        
+        let renderSize = pixelRect.size
         let renderer = UIGraphicsImageRenderer(size: renderSize, format: format)
+
         return renderer.image { _ in
-            let origin = CGPoint(
-                x: -pixelRect.minX / image.scale,
-                y: -pixelRect.minY / image.scale
-            )
+            // Draw origin so that clipped region maps to canvas
+            let origin = CGPoint(x: -pixelRect.minX, y: -pixelRect.minY)
             image.draw(at: origin)
         }
     }

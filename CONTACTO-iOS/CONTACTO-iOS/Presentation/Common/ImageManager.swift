@@ -57,10 +57,12 @@ final class ImageManager {
                         completion?(value.image)
                     }
                 case .failure(let error):
+                    DispatchQueue.main.async {
                     #if DEBUG
-                    print("이미지 로딩 실패: \(error)")
+                      print("이미지 로딩 실패: \(error)")
                     #endif
-                    completion?(nil)
+                      completion?(nil)
+                    }
                 }
             }
             
