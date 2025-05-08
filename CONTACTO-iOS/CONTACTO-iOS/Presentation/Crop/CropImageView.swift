@@ -52,17 +52,16 @@ final class CropImageView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
-        applyRatio(currentRatio)
         addPanGesture()
         addPinchGesture()
-        // initial layout
+        applyRatio(currentRatio)
     }
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupSubviews()
-        applyRatio(currentRatio)
         addPanGesture()
         addPinchGesture()
+        applyRatio(currentRatio)
     }
 
     private func setupSubviews() {
@@ -106,18 +105,15 @@ final class CropImageView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        // Only update mask here (don't reset frame)
         updateOverlayMask()
     }
 
-    /// Handle ratio change and initial layout
+    // MARK: Ratio Handling
     func applyRatio(_ ratio: String) {
         currentRatio = ratio
-        // Recalculate crop frame
-        layoutCropArea()
+        layoutCropArea()  // calculate maximum for new ratio
         updateOverlayMask()
     }
-
     @objc private func ratioChanged(_ sender: UISegmentedControl) {
         let ratio = ratioOptions[sender.selectedSegmentIndex]
         applyRatio(ratio)
@@ -126,29 +122,18 @@ final class CropImageView: UIView {
     private func layoutCropArea() {
         guard imageView.image != nil else { return }
         let imgFrame = imageDisplayFrame()
-        let margin: CGFloat = 8
         let boxSize: CGSize
-        switch currentRatio {
-        case "1:1":
-            let w = imgFrame.width * 0.8
-            boxSize = CGSize(width: w, height: w)
-        case "3:4":
-            let w = imgFrame.width * 0.6
-            boxSize = CGSize(width: w, height: w * 4/3)
-        case "4:3":
-            let w = imgFrame.width * 0.8
-            boxSize = CGSize(width: w, height: w * 3/4)
-        case "9:16":
-            let w = imgFrame.width * 0.5
-            boxSize = CGSize(width: w, height: w * 16/9)
-        case "16:9":
-            let w = imgFrame.width * 0.9
-            boxSize = CGSize(width: w, height: w * 9/16)
-        case "Fit":
-            boxSize = CGSize(width: imgFrame.width - 2 * margin,
-                             height: imgFrame.height - 2 * margin)
-        default:
-            return
+        if currentRatio == "Fit" {
+            boxSize = imgFrame.size
+        } else {
+            let parts = currentRatio.split(separator: ":").compactMap { Double($0) }
+            guard parts.count == 2 else { return }
+            let ratioW = CGFloat(parts[0])
+            let ratioH = CGFloat(parts[1])
+            let scale = min(imgFrame.width / ratioW,
+                            imgFrame.height / ratioH)
+            boxSize = CGSize(width: ratioW * scale,
+                             height: ratioH * scale)
         }
         cropAreaView.frame = CGRect(
             x: imgFrame.midX - boxSize.width / 2,
@@ -158,7 +143,7 @@ final class CropImageView: UIView {
         )
     }
 
-    // MARK: - Pan Gesture
+    // MARK: Pan Gesture
     private func addPanGesture() {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         cropAreaView.addGestureRecognizer(pan)
@@ -179,7 +164,7 @@ final class CropImageView: UIView {
         updateOverlayMask()
     }
 
-    // MARK: - Pinch Gesture
+    // MARK: Pinch Gesture
     private func addPinchGesture() {
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchGesture(_:)))
         cropAreaView.addGestureRecognizer(pinch)
@@ -193,7 +178,6 @@ final class CropImageView: UIView {
         let center = CGPoint(x: currentFrame.midX, y: currentFrame.midY)
         let halfW = newWidth / 2
         let halfH = newHeight / 2
-        // Check within bounds and min size
         let isWithinBounds = newWidth >= Constants.minCropSize &&
                              newHeight >= Constants.minCropSize &&
                              center.x - halfW >= imgFrame.minX &&
@@ -212,7 +196,7 @@ final class CropImageView: UIView {
         gesture.scale = 1
     }
 
-    // MARK: - Overlay Mask
+    // MARK: Overlay Mask
     func updateOverlayMask() {
         let path = UIBezierPath(rect: overlayView.bounds)
         let frameInOverlay = overlayView.convert(cropAreaView.frame, from: self)
