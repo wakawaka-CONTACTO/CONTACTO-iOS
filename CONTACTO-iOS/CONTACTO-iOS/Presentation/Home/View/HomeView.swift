@@ -21,6 +21,7 @@ final class HomeView: BaseView, HomeAmplitudeSender{
     let backView = UIView()
     let nextView = UIView()
     let portImageView = UIImageView()
+    let bottomGradientView = UIImageView()
     
     let profileButton = UIButton()
     let profileTitle = UILabel()
@@ -85,6 +86,11 @@ final class HomeView: BaseView, HomeAmplitudeSender{
         undoButton.do {
             $0.setImage(.icUndo2, for: .normal)
         }
+        
+        bottomGradientView.do {
+            $0.image = .imgMatchGradient
+            $0.contentMode = .scaleAspectFill
+        }
     }
     
     override func setLayout() {
@@ -92,6 +98,7 @@ final class HomeView: BaseView, HomeAmplitudeSender{
         self.addSubviews(profileButton,
                          pageCollectionView,
                          portView,
+                         bottomGradientView,
                          noButton,
                          yesButton,
                          undoButton)
@@ -162,6 +169,12 @@ final class HomeView: BaseView, HomeAmplitudeSender{
         undoButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.bottom.equalTo(noButton).inset(20)
+        }
+        
+        bottomGradientView.snp.makeConstraints {
+            $0.top.equalTo(yesButton.snp.top).offset(-25)
+            $0.bottom.equalTo(yesButton.snp.bottom).inset(0)
+            $0.width.equalToSuperview()
         }
     }
 }
