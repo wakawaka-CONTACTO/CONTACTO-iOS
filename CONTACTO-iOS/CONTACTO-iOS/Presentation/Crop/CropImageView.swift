@@ -52,17 +52,17 @@ final class CropImageView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
+        applyRatio(currentRatio)
         addPanGesture()
         addPinchGesture()
         // initial layout
-        applyRatio(currentRatio)
     }
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupSubviews()
+        applyRatio(currentRatio)
         addPanGesture()
         addPinchGesture()
-        applyRatio(currentRatio)
     }
 
     private func setupSubviews() {

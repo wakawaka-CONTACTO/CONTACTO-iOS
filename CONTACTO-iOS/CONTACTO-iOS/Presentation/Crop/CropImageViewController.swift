@@ -260,13 +260,16 @@ final class CropImageViewController: UIViewController {
     }
     
     private func setupInitialState() {
-        cropView.applyRatio(cropView.ratioOptions.first!)
+        cropView.ratioControl.selectedSegmentIndex = 0
+        cropView.applyRatio(cropView.ratioOptions[0])
+
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.imageViewFrame = self.cropView.imageView.frame
             self.cropView.updateOverlayMask()
         }
     }
+
     
     // MARK: - Ratio 변경
     @objc private func ratioChanged() {
