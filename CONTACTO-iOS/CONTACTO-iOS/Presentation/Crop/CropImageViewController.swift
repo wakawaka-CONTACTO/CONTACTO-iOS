@@ -134,19 +134,29 @@ final class CropImageViewController: UIViewController {
         let ratio = cropView.ratioOptions[cropView.ratioControl.selectedSegmentIndex]
         cropView.applyRatio(ratio)
     }
-
+    	
     @objc private func cropTapped() {
         let selectedRatio = cropView.ratioOptions[cropView.ratioControl.selectedSegmentIndex]
         let result: UIImage
+
         if selectedRatio == "Fit" {
             result = imageToCrop
         } else {
+            // ① 테두리 두께 가져오기
+            let bw = cropView.cropAreaView.layer.borderWidth
+
+            // ② 원래 프레임에서 테두리만큼 안쪽으로 들여쓰기
+            let rawFrame = cropView.cropAreaView.frame
+            let insetFrame = rawFrame.insetBy(dx: bw, dy: bw)
+
+            // ③ 보정된 프레임으로 크롭
             result = ImageProcessor.crop(
                 image: imageToCrop,
-                cropFrame: cropView.cropAreaView.frame,
+                cropFrame: insetFrame,
                 contentFrame: cropView.imageDisplayFrame()
             )
         }
+
         delegate?.cropImageViewController(self, didCrop: result)
 
         if !isLastImage {
