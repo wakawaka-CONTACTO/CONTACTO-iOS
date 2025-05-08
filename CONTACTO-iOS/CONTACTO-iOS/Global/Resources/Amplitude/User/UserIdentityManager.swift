@@ -11,7 +11,7 @@ import AmplitudeSwift
 public struct UserIdentityManager{
     
     static func setUserId(){
-        let userId = "\(KeychainHandler.shared.userID) - \(KeychainHandler.shared.userName)"
+        let userId = "[\(KeychainHandler.shared.userID)] \(KeychainHandler.shared.userName)"
         AmplitudeManager.amplitude.setUserId(userId: userId)
     }
     
@@ -37,6 +37,9 @@ public struct UserIdentityManager{
     
     static func myDetailProperty(data: MyDetailResponseDTO){
         let identity = Identify()
+        let key = "\(data.id) - \(data.username)"
+        AmplitudeManager.amplitude.setUserId(userId: key)
+        
         identity.set(property: "user_email", value: data.email)
         identity.set(property: "user_name", value: data.username)
         identity.set(property: "user_description", value: data.description)

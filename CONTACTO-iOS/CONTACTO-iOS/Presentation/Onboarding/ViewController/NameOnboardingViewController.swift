@@ -110,6 +110,7 @@ extension NameOnboardingViewController {
                 self.showDuplicateNameError()
             } else {
                 UserInfo.shared.name = name
+                UserIdentityManager.setUserId(userId: name, status: "ONBOADING")
                 let purposeOnboardingViewController = PurposeOnboardingViewController()
                 self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
             }

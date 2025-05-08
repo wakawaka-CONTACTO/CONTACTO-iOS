@@ -132,12 +132,12 @@ extension SignUpViewController {
     @objc private func sendCode() {
         self.signUpView.continueButton.isEnabled = false
         self.dismissKeyboard()
-
         if self.signUpView.isHidden == false {
+            KeychainHandler.shared.userName = self.email
             self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
         }
         
-        UserIdentityManager.setUserId(userId: self.email, status: "Unknown");
+        UserIdentityManager.setUserId(userId: self.email, status: "UNKNOWN")
         
         EmailVerificationManager.shared.startVerification(
             email: self.email,
