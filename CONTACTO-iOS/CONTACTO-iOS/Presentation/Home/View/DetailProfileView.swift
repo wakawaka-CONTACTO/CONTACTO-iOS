@@ -6,9 +6,9 @@
 //
 
 import UIKit
-
 import SnapKit
 import Then
+import SkeletonView
 
 final class DetailProfileView: BaseView, DetailAmplitudeSender {
     
@@ -72,6 +72,7 @@ final class DetailProfileView: BaseView, DetailAmplitudeSender {
             $0.showsHorizontalScrollIndicator = false
             $0.tag = 0
             $0.isPagingEnabled = true
+            $0.isSkeletonable = true
         }
         
         portImageFlowLayout.do {
@@ -95,11 +96,15 @@ final class DetailProfileView: BaseView, DetailAmplitudeSender {
         nameLabel.do {
             $0.font = .fontContacto(.title3)
             $0.textColor = .ctgray6
+            $0.isSkeletonable = true
+            $0.linesCornerRadius = 4
         }
         
         nationalityLabel.do {
             $0.font = .fontContacto(.title)
             $0.textColor = .ctgray6
+            $0.isSkeletonable = true
+            $0.linesCornerRadius = 4
         }
         
         talentCollectionView.do {
@@ -108,6 +113,7 @@ final class DetailProfileView: BaseView, DetailAmplitudeSender {
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
             $0.tag = 2
+            $0.isSkeletonable = true
         }
         
         talentFlowLayout.do {
@@ -122,6 +128,8 @@ final class DetailProfileView: BaseView, DetailAmplitudeSender {
             $0.textAlignment = .left
             $0.lineBreakMode = .byCharWrapping
             $0.numberOfLines = 0
+            $0.isSkeletonable = true
+            $0.linesCornerRadius = 4
         }
         
         purposeLabel.do {
@@ -129,6 +137,8 @@ final class DetailProfileView: BaseView, DetailAmplitudeSender {
             $0.textColor = .ctgray6
             $0.font = .fontContacto(.caption6)
             $0.numberOfLines = 0
+            $0.isSkeletonable = true
+            $0.linesCornerRadius = 4
         }
         
         purposeCollectionView.do {
@@ -137,6 +147,7 @@ final class DetailProfileView: BaseView, DetailAmplitudeSender {
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
             $0.tag = 3
+            $0.isSkeletonable = true
         }
         
         purposeFlowLayout.do {
@@ -294,5 +305,27 @@ final class DetailProfileView: BaseView, DetailAmplitudeSender {
             $0.height.equalTo(blockButton.snp.height)
             $0.width.equalTo(blockButton)
         }
+    }
+    
+    // 스켈레톤 뷰를 보여주는 메서드
+    func showSkeleton() {
+        portImageCollectionView.showAnimatedGradientSkeleton()
+        nameLabel.showAnimatedGradientSkeleton()
+        nationalityLabel.showAnimatedGradientSkeleton()
+        talentCollectionView.showAnimatedGradientSkeleton()
+        descriptionLabel.showAnimatedGradientSkeleton()
+        purposeLabel.showAnimatedGradientSkeleton()
+        purposeCollectionView.showAnimatedGradientSkeleton()
+    }
+    
+    // 스켈레톤 뷰를 숨기는 메서드
+    func hideSkeleton() {
+        portImageCollectionView.hideSkeleton()
+        nameLabel.hideSkeleton()
+        nationalityLabel.hideSkeleton()
+        talentCollectionView.hideSkeleton()
+        descriptionLabel.hideSkeleton()
+        purposeLabel.hideSkeleton()
+        purposeCollectionView.hideSkeleton()
     }
 }

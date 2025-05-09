@@ -6,11 +6,11 @@
 //
 
 import UIKit
-
 import SnapKit
 import Then
+import SkeletonView
 
-final class HomeView: BaseView, HomeAmplitudeSender{
+final class HomeView: BaseView, HomeAmplitudeSender {
     lazy var pageCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: pageFlowLayout
@@ -54,6 +54,8 @@ final class HomeView: BaseView, HomeAmplitudeSender{
         
         portImageView.do {
             $0.contentMode = .scaleAspectFit
+            $0.isSkeletonable = true
+            $0.skeletonCornerRadius = 8
         }
         
         profileButton.do {
@@ -65,6 +67,7 @@ final class HomeView: BaseView, HomeAmplitudeSender{
             $0.text = StringLiterals.Home.Main.title
             $0.textColor = .ctblack
             $0.font = .fontContacto(.caption6)
+            $0.isSkeletonable = true
             $0.textAlignment = .center
         }
         
@@ -176,5 +179,17 @@ final class HomeView: BaseView, HomeAmplitudeSender{
             $0.bottom.equalTo(yesButton.snp.bottom).inset(0)
             $0.leading.trailing.equalToSuperview()
         }
+    }
+    
+    // 스켈레톤 뷰를 보여주는 메서드
+    func showSkeleton() {
+        portImageView.showAnimatedGradientSkeleton()
+        self.profileTitle.isSkeletonable = true
+    }
+    
+    // 스켈레톤 뷰를 숨기는 메서드
+    func hideSkeleton() {
+        portImageView.hideSkeleton()
+        self.profileTitle.isSkeletonable = false
     }
 }
