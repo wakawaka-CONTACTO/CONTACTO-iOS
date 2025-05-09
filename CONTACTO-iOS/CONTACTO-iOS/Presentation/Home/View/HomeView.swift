@@ -163,7 +163,7 @@ final class HomeView: BaseView, HomeAmplitudeSender{
         
         yesButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(10)
-            $0.bottom.equalTo(noButton)
+            $0.centerY.equalTo(noButton.snp.centerY)
         }
         
         undoButton.snp.makeConstraints {
@@ -174,7 +174,7 @@ final class HomeView: BaseView, HomeAmplitudeSender{
         bottomGradientView.snp.makeConstraints {
             $0.top.equalTo(yesButton.snp.top).offset(-25)
             $0.bottom.equalTo(yesButton.snp.bottom).inset(0)
-            $0.width.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
         }
     }
 }
