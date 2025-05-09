@@ -13,6 +13,7 @@
 		268244582D9E75A500919FE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 268244572D9E75A500919FE7 /* Assets.xcassets */; };
 		26D11D582D9E6DA000E59472 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 26D11D572D9E6D9D00E59472 /* Config.xcconfig */; };
 		26DEC0212D806D0B00667450 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEC0202D806D0B00667450 /* EmptyResponse.swift */; };
+		26EEC2D22DCDAA8400D1C4E1 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 26EEC2D12DCDAA8400D1C4E1 /* SkeletonView */; };
 		26FC24492DA62561003BE481 /* ProfilePurpose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26FC24482DA62561003BE481 /* ProfilePurpose.swift */; };
 		330688D32D82D7F400BD34EA /* ReportRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D22D82D7F400BD34EA /* ReportRequestBodyDTO.swift */; };
 		330688D52D82D98F00BD34EA /* ReportResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */; };
@@ -377,6 +378,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26EEC2D22DCDAA8400D1C4E1 /* SkeletonView in Frameworks */,
 				ACAC3E1F2D8413640001B069 /* FirebaseMessaging in Frameworks */,
 				ACAC3E1B2D8413640001B069 /* FirebaseAnalytics in Frameworks */,
 				C33D73CD2CDEEE7E00889B1B /* SwiftKeychainWrapper in Frameworks */,
@@ -1244,6 +1246,7 @@
 				ACAC3E1C2D8413640001B069 /* FirebaseInAppMessaging-Beta */,
 				ACAC3E1E2D8413640001B069 /* FirebaseMessaging */,
 				2633502C2D9D390300818CB9 /* AmplitudeSwift */,
+				26EEC2D12DCDAA8400D1C4E1 /* SkeletonView */,
 			);
 			productName = "CONTACTO-iOS";
 			productReference = C3FD90352C9139D40021D2BA /* CONTACTO-iOS.app */;
@@ -1280,6 +1283,7 @@
 				C32D06F32CE633260016F497 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				2633502B2D9D390300818CB9 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */,
+				26EEC2D02DCDAA8400D1C4E1 /* XCRemoteSwiftPackageReference "SkeletonView" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C3FD90362C9139D40021D2BA /* Products */;
@@ -1743,6 +1747,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		26EEC2D02DCDAA8400D1C4E1 /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.31.0;
+			};
+		};
 		ACAC3E192D84134E0001B069 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -1798,6 +1810,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2633502B2D9D390300818CB9 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */;
 			productName = AmplitudeSwift;
+		};
+		26EEC2D12DCDAA8400D1C4E1 /* SkeletonView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 26EEC2D02DCDAA8400D1C4E1 /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			productName = SkeletonView;
 		};
 		ACAC3E1A2D8413640001B069 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
