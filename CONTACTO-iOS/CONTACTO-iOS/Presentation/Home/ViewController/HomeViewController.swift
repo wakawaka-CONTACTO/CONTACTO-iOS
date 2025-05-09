@@ -101,7 +101,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationBar()
-        
+
         // DetailProfileViewController에서 돌아왔을 경우 데이터 재로드하지 않음
         if isFromProfile {
             isFromProfile = false // 플래그 리셋
@@ -144,7 +144,6 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         // 진행 중인 이미지 로딩 작업 취소
         imageLoadingTasks.forEach { $0.cancel() }
         imageLoadingTasks.removeAll()
-        
         // 캐시 정리
         imageCache.removeAllObjects()
         
@@ -455,6 +454,7 @@ extension HomeViewController {
             }
             return
         }
+        self.homeView.showSkeleton()
 
         let imageUrl = portfolioImages[portfolioImageIdx]
         ImageManager.shared.loadImage(url: imageUrl, into: homeView.portImageView) { [weak self] image in
@@ -463,6 +463,7 @@ extension HomeViewController {
                 
                 if let img = image {
                     self.homeView.portImageView.image = img
+                    self.homeView.hideSkeleton()
                 } else {
                     self.homeView.portImageView.image = UIImage(named: "placeholder")
                     let alert = UIAlertController(title: "로드 실패",

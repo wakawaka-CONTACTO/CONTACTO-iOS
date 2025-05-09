@@ -158,6 +158,21 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         }
     }
     
+    private func setData() {
+        if isPreview {
+            self.detailProfileView.blockButton.isEnabled = false
+            self.detailProfileView.reportButton.isEnabled = false
+        }
+        // 데이터 로딩 시작 시 스켈레톤 효과 표시
+        detailProfileView.showSkeleton()
+        
+        detailPort(userId: userId) { [weak self] success in
+            guard let self = self else { return }
+            // 데이터 로딩 완료 시 스켈레톤 효과 숨김
+            self.detailProfileView.hideSkeleton()
+        }
+    }
+    
     private func updatePortfolio() {
         self.talentData = self.portfolioData.userTalents.compactMap { userTalent in
             if self.isPreview {
@@ -188,14 +203,6 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         DispatchQueue.main.async {
             self.resetCollectionViewLayout()
         }
-    }
-    
-    private func setData() {
-        if isPreview {
-            self.detailProfileView.blockButton.isEnabled = false
-            self.detailProfileView.reportButton.isEnabled = false
-        }
-        detailPort(userId: userId) { _ in }
     }
     
     private func resetCollectionViewLayout() {
