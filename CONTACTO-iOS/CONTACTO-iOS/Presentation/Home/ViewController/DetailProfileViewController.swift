@@ -120,14 +120,30 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
                     self?.portfolioData = data
                     self?.updatePortfolio()
                     completion(true)
+                case .failure(let error):
+                    if error.statusCode == 404 {
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController(
+                                title: StringLiterals.Chat.Profile.notFoundUserTitle,
+                                message: StringLiterals.Chat.Profile.notFoundUserDesc,
+                                preferredStyle: .alert
+                            )
+                            let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                                self?.navigationController?.popViewController(animated: true)
+                            }
+                            alert.addAction(okAction)
+                            self?.present(alert, animated: true)
+                        }
+                    }
+                    completion(false)
                 default:
                     completion(false)
                 }
             }
         } else {
             self.updatePortfolio()
+            completion(true)
         }
-        completion(true)
     }
     
     private func blockUser(blockedUserId: Int, completion: @escaping (Bool) -> Void) {

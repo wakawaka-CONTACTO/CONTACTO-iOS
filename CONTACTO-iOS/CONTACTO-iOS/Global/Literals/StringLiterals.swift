@@ -166,6 +166,11 @@ enum StringLiterals {
             static let title = "Congratulation!"
             static let description = "We think you both have a lot in common.\nFeel free to talk comfortably."
         }
+        
+        enum Profile {
+            static let notFoundUserTitle = "User Not Found"
+            static let notFoundUserDesc = "This profile belongs to a deactivated\nor non‑existent user."
+        }
     }
     
     enum Edit {
