@@ -46,7 +46,9 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        #if DEBUG
         print("ChatList: viewDidAppear - 채팅 리스트 화면 표시됨")
+        #endif
         
         // 초기 데이터 로딩
         setData()
@@ -88,11 +90,15 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     
     private func setData() {
         let startTime = Date()
+        #if DEBUG
         print("ChatList: UI 업데이트 시작 - 시간: \(startTime)")
+        #endif
         
         // 이미 데이터를 가져오는 중이면 중복 호출 방지
         guard !isFetching else {
+            #if DEBUG
             print("ChatList: 이미 데이터 로딩 중입니다.")
+            #endif
             return
         }
         
@@ -112,7 +118,9 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
             let renderEndTime = Date()
             let renderTimeInterval = renderEndTime.timeIntervalSince(renderStartTime)
             let totalTimeInterval = renderEndTime.timeIntervalSince(startTime)
+            #if DEBUG
             print("ChatList: UI 렌더링 완료 - 렌더링 시간: \(String(format: "%.3f", renderTimeInterval))초, 총 소요시간: \(String(format: "%.3f", totalTimeInterval))초")
+            #endif
             
             if self.chatRoomListData.isEmpty {
                 self.sendAmpliLog(eventName: EventName.VIEW_EMPTY)
@@ -156,7 +164,9 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     }
     
     @objc private func refreshChatList() {
+        #if DEBUG
         print("ChatList: refreshChatList 호출됨")
+        #endif
         currentPage = 0
         chatRoomListData = []
         hasNext = true
@@ -172,13 +182,17 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         isFetching = true
 
         let startTime = Date()
+        #if DEBUG
         print("ChatList: API 호출 시작 - page: \(currentPage), 시간: \(startTime)")
+        #endif
         NetworkService.shared.chatService.chatRoomList(page: currentPage, size: pageSize) { [weak self] response in
             guard let self = self else { return }
             
             let endTime = Date()
             let timeInterval = endTime.timeIntervalSince(startTime)
+            #if DEBUG
             print("ChatList: API 응답 완료 - page: \(self.currentPage), 소요시간: \(String(format: "%.3f", timeInterval))초")
+            #endif
 
             switch response {
             case .success(let data):
@@ -187,7 +201,9 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
                 // page가 0일 때는 기존 데이터를 완전히 교체
                 if self.currentPage == 0 {
                     self.chatRoomListData = data.content
+                    #if DEBUG
                     print("ChatList: 첫 로드 데이터 개수 - \(data.content.count)")
+                    #endif
                 } else {
                     // 중복 데이터 체크 후 추가
                     let newContent = data.content.filter { newItem in
@@ -196,35 +212,49 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
                         }
                     }
                     self.chatRoomListData.append(contentsOf: newContent)
+                    #if DEBUG
                     print("ChatList: 추가 로드 데이터 개수 - \(newContent.count)")
+                    #endif
                 }
 
                 self.hasNext = data.hasNext
                 
                 let dataProcessingEndTime = Date()
                 let dataProcessingTime = dataProcessingEndTime.timeIntervalSince(dataProcessingStartTime)
+                #if DEBUG
                 print("ChatList: 데이터 처리 시간 - \(String(format: "%.3f", dataProcessingTime))초")
+                #endif
                 
                 self.isFetching = false
                 completion(true)
             case .failure(let error):
+                #if DEBUG
                 print("ChatList: API 호출 실패 - 에러: \(error)")
+                #endif
                 self.isFetching = false
                 completion(false)
             case .pathErr:
+                #if DEBUG
                 print("ChatList: API 호출 실패 - pathErr")
+                #endif
                 self.isFetching = false
                 completion(false)
             case .serverErr:
+                #if DEBUG
                 print("ChatList: API 호출 실패 - serverErr")
+                #endif
                 self.isFetching = false
                 completion(false)
             case .networkErr:
+                #if DEBUG
                 print("ChatList: API 호출 실패 - networkErr")
+                #endif
                 self.isFetching = false
                 completion(false)
             case .requestErr(let data):
+                #if DEBUG
                 print("ChatList: API 호출 실패 - requestErr: \(data)")
+                #endif
                 self.isFetching = false
                 completion(false)
             }
@@ -236,7 +266,9 @@ extension ChatListViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // 초기화 중이면 스크롤 이벤트 무시
         if isInitializing { 
+            #if DEBUG
             print("ChatList: 초기화 중이므로 스크롤 이벤트 무시")
+            #endif
             return 
         }
         
@@ -250,14 +282,18 @@ extension ChatListViewController: UICollectionViewDelegate {
             
             // 다음 페이지 요청 전에 currentPage 증가
             currentPage += 1
+            #if DEBUG
             print("ChatList: 다음 페이지 로드 시작 - page: \(currentPage)")
+            #endif
             
             chatRoomList { [weak self] success in
                 guard let self = self else { return }
                 if success {
                     DispatchQueue.main.async {
                         self.chatListView.chatListCollectionView.reloadData()
+                        #if DEBUG
                         print("ChatList: 다음 페이지 로드 완료 - 현재 데이터 개수: \(self.chatRoomListData.count)")
+                        #endif
                     }
                 }
             }
