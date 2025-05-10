@@ -43,6 +43,9 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         chatRoomListData = []
         hasNext = true
         isInitializing = true
+        
+        // 초기 데이터 로딩
+        setData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -50,10 +53,6 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         #if DEBUG
         print("ChatList: viewDidAppear - 채팅 리스트 화면 표시됨")
         #endif
-        
-        // 초기 데이터 로딩
-        setData()
-        isInitializing = false  // 초기화 완료 표시
         
         self.sendAmpliLog(eventName: EventName.VIEW_CHAT)
     }
@@ -106,6 +105,17 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         // 데이터 초기화
         if currentPage == 0 {
             chatRoomListData = []
+            
+            // 캐시된 데이터가 있으면 먼저 표시
+            if let cachedData = getCachedChatRoomList() {
+                chatRoomListData = cachedData.content
+                chatListView.chatListCollectionView.reloadData()
+                chatListView.isHidden = chatRoomListData.isEmpty
+                chatEmptyView.isHidden = !chatRoomListData.isEmpty
+                #if DEBUG
+                print("ChatList: 캐시된 데이터 표시 - 데이터 개수: \(cachedData.content.count)")
+                #endif
+            }
         }
         
         self.chatRoomList { [weak self] _ in
@@ -129,7 +139,48 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
             
             // 읽지 않은 메시지가 있는지 확인하고 탭바 아이콘 업데이트
             self.updateTabBarIcon()
+            
+            // 초기화 완료 표시
+            self.isInitializing = false
         }
+    }
+    
+    private func getCachedChatRoomList() -> PageableResponse<[ChatListResponseDTO]>? {
+        let startTime = Date()
+        #if DEBUG
+        print("🔍 [Chat] 캐시 데이터 조회 시작 - 시간: \(startTime)")
+        #endif
+        
+        guard let url = URL(string: "https://api.contacto.site/v1/users/me/chatroom") else {
+            #if DEBUG
+            print("❌ [Chat] URL 생성 실패")
+            #endif
+            return nil
+        }
+        
+        let request = URLRequest(url: url)
+        
+        if let cachedResponse = URLCache.shared.cachedResponse(for: request) {
+            do {
+                let decoder = JSONDecoder()
+                let data = try decoder.decode(PageableResponse<[ChatListResponseDTO]>.self, from: cachedResponse.data)
+                let endTime = Date()
+                #if DEBUG
+                print("✅ [Chat] 캐시 데이터 조회 성공 - 시간: \(endTime)")
+                print("⏱️ [Chat] 캐시 데이터 조회 소요시간: \(endTime.timeIntervalSince(startTime))초")
+                #endif
+                return data
+            } catch {
+                #if DEBUG
+                print("❌ [Chat] 캐시된 채팅방 리스트 디코딩 실패: \(error)")
+                #endif
+                return nil
+            }
+        }
+        #if DEBUG
+        print("ℹ️ [Chat] 캐시된 데이터 없음")
+        #endif
+        return nil
     }
     
     private func updateTabBarIcon() {
