@@ -42,6 +42,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         currentPage = 0
         chatRoomListData = []
         hasNext = true
+        isInitializing = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
