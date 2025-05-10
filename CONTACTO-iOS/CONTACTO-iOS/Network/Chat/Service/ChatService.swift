@@ -22,12 +22,14 @@ final class ChatService: APIRequestLoader<ChatTarget>, ChatServiceProtocol {
         let startTime = Date()
         print("🔄 [Chat] 채팅방 리스트 조회 시작 - 시간: \(startTime)")
         
-        // 캐시된 데이터가 있는지 확인
-        if let cachedData = getCachedChatRoomList() {
-            let cacheRenderTime = Date()
-            print("✅ [Chat] 캐시된 데이터 렌더링 - 시간: \(cacheRenderTime)")
-            print("⏱️ [Chat] 캐시 데이터 렌더링 소요시간: \(cacheRenderTime.timeIntervalSince(startTime))초")
-            completion(.success(cachedData))
+        // page가 0일 때만 캐시 확인
+        if page == 0 {
+            if let cachedData = getCachedChatRoomList() {
+                let cacheRenderTime = Date()
+                print("✅ [Chat] 캐시된 데이터 렌더링 - 시간: \(cacheRenderTime)")
+                print("⏱️ [Chat] 캐시 데이터 렌더링 소요시간: \(cacheRenderTime.timeIntervalSince(startTime))초")
+                completion(.success(cachedData))
+            }
         }
         
         // API 요청
@@ -38,8 +40,11 @@ final class ChatService: APIRequestLoader<ChatTarget>, ChatServiceProtocol {
             
             switch result {
             case .success(let data):
-                // 성공 시 캐시 업데이트
-                self?.cacheChatRoomList(data)
+                // 첫 페이지 데이터만 캐시
+                if page == 0 {
+                    self?.cacheChatRoomList(data)
+                }
+                
                 let renderTime = Date()
                 print("✅ [Chat] 새로운 데이터 렌더링 - 시간: \(renderTime)")
                 print("⏱️ [Chat] 새로운 데이터 렌더링 소요시간: \(renderTime.timeIntervalSince(responseTime))초")
