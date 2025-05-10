@@ -38,7 +38,7 @@ final class ContactoRequestInterceptor: RequestInterceptor {
             #if DEBUG
             print("🔄 [Network] 재시도 시작 - 현재 시도: \(request.retryCount + 1)/\(maxRetryCount + 1)")
             #endif
-            DispatchQueue.main.async { self.showNetworkErrorAlert() }
+//            DispatchQueue.main.async { self.showNetworkErrorAlert() }
         } else {
             #if DEBUG
             print("🔄 [Network] 재시도 중 - 현재 시도: \(request.retryCount + 1)/\(maxRetryCount + 1)")
@@ -240,16 +240,16 @@ final class ContactoRequestInterceptor: RequestInterceptor {
         }
     }
     
-    private func showNetworkErrorAlert() {
-        #if DEBUG
-        print("🔴 [Network] 네트워크 오류 발생")
-        #endif
-        
-        DispatchQueue.main.async {
-            // 토스트 메시지 표시
-            if let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
-                window.showToast(message: StringLiterals.Info.Alert.Session.networkErrorMessage, position: .middle)
-            }
-        }
-    }
+//    private func showNetworkErrorAlert() {
+//        #if DEBUG
+//        print("🔴 [Network] 네트워크 오류 발생")
+//        #endif
+//        
+//        DispatchQueue.main.async {
+//            // 토스트 메시지 표시
+//            if let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
+//                window.showToast(message: StringLiterals.Info.Alert.Session.networkErrorMessage, position: .middle)
+//            }
+//        }
+//    }
 }
