@@ -281,6 +281,7 @@ extension ChatListViewController: UICollectionViewDelegate {
             guard !isFetching && hasNext else { return }
             
             // 다음 페이지 요청 전에 currentPage 증가
+            let previousPage = currentPage
             currentPage += 1
             #if DEBUG
             print("ChatList: 다음 페이지 로드 시작 - page: \(currentPage)")
@@ -288,6 +289,13 @@ extension ChatListViewController: UICollectionViewDelegate {
             
             chatRoomList { [weak self] success in
                 guard let self = self else { return }
+                if !success {
+                    // 실패 시 페이지 롤백
+                    self.currentPage = previousPage
+                    #if DEBUG
+                    print("ChatList: API 호출 실패로 페이지 롤백 - page: \(self.currentPage)")
+                    #endif
+                }
                 if success {
                     DispatchQueue.main.async {
                         self.chatListView.chatListCollectionView.reloadData()
