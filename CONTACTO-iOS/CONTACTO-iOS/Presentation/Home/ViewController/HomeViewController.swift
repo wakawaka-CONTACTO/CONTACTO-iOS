@@ -113,17 +113,24 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
 
         setData()
         
-//        // 24시간 이내에 팝업을 닫은 적이 있는지 확인
-//        if let dismissDate = UserDefaults.standard.object(forKey: "PopupDismissDate") as? Date,
-//           dismissDate > Date() {
-//            return
-//        }
-//        
-//        // 프로모션 팝업 표시
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            let popupView = PromotionPopupView(frame: self.view.bounds)
-//            self.view.addSubview(popupView)
-//        }
+        // 24시간 이내에 팝업을 닫은 적이 있는지 확인
+        if let dismissDate = UserDefaults.standard.object(forKey: "PopupDismissDate") as? Date,
+           dismissDate > Date() {
+            return
+        }
+        
+        // 프로모션 이미지+URL 리스트 예시 (실제 데이터로 교체)
+        let promotionItems: [PromotionItem] = [
+            // PromotionItem(imageName: "contacto_contest", url: "https://acre-spool-teal.figma.site/"),
+        ]
+        
+        if !promotionItems.isEmpty {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                if let popupView = PromotionPopupView(frame: self.view.bounds, items: promotionItems) {
+                    self.view.addSubview(popupView)
+                }
+            }
+        }
         
         // 프리로딩 작업 재개를 위해 플래그 초기화
         shouldCancelPreloading = false
