@@ -49,7 +49,6 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
         super.viewWillAppear(animated)
         self.addKeyboardNotifications()
         self.setData()
-        self.registerSocket()
         self.sendAmpliLog(eventName: EventName.VIEW_CHATROOM)
         self.isInitializing = false
     }
@@ -165,6 +164,11 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
             }
             
             self.chatRoomView.setChatRoomAvailability(isAvailable: isAvailable)
+            
+            // isAvailable이 false인 경우 소켓 구독하지 않음
+            if isAvailable {
+                self.registerSocket()
+            }
         }
     }
     
