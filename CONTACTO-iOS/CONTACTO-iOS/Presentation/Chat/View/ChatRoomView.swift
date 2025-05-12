@@ -38,6 +38,7 @@ final class ChatRoomView: BaseView {
     let plusButton = UIButton()
     let messageTextView = UITextView()
     let sendButton = UIButton()
+    let unavailableLabel = UILabel()
     
     func fadeoutDisclaimer() {
         if isFirstChat {
@@ -134,6 +135,14 @@ final class ChatRoomView: BaseView {
             $0.font = .fontContacto(.subTitle)
             $0.textColor = .ctblack
         }
+        
+        unavailableLabel.do {
+            $0.text = StringLiterals.Chat.Unavailable.title
+            $0.textColor = UIColor.lightGray
+            $0.textAlignment = .center
+            $0.font = .fontContacto(.chat)
+            $0.isHidden = true
+        }
     }
     
     override func setLayout() {
@@ -149,7 +158,8 @@ final class ChatRoomView: BaseView {
         
         bottomView.addSubviews(plusButton,
                                messageTextView,
-                               sendButton)
+                               sendButton,
+                               unavailableLabel)
         
         disclaimerView.addSubviews(disclaimerTitleLabel,
                                    disclaimerDescriptionLabel)
@@ -219,9 +229,35 @@ final class ChatRoomView: BaseView {
             $0.trailing.equalTo(messageTextView)
         }
         
+        unavailableLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview().offset(-17)
+            $0.leading.trailing.equalToSuperview().inset(8)
+        }
+        
         chatRoomCollectionView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(bottomView.snp.top)
+        }
+    }
+}
+
+extension ChatRoomView {
+    func setChatRoomAvailability(isAvailable: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            if isAvailable {
+                self.sendButton.isHidden = false
+                self.plusButton.isHidden = false
+                self.messageTextView.isHidden = false
+                self.unavailableLabel.isHidden = true
+            } else {
+                self.sendButton.isHidden = true
+                self.plusButton.isHidden = true
+                self.messageTextView.isHidden = true
+                self.unavailableLabel.isHidden = false
+            }
         }
     }
 }
