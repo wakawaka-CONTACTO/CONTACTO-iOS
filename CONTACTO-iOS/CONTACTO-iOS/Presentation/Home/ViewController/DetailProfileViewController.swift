@@ -142,7 +142,6 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
             }
         } else {
             self.updatePortfolio()
-            completion(true)
         }
         completion(true)
     }
