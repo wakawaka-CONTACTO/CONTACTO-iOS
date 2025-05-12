@@ -144,6 +144,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
             self.updatePortfolio()
             completion(true)
         }
+        completion(true)
     }
     
     private func blockUser(blockedUserId: Int, completion: @escaping (Bool) -> Void) {
