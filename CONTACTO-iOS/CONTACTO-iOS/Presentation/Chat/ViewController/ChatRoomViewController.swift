@@ -135,10 +135,36 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
         } else {
             self.chatRoomView.profileImageButton.setImage(UIImage(named: "defaultProfile"), for: .normal)
         }
+        
+        // 상대 프로필 조회
+        detailPort(userId: otherUserId) { _ in }
+        
         chatMessages(isFirstLoad: true) { _ in
             self.chatRoomView.chatRoomCollectionView.reloadData()
             self.scrollToBottom()
             self.isFirstLoad = false
+        }
+    }
+    
+    private func detailPort(userId: Int, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.homeService.detailPort(userId: userId) { [weak self] response in
+            guard let self = self else { return }
+            var isAvailable = true
+            
+            switch response {
+            case .success:
+                isAvailable = true
+                completion(true)
+            case .failure(let error):
+                if error.statusCode == 404 {
+                    isAvailable = false
+                }
+                completion(false)
+            default:
+                completion(false)
+            }
+            
+            self.chatRoomView.setChatRoomAvailability(isAvailable: isAvailable)
         }
     }
     
