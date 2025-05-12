@@ -127,7 +127,6 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         
         // 프리로딩 작업 재개를 위해 플래그 초기화
         shouldCancelPreloading = false
-        
         ImageManager.shared.resumePreloading()
     }
     
@@ -451,6 +450,7 @@ extension HomeViewController {
         guard !isPreview, portfolioImageIdx < portfolioImageCount else {
             if isPreview {
                 homeView.portImageView.image = previewImages[portfolioImageIdx]
+                homeView.hideSkeleton()
             }
             return
         }

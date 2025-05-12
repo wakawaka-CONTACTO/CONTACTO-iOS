@@ -141,8 +141,8 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
                 }
             }
         } else {
+            self.detailProfileView.hideSkeleton()
             self.updatePortfolio()
-            completion(true)
         }
         completion(true)
     }
