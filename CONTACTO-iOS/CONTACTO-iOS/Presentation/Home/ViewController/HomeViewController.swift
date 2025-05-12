@@ -121,7 +121,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         
         // 프로모션 이미지+URL 리스트 예시 (실제 데이터로 교체)
         let promotionItems: [PromotionItem] = [
-            PromotionItem(imageName: "contacto_contest", url: "https://acre-spool-teal.figma.site/"),
+            // PromotionItem(imageName: "contacto_contest", url: "https://acre-spool-teal.figma.site/"),
         ]
         
         if !promotionItems.isEmpty {
