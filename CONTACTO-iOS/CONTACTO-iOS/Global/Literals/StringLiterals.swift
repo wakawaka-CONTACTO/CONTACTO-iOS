@@ -171,6 +171,10 @@ enum StringLiterals {
             static let notFoundUserTitle = "User Not Found"
             static let notFoundUserDesc = "This profile belongs to a deactivated\nor non‑existent user."
         }
+        
+        enum Unavailable {
+            static let title = "This chat room is unavailable."
+        }
     }
     
     enum Edit {

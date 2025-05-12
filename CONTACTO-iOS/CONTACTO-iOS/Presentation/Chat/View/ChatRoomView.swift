@@ -137,7 +137,7 @@ final class ChatRoomView: BaseView {
         }
         
         unavailableLabel.do {
-            $0.text = "This chat room is unavailable"
+            $0.text = StringLiterals.Chat.Unavailable.title
             $0.textColor = UIColor.lightGray
             $0.textAlignment = .center
             $0.font = .fontContacto(.chat)
