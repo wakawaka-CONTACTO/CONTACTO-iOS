@@ -377,8 +377,141 @@ extension ChatListViewController: UICollectionViewDataSource {
             withReuseIdentifier: ChatListCollectionViewCell.className,
             for: indexPath) as? ChatListCollectionViewCell else { return UICollectionViewCell() }
         cell.configCell(data: chatRoomListData[indexPath.row])
+        
+        // 탭 제스처 추가
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushToChatRoom(_:)))
+        
+        // 길게 누르기 제스처 추가
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        longPressGesture.minimumPressDuration = 0.5
+        
         cell.addGestureRecognizer(tapGesture)
+        cell.addGestureRecognizer(longPressGesture)
+        
         return cell
+    }
+}
+
+// MARK: - 채팅방 나가기 관련 메소드
+extension ChatListViewController {
+    @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            guard let cell = gesture.view as? ChatListCollectionViewCell,
+                  let indexPath = chatListView.chatListCollectionView.indexPath(for: cell) else { return }
+            
+            let chatRoom = chatRoomListData[indexPath.row]
+            showChatRoomActionSheet(for: chatRoom, at: indexPath)
+        }
+    }
+    
+    private func showChatRoomActionSheet(for chatRoom: ChatListResponseDTO, at indexPath: IndexPath) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let leaveAction = UIAlertAction(title: "채팅방 나가기", style: .destructive) { [weak self] _ in
+            self?.showLeaveChatRoomConfirmation(for: chatRoom, at: indexPath)
+        }
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        
+        actionSheet.addAction(leaveAction)
+        actionSheet.addAction(cancelAction)
+        
+        if let popoverController = actionSheet.popoverPresentationController {
+            if let cell = chatListView.chatListCollectionView.cellForItem(at: indexPath) {
+                popoverController.sourceView = cell
+                popoverController.sourceRect = cell.bounds
+            }
+        }
+        
+        present(actionSheet, animated: true)
+    }
+    
+    private func showLeaveChatRoomConfirmation(for chatRoom: ChatListResponseDTO, at indexPath: IndexPath) {
+        let alert = UIAlertController(
+            title: "채팅방 나가기",
+            message: "정말로 '\(chatRoom.title)' 채팅방을 나가시겠습니까?\n나가면 대화 내용이 모두 삭제됩니다.",
+            preferredStyle: .alert
+        )
+        
+        let confirmAction = UIAlertAction(title: "나가기", style: .destructive) { [weak self] _ in
+            self?.leaveChatRoom(chatRoom.id, at: indexPath)
+        }
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        
+        alert.addAction(confirmAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
+    }
+    
+    private func leaveChatRoom(_ roomId: Int, at indexPath: IndexPath) {
+        // 로딩 표시
+        let loadingAlert = UIAlertController(title: nil, message: "채팅방 나가는 중...", preferredStyle: .alert)
+        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = .medium
+        loadingIndicator.startAnimating()
+        
+        loadingAlert.view.addSubview(loadingIndicator)
+        present(loadingAlert, animated: true)
+        
+        NetworkService.shared.chatService.leaveChatRoom(roomId: roomId) { [weak self] result in
+            guard let self = self else { return }
+            
+            // 로딩 얼럿 닫기
+            self.dismiss(animated: true) {
+                switch result {
+                case .success(let response):
+                    if response.success {
+                        #if DEBUG
+                        print("ChatList: 채팅방 나가기 성공 - roomId: \(roomId), 메시지: \(response.message)")
+                        #endif
+                        
+                        // 성공 시 UI 업데이트
+                        DispatchQueue.main.async {
+                            // 데이터에서 해당 채팅방 제거
+                            self.chatRoomListData.remove(at: indexPath.row)
+                            
+                            // 컬렉션뷰 업데이트
+                            self.chatListView.chatListCollectionView.deleteItems(at: [indexPath])
+                            
+                            // 빈 상태 처리
+                            self.chatListView.isHidden = self.chatRoomListData.isEmpty
+                            self.chatEmptyView.isHidden = !self.chatRoomListData.isEmpty
+                            
+                            // 탭바 아이콘 업데이트
+                            self.updateTabBarIcon()
+                            
+                            // 채팅방 목록 갱신을 위한 노티피케이션 전송
+                            NotificationCenter.default.post(name: NSNotification.Name("RefreshChatList"), object: nil)
+                            
+                            // 성공 토스트 메시지 표시
+                            self.showToast(message: "채팅방에서 나갔습니다.")
+                        }
+                    } else {
+                        #if DEBUG
+                        print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId), 메시지: \(response.message)")
+                        #endif
+                        self.showErrorAlert(message: response.message)
+                    }
+                    
+                default:
+                    #if DEBUG
+                    print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId)")
+                    #endif
+                    
+                    // 실패 시 에러 메시지
+                    self.showErrorAlert(message: "채팅방 나가기에 실패했습니다. 다시 시도해주세요.")
+                }
+            }
+        }
+    }
+    
+    private func showErrorAlert(message: String) {
+        let alert = UIAlertController(title: "오류", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .default)
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
 }
