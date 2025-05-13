@@ -470,9 +470,10 @@ extension HomeViewController {
                 
                 if let img = image {
                     self.homeView.portImageView.image = img
-                    self.homeView.hideSkeleton()
                 } else {
-                    self.homeView.portImageView.image = UIImage(named: "placeholder")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.setPortImage()
+                    }
                     let alert = UIAlertController(title: "로드 실패",
                                                   message: "포트폴리오 이미지를 불러오지 못했습니다.",
                                                   preferredStyle: .alert)
@@ -481,6 +482,7 @@ extension HomeViewController {
                     
                     // self.retryLoadImage()
                 }
+                self.homeView.hideSkeleton()
             }
         }
     }
@@ -494,8 +496,19 @@ extension HomeViewController {
         NetworkService.shared.homeService.homeList { [weak self] response in
             switch response {
             case .success(let data):
-                self?.recommendedPortfolios = data
-                completion(true)
+                DispatchQueue.main.async {
+                    guard let self = self, !data.isEmpty else {
+                        completion(false)
+                        return
+                    }
+                    self.recommendedPortfolios = data
+                    self.recommendedPortfolioIdx = 0
+                    self.portfolioImages = data[0].portfolioImageUrl
+                    self.portfolioImageCount = self.portfolioImages.count
+                    self.portfolioImageIdx = 0
+                    self.homeView.pageCollectionView.reloadData()
+                    completion(true)
+                }
             default:
                 completion(false)
             }
