@@ -7,12 +7,6 @@
 
 import Foundation
 
-// ChatLeaveResponseDTO 정의
-struct ChatLeaveResponseDTO: Codable {
-    let success: Bool
-    let message: String
-}
-
 protocol ChatServiceProtocol {
     func chatRoomList(page: Int, size: Int, completion: @escaping (NetworkResult<PageableResponse<[ChatListResponseDTO]>>) -> Void)
     
