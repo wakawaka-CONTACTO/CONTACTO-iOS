@@ -25,12 +25,17 @@ protocol OnboardingServiceProtocol {
     
     func updatePwd(bodyDTO: LoginRequestBodyDTO, completion: @escaping (NetworkResult<ResetPasswordResponseDTO>) -> Void)
     
-    func validateDescription(bodyDTO: DescriptionValidationRequestDTO, completion: @escaping (NetworkResult<String>) -> Void)
-    func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
-    func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (NetworkResult<EmailValidationResponseDTO>) -> Void)
-    func validateLoginType(bodyDTO: LoginTypeValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
-    func validateUrl(bodyDTO: UrlValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
-    func validateName(bodyDTO: NameValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
+    func validateDescription(bodyDTO: DescriptionValidationRequestDTO, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
+
+    func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
+
+    func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
+
+    func validateLoginType(bodyDTO: LoginTypeValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
+
+    func validateUrl(bodyDTO: UrlValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
+
+    func validateName(bodyDTO: NameValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
 }
 
 final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingServiceProtocol {
@@ -67,24 +72,26 @@ final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingSer
         fetchData(target: .updatePwd(bodyDTO), responseData: ResetPasswordResponseDTO.self, completion: completion)
     }
  
-    func validateDescription(bodyDTO: DescriptionValidationRequestDTO, completion: @escaping (NetworkResult<String>) -> Void) {
-        fetchData(target: .validateDescription(bodyDTO), responseData: String.self, completion: completion)
+    func validateDescription(bodyDTO: DescriptionValidationRequestDTO, completion: @escaping (NetworkResult<EmptyResponse>) -> Void) {
+        fetchData(target: .validateDescription(bodyDTO), responseData: EmptyResponse.self, completion: completion)
     }
-    func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (NetworkResult<String>) -> Void) {
-        fetchData(target: .validatePassword(bodyDTO), responseData: String.self, completion: completion)
+    func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void) {
+        fetchData(target: .validatePassword(bodyDTO), responseData: EmptyResponse.self, completion: completion)
     }
     
+    func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void){
+        fetchData(target: .validateEmail(bodyDTO), responseData: EmptyResponse.self, completion: completion)
+    }
+
+    func validateLoginType(bodyDTO: LoginTypeValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void){
+        fetchData(target: .validateLoginType(bodyDTO), responseData: EmptyResponse.self, completion: completion)
+    }
+
+    func validateUrl(bodyDTO: UrlValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void){
+        fetchData(target: .validateUrl(bodyDTO), responseData: EmptyResponse.self, completion: completion)
+    }
     
-    func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (NetworkResult<EmailValidationResponseDTO>) -> Void){
-        fetchData(target: .validateEmail(bodyDTO), responseData: EmailValidationResponseDTO.self, completion: completion)
-    }
-    func validateLoginType(bodyDTO: LoginTypeValidationRequest, completion: @escaping (NetworkResult<String>) -> Void){
-        fetchData(target: .validateLoginType(bodyDTO), responseData: String.self, completion: completion)
-    }
-    func validateUrl(bodyDTO: UrlValidationRequest, completion: @escaping (NetworkResult<String>) -> Void){
-        fetchData(target: .validateUrl(bodyDTO), responseData: String.self, completion: completion)
-    }
-    func validateName(bodyDTO: NameValidationRequest, completion: @escaping (NetworkResult<String>) -> Void){
-        fetchData(target: .validateName(bodyDTO), responseData: String.self, completion: completion)
+    func validateName(bodyDTO: NameValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void){
+        fetchData(target: .validateName(bodyDTO), responseData: EmptyResponse.self, completion: completion)
     }
 }
