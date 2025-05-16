@@ -27,6 +27,10 @@ protocol OnboardingServiceProtocol {
     
     func validateDescription(bodyDTO: DescriptionValidationRequestDTO, completion: @escaping (NetworkResult<String>) -> Void)
     func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
+    func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
+    func validateLoginType(bodyDTO: LoginTypeValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
+    func validateUrl(bodyDTO: UrlValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
+    func validateName(bodyDTO: NameValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
 }
 
 final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingServiceProtocol {
@@ -68,5 +72,19 @@ final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingSer
     }
     func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (NetworkResult<String>) -> Void) {
         fetchData(target: .validatePassword(bodyDTO), responseData: String.self, completion: completion)
+    }
+    
+    
+    func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (NetworkResult<String>) -> Void){
+        fetchData(target: .validateEmail(bodyDTO), responseData: String.self, completion: completion)
+    }
+    func validateLoginType(bodyDTO: LoginTypeValidationRequest, completion: @escaping (NetworkResult<String>) -> Void){
+        fetchData(target: .validateLoginType(bodyDTO), responseData: String.self, completion: completion)
+    }
+    func validateUrl(bodyDTO: UrlValidationRequest, completion: @escaping (NetworkResult<String>) -> Void){
+        fetchData(target: .validateUrl(bodyDTO), responseData: String.self, completion: completion)
+    }
+    func validateName(bodyDTO: NameValidationRequest, completion: @escaping (NetworkResult<String>) -> Void){
+        fetchData(target: .validateName(bodyDTO), responseData: String.self, completion: completion)
     }
 }
