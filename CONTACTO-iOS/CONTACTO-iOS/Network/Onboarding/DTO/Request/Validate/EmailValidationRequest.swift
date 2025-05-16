@@ -1,0 +1,12 @@
+//
+//  EmailValidationRequest.swift
+//  CONTACTO-iOS
+//
+//  Created by 장아령 on 5/16/25.
+//
+
+import Foundation
+
+struct EmailValidationRequest: Codable {
+    let email: String
+}
