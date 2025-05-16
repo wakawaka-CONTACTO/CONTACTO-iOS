@@ -20,6 +20,11 @@ enum OnboardingTarget {
     case updatePwd(_ bodyDTO: LoginRequestBodyDTO)
     case validateDescription(_ bodyDTO: DescriptionValidationRequestDTO)
     case validatePassword(_ bodyDTO: PasswordValidationRequest)
+    case validateEmail(_ bodyDTO: EmailValidationRequest)
+    case validateInstagram(_ bodyDTO: InstagramValidationRequest)
+    case validateLoginType(_ bodyDTO: LoginTypeValidationRequest)
+    case validateName(_ bodyDTO: NameValidationRequest)
+    case validateUrl(_ bodyDTO: UrlValidationRequest)
 }
 
 extension OnboardingTarget: TargetType {
@@ -41,7 +46,7 @@ extension OnboardingTarget: TargetType {
             return .unauthorization
         case .updatePwd(_):
             return .unauthorization
-        case .validateDescription(_), .validatePassword(_):
+        case .validateDescription(_), .validatePassword(_), .validateEmail(_), .validateInstagram(_), .validateLoginType(_), .validateName(_), .validateUrl(_):
             return .unauthorization
 
         }
@@ -65,7 +70,7 @@ extension OnboardingTarget: TargetType {
             return .plain
         case .updatePwd(_):
             return .plain
-        case .validateDescription(_), .validatePassword(_):
+        case .validateDescription(_), .validatePassword(_), .validateEmail(_), .validateInstagram(_), .validateLoginType(_), .validateName(_), .validateUrl(_):
             return .plain
         }
     }
@@ -88,7 +93,7 @@ extension OnboardingTarget: TargetType {
             return .get
         case .updatePwd(_):
             return .patch
-        case .validateDescription(_), .validatePassword(_):
+        case .validateDescription(_), .validatePassword(_), .validateEmail(_), .validateInstagram(_), .validateLoginType(_), .validateName(_), .validateUrl(_):
             return .post
         }
     }
@@ -112,9 +117,19 @@ extension OnboardingTarget: TargetType {
         case .updatePwd:
             return "/v1/users/me/pwd"
         case .validateDescription:
-            return "/validate/description"
+            return "/v1/users/validate/description"
         case .validatePassword:
-            return "/validate/password"
+            return "/v1/users/validate/password"
+        case .validateEmail(_):
+            return "/v1/users/validate/email"
+        case .validateInstagram(_):
+            return "/v1/users/validate/instagram"
+        case .validateLoginType(_):
+            return "/v1/users/validate/loginType"
+        case .validateName(_):
+            return "/v1/users/validate/name"
+        case .validateUrl(_):
+            return "/v1/users/validate/url"
         }
     }
     
@@ -139,6 +154,16 @@ extension OnboardingTarget: TargetType {
         case .validateDescription(let bodyDTO):
             return .requestWithBody(bodyDTO)
         case .validatePassword(let bodyDTO):
+            return .requestWithBody(bodyDTO)
+        case  .validateUrl(let bodyDTO):
+            return .requestWithBody(bodyDTO)
+        case  .validateName(let bodyDTO):
+            return .requestWithBody(bodyDTO)
+        case  .validateLoginType(let bodyDTO):
+            return .requestWithBody(bodyDTO)
+        case  .validateInstagram(let bodyDTO):
+            return .requestWithBody(bodyDTO)
+        case  .validateEmail(let bodyDTO):
             return .requestWithBody(bodyDTO)
         }
     }
