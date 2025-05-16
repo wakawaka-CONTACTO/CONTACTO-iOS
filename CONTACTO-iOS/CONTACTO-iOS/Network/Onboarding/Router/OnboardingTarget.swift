@@ -19,6 +19,7 @@ enum OnboardingTarget {
     case emailExist(_ queryDTO: EmailExistRequestQueryDTO)
     case updatePwd(_ bodyDTO: LoginRequestBodyDTO)
     case validateDescription(_ bodyDTO: DescriptionValidationRequestDTO)
+    case validatePassword(_ bodyDTO: PasswordValidationRequest)
 }
 
 extension OnboardingTarget: TargetType {
@@ -40,8 +41,9 @@ extension OnboardingTarget: TargetType {
             return .unauthorization
         case .updatePwd(_):
             return .unauthorization
-        case .validateDescription(_):
+        case .validateDescription(_), .validatePassword(_):
             return .unauthorization
+
         }
     }
     
@@ -63,7 +65,7 @@ extension OnboardingTarget: TargetType {
             return .plain
         case .updatePwd(_):
             return .plain
-        case .validateDescription(_):
+        case .validateDescription(_), .validatePassword(_):
             return .plain
         }
     }
@@ -86,7 +88,7 @@ extension OnboardingTarget: TargetType {
             return .get
         case .updatePwd(_):
             return .patch
-        case .validateDescription(_):
+        case .validateDescription(_), .validatePassword(_):
             return .post
         }
     }
@@ -111,6 +113,8 @@ extension OnboardingTarget: TargetType {
             return "/v1/users/me/pwd"
         case .validateDescription:
             return "/validate/description"
+        case .validatePassword:
+            return "/validate/password"
         }
     }
     
@@ -133,6 +137,8 @@ extension OnboardingTarget: TargetType {
         case .updatePwd(let bodyDTO):
             return .requestWithBody(bodyDTO)
         case .validateDescription(let bodyDTO):
+            return .requestWithBody(bodyDTO)
+        case .validatePassword(let bodyDTO):
             return .requestWithBody(bodyDTO)
         }
     }
