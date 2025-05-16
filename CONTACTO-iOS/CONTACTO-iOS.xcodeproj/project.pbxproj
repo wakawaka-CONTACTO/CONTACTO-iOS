@@ -356,6 +356,11 @@
 			path = Amplitude;
 			sourceTree = "<group>";
 		};
+		267DA2F52DD6F3C400B62D4D /* Validate */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Validate;
+			sourceTree = "<group>";
+		};
 		26889EFC2DB731240022A3C1 /* Managers */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Managers;
@@ -516,6 +521,7 @@
 		C33D73E32CDEF08F00889B1B /* Request */ = {
 			isa = PBXGroup;
 			children = (
+				267DA2F52DD6F3C400B62D4D /* Validate */,
 				C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */,
 				C33D73E52CDEF0A900889B1B /* LoginRequestBodyDTO.swift */,
 				C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */,
@@ -1231,6 +1237,7 @@
 				261111FB2D895D8000D481E2 /* PortfolioItem */,
 				2627990F2DB9F44E00C4CAF5 /* Crop */,
 				263350202D9D352E00818CB9 /* Amplitude */,
+				267DA2F52DD6F3C400B62D4D /* Validate */,
 				26889EFC2DB731240022A3C1 /* Managers */,
 				26B59E7E2D96408A00B4E01B /* DTO */,
 				26BBF5E62D8432830089E60C /* Alert */,
