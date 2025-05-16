@@ -400,54 +400,32 @@ extension ChatListViewController {
                   let indexPath = chatListView.chatListCollectionView.indexPath(for: cell) else { return }
             
             let chatRoom = chatRoomListData[indexPath.row]
-            showChatRoomActionSheet(for: chatRoom, at: indexPath)
+            showLeaveChatRoomConfirmation(for: chatRoom, at: indexPath)
         }
-    }
-    
-    private func showChatRoomActionSheet(for chatRoom: ChatListResponseDTO, at indexPath: IndexPath) {
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        let leaveAction = UIAlertAction(title: "채팅방 나가기", style: .destructive) { [weak self] _ in
-            self?.showLeaveChatRoomConfirmation(for: chatRoom, at: indexPath)
-        }
-        
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        
-        actionSheet.addAction(leaveAction)
-        actionSheet.addAction(cancelAction)
-        
-        if let popoverController = actionSheet.popoverPresentationController {
-            if let cell = chatListView.chatListCollectionView.cellForItem(at: indexPath) {
-                popoverController.sourceView = cell
-                popoverController.sourceRect = cell.bounds
-            }
-        }
-        
-        present(actionSheet, animated: true)
     }
     
     private func showLeaveChatRoomConfirmation(for chatRoom: ChatListResponseDTO, at indexPath: IndexPath) {
         let alert = UIAlertController(
-            title: "채팅방 나가기",
-            message: "정말로 '\(chatRoom.title)' 채팅방을 나가시겠습니까?\n나가면 대화 내용이 모두 삭제됩니다.",
+            title: "Leave chatroom",
+            message: "Do you want to leave Chatroom?",
             preferredStyle: .alert
         )
         
-        let confirmAction = UIAlertAction(title: "나가기", style: .destructive) { [weak self] _ in
+        let yesAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
             self?.leaveChatRoom(chatRoom.id, at: indexPath)
         }
+        let noAction = UIAlertAction(title: "No", style: .destructive)
         
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        
-        alert.addAction(confirmAction)
-        alert.addAction(cancelAction)
+        // Yes(파랑)가 왼쪽, No(빨강)가 오른쪽
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
         
         present(alert, animated: true)
     }
     
     private func leaveChatRoom(_ roomId: Int, at indexPath: IndexPath) {
         // 로딩 표시
-        let loadingAlert = UIAlertController(title: nil, message: "채팅방 나가는 중...", preferredStyle: .alert)
+        let loadingAlert = UIAlertController(title: nil, message: "Leaving...", preferredStyle: .alert)
         let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
         loadingIndicator.hidesWhenStopped = true
         loadingIndicator.style = .medium
@@ -465,7 +443,7 @@ extension ChatListViewController {
                 case .success(let response):
                     if response.success {
                         #if DEBUG
-                        print("ChatList: 채팅방 나가기 성공 - roomId: \(roomId), 메시지: \(response.message)")
+                        print("ChatList: 채팅방 나가기 성공 - roomId: \(roomId)")
                         #endif
                         
                         // 성공 시 UI 업데이트
@@ -491,17 +469,27 @@ extension ChatListViewController {
                         }
                     } else {
                         #if DEBUG
-                        print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId), 메시지: \(response.message)")
+                        print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId)")
                         #endif
-                        self.showErrorAlert(message: response.message)
+                        self.showErrorAlert(message: "채팅방 나가기에 실패했습니다. 다시 시도해주세요.")
                     }
-                    
-                default:
+                    return // 추가: 성공 또는 실패 처리 후 여기서 종료
+                case .failure(let error):
                     #if DEBUG
-                    print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId)")
+                    print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId), 오류: \(error)")
                     #endif
+                    self.showErrorAlert(message: "채팅방 나가기에 실패했습니다. 다시 시도해주세요.")
                     
-                    // 실패 시 에러 메시지
+                case .pathErr, .serverErr, .networkErr:
+                    #if DEBUG
+                    print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId), 서버 또는 네트워크 오류")
+                    #endif
+                    self.showErrorAlert(message: "서버 연결에 문제가 있습니다. 잠시 후 다시 시도해주세요.")
+                    
+                case .requestErr(let data):
+                    #if DEBUG
+                    print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId), 요청 오류: \(data)")
+                    #endif
                     self.showErrorAlert(message: "채팅방 나가기에 실패했습니다. 다시 시도해주세요.")
                 }
             }

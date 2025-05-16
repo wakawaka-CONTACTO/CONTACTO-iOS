@@ -85,7 +85,7 @@ final class ChatService: APIRequestLoader<ChatTarget>, ChatServiceProtocol {
             switch result {
             case .success(let data):
                 #if DEBUG
-                print("✅ [Chat] 채팅방 나가기 성공: \(data.message)")
+                print("✅ [Chat] 채팅방 나가기 성공")
                 #endif
                 completion(.success(data))
             case .failure(let error):
