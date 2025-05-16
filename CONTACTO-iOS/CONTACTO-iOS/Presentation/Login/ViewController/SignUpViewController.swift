@@ -167,6 +167,44 @@ extension SignUpViewController {
         }
     }
 
+    private func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.validatePassword(bodyDTO: bodyDTO) { response in
+            switch response {
+            case .success:
+                // 200 응답을 받으면 성공으로 처리
+                DispatchQueue.main.async {
+                    completion(true)
+                }
+            case .failure(let error):
+                // 400, 404 등의 에러 응답을 받은 경우
+                DispatchQueue.main.async {
+                    let alertController = UIAlertController(
+                        title: "Error",
+                        message: "비밀번호는 8자 이상이며, 영문자, 숫자, 특수문자(@,$,!,%,*,#,?,&) 를 포함해야 합니다",
+                        preferredStyle: .alert
+                    )
+                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: true, completion: nil)
+                    completion(false)
+                }
+            default:
+                // 기타 에러의 경우
+                DispatchQueue.main.async {
+                    let alertController = UIAlertController(
+                        title: "Error",
+                        message: "서버 오류가 발생했습니다. 다시 시도해주세요.",
+                        preferredStyle: .alert
+                    )
+                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: true, completion: nil)
+                    completion(false)
+                }
+            }
+        }
+    }
+
     @objc private func sendCode() {
         self.signUpView.continueButton.isEnabled = false
         self.dismissKeyboard()
@@ -234,12 +272,17 @@ extension SignUpViewController {
     }
     
     @objc private func pwContinueButton() {
-        UserInfo.shared.email = self.email
-        UserInfo.shared.password = self.pw
-        let validateRequest = PasswordValidationRequest(password: self.pw) // todo: send password validate
-        
-        let nameOnboardingViewController = NameOnboardingViewController()
-        view.window?.rootViewController = UINavigationController(rootViewController: nameOnboardingViewController)
+        let validateRequest = PasswordValidationRequest(password: self.pw)
+        validatePassword(bodyDTO: validateRequest) { [weak self] isValid in
+            guard let self = self else { return }
+            
+            if isValid {
+                UserInfo.shared.email = self.email
+                UserInfo.shared.password = self.pw
+                let nameOnboardingViewController = NameOnboardingViewController()
+                self.view.window?.rootViewController = UINavigationController(rootViewController: nameOnboardingViewController)
+            }
+        }
     }
     
     private func changePWButton() {
