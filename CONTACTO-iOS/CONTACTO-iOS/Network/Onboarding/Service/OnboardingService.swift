@@ -27,7 +27,7 @@ protocol OnboardingServiceProtocol {
     
     func validateDescription(bodyDTO: DescriptionValidationRequestDTO, completion: @escaping (NetworkResult<String>) -> Void)
     func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
-    func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
+    func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (NetworkResult<EmailValidationResponseDTO>) -> Void)
     func validateLoginType(bodyDTO: LoginTypeValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
     func validateUrl(bodyDTO: UrlValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
     func validateName(bodyDTO: NameValidationRequest, completion: @escaping (NetworkResult<String>) -> Void)
@@ -75,8 +75,8 @@ final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingSer
     }
     
     
-    func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (NetworkResult<String>) -> Void){
-        fetchData(target: .validateEmail(bodyDTO), responseData: String.self, completion: completion)
+    func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (NetworkResult<EmailValidationResponseDTO>) -> Void){
+        fetchData(target: .validateEmail(bodyDTO), responseData: EmailValidationResponseDTO.self, completion: completion)
     }
     func validateLoginType(bodyDTO: LoginTypeValidationRequest, completion: @escaping (NetworkResult<String>) -> Void){
         fetchData(target: .validateLoginType(bodyDTO), responseData: String.self, completion: completion)
