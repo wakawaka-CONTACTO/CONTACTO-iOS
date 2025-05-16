@@ -104,15 +104,25 @@ extension NameOnboardingViewController {
             return
         }
         
-        // 이름 중복 확인
-        checkNameExists(bodyDTO: SignInHelpRequestBodyDTO(userName: name)) { isExists in
-            if isExists {
-                self.showDuplicateNameError()
-            } else {
-                UserInfo.shared.name = name
-                UserIdentityManager.setUserId(userId: name, status: "ONBOADING")
-                let purposeOnboardingViewController = PurposeOnboardingViewController()
-                self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+        // 이름 유효성 검사
+        NetworkService.shared.onboardingService.validateName(bodyDTO: NameValidationRequest(name: name)) { response in
+            switch response {
+            case .success:
+                // 이름 유효성 검사 성공 시 중복 확인
+                self.checkNameExists(bodyDTO: SignInHelpRequestBodyDTO(userName: name)) { isExists in
+                    if isExists {
+                        self.showDuplicateNameError()
+                    } else {
+                        UserInfo.shared.name = name
+                        UserIdentityManager.setUserId(userId: name, status: "ONBOADING")
+                        let purposeOnboardingViewController = PurposeOnboardingViewController()
+                        self.navigationController?.pushViewController(purposeOnboardingViewController, animated: true)
+                    }
+                }
+            case .failure:
+                self.showInvalidNameAlert()
+            default:
+                self.showInvalidNameAlert()
             }
         }
     }
