@@ -139,12 +139,12 @@ extension SignUpViewController {
             case .failure:
                 // 400, 404 등의 에러 응답을 받은 경우
                 DispatchQueue.main.async {
-                    self.showValidationError(message: StringLiterals.Onboarding.Error.invalidEmail)
+                    self.showValidationError(message: StringLiterals.Error.invalidEmail)
                     completion(false)
                 }
             default:
                 DispatchQueue.main.async {
-                    self.showValidationError(message: StringLiterals.Onboarding.Error.serverError)
+                    self.showValidationError(message: StringLiterals.Error.serverError)
                     completion(false)
                 }
             }
@@ -161,12 +161,12 @@ extension SignUpViewController {
             case .failure:
                 // 400, 404 등의 에러 응답을 받은 경우
                 DispatchQueue.main.async {
-                    self.showValidationError(message: StringLiterals.Onboarding.Error.invalidPassword)
+                    self.showValidationError(message: StringLiterals.Error.invalidPassword)
                     completion(false)
                 }
             default:
                 DispatchQueue.main.async {
-                    self.showValidationError(message: StringLiterals.Onboarding.Error.serverError)
+                    self.showValidationError(message: StringLiterals.Error.serverError)
                     completion(false)
                 }
             }
