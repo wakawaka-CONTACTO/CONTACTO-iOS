@@ -133,34 +133,18 @@ extension SignUpViewController {
         NetworkService.shared.onboardingService.validateEmail(bodyDTO: bodyDTO) { response in
             switch response {
             case .success:
-                // 200 응답을 받으면 성공으로 처리
                 DispatchQueue.main.async {
                     completion(true)
                 }
-            case .failure(let error):
+            case .failure:
                 // 400, 404 등의 에러 응답을 받은 경우
                 DispatchQueue.main.async {
-                    let alertController = UIAlertController(
-                        title: "Error",
-                        message: "유효하지 않은 이메일입니다.",
-                        preferredStyle: .alert
-                    )
-                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                    alertController.addAction(okAction)
-                    self.present(alertController, animated: true, completion: nil)
+                    self.showValidationError(message: StringLiterals.Onboarding.Error.invalidEmail)
                     completion(false)
                 }
             default:
-                // 기타 에러의 경우
                 DispatchQueue.main.async {
-                    let alertController = UIAlertController(
-                        title: "Error",
-                        message: "서버 오류가 발생했습니다. 다시 시도해주세요.",
-                        preferredStyle: .alert
-                    )
-                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                    alertController.addAction(okAction)
-                    self.present(alertController, animated: true, completion: nil)
+                    self.showValidationError(message: StringLiterals.Onboarding.Error.serverError)
                     completion(false)
                 }
             }
@@ -171,38 +155,33 @@ extension SignUpViewController {
         NetworkService.shared.onboardingService.validatePassword(bodyDTO: bodyDTO) { response in
             switch response {
             case .success:
-                // 200 응답을 받으면 성공으로 처리
                 DispatchQueue.main.async {
                     completion(true)
                 }
             case .failure:
                 // 400, 404 등의 에러 응답을 받은 경우
                 DispatchQueue.main.async {
-                    let alertController = UIAlertController(
-                        title: "Error",
-                        message: "비밀번호는 8자 이상이며, 영문자, 숫자, 특수문자(@,$,!,%,*,#,?,&) 를 포함해야 합니다",
-                        preferredStyle: .alert
-                    )
-                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                    alertController.addAction(okAction)
-                    self.present(alertController, animated: true, completion: nil)
+                    self.showValidationError(message: StringLiterals.Onboarding.Error.invalidPassword)
                     completion(false)
                 }
             default:
-                // 기타 에러의 경우
                 DispatchQueue.main.async {
-                    let alertController = UIAlertController(
-                        title: "Error",
-                        message: "서버 오류가 발생했습니다. 다시 시도해주세요.",
-                        preferredStyle: .alert
-                    )
-                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                    alertController.addAction(okAction)
-                    self.present(alertController, animated: true, completion: nil)
+                    self.showValidationError(message: StringLiterals.Onboarding.Error.serverError)
                     completion(false)
                 }
             }
         }
+    }
+    
+    private func showValidationError(message: String) {
+        let alertController = UIAlertController(
+            title: "Error",
+            message: message,
+            preferredStyle: .alert
+        )
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
     }
 
     @objc private func sendCode() {
