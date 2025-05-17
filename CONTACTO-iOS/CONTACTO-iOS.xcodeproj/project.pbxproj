@@ -19,6 +19,7 @@
 		330688D52D82D98F00BD34EA /* ReportResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */; };
 		33185B092D79A6A200B508A3 /* PageableResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B082D79A6A200B508A3 /* PageableResponse.swift */; };
 		33185B0B2D7B1E6B00B508A3 /* PageableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */; };
+		332AB28C2DD72EEE00E237AA /* EmailValidationResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 332AB28B2DD72EEE00E237AA /* EmailValidationResponseDTO.swift */; };
 		333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */; };
 		333BD1662DC0807B00A9C2E9 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333BD1652DC0807B00A9C2E9 /* ImageManager.swift */; };
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
@@ -187,6 +188,7 @@
 		330688D42D82D98F00BD34EA /* ReportResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportResponseDTO.swift; sourceTree = "<group>"; };
 		33185B082D79A6A200B508A3 /* PageableResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableResponse.swift; sourceTree = "<group>"; };
 		33185B0A2D7B1E6B00B508A3 /* PageableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageableRequest.swift; sourceTree = "<group>"; };
+		332AB28B2DD72EEE00E237AA /* EmailValidationResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailValidationResponseDTO.swift; sourceTree = "<group>"; };
 		333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockResponseDTO.swift; sourceTree = "<group>"; };
 		333BD1652DC0807B00A9C2E9 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
@@ -356,6 +358,11 @@
 			path = Amplitude;
 			sourceTree = "<group>";
 		};
+		267DA2F52DD6F3C400B62D4D /* Validate */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Validate;
+			sourceTree = "<group>";
+		};
 		26889EFC2DB731240022A3C1 /* Managers */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Managers;
@@ -516,6 +523,7 @@
 		C33D73E32CDEF08F00889B1B /* Request */ = {
 			isa = PBXGroup;
 			children = (
+				267DA2F52DD6F3C400B62D4D /* Validate */,
 				C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */,
 				C33D73E52CDEF0A900889B1B /* LoginRequestBodyDTO.swift */,
 				C34C1F592CE39C5200F94BCD /* EmailCheckRequestBodyDTO.swift */,
@@ -529,6 +537,7 @@
 		C33D73E42CDEF09600889B1B /* Response */ = {
 			isa = PBXGroup;
 			children = (
+				332AB28B2DD72EEE00E237AA /* EmailValidationResponseDTO.swift */,
 				C30C2E472CF2FA2000FAE056 /* SignUpResponseDTO.swift */,
 				C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */,
 				C33DCF892CFDF483009072C4 /* ResetPasswordResponseDTO.swift */,
@@ -1231,6 +1240,7 @@
 				261111FB2D895D8000D481E2 /* PortfolioItem */,
 				2627990F2DB9F44E00C4CAF5 /* Crop */,
 				263350202D9D352E00818CB9 /* Amplitude */,
+				267DA2F52DD6F3C400B62D4D /* Validate */,
 				26889EFC2DB731240022A3C1 /* Managers */,
 				26B59E7E2D96408A00B4E01B /* DTO */,
 				26BBF5E62D8432830089E60C /* Alert */,
@@ -1423,6 +1433,7 @@
 				C37A28DE2CB417BE004BC6AE /* EditViewController.swift in Sources */,
 				C33D73EA2CDEF14600889B1B /* HomeService.swift in Sources */,
 				C35E26492C9D2F4400B197CB /* MatchView.swift in Sources */,
+				332AB28C2DD72EEE00E237AA /* EmailValidationResponseDTO.swift in Sources */,
 				338F7E742DA3815300442048 /* AppVersionCheck.swift in Sources */,
 				C3F21FF02CE9CA39005C4CA2 /* HapticService.swift in Sources */,
 				C35E26432C9D10B800B197CB /* ProfileImageCollectionViewCell.swift in Sources */,
