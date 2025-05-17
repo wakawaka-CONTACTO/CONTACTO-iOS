@@ -8,5 +8,5 @@
 import Foundation
 
 struct LoginTypeValidationRequest: Codable {
-    let LoginType: String
+    let loginType: String
 }

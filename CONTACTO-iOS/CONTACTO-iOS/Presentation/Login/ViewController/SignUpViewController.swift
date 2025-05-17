@@ -175,7 +175,7 @@ extension SignUpViewController {
                 DispatchQueue.main.async {
                     completion(true)
                 }
-            case .failure(let error):
+            case .failure:
                 // 400, 404 등의 에러 응답을 받은 경우
                 DispatchQueue.main.async {
                     let alertController = UIAlertController(
