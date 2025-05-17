@@ -13,6 +13,7 @@ enum ChatTarget {
     case chatRoomList(_ page: Int, _ size: Int)
     case chatRoomMessage(_ roomId: Int)
     case chatMessage(_ roomId: Int, _ page: Int, _ size: Int)
+    case leaveChatRoom(_ roomId: Int)
     
 }
 
@@ -25,6 +26,8 @@ extension ChatTarget: TargetType {
             return .authorization
         case .chatMessage(_, _, _):
             return .authorization
+        case .leaveChatRoom(_):
+            return .authorization
         }
     }
     
@@ -35,6 +38,8 @@ extension ChatTarget: TargetType {
         case .chatRoomMessage(_):
             return .hasToken
         case .chatMessage(_, _, _):
+            return .hasToken
+        case .leaveChatRoom(_):
             return .hasToken
         }
     }
@@ -47,6 +52,8 @@ extension ChatTarget: TargetType {
             return .get
         case .chatMessage(_, _, _):
             return .get
+        case .leaveChatRoom(_):
+            return .delete
         }
     }
     
@@ -58,6 +65,8 @@ extension ChatTarget: TargetType {
             return "/v1/users/me/chatroom/\(roomId)"
         case .chatMessage(let roomId, _, _):
             return "/v1/users/me/chatroom/\(roomId)/messages"
+        case .leaveChatRoom(let roomId):
+            return "/v1/chat/rooms/\(roomId)/participants/me"
         }
     }
     
@@ -70,6 +79,8 @@ extension ChatTarget: TargetType {
         case .chatMessage(_, let page, let size):
             let query = PageableRequest(page: page, size: size, sort: "createdAt,desc")
             return .requestQuery(query)
+        case .leaveChatRoom(_):
+            return .requestPlain
         }
     }
 }
