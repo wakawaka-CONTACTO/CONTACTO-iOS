@@ -89,7 +89,7 @@ extension ExplainOnboardingViewController {
     
     @objc private func nextButtonTapped() {
         let description = explainOnboardingView.explainTextView.text ?? ""
-                let requestDTO = DescriptionValidationRequestDTO(description: description)
+                let requestDTO = DescriptionValidationRequest(description: description)
                 
                 NetworkService.shared.onboardingService.validateDescription(bodyDTO: requestDTO) { [weak self] result in
                     guard let self = self else { return }

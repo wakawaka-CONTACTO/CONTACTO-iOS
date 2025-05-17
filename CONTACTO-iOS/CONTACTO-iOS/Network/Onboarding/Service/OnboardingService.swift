@@ -25,7 +25,7 @@ protocol OnboardingServiceProtocol {
     
     func updatePwd(bodyDTO: LoginRequestBodyDTO, completion: @escaping (NetworkResult<ResetPasswordResponseDTO>) -> Void)
     
-    func validateDescription(bodyDTO: DescriptionValidationRequestDTO, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
+    func validateDescription(bodyDTO: DescriptionValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
 
     func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
 
@@ -72,7 +72,7 @@ final class OnboardingService: APIRequestLoader<OnboardingTarget>, OnboardingSer
         fetchData(target: .updatePwd(bodyDTO), responseData: ResetPasswordResponseDTO.self, completion: completion)
     }
  
-    func validateDescription(bodyDTO: DescriptionValidationRequestDTO, completion: @escaping (NetworkResult<EmptyResponse>) -> Void) {
+    func validateDescription(bodyDTO: DescriptionValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void) {
         fetchData(target: .validateDescription(bodyDTO), responseData: EmptyResponse.self, completion: completion)
     }
     func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (NetworkResult<EmptyResponse>) -> Void) {

@@ -18,7 +18,7 @@ enum OnboardingTarget {
     case reissue
     case emailExist(_ queryDTO: EmailExistRequestQueryDTO)
     case updatePwd(_ bodyDTO: LoginRequestBodyDTO)
-    case validateDescription(_ bodyDTO: DescriptionValidationRequestDTO)
+    case validateDescription(_ bodyDTO: DescriptionValidationRequest)
     case validatePassword(_ bodyDTO: PasswordValidationRequest)
     case validateEmail(_ bodyDTO: EmailValidationRequest)
     case validateInstagram(_ bodyDTO: InstagramValidationRequest)
