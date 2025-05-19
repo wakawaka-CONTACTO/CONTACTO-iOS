@@ -377,6 +377,7 @@ extension ChatListViewController: UICollectionViewDataSource {
             withReuseIdentifier: ChatListCollectionViewCell.className,
             for: indexPath) as? ChatListCollectionViewCell else { return UICollectionViewCell() }
         cell.configCell(data: chatRoomListData[indexPath.row])
+        cell.delegate = self
         
         // 탭 제스처 추가
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushToChatRoom(_:)))
@@ -501,5 +502,15 @@ extension ChatListViewController {
         let okAction = UIAlertAction(title: "확인", style: .default)
         alert.addAction(okAction)
         present(alert, animated: true)
+    }
+}
+
+// MARK: - ChatListCollectionViewCellDelegate 구현
+extension ChatListViewController: ChatListCollectionViewCellDelegate {
+    func chatListCellDidRequestLeave(_ cell: ChatListCollectionViewCell, chatRoomId: Int) {
+        guard let indexPath = chatListView.chatListCollectionView.indexPath(for: cell) else { return }
+        let chatRoom = chatRoomListData[indexPath.row]
+        // 기존과 동일하게 나가기 처리
+        showLeaveChatRoomConfirmation(for: chatRoom, at: indexPath)
     }
 }
