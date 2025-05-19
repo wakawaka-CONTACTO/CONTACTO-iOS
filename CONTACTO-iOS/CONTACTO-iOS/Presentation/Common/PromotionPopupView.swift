@@ -1,15 +1,10 @@
 import UIKit
 import SafariServices
-
-struct PromotionItem {
-    let imageName: String
-    let url: String
-}
+import Kingfisher
 
 final class PromotionPopupView: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PromotionImageCellDelegate {
-    
     // MARK: - Properties
-    private let items: [PromotionItem]
+    private let items: [PopupResponseDTO]
     private var currentIndex: Int = 0 {
         didSet {
             updateArrowButtons()
@@ -75,8 +70,10 @@ final class PromotionPopupView: UIView, UICollectionViewDataSource, UICollection
         return button
     }()
     
+    private var containerHeightConstraint: NSLayoutConstraint?
+    
     // MARK: - Lifecycle
-    init?(frame: CGRect, items: [PromotionItem]) {
+    init?(frame: CGRect, items: [PopupResponseDTO]) {
         guard !items.isEmpty else { return nil }
         self.items = items
         super.init(frame: frame)
@@ -96,25 +93,23 @@ final class PromotionPopupView: UIView, UICollectionViewDataSource, UICollection
             containerView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
+        let heightConstraint = containerView.heightAnchor.constraint(equalToConstant: 400)
+        containerHeightConstraint = heightConstraint
         NSLayoutConstraint.activate([
             containerView.centerXAnchor.constraint(equalTo: centerXAnchor),
             containerView.centerYAnchor.constraint(equalTo: centerYAnchor),
             containerView.widthAnchor.constraint(equalToConstant: 300),
-            containerView.heightAnchor.constraint(equalToConstant: 400),
-            
+            heightConstraint,
             collectionView.topAnchor.constraint(equalTo: containerView.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: dismissButton.topAnchor, constant: -10),
-            
             dismissButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -15),
             dismissButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            
             leftArrowButton.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor),
             leftArrowButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
             leftArrowButton.widthAnchor.constraint(equalToConstant: 28),
             leftArrowButton.heightAnchor.constraint(equalToConstant: 28),
-            
             rightArrowButton.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor),
             rightArrowButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
             rightArrowButton.widthAnchor.constraint(equalToConstant: 28),
@@ -136,7 +131,19 @@ final class PromotionPopupView: UIView, UICollectionViewDataSource, UICollection
             return UICollectionViewCell()
         }
         let item = items[indexPath.item]
-        cell.configure(with: item.imageName)
+        cell.configure(with: item.imageUrl) { [weak self] imageSize in
+            guard let self = self, let imageSize = imageSize else { return }
+            let popupWidth: CGFloat = 300
+            let aspectRatio = imageSize.height / imageSize.width
+            let minHeight: CGFloat = 200
+            let maxHeight: CGFloat = 500
+            let contentHeight = popupWidth * aspectRatio + 60 // 버튼 등 여유
+            let newHeight = min(max(contentHeight, minHeight), maxHeight)
+            DispatchQueue.main.async {
+                self.containerHeightConstraint?.constant = newHeight
+                self.layoutIfNeeded()
+            }
+        }
         cell.delegate = self
         return cell
     }
@@ -144,7 +151,7 @@ final class PromotionPopupView: UIView, UICollectionViewDataSource, UICollection
     // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = items[indexPath.item]
-        guard let url = URL(string: item.url) else { return }
+        guard let url = URL(string: item.siteUrl) else { return }
         let safariViewController = SFSafariViewController(url: url)
         if let topVC = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController {
             var presentedVC = topVC
@@ -169,7 +176,7 @@ final class PromotionPopupView: UIView, UICollectionViewDataSource, UICollection
     func promotionImageCellDidTap(_ cell: PromotionImageCell) {
         if let indexPath = collectionView.indexPath(for: cell) {
             let item = items[indexPath.item]
-            guard let url = URL(string: item.url) else { return }
+            guard let url = URL(string: item.siteUrl) else { return }
             let safariViewController = SFSafariViewController(url: url)
             if let topVC = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController {
                 var presentedVC = topVC
@@ -220,7 +227,7 @@ class PromotionImageCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .clear
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         contentView.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -236,12 +243,20 @@ class PromotionImageCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func configure(with imageName: String) {
-        if let image = UIImage(named: imageName) {
-            imageView.image = image
+    func configure(with imageUrl: String, completion: ((CGSize?) -> Void)? = nil) {
+        if let url = URL(string: imageUrl) {
+            imageView.kf.setImage(with: url, placeholder: nil, options: nil) { result in
+                switch result {
+                case .success(let value):
+                    completion?(value.image.size)
+                default:
+                    completion?(nil)
+                }
+            }
         } else {
             imageView.backgroundColor = .gray
             imageView.image = nil
+            completion?(nil)
         }
     }
     @objc private func imageTapped() {
