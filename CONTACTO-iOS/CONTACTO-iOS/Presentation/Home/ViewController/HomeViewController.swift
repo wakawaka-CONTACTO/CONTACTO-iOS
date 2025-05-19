@@ -125,9 +125,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
             case .success(let popupList):
                 guard let popupList = popupList, !popupList.isEmpty else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    if let popupView = PromotionPopupView(frame: self.view.bounds, items: popupList) {
-                        self.view.addSubview(popupView)
-                    }
+                    PromotionPopupView.showIfNeeded(on: self.view, items: popupList)
                 }
             default:
                 break

@@ -215,6 +215,14 @@ final class PromotionPopupView: UIView, UICollectionViewDataSource, UICollection
         rightArrowButton.isEnabled = currentIndex < items.count - 1
         rightArrowButton.alpha = currentIndex < items.count - 1 ? 1.0 : 0.3
     }
+    
+    // MARK: - Only one popup
+    static func showIfNeeded(on parent: UIView, items: [PopupResponseDTO]) {
+        let alreadyExists = parent.subviews.contains { $0 is PromotionPopupView }
+        if !alreadyExists, let popup = PromotionPopupView(frame: parent.bounds, items: items) {
+            parent.addSubview(popup)
+        }
+    }
 }
 
 protocol PromotionImageCellDelegate: AnyObject {
