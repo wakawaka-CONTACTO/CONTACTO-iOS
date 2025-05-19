@@ -378,6 +378,11 @@
 			path = Alert;
 			sourceTree = "<group>";
 		};
+		AC7B66232DDB011B00356E5F /* Popup */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Popup;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1087,6 +1092,7 @@
 		C3FD905E2C9142D70021D2BA /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				AC7B66232DDB011B00356E5F /* Popup */,
 				ACFE3D212D9FDB0900F14592 /* Alarm */,
 				C33D73D82CDEEEF800889B1B /* Base */,
 				C33D73DB2CDEEFF400889B1B /* Onboarding */,
@@ -1244,6 +1250,7 @@
 				26889EFC2DB731240022A3C1 /* Managers */,
 				26B59E7E2D96408A00B4E01B /* DTO */,
 				26BBF5E62D8432830089E60C /* Alert */,
+				AC7B66232DDB011B00356E5F /* Popup */,
 			);
 			name = "CONTACTO-iOS";
 			packageProductDependencies = (
