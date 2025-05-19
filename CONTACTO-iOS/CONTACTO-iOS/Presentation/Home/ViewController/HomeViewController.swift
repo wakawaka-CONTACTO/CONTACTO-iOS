@@ -101,7 +101,7 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationBar()
-        
+
         // DetailProfileViewController에서 돌아왔을 경우 데이터 재로드하지 않음
         if isFromProfile {
             isFromProfile = false // 플래그 리셋
@@ -113,21 +113,27 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
 
         setData()
         
-//        // 24시간 이내에 팝업을 닫은 적이 있는지 확인
-//        if let dismissDate = UserDefaults.standard.object(forKey: "PopupDismissDate") as? Date,
-//           dismissDate > Date() {
-//            return
-//        }
-//        
-//        // 프로모션 팝업 표시
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            let popupView = PromotionPopupView(frame: self.view.bounds)
-//            self.view.addSubview(popupView)
-//        }
+        // 24시간 이내에 팝업을 닫은 적이 있는지 확인
+        if let dismissDate = UserDefaults.standard.object(forKey: "PopupDismissDate") as? Date,
+           dismissDate > Date() {
+            return
+        }
+        
+        // 프로모션 이미지+URL 리스트 예시 (실제 데이터로 교체)
+        let promotionItems: [PromotionItem] = [
+            // PromotionItem(imageName: "contacto_contest", url: "https://acre-spool-teal.figma.site/"),
+        ]
+        
+        if !promotionItems.isEmpty {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                if let popupView = PromotionPopupView(frame: self.view.bounds, items: promotionItems) {
+                    self.view.addSubview(popupView)
+                }
+            }
+        }
         
         // 프리로딩 작업 재개를 위해 플래그 초기화
         shouldCancelPreloading = false
-        
         ImageManager.shared.resumePreloading()
     }
     
@@ -144,7 +150,6 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
         // 진행 중인 이미지 로딩 작업 취소
         imageLoadingTasks.forEach { $0.cancel() }
         imageLoadingTasks.removeAll()
-        
         // 캐시 정리
         imageCache.removeAllObjects()
         
@@ -449,14 +454,35 @@ extension HomeViewController {
     }
     
     private func setPortImage() {
-        if !isPreview {
-            if portfolioImageIdx < portfolioImageCount {
-                let imageUrl = portfolioImages[portfolioImageIdx]
-                ImageManager.shared.loadImage(url: imageUrl, into: homeView.portImageView)
-            }
-        } else {
-            if portfolioImageIdx < portfolioImageCount {
+        guard !isPreview, portfolioImageIdx < portfolioImageCount else {
+            if isPreview {
                 homeView.portImageView.image = previewImages[portfolioImageIdx]
+                homeView.hideSkeleton()
+            }
+            return
+        }
+        self.homeView.showSkeleton()
+
+        let imageUrl = portfolioImages[portfolioImageIdx]
+        ImageManager.shared.loadImage(url: imageUrl, into: homeView.portImageView) { [weak self] image in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                if let img = image {
+                    self.homeView.portImageView.image = img
+                } else {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.setPortImage()
+                    }
+                    let alert = UIAlertController(title: "로드 실패",
+                                                  message: "포트폴리오 이미지를 불러오지 못했습니다.",
+                                                  preferredStyle: .alert)
+                    alert.addAction(.init(title: "확인", style: .default))
+                    self.present(alert, animated: true)
+                    
+                    // self.retryLoadImage()
+                }
+                self.homeView.hideSkeleton()
             }
         }
     }
@@ -470,8 +496,19 @@ extension HomeViewController {
         NetworkService.shared.homeService.homeList { [weak self] response in
             switch response {
             case .success(let data):
-                self?.recommendedPortfolios = data
-                completion(true)
+                DispatchQueue.main.async {
+                    guard let self = self, !data.isEmpty else {
+                        completion(false)
+                        return
+                    }
+                    self.recommendedPortfolios = data
+                    self.recommendedPortfolioIdx = 0
+                    self.portfolioImages = data[0].portfolioImageUrl
+                    self.portfolioImageCount = self.portfolioImages.count
+                    self.portfolioImageIdx = 0
+                    self.homeView.pageCollectionView.reloadData()
+                    completion(true)
+                }
             default:
                 completion(false)
             }
@@ -558,11 +595,9 @@ extension HomeViewController {
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                 guard let self = self else { return }
                 likeOrDislike(bodyDTO: LikeRequestBodyDTO(likedUserId: currentUserId, status: LikeStatus.dislike.rawValue)) { _ in
-                    if self.isMatch {
-                        DispatchQueue.main.async {
-                            self.pushToMatch()
-                        }
-                    }
+                    // dislike인 경우에는 매치가 되지 않아야 하므로 매치 확인 로직 제거
+                    // 서버에서 잘못된 응답을 주는 경우를 방지하기 위해 isMatch를 강제로 false로 설정
+                    self.isMatch = false
                 }
             }
             

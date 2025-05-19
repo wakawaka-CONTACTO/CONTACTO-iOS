@@ -39,6 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             UserIdentityManager.agreePushNotification(isAgree: isPushAgreed)
         }
+        _ = AmplitudeManager.amplitude
         
         return true
     }

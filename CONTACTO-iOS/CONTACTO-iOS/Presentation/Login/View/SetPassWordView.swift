@@ -18,6 +18,7 @@ final class SetPassWordView: BaseView, LoginAmplitudeSender {
     let conditionViewLetter = PasswordConditionView(state: .letter)
     let conditionViewSpecial = PasswordConditionView(state: .special)
     let conditionViewNum = PasswordConditionView(state: .num)
+    let conditionViewAlphabet = PasswordConditionView(state: .alphabet)
     let confirmTextField = LoginBaseTextField(state: .pw)
     let continueButton = UIButton()
 
@@ -59,6 +60,7 @@ final class SetPassWordView: BaseView, LoginAmplitudeSender {
                     conditionViewLetter,
                     conditionViewSpecial,
                     conditionViewNum,
+                    conditionViewAlphabet,
                     confirmTextField,
                     continueButton)
         
@@ -96,8 +98,13 @@ final class SetPassWordView: BaseView, LoginAmplitudeSender {
             $0.leading.equalTo(conditionViewSpecial)
         }
         
+        conditionViewAlphabet.snp.makeConstraints {
+            $0.top.equalTo(conditionViewNum.snp.bottom)
+            $0.leading.equalTo(conditionViewNum)
+        }
+        
         confirmTextField.snp.makeConstraints {
-            $0.top.equalTo(conditionViewNum.snp.bottom).offset(12.adjustedHeight)
+            $0.top.equalTo(conditionViewAlphabet.snp.bottom).offset(12.adjustedHeight)
             $0.leading.trailing.equalToSuperview().inset(37.adjustedWidth)
             $0.height.equalTo(34.adjustedHeight)
         }

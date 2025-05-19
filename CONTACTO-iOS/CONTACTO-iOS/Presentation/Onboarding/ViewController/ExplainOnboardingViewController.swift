@@ -88,11 +88,33 @@ extension ExplainOnboardingViewController {
     }
     
     @objc private func nextButtonTapped() {
-        UserInfo.shared.description = explainOnboardingView.explainTextView.text ?? ""
-        sendAmpliLog(eventName: EventName.CLICK_ONBOARDING3_NEXT)
-        let SNSOnboardingViewController = SNSOnboardingViewController()
-        self.navigationController?.pushViewController(SNSOnboardingViewController, animated: true)
-    }
+        let description = explainOnboardingView.explainTextView.text ?? ""
+                let requestDTO = DescriptionValidationRequest(description: description)
+                
+                NetworkService.shared.onboardingService.validateDescription(bodyDTO: requestDTO) { [weak self] result in
+                    guard let self = self else { return }
+                    
+                    switch result {
+                    case .success:
+                        UserInfo.shared.description = description
+                        self.sendAmpliLog(eventName: EventName.CLICK_ONBOARDING3_NEXT)
+                        let SNSOnboardingViewController = SNSOnboardingViewController()
+                        self.navigationController?.pushViewController(SNSOnboardingViewController, animated: true)
+                        
+                    case .failure(let error):
+                        if let data = error.data,
+                           let errorResponse = try? JSONDecoder().decode(ErrorResponse<[String]>.self, from: data) {
+                            let translatedMessage = ErrorCodeTranslator.shared.translate(errorResponse.code)
+                            self.showAlert(title: "오류", message: translatedMessage)
+                        } else {
+                            self.showAlert(title: "오류", message: "설명 검증에 실패했습니다.")
+                        }
+                        
+                    default:
+                        self.showAlert(title: "오류", message: "설명 검증에 실패했습니다.")
+                    }
+                }
+            }
 }
 
 extension ExplainOnboardingViewController: UIGestureRecognizerDelegate {

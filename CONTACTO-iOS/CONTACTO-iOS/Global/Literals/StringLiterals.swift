@@ -42,8 +42,9 @@ enum StringLiterals {
         static let setPW = "Set password"
         static let resetPW = "Reset password"
         static let condition1 = "at least 8 char.".uppercased()
-        static let condition2 = "at least 1 special char.".uppercased()
+        static let condition2 = "at least 1 special char. (only @, $, !, %, *, #, ?, &)".uppercased()
         static let condition3 = "at least 1 number".uppercased()
+        static let condition4 = "At least 1 Alphabet".uppercased()
         static let confirmPW = "confirm password"
         
         static let inputName = "Input your Profile name."
@@ -98,6 +99,12 @@ enum StringLiterals {
         enum Nationality {
             static let title = "NATIONALITY"
         }
+    }
+    
+    enum Error {
+        static let invalidEmail = "유효하지 않은 이메일입니다."
+        static let invalidPassword = "비밀번호는 8자 이상이며, 영문자, 숫자, 특수문자(@,$,!,%,*,#,?,&) 를 포함해야 합니다"
+        static let serverError = "서버 오류가 발생했습니다. 다시 시도해주세요."
     }
     
     enum Home {
@@ -164,6 +171,15 @@ enum StringLiterals {
         enum Disclaimer {
             static let title = "Congratulation!"
             static let description = "We think you both have a lot in common.\nFeel free to talk comfortably."
+        }
+        
+        enum Profile {
+            static let notFoundUserTitle = "User Not Found"
+            static let notFoundUserDesc = "This profile belongs to a deactivated\nor non‑existent user."
+        }
+        
+        enum Unavailable {
+            static let title = "This chat room is unavailable."
         }
     }
     

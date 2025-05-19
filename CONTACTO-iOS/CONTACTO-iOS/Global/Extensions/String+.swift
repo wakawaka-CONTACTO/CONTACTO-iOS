@@ -104,4 +104,11 @@ extension String {
         let numberPredicate = NSPredicate(format: "SELF MATCHES %@", numberRegex)
         return numberPredicate.evaluate(with: password)
     }
+
+    /// 비밀번호 알파벳 하나 이상 포함
+    func containsAlphabet(_ password: String) -> Bool {
+        let alphabetRegex = ".*[a-zA-Z].*"
+        let alphabetPredicate = NSPredicate(format: "SELF MATCHES %@", alphabetRegex)
+        return alphabetPredicate.evaluate(with: password)
+    }
 }

@@ -129,31 +129,95 @@ final class SignUpViewController: UIViewController, LoginAmplitudeSender {
 }
 
 extension SignUpViewController {
+    private func validateEmail(bodyDTO: EmailValidationRequest, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.validateEmail(bodyDTO: bodyDTO) { response in
+            switch response {
+            case .success:
+                DispatchQueue.main.async {
+                    completion(true)
+                }
+            case .failure:
+                // 400, 404 등의 에러 응답을 받은 경우
+                DispatchQueue.main.async {
+                    self.showValidationError(message: StringLiterals.Error.invalidEmail)
+                    completion(false)
+                }
+            default:
+                DispatchQueue.main.async {
+                    self.showValidationError(message: StringLiterals.Error.serverError)
+                    completion(false)
+                }
+            }
+        }
+    }
+
+    private func validatePassword(bodyDTO: PasswordValidationRequest, completion: @escaping (Bool) -> Void) {
+        NetworkService.shared.onboardingService.validatePassword(bodyDTO: bodyDTO) { response in
+            switch response {
+            case .success:
+                DispatchQueue.main.async {
+                    completion(true)
+                }
+            case .failure:
+                // 400, 404 등의 에러 응답을 받은 경우
+                DispatchQueue.main.async {
+                    self.showValidationError(message: StringLiterals.Error.invalidPassword)
+                    completion(false)
+                }
+            default:
+                DispatchQueue.main.async {
+                    self.showValidationError(message: StringLiterals.Error.serverError)
+                    completion(false)
+                }
+            }
+        }
+    }
+    
+    private func showValidationError(message: String) {
+        let alertController = UIAlertController(
+            title: "Error",
+            message: message,
+            preferredStyle: .alert
+        )
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
     @objc private func sendCode() {
         self.signUpView.continueButton.isEnabled = false
         self.dismissKeyboard()
-
-        if self.signUpView.isHidden == false {
-            self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
-        }
-        
-        UserIdentityManager.setUserId(userId: self.email, status: "Unknown");
-        
-        EmailVerificationManager.shared.startVerification(
-            email: self.email,
-            purpose: .signup
-        ) { [weak self] success, _ in
-            DispatchQueue.main.async {
-                if success {
-                    self?.signUpView.isHidden = true
-                    self?.emailCodeView.isHidden = false
-                    self?.setPWView.isHidden = true
-                    self?.emailCodeView.startTimer()
-                    self?.emailCodeView.setStatus()
-                } else {
-                    self?.signUpView.mainTextField.isError = true
-                    self?.signUpView.continueButton.isEnabled = true
-                    self?.emailCodeView.setFail()
+        validateEmail(bodyDTO: EmailValidationRequest(email: self.email)) { [weak self] isValid in
+            guard let self = self else { return }
+            
+            if !isValid {
+                self.signUpView.continueButton.isEnabled = true
+                return
+            }
+            
+            if self.signUpView.isHidden == false {
+                KeychainHandler.shared.userName = self.email
+                self.sendAmpliLog(eventName: EventName.CLICK_SIGNUP_CONTINUE)
+            }
+            
+            UserIdentityManager.setUserId(userId: self.email, status: "UNKNOWN")
+            
+            EmailVerificationManager.shared.startVerification(
+                email: self.email,
+                purpose: .signup
+            ) { [weak self] success, _ in
+                DispatchQueue.main.async {
+                    if success {
+                        self?.signUpView.isHidden = true
+                        self?.emailCodeView.isHidden = false
+                        self?.setPWView.isHidden = true
+                        self?.emailCodeView.startTimer()
+                        self?.emailCodeView.setStatus()
+                    } else {
+                        self?.signUpView.mainTextField.isError = true
+                        self?.signUpView.continueButton.isEnabled = true
+                        self?.emailCodeView.setFail()
+                    }
                 }
             }
         }
@@ -187,17 +251,24 @@ extension SignUpViewController {
     }
     
     @objc private func pwContinueButton() {
-        UserInfo.shared.email = self.email
-        UserInfo.shared.password = self.pw
-        
-        let nameOnboardingViewController = NameOnboardingViewController()
-        view.window?.rootViewController = UINavigationController(rootViewController: nameOnboardingViewController)
+        let validateRequest = PasswordValidationRequest(password: self.pw)
+        validatePassword(bodyDTO: validateRequest) { [weak self] isValid in
+            guard let self = self else { return }
+            
+            if isValid {
+                UserInfo.shared.email = self.email
+                UserInfo.shared.password = self.pw
+                let nameOnboardingViewController = NameOnboardingViewController()
+                self.view.window?.rootViewController = UINavigationController(rootViewController: nameOnboardingViewController)
+            }
+        }
     }
     
     private func changePWButton() {
         if setPWView.conditionViewLetter.isSatisfied,
            setPWView.conditionViewSpecial.isSatisfied,
-           setPWView.conditionViewNum.isSatisfied, 
+           setPWView.conditionViewNum.isSatisfied,
+           setPWView.conditionViewAlphabet.isSatisfied,
             self.pw == self.confirmPw {
             setPWView.continueButton.isEnabled = true
         } else {
@@ -254,6 +325,7 @@ extension SignUpViewController: UITextFieldDelegate {
                 setPWView.conditionViewLetter.isSatisfied = text.isMinimumLength(textField.text ?? "")
                 setPWView.conditionViewSpecial.isSatisfied = text.containsSpecialCharacter(textField.text ?? "")
                 setPWView.conditionViewNum.isSatisfied = text.containsNumber(textField.text ?? "")
+                setPWView.conditionViewAlphabet.isSatisfied = text.containsAlphabet(textField.text ?? "")
                 
                 self.pw = textField.text ?? ""
                 changePWButton()

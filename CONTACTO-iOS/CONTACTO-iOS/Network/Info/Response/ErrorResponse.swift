@@ -13,3 +13,16 @@ struct ErrorResponse<T: Decodable>: Decodable {
     let code: String
     let errors: T?
 }
+
+struct FieldError: Decodable {
+    let field: String
+    let value: String
+    let reason: String
+}
+
+struct ServerErrorResponse: Decodable {
+    let status: String
+    let message: String
+    let code: String
+    let errors: [FieldError]?
+}
