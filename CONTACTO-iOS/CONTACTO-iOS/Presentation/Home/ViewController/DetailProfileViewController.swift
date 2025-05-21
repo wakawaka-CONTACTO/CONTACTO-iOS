@@ -368,7 +368,50 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     }
 }
 
-extension DetailProfileViewController: UICollectionViewDelegate { }
+
+extension DetailProfileViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard collectionView == detailProfileView.portImageCollectionView else { return }
+
+        if isPreview {
+            // 이미지 배열이 이미 존재할 때
+            let fullscreenVC = FullscreenImagePagingViewController()
+            fullscreenVC.modalPresentationStyle = .fullScreen
+            fullscreenVC.images = imagePreviewDummy
+            fullscreenVC.startIndex = indexPath.row
+            present(fullscreenVC, animated: true)
+        } else {
+            // URL → UIImage 변환 후 전체화면 뷰어 띄우기
+            let urls = imageArray
+            var uiImages: [UIImage?] = Array(repeating: nil, count: urls.count)
+            let group = DispatchGroup()
+
+            for (i, urlStr) in urls.enumerated() {
+                guard let url = URL(string: urlStr) else { continue }
+                group.enter()
+                KingfisherManager.shared.retrieveImage(with: url) { result in
+                    switch result {
+                    case .success(let value):
+                        uiImages[i] = value.image
+                    default:
+                        uiImages[i] = UIImage()
+                    }
+                    group.leave()
+                }
+            }
+
+            group.notify(queue: .main) {
+                let validImages = uiImages.compactMap { $0 }
+                let fullscreenVC = FullscreenImagePagingViewController()
+                fullscreenVC.modalPresentationStyle = .fullScreen
+                fullscreenVC.images = validImages
+                fullscreenVC.startIndex = indexPath.row
+                self.present(fullscreenVC, animated: true)
+            }
+        }
+    }
+
+}
 
 extension DetailProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -390,11 +433,44 @@ extension DetailProfileViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfileImageCollectionViewCell.className,
                 for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
+
             if !isPreview {
                 cell.portImageView.kfSetImage(url: imageArray[indexPath.row], width: Int(SizeLiterals.Screen.screenWidth))
             } else {
                 cell.portImageView.image = imagePreviewDummy[indexPath.row]
             }
+
+            cell.onImageTapped = { [weak self] in
+                guard let self = self else { return }
+
+                if self.isPreview {
+                    self.presentFullscreenImageViewer(images: self.imagePreviewDummy, startIndex: indexPath.row)
+                } else {
+                    let urls = self.imageArray
+                    var uiImages: [UIImage?] = Array(repeating: nil, count: urls.count)
+                    let group = DispatchGroup()
+
+                    for (i, urlStr) in urls.enumerated() {
+                        guard let url = URL(string: urlStr) else { continue }
+                        group.enter()
+                        KingfisherManager.shared.retrieveImage(with: url) { result in
+                            switch result {
+                            case .success(let value):
+                                uiImages[i] = value.image
+                            case .failure:
+                                uiImages[i] = UIImage()
+                            }
+                            group.leave()
+                        }
+                    }
+
+                    group.notify(queue: .main) {
+                        let validImages = uiImages.compactMap { $0 }
+                        self.presentFullscreenImageViewer(images: validImages, startIndex: indexPath.row)
+                    }
+                }
+            }
+
             return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(
@@ -472,5 +548,15 @@ extension DetailProfileViewController: UIScrollViewDelegate {
             self.sendAmpliLog(eventName: EventName.SCROLL_DETAIL)
             lastScrollLogTime = currentTime
         }
+    }
+}
+
+extension DetailProfileViewController {
+    func presentFullscreenImageViewer(images: [UIImage], startIndex: Int) {
+        let fullscreenVC = FullscreenImagePagingViewController()
+        fullscreenVC.modalPresentationStyle = .fullScreen
+        fullscreenVC.images = images
+        fullscreenVC.startIndex = startIndex
+        self.navigationController?.pushViewController(fullscreenVC, animated: true)
     }
 }
