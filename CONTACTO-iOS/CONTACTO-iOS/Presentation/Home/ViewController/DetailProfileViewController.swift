@@ -298,143 +298,156 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         self.navigationController?.popViewController(animated: true)
     }
     
+    // MARK: - Alert Handling
+    private func showAlert(title: String?, message: String, actions: [UIAlertAction]) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        actions.forEach { alert.addAction($0) }
+        present(alert, animated: true)
+    }
+    
+    private func showActionSheet(title: String?, actions: [UIAlertAction]) {
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
+        actions.forEach { alert.addAction($0) }
+        present(alert, animated: true)
+    }
+    
+    private func handleBlockSuccess() {
+        let successAlert = UIAlertController(
+            title: nil,
+            message: StringLiterals.Home.Block.result,
+            preferredStyle: .alert
+        )
+        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }
+        successAlert.addAction(okAction)
+        present(successAlert, animated: true)
+    }
+    
+    private func handleBlockFailure() {
+        showAlert(
+            title: "Error",
+            message: "사용자 차단에 실패했습니다.",
+            actions: [UIAlertAction(title: "OK", style: .default)]
+        )
+    }
+    
+    private func handleReportSuccess() {
+        showAlert(
+            title: nil,
+            message: StringLiterals.Home.Report.result,
+            actions: [UIAlertAction(title: "OK", style: .default)]
+        )
+    }
+    
+    private func handleReportFailure() {
+        showAlert(
+            title: "Error",
+            message: "신고 처리에 실패했습니다.",
+            actions: [UIAlertAction(title: "OK", style: .default)]
+        )
+    }
+    
     @objc private func blockButtonTapped() {
         guard !isPreview else { return }
         
-        let alert = UIAlertController(
-            title: StringLiterals.Home.Block.title,
-            message: StringLiterals.Home.Block.message,
-            preferredStyle: .alert
-        )
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_NO)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+            self?.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_NO)
         }
-        let blockAction = UIAlertAction(title: "Block", style: .destructive) { _ in
+        
+        let blockAction = UIAlertAction(title: "Block", style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
             self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_BLOCK_YES)
+            
             self.blockUser(blockedUserId: self.portfolioData.id) { success in
                 DispatchQueue.main.async {
                     if success {
-                        let successAlert = UIAlertController(
-                            title: nil,
-                            message: StringLiterals.Home.Block.result,
-                            preferredStyle: .alert
-                        )
-                        if let navigationController = self.navigationController {
-                            navigationController.popViewController(animated: true)
-                        }
-                        let okAction = UIAlertAction(title: "OK", style: .default)
-                        successAlert.addAction(okAction)
-                        self.present(successAlert, animated: true, completion: nil)
+                        self.handleBlockSuccess()
                     } else {
-                        let errorAlert = UIAlertController(
-                            title: "Error",
-                            message: "사용자 차단에 실패했습니다.",
-                            preferredStyle: .alert
-                        )
-                        if let navigationController = self.navigationController {
-                            navigationController.popViewController(animated: true)
-                        }
-                        let okAction = UIAlertAction(title: "OK", style: .default)
-                        errorAlert.addAction(okAction)
-                        self.present(errorAlert, animated: true, completion: nil)
+                        self.handleBlockFailure()
                     }
                 }
             }
         }
-        alert.addAction(blockAction)
-        alert.addAction(cancelAction)
         
-        present(alert, animated: true, completion: nil)
+        showAlert(
+            title: StringLiterals.Home.Block.title,
+            message: StringLiterals.Home.Block.message,
+            actions: [blockAction, cancelAction]
+        )
     }
     
     @objc private func reportButtonTapped() {
-        let alert = UIAlertController(title: StringLiterals.Home.Report.title, message: nil, preferredStyle: .actionSheet)
-        
-        let reportReasons = StringLiterals.Home.Report.ReportReasons.allCases
-        for (index, reason) in reportReasons.enumerated() {
-            let action = UIAlertAction(title: reason, style: .default) { _ in
-                self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_YES, properties: ["report_name" : reason])
-
+        let reportActions = StringLiterals.Home.Report.ReportReasons.allCases.enumerated().map { index, reason in
+            UIAlertAction(title: reason, style: .default) { [weak self] _ in
+                guard let self = self else { return }
+                self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_YES, properties: ["report_name": reason])
+                
                 self.reportUser(bodyDTO: ReportRequestBodyDTO(reportedUserId: self.portfolioData.id, reportReasonIdx: index)) { success in
                     DispatchQueue.main.async {
                         if success {
-                            let successAlert = UIAlertController(
-                                title: nil,
-                                message: StringLiterals.Home.Report.result,
-                                preferredStyle: .alert
-                            )
-                            let okAction = UIAlertAction(title: "OK", style: .default)
-                            successAlert.addAction(okAction)
-                            self.present(successAlert, animated: true, completion: nil)
+                            self.handleReportSuccess()
                         } else {
-                            let errorAlert = UIAlertController(
-                                title: "Error",
-                                message: "신고 처리에 실패했습니다.",
-                                preferredStyle: .alert
-                            )
-                            let okAction = UIAlertAction(title: "OK", style: .default)
-                            errorAlert.addAction(okAction)
-                            self.present(errorAlert, animated: true, completion: nil)
+                            self.handleReportFailure()
                         }
                     }
                 }
             }
-            alert.addAction(action)
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_NO)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+            self?.sendAmpliLog(eventName: EventName.CLICK_DETAIL_REPORT_NO)
         }
-        alert.addAction(cancelAction)
         
-        present(alert, animated: true, completion: nil)
+        showActionSheet(
+            title: StringLiterals.Home.Report.title,
+            actions: reportActions + [cancelAction]
+        )
+    }
+    
+    // MARK: - Image Handling
+    private func loadImagesFromURLs(_ urls: [String], completion: @escaping ([UIImage]) -> Void) {
+        var uiImages: [UIImage?] = Array(repeating: nil, count: urls.count)
+        let group = DispatchGroup()
+        
+        for (i, urlStr) in urls.enumerated() {
+            guard let url = URL(string: urlStr) else { continue }
+            group.enter()
+            
+            KingfisherManager.shared.retrieveImage(with: url) { result in
+                switch result {
+                case .success(let value):
+                    uiImages[i] = value.image
+                case .failure:
+                    uiImages[i] = UIImage()
+                }
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            let validImages = uiImages.compactMap { $0 }
+            completion(validImages)
+        }
+    }
+    
+    private func handleImageTap(at index: Int) {
+        if isPreview {
+            presentFullscreenImageViewer(images: imagePreviewDummy, startIndex: index)
+        } else {
+            loadImagesFromURLs(imageArray) { [weak self] images in
+                self?.presentFullscreenImageViewer(images: images, startIndex: index)
+            }
+        }
     }
 }
-
 
 extension DetailProfileViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard collectionView == detailProfileView.portImageCollectionView else { return }
 
-        if isPreview {
-            // 이미지 배열이 이미 존재할 때
-            let fullscreenVC = FullscreenImagePagingViewController()
-            fullscreenVC.modalPresentationStyle = .fullScreen
-            fullscreenVC.images = imagePreviewDummy
-            fullscreenVC.startIndex = indexPath.row
-            present(fullscreenVC, animated: true)
-        } else {
-            // URL → UIImage 변환 후 전체화면 뷰어 띄우기
-            let urls = imageArray
-            var uiImages: [UIImage?] = Array(repeating: nil, count: urls.count)
-            let group = DispatchGroup()
-
-            for (i, urlStr) in urls.enumerated() {
-                guard let url = URL(string: urlStr) else { continue }
-                group.enter()
-                KingfisherManager.shared.retrieveImage(with: url) { result in
-                    switch result {
-                    case .success(let value):
-                        uiImages[i] = value.image
-                    default:
-                        uiImages[i] = UIImage()
-                    }
-                    group.leave()
-                }
-            }
-
-            group.notify(queue: .main) {
-                let validImages = uiImages.compactMap { $0 }
-                let fullscreenVC = FullscreenImagePagingViewController()
-                fullscreenVC.modalPresentationStyle = .fullScreen
-                fullscreenVC.images = validImages
-                fullscreenVC.startIndex = indexPath.row
-                self.present(fullscreenVC, animated: true)
-            }
-        }
+        handleImageTap(at: indexPath.row)
     }
-
 }
 
 extension DetailProfileViewController: UICollectionViewDataSource {
@@ -466,33 +479,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
 
             cell.onImageTapped = { [weak self] in
                 guard let self = self else { return }
-
-                if self.isPreview {
-                    self.presentFullscreenImageViewer(images: self.imagePreviewDummy, startIndex: indexPath.row)
-                } else {
-                    let urls = self.imageArray
-                    var uiImages: [UIImage?] = Array(repeating: nil, count: urls.count)
-                    let group = DispatchGroup()
-
-                    for (i, urlStr) in urls.enumerated() {
-                        guard let url = URL(string: urlStr) else { continue }
-                        group.enter()
-                        KingfisherManager.shared.retrieveImage(with: url) { result in
-                            switch result {
-                            case .success(let value):
-                                uiImages[i] = value.image
-                            case .failure:
-                                uiImages[i] = UIImage()
-                            }
-                            group.leave()
-                        }
-                    }
-
-                    group.notify(queue: .main) {
-                        let validImages = uiImages.compactMap { $0 }
-                        self.presentFullscreenImageViewer(images: validImages, startIndex: indexPath.row)
-                    }
-                }
+                self.handleImageTap(at: indexPath.row)
             }
 
             return cell
