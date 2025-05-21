@@ -113,38 +113,62 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     
     // MARK: - Server Function
     private func detailPort(userId: Int, completion: @escaping (Bool) -> Void) {
-        if !isPreview {
-            NetworkService.shared.homeService.detailPort(userId: userId) { [weak self] response in
-                switch response {
-                case .success(let data):
-                    self?.portfolioData = data
-                    self?.updatePortfolio()
-                    completion(true)
-                case .failure(let error):
-                    if error.statusCode == 404 {
-                        DispatchQueue.main.async {
-                            let alert = UIAlertController(
-                                title: StringLiterals.Chat.Profile.notFoundUserTitle,
-                                message: StringLiterals.Chat.Profile.notFoundUserDesc,
-                                preferredStyle: .alert
-                            )
-                            let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-                                self?.navigationController?.popViewController(animated: true)
-                            }
-                            alert.addAction(okAction)
-                            self?.present(alert, animated: true)
-                        }
-                    }
-                    completion(false)
-                default:
-                    completion(false)
-                }
-            }
-        } else {
-            self.detailProfileView.hideSkeleton()
-            self.updatePortfolio()
+        if isPreview {
+            handlePreviewMode()
+            completion(true)
+            return
         }
-        completion(true)
+        
+        NetworkService.shared.homeService.detailPort(userId: userId) { [weak self] response in
+            guard let self = self else {
+                completion(false)
+                return
+            }
+            
+            switch response {
+            case .success(let data):
+                self.handleSuccess(data: data)
+                completion(true)
+            case .failure(let error):
+                self.handleFailure(error: error)
+                completion(false)
+            default:
+                completion(false)
+            }
+        }
+    }
+    
+    private func handlePreviewMode() {
+        detailProfileView.hideSkeleton()
+        updatePortfolio()
+    }
+    
+    private func handleSuccess(data: MyDetailResponseDTO) {
+        portfolioData = data
+        updatePortfolio()
+    }
+    
+    private func handleFailure(error: NetworkError) {
+        if error.statusCode == 404 {
+            showUserNotFoundAlert()
+        }
+    }
+    
+    private func showUserNotFoundAlert() {
+        DispatchQueue.main.async { [weak self] in
+            let alert = UIAlertController(
+                title: StringLiterals.Chat.Profile.notFoundUserTitle,
+                message: StringLiterals.Chat.Profile.notFoundUserDesc,
+                preferredStyle: .alert
+            )
+            
+            let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                self?.navigationController?.popViewController(animated: true)
+            }
+            
+            alert.addAction(okAction)
+            self?.present(alert, animated: true)
+        }
     }
     
     private func blockUser(blockedUserId: Int, completion: @escaping (Bool) -> Void) {
