@@ -470,10 +470,31 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         if isPreview {
             presentFullscreenImageViewer(images: imagePreviewDummy, startIndex: index)
         } else {
-            loadImagesFromURLs(imageArray) { [weak self] images in
-                self?.presentFullscreenImageViewer(images: images, startIndex: index)
+            // 먼저 빈 이미지 배열로 뷰어를 표시
+            let emptyImages = Array(repeating: UIImage(), count: imageArray.count)
+            let fullscreenVC = FullscreenImagePagingViewController()
+            fullscreenVC.modalPresentationStyle = .fullScreen
+            fullscreenVC.images = emptyImages
+            fullscreenVC.startIndex = index
+            fullscreenVC.isLoading = true
+            self.navigationController?.pushViewController(fullscreenVC, animated: true)
+            
+            // 이미지 로딩 시작
+            loadImagesFromURLs(imageArray) { [weak fullscreenVC] images in
+                guard let fullscreenVC = fullscreenVC else { return }
+                DispatchQueue.main.async {
+                    fullscreenVC.images = images
+                    fullscreenVC.isLoading = false
+                    fullscreenVC.reloadImages()
+                }
             }
         }
+    }
+    
+    @objc private func imageTapped(_ gesture: UITapGestureRecognizer) {
+        guard let imageView = gesture.view,
+              let index = imageView.tag as Int? else { return }
+        handleImageTap(at: index)
     }
 }
 
@@ -512,10 +533,11 @@ extension DetailProfileViewController: UICollectionViewDataSource {
                 cell.portImageView.image = imagePreviewDummy[indexPath.row]
             }
 
-            cell.onImageTapped = { [weak self] in
-                guard let self = self else { return }
-                self.handleImageTap(at: indexPath.row)
-            }
+            // 탭 제스처 추가
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
+            cell.portImageView.isUserInteractionEnabled = true
+            cell.portImageView.addGestureRecognizer(tapGesture)
+            cell.portImageView.tag = indexPath.row
 
             return cell
         case 1:
