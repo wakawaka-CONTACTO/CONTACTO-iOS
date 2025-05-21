@@ -272,26 +272,61 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_INSTA)
     }
     
-    @objc private func webButtonTapped() {
-        guard let url = URL(string: portfolioData.webUrl ?? "google.com") else {
-            let alert = UIAlertController(title: "에러", message: "url error", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "확인", style: .default))
-            self.present(alert, animated: true, completion: nil)
-            return
+    // MARK: - URL Handling
+    private enum URLValidationError: Error {
+        case invalidURL
+        case invalidScheme
+        
+        var message: String {
+            switch self {
+            case .invalidURL:
+                return "유효하지 않은 URL입니다."
+            case .invalidScheme:
+                return "지원하지 않는 URL 형식입니다."
+            }
+        }
+    }
+    
+    private func validateAndOpenURL(_ urlString: String?) {
+        do {
+            let url = try createValidURL(from: urlString)
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_WEB)
+        } catch let error as URLValidationError {
+            showAlert(
+                title: "에러",
+                message: error.message,
+                actions: [UIAlertAction(title: "확인", style: .default)]
+            )
+        } catch {
+            showAlert(
+                title: "에러",
+                message: "알 수 없는 오류가 발생했습니다.",
+                actions: [UIAlertAction(title: "확인", style: .default)]
+            )
+        }
+    }
+    
+    private func createValidURL(from urlString: String?) throws -> URL {
+        guard let urlString = urlString, !urlString.isEmpty else {
+            throw URLValidationError.invalidURL
         }
         
-        if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        } else {
-            guard let chatURL = URL(string: "https://" + (portfolioData.webUrl ?? "google.com")) else {
-                let alert = UIAlertController(title: "에러", message: "url error", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "확인", style: .default))
-                self.present(alert, animated: true, completion: nil)
-                return
-            }
-            UIApplication.shared.open(chatURL, options: [:], completionHandler: nil)
+        // URL이 이미 http:// 또는 https://로 시작하는지 확인
+        if let url = URL(string: urlString), ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
+            return url
         }
-        self.sendAmpliLog(eventName: EventName.CLICK_DETAIL_WEB)
+        
+        // URL이 스키마를 포함하지 않는 경우 https:// 추가
+        guard let url = URL(string: "https://\(urlString)") else {
+            throw URLValidationError.invalidURL
+        }
+        
+        return url
+    }
+    
+    @objc private func webButtonTapped() {
+        validateAndOpenURL(portfolioData.webUrl)
     }
     
     @objc private func popButtonTapped() {
