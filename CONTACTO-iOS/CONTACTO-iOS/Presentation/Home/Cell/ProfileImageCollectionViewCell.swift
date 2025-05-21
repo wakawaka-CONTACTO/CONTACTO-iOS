@@ -36,7 +36,7 @@ final class ProfileImageCollectionViewCell: UICollectionViewCell {
         }
         
         portImageView.do {
-            $0.contentMode = .scaleAspectFit
+            $0.contentMode = .scaleAspectFill
         }
     }
     

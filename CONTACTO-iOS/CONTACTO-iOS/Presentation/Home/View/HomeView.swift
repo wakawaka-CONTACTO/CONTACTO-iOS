@@ -53,7 +53,8 @@ final class HomeView: BaseView, HomeAmplitudeSender {
         }
         
         portImageView.do {
-            $0.contentMode = .scaleAspectFit
+            $0.contentMode = .scaleAspectFill
+            $0.clipsToBounds = true
             $0.isSkeletonable = true
             $0.skeletonCornerRadius = 8
         }
