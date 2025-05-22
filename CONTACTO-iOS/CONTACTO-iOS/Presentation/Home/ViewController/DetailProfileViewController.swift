@@ -36,6 +36,8 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     var isPreview = false
     var isFromChat = false
     
+    let fullscreenVC = FullscreenImagePagingViewController()
+    
     let detailProfileView = DetailProfileView()
     var portfolioData = MyDetailResponseDTO(id: 0, username: "", description: "", instagramId: "", socialId: 0, loginType: "", email: "", nationality: Nationalities.NONE, webUrl: nil, password: "", userPortfolio: UserPortfolio(portfolioId: 0, userId: 0, portfolioImageUrl: []), userPurposes: [], userTalents: [])
     private var talentData: [TalentInfo] = []
@@ -46,6 +48,7 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
     override func viewDidLoad() {
         super.viewDidLoad()
         setCollectionView()
+        fullscreenVC.modalPresentationStyle = .fullScreen
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -472,12 +475,8 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
         } else {
             // 먼저 빈 이미지 배열로 뷰어를 표시
             let emptyImages = Array(repeating: UIImage(), count: imageArray.count)
-            let fullscreenVC = FullscreenImagePagingViewController()
-            fullscreenVC.modalPresentationStyle = .fullScreen
-            fullscreenVC.images = emptyImages
-            fullscreenVC.startIndex = index
+            presentFullscreenImageViewer(images: emptyImages, startIndex: index)
             fullscreenVC.isLoading = true
-            self.navigationController?.pushViewController(fullscreenVC, animated: true)
             
             // 이미지 로딩 시작
             loadImagesFromURLs(imageArray) { [weak fullscreenVC] images in
@@ -522,7 +521,7 @@ extension DetailProfileViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch collectionView.tag {
-        case 0:
+        case 0: 
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: ProfileImageCollectionViewCell.className,
                 for: indexPath) as? ProfileImageCollectionViewCell else { return UICollectionViewCell() }
@@ -621,8 +620,6 @@ extension DetailProfileViewController: UIScrollViewDelegate {
 
 extension DetailProfileViewController {
     func presentFullscreenImageViewer(images: [UIImage], startIndex: Int) {
-        let fullscreenVC = FullscreenImagePagingViewController()
-        fullscreenVC.modalPresentationStyle = .fullScreen
         fullscreenVC.images = images
         fullscreenVC.startIndex = startIndex
         self.navigationController?.pushViewController(fullscreenVC, animated: true)
