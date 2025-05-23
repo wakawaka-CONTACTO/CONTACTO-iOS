@@ -11,6 +11,8 @@
 		2633502D2D9D390300818CB9 /* AmplitudeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2633502C2D9D390300818CB9 /* AmplitudeSwift */; };
 		26434AC82D82D604000FB7AE /* Nationality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26434AC72D82D604000FB7AE /* Nationality.swift */; };
 		268244582D9E75A500919FE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 268244572D9E75A500919FE7 /* Assets.xcassets */; };
+		269B66BD2DDD9B610037D7C9 /* ImagePagingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269B66BC2DDD9B610037D7C9 /* ImagePagingCell.swift */; };
+		269B66BF2DDD9BB20037D7C9 /* FullscreenImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269B66BE2DDD9BB20037D7C9 /* FullscreenImageViewController.swift */; };
 		26D11D582D9E6DA000E59472 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 26D11D572D9E6D9D00E59472 /* Config.xcconfig */; };
 		26DEC0212D806D0B00667450 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DEC0202D806D0B00667450 /* EmptyResponse.swift */; };
 		26EEC2D22DCDAA8400D1C4E1 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 26EEC2D12DCDAA8400D1C4E1 /* SkeletonView */; };
@@ -181,6 +183,8 @@
 		19F102294D75A8C826FC5EB2 /* Pods-CONTACTO-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CONTACTO-iOS.release.xcconfig"; path = "Target Support Files/Pods-CONTACTO-iOS/Pods-CONTACTO-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		26434AC72D82D604000FB7AE /* Nationality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nationality.swift; sourceTree = "<group>"; };
 		268244572D9E75A500919FE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		269B66BC2DDD9B610037D7C9 /* ImagePagingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePagingCell.swift; sourceTree = "<group>"; };
+		269B66BE2DDD9BB20037D7C9 /* FullscreenImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenImageViewController.swift; sourceTree = "<group>"; };
 		26D11D572D9E6D9D00E59472 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		26DEC0202D806D0B00667450 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
 		26FC24482DA62561003BE481 /* ProfilePurpose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePurpose.swift; sourceTree = "<group>"; };
@@ -887,6 +891,7 @@
 				C393A61B2C94201C00ECF1B5 /* HomeViewController.swift */,
 				C3B95CEB2C9BE004002A4681 /* DetailProfileViewController.swift */,
 				C35E26462C9D2EC300B197CB /* MatchViewController.swift */,
+				269B66BE2DDD9BB20037D7C9 /* FullscreenImageViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -908,6 +913,7 @@
 				C35E26402C9D08A800B197CB /* ProfilePurposeCollectionViewCell.swift */,
 				C35E26422C9D10B800B197CB /* ProfileImageCollectionViewCell.swift */,
 				C35E264C2C9D458500B197CB /* GreetCollectionViewCell.swift */,
+				269B66BC2DDD9B610037D7C9 /* ImagePagingCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -1490,8 +1496,10 @@
 				C33D73D72CDEEEBE00889B1B /* ContactoRequestInterceptor.swift in Sources */,
 				C3B95CF32C9C08B7002A4681 /* ProfileTalentCollectionViewCell.swift in Sources */,
 				C3E88C8A2C92E661005A19BE /* PortfolioOnboardingView.swift in Sources */,
+				269B66BD2DDD9B610037D7C9 /* ImagePagingCell.swift in Sources */,
 				C3E6D9102CFAD27E00D6ABDC /* EmailCodeView.swift in Sources */,
 				C3E88C712C927D1C005A19BE /* PurposeOnboardingViewController.swift in Sources */,
+				269B66BF2DDD9BB20037D7C9 /* FullscreenImageViewController.swift in Sources */,
 				C3FD906E2C9154EC0021D2BA /* UIView+.swift in Sources */,
 				C3E88C7D2C92A95A005A19BE /* SNSOnboardingView.swift in Sources */,
 				C33D73D12CDEEE9500889B1B /* APIEventLogger.swift in Sources */,

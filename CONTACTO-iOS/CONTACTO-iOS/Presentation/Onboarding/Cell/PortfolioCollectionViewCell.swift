@@ -61,7 +61,7 @@ final class PortfolioCollectionViewCell: UICollectionViewCell {
         backgroundImageView.do {
             $0.isHidden = true
             $0.isUserInteractionEnabled = true
-            $0.contentMode = .scaleAspectFit
+            $0.contentMode = .scaleAspectFill
             $0.clipsToBounds = true
         }
         

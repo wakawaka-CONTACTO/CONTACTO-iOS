@@ -14,9 +14,12 @@ final class ProfileImageCollectionViewCell: UICollectionViewCell {
     let portView = UIView()
     let portImageView = UIImageView()
     
+    var onImageTapped: (() -> Void)?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
+        setGesture()
     }
     
     required init?(coder: NSCoder) {
@@ -36,8 +39,18 @@ final class ProfileImageCollectionViewCell: UICollectionViewCell {
         }
         
         portImageView.do {
-            $0.contentMode = .scaleAspectFit
+            $0.contentMode = .scaleAspectFill
+            $0.isUserInteractionEnabled = true
         }
+    }
+    
+    private func setGesture() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        portImageView.addGestureRecognizer(tap)
+    }
+
+    @objc private func imageTapped() {
+        onImageTapped?()
     }
     
     private func setLayout() {
