@@ -194,6 +194,7 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
             }
         case .changed:
             if translation.x < 0 {
+                // 왼쪽으로 스와이프 - LEAVE 표시
                 // 최대 LEAVE 너비만큼만 드래그 허용
                 let limitedDragX = max(translation.x, -leaveWidth)
                 contentView.transform = CGAffineTransform(translationX: limitedDragX, y: 0)
@@ -206,28 +207,65 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
                 
                 // 너비에 따라 투명도 조절
                 leaveBackgroundView.alpha = swipeRatio
+            } else if translation.x > 0 && isShowingLeave {
+                // 오른쪽으로 스와이프 - LEAVE가 표시된 상태에서만 처리
+                // LEAVE 영역에서 원래 위치로 돌아가는 중
+                let currentOffset = -leaveWidth + translation.x
+                let limitedDragX = min(currentOffset, 0)
+                contentView.transform = CGAffineTransform(translationX: limitedDragX, y: 0)
+                
+                // 스와이프 비율에 따라 투명도 조절 (반대 방향)
+                let swipeBackRatio = 1.0 - min(translation.x / leaveWidth, 1.0)
+                leaveBackgroundView.alpha = swipeBackRatio
             }
         case .ended, .cancelled:
-            // 임계값을 넘었는지 확인 (leaveWidth의 40% 이상 스와이프)
-            let swipeDistance = abs(translation.x)
-            let threshold = leaveWidth * swipeThreshold
-            
-            if swipeDistance > threshold {
-                // 임계값 이상으로 스와이프했을 때 LEAVE 영역 표시
-                UIView.animate(withDuration: 0.2) {
-                    self.contentView.transform = CGAffineTransform(translationX: -self.leaveWidth, y: 0)
-                    self.leaveBackgroundView.alpha = 1.0
-                } completion: { _ in
-                    self.isShowingLeave = true
+            if translation.x < 0 {
+                // 왼쪽으로 스와이프한 경우
+                // 임계값을 넘었는지 확인 (leaveWidth의 40% 이상 스와이프)
+                let swipeDistance = abs(translation.x)
+                let threshold = leaveWidth * swipeThreshold
+                
+                if swipeDistance > threshold {
+                    // 임계값 이상으로 스와이프했을 때 LEAVE 영역 표시
+                    UIView.animate(withDuration: 0.2) {
+                        self.contentView.transform = CGAffineTransform(translationX: -self.leaveWidth, y: 0)
+                        self.leaveBackgroundView.alpha = 1.0
+                    } completion: { _ in
+                        self.isShowingLeave = true
+                    }
+                } else {
+                    // 임계값보다 적게 스와이프했을 때 복귀
+                    UIView.animate(withDuration: 0.2) {
+                        self.contentView.transform = .identity
+                        self.leaveBackgroundView.alpha = 0.0
+                    } completion: { _ in
+                        self.isShowingLeave = false
+                        self.leaveBackgroundView.isHidden = true
+                    }
                 }
-            } else {
-                // 임계값보다 적게 스와이프했을 때 복귀
-                UIView.animate(withDuration: 0.2) {
-                    self.contentView.transform = .identity
-                    self.leaveBackgroundView.alpha = 0.0
-                } completion: { _ in
-                    self.isShowingLeave = false
-                    self.leaveBackgroundView.isHidden = true
+            } else if translation.x > 0 && isShowingLeave {
+                // 오른쪽으로 스와이프한 경우 (LEAVE 상태에서만)
+                // 임계값을 넘었는지 확인 (leaveWidth의 40% 이상 스와이프)
+                let swipeDistance = translation.x
+                let threshold = leaveWidth * swipeThreshold
+                
+                if swipeDistance > threshold {
+                    // 임계값 이상으로 스와이프했을 때 원래 상태로 복귀
+                    UIView.animate(withDuration: 0.2) {
+                        self.contentView.transform = .identity
+                        self.leaveBackgroundView.alpha = 0.0
+                    } completion: { _ in
+                        self.isShowingLeave = false
+                        self.leaveBackgroundView.isHidden = true
+                    }
+                } else {
+                    // 임계값보다 적게 스와이프했을 때 LEAVE 상태 유지
+                    UIView.animate(withDuration: 0.2) {
+                        self.contentView.transform = CGAffineTransform(translationX: -self.leaveWidth, y: 0)
+                        self.leaveBackgroundView.alpha = 1.0
+                    } completion: { _ in
+                        self.isShowingLeave = true
+                    }
                 }
             }
         default:
