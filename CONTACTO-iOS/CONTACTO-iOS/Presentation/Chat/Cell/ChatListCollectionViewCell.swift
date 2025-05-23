@@ -315,6 +315,23 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
         leaveLabel.isUserInteractionEnabled = true
         leaveLabel.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        // 참조 프로퍼티 초기화
+        delegate = nil
+        chatRoomId = nil
+        
+        // UI 요소 초기화
+        profileImageView.image = nil
+        nameLabel.text = nil
+        messageLabel.text = nil
+        newLabel.isHidden = true
+        
+        // LEAVE 상태 초기화
+        resetLeaveState()
+    }
 }
 
 // MARK: - Delegate 프로토콜 정의
