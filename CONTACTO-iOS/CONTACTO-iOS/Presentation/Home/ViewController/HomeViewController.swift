@@ -113,17 +113,24 @@ final class HomeViewController: BaseViewController, HomeAmplitudeSender {
 
         setData()
         
-//        // 24시간 이내에 팝업을 닫은 적이 있는지 확인
-//        if let dismissDate = UserDefaults.standard.object(forKey: "PopupDismissDate") as? Date,
-//           dismissDate > Date() {
-//            return
-//        }
-//        
-//        // 프로모션 팝업 표시
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            let popupView = PromotionPopupView(frame: self.view.bounds)
-//            self.view.addSubview(popupView)
-//        }
+        // 12시간 이내에 팝업을 닫은 적이 있는지 확인
+        if let dismissDate = UserDefaults.standard.object(forKey: "PopupDismissDate") as? Date,
+           dismissDate > Date() {
+            return
+        }
+        
+        // 팝업 API 호출
+        PopupService().getPopups { result in
+            switch result {
+            case .success(let popupList):
+                guard let popupList = popupList, !popupList.isEmpty else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    PromotionPopupView.showIfNeeded(on: self.view, items: popupList)
+                }
+            default:
+                break
+            }
+        }
         
         // 프리로딩 작업 재개를 위해 플래그 초기화
         shouldCancelPreloading = false
@@ -463,9 +470,10 @@ extension HomeViewController {
                 
                 if let img = image {
                     self.homeView.portImageView.image = img
-                    self.homeView.hideSkeleton()
                 } else {
-                    self.homeView.portImageView.image = UIImage(named: "placeholder")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.setPortImage()
+                    }
                     let alert = UIAlertController(title: "로드 실패",
                                                   message: "포트폴리오 이미지를 불러오지 못했습니다.",
                                                   preferredStyle: .alert)
@@ -474,6 +482,7 @@ extension HomeViewController {
                     
                     // self.retryLoadImage()
                 }
+                self.homeView.hideSkeleton()
             }
         }
     }
@@ -487,8 +496,19 @@ extension HomeViewController {
         NetworkService.shared.homeService.homeList { [weak self] response in
             switch response {
             case .success(let data):
-                self?.recommendedPortfolios = data
-                completion(true)
+                DispatchQueue.main.async {
+                    guard let self = self, !data.isEmpty else {
+                        completion(false)
+                        return
+                    }
+                    self.recommendedPortfolios = data
+                    self.recommendedPortfolioIdx = 0
+                    self.portfolioImages = data[0].portfolioImageUrl
+                    self.portfolioImageCount = self.portfolioImages.count
+                    self.portfolioImageIdx = 0
+                    self.homeView.pageCollectionView.reloadData()
+                    completion(true)
+                }
             default:
                 completion(false)
             }

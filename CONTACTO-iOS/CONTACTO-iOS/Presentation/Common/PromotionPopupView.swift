@@ -1,9 +1,15 @@
 import UIKit
 import SafariServices
+import Kingfisher
 
-final class PromotionPopupView: UIView {
-    
+final class PromotionPopupView: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PromotionImageCellDelegate {
     // MARK: - Properties
+    private let items: [PopupResponseDTO]
+    private var currentIndex: Int = 0 {
+        didSet {
+            updateArrowButtons()
+        }
+    }
     private let containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -12,19 +18,19 @@ final class PromotionPopupView: UIView {
         return view
     }()
     
-    private let promotionImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.isUserInteractionEnabled = true
-        // 이미지 설정
-        if let image = UIImage(named: "img_promotion_conclave") {
-            imageView.image = image
-        } else {
-            // 이미지가 없을 경우 서버에서 이미지를 다운로드하거나 기본 이미지를 설정할 수 있습니다
-            imageView.backgroundColor = .gray
-        }
-        return imageView
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.isPagingEnabled = true
+        cv.showsHorizontalScrollIndicator = false
+        cv.dataSource = self
+        cv.delegate = self
+        cv.register(PromotionImageCell.self, forCellWithReuseIdentifier: "PromotionImageCell")
+        cv.backgroundColor = .clear
+        return cv
     }()
     
     private let closeButton: UIButton = {
@@ -36,19 +42,42 @@ final class PromotionPopupView: UIView {
     
     private let dismissButton: UIButton = {
         let button = UIButton()
-        button.setTitle("24시간 동안 보지 않기", for: .normal)
+        button.setTitle("12시간 동안 보지 않기", for: .normal)
         button.setTitleColor(.gray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14)
         return button
     }()
     
-    private let promotionURL = "https://www.youtube.com/watch?v=iOt5AZmGg5o"
+    private let leftArrowButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        button.tintColor = .black
+        button.backgroundColor = .clear
+        button.layer.cornerRadius = 14
+        button.clipsToBounds = true
+        button.isHidden = false
+        return button
+    }()
+    
+    private let rightArrowButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+        button.tintColor = .black
+        button.backgroundColor = .clear
+        button.layer.cornerRadius = 14
+        button.clipsToBounds = true
+        button.isHidden = false
+        return button
+    }()
+    
+    private var containerHeightConstraint: NSLayoutConstraint?
     
     // MARK: - Lifecycle
-    override init(frame: CGRect) {
+    init?(frame: CGRect, items: [PopupResponseDTO]) {
+        guard !items.isEmpty else { return nil }
+        self.items = items
         super.init(frame: frame)
         setupUI()
-        setupGestures()
     }
     
     required init?(coder: NSCoder) {
@@ -58,63 +87,187 @@ final class PromotionPopupView: UIView {
     // MARK: - Setup
     private func setupUI() {
         backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        
         addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        [promotionImageView, closeButton, dismissButton].forEach {
+        [collectionView, dismissButton, leftArrowButton, rightArrowButton].forEach {
             containerView.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
-        
+        let heightConstraint = containerView.heightAnchor.constraint(equalToConstant: 400)
+        containerHeightConstraint = heightConstraint
         NSLayoutConstraint.activate([
             containerView.centerXAnchor.constraint(equalTo: centerXAnchor),
             containerView.centerYAnchor.constraint(equalTo: centerYAnchor),
             containerView.widthAnchor.constraint(equalToConstant: 300),
-            containerView.heightAnchor.constraint(equalToConstant: 400),
-            
-            promotionImageView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            promotionImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            promotionImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            promotionImageView.bottomAnchor.constraint(equalTo: dismissButton.topAnchor, constant: -10),
-            
-            closeButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
-            closeButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
-            closeButton.widthAnchor.constraint(equalToConstant: 24),
-            closeButton.heightAnchor.constraint(equalToConstant: 24),
-            
+            heightConstraint,
+            collectionView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: dismissButton.topAnchor, constant: -10),
             dismissButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -15),
-            dismissButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor)
+            dismissButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            leftArrowButton.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor),
+            leftArrowButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+            leftArrowButton.widthAnchor.constraint(equalToConstant: 28),
+            leftArrowButton.heightAnchor.constraint(equalToConstant: 28),
+            rightArrowButton.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor),
+            rightArrowButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+            rightArrowButton.widthAnchor.constraint(equalToConstant: 28),
+            rightArrowButton.heightAnchor.constraint(equalToConstant: 28)
         ])
-        
-        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         dismissButton.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
+        leftArrowButton.addTarget(self, action: #selector(leftArrowTapped), for: .touchUpInside)
+        rightArrowButton.addTarget(self, action: #selector(rightArrowTapped), for: .touchUpInside)
+        updateArrowButtons()
     }
     
-    private func setupGestures() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
-        promotionImageView.addGestureRecognizer(tapGesture)
+    // MARK: - UICollectionViewDataSource
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return items.count
     }
     
-    // MARK: - Actions
-    @objc private func imageTapped() {
-        guard let url = URL(string: promotionURL) else { return }
-        
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootViewController = windowScene.windows.first?.rootViewController {
-            let safariViewController = SFSafariViewController(url: url)
-            rootViewController.present(safariViewController, animated: true)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PromotionImageCell", for: indexPath) as? PromotionImageCell else {
+            return UICollectionViewCell()
+        }
+        let item = items[indexPath.item]
+        cell.configure(with: item.imageUrl) { [weak self] imageSize in
+            guard let self = self, let imageSize = imageSize else { return }
+            let popupWidth: CGFloat = 300
+            let aspectRatio = imageSize.height / imageSize.width
+            let minHeight: CGFloat = 200
+            let maxHeight: CGFloat = 500
+            let contentHeight = popupWidth * aspectRatio + 60 // 버튼 등 여유
+            let newHeight = min(max(contentHeight, minHeight), maxHeight)
+            DispatchQueue.main.async {
+                self.containerHeightConstraint?.constant = newHeight
+                self.layoutIfNeeded()
+            }
+        }
+        cell.delegate = self
+        return cell
+    }
+    
+    // MARK: - UICollectionViewDelegate
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let item = items[indexPath.item]
+        guard let url = URL(string: item.siteUrl) else { return }
+        let safariViewController = SFSafariViewController(url: url)
+        if let topVC = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController {
+            var presentedVC = topVC
+            while let next = presentedVC.presentedViewController {
+                presentedVC = next
+            }
+            presentedVC.present(safariViewController, animated: true)
         }
     }
     
-    @objc private func closeButtonTapped() {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let page = Int(round(scrollView.contentOffset.x / scrollView.frame.width))
+        currentIndex = page
+    }
+    
+    // MARK: - UICollectionViewDelegateFlowLayout
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 300, height: 340)
+    }
+    
+    // MARK: - PromotionImageCellDelegate
+    func promotionImageCellDidTap(_ cell: PromotionImageCell) {
+        if let indexPath = collectionView.indexPath(for: cell) {
+            let item = items[indexPath.item]
+            guard let url = URL(string: item.siteUrl) else { return }
+            let safariViewController = SFSafariViewController(url: url)
+            if let topVC = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController {
+                var presentedVC = topVC
+                while let next = presentedVC.presentedViewController {
+                    presentedVC = next
+                }
+                presentedVC.present(safariViewController, animated: true)
+            }
+        }
+    }
+    
+    // MARK: - Actions
+    @objc private func dismissButtonTapped() {
+        let twelveHoursFromNow = Calendar.current.date(byAdding: .hour, value: 12, to: Date())
+        UserDefaults.standard.set(twelveHoursFromNow, forKey: "PopupDismissDate")
         removeFromSuperview()
     }
     
-    @objc private func dismissButtonTapped() {
-        // UserDefaults에 24시간 후 날짜 저장
-        let twentyFourHoursFromNow = Calendar.current.date(byAdding: .hour, value: 24, to: Date())
-        UserDefaults.standard.set(twentyFourHoursFromNow, forKey: "PopupDismissDate")
-        removeFromSuperview()
+    @objc private func leftArrowTapped() {
+        guard currentIndex > 0 else { return }
+        currentIndex -= 1
+        let indexPath = IndexPath(item: currentIndex, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
+    
+    @objc private func rightArrowTapped() {
+        guard currentIndex < items.count - 1 else { return }
+        currentIndex += 1
+        let indexPath = IndexPath(item: currentIndex, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
+    
+    private func updateArrowButtons() {
+        leftArrowButton.isEnabled = currentIndex > 0
+        leftArrowButton.alpha = currentIndex > 0 ? 1.0 : 0.3
+        rightArrowButton.isEnabled = currentIndex < items.count - 1
+        rightArrowButton.alpha = currentIndex < items.count - 1 ? 1.0 : 0.3
+    }
+    
+    // MARK: - Only one popup
+    static func showIfNeeded(on parent: UIView, items: [PopupResponseDTO]) {
+        let alreadyExists = parent.subviews.contains { $0 is PromotionPopupView }
+        if !alreadyExists, let popup = PromotionPopupView(frame: parent.bounds, items: items) {
+            parent.addSubview(popup)
+        }
+    }
+}
+
+protocol PromotionImageCellDelegate: AnyObject {
+    func promotionImageCellDidTap(_ cell: PromotionImageCell)
+}
+
+class PromotionImageCell: UICollectionViewCell {
+    private let imageView = UIImageView()
+    weak var delegate: PromotionImageCellDelegate?
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentView.backgroundColor = .clear
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        contentView.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+        let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        contentView.addGestureRecognizer(tap)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    func configure(with imageUrl: String, completion: ((CGSize?) -> Void)? = nil) {
+        if let url = URL(string: imageUrl) {
+            imageView.kf.setImage(with: url, placeholder: nil, options: nil) { result in
+                switch result {
+                case .success(let value):
+                    completion?(value.image.size)
+                default:
+                    completion?(nil)
+                }
+            }
+        } else {
+            imageView.backgroundColor = .gray
+            imageView.image = nil
+            completion?(nil)
+        }
+    }
+    @objc private func imageTapped() {
+        delegate?.promotionImageCellDidTap(self)
     }
 } 
