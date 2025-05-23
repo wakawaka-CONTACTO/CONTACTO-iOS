@@ -106,9 +106,11 @@ final class FullscreenImagePagingViewController: UIViewController {
     
     private func updatePageLabel() {
         let width = collectionView.frame.width
-        guard width > 0 else { return }
-        
-        let currentPage = Int(round(collectionView.contentOffset.x / width)) + 1
+        guard width > 0, !images.isEmpty else {
+             pageLabel.text = "0/0"
+            return
+        }
+        let currentPage = max(1, min(images.count, Int(round(collectionView.contentOffset.x / width)) + 1))
         let totalPages = max(1, images.count)
         pageLabel.text = "\(currentPage)/\(totalPages)"
     }
@@ -135,7 +137,9 @@ extension FullscreenImagePagingViewController: UICollectionViewDataSource, UICol
             cell.showSkeleton()
         } else {
             cell.hideSkeleton()
-            cell.setImage(images[indexPath.item])
+            if indexPath.item < images.count {
+                cell.setImage(images[indexPath.item])
+            }
         }
         
         cell.onDismissRequested = { [weak self] in

@@ -38,9 +38,10 @@ final class ProfileImageCollectionViewCell: UICollectionViewCell {
             $0.clipsToBounds = true
         }
         
-        portView.clipsToBounds = true
-        portImageView.contentMode = .scaleAspectFill
-        portImageView.isUserInteractionEnabled = true
+        portImageView.do {
+            $0.contentMode = .scaleAspectFill
+            $0.isUserInteractionEnabled = true
+        }
     }
     
     private func setGesture() {
