@@ -160,14 +160,14 @@ final class HomeView: BaseView, HomeAmplitudeSender {
             $0.leading.equalToSuperview().inset(SizeLiterals.Screen.screenWidth / 2)
         }
         
-        noButton.snp.makeConstraints {
+        yesButton.snp.makeConstraints {
             $0.leading.equalToSuperview().inset(10)
             $0.bottom.equalToSuperview()
         }
         
-        yesButton.snp.makeConstraints {
+        noButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(10)
-            $0.centerY.equalTo(noButton.snp.centerY)
+            $0.centerY.equalTo(yesButton.snp.centerY)
         }
         
         undoButton.snp.makeConstraints {

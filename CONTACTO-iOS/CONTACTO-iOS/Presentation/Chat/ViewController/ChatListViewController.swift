@@ -236,13 +236,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
             case .failure(let error):
                 self.isFetching = false
                 completion(false)
-            case .pathErr:
-                self.isFetching = false
-                completion(false)
-            case .serverErr:
-                self.isFetching = false
-                completion(false)
-            case .networkErr:
+            case .pathErr, .serverErr, .networkErr:
                 self.isFetching = false
                 completion(false)
             case .requestErr(let data):
@@ -304,8 +298,123 @@ extension ChatListViewController: UICollectionViewDataSource {
             withReuseIdentifier: ChatListCollectionViewCell.className,
             for: indexPath) as? ChatListCollectionViewCell else { return UICollectionViewCell() }
         cell.configCell(data: chatRoomListData[indexPath.row])
+        cell.delegate = self
+        
+        // 탭 제스처 추가
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushToChatRoom(_:)))
+        
+        // 길게 누르기 제스처 추가
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        longPressGesture.minimumPressDuration = 0.5
+        
         cell.addGestureRecognizer(tapGesture)
+        cell.addGestureRecognizer(longPressGesture)
+        
         return cell
+    }
+}
+
+// MARK: - 채팅방 나가기 관련 메소드
+extension ChatListViewController {
+    @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            guard let cell = gesture.view as? ChatListCollectionViewCell,
+                  let indexPath = chatListView.chatListCollectionView.indexPath(for: cell) else { return }
+            
+            let chatRoom = chatRoomListData[indexPath.row]
+            showLeaveChatRoomConfirmation(for: chatRoom, at: indexPath)
+        }
+    }
+    
+    private func showLeaveChatRoomConfirmation(for chatRoom: ChatListResponseDTO, at indexPath: IndexPath) {
+        let alert = UIAlertController(
+            title: "Leave chatroom",
+            message: "Do you want to leave Chatroom?",
+            preferredStyle: .alert
+        )
+        
+        let yesAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
+            self?.leaveChatRoom(chatRoom.id, at: indexPath)
+        }
+        let noAction = UIAlertAction(title: "No", style: .destructive)
+        
+        // Yes(파랑)가 왼쪽, No(빨강)가 오른쪽
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        
+        present(alert, animated: true)
+    }
+    
+    private func leaveChatRoom(_ roomId: Int, at indexPath: IndexPath) {
+        // 로딩 표시
+        let loadingAlert = UIAlertController(title: nil, message: "Leaving...", preferredStyle: .alert)
+        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = .medium
+        loadingIndicator.startAnimating()
+        
+        loadingAlert.view.addSubview(loadingIndicator)
+        present(loadingAlert, animated: true)
+        
+        NetworkService.shared.chatService.leaveChatRoom(roomId: roomId) { [weak self] result in
+            guard let self = self else { return }
+            
+            // 로딩 얼럿 닫기
+            self.dismiss(animated: true) {
+                switch result {
+                    case .success(_):
+                        #if DEBUG
+                        print("ChatList: 채팅방 나가기 성공 - roomId: \(roomId)")
+                        #endif
+                        
+                        // 채팅방 나가기 성공 시 데이터에서 해당 채팅방 제거
+                        if indexPath.row < self.chatRoomListData.count {
+                            self.chatRoomListData.remove(at: indexPath.row)
+                            self.chatListView.chatListCollectionView.deleteItems(at: [indexPath])
+                        }
+                        
+                        // 빈 데이터일 경우 처리
+                        if self.chatRoomListData.isEmpty {
+                            self.chatListView.isHidden = true
+                            self.chatEmptyView.isHidden = false
+                        }
+                    
+                case .failure(let error):
+                    #if DEBUG
+                    print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId), 오류: \(error)")
+                    #endif
+                    self.showErrorAlert(message: "채팅방 나가기에 실패했습니다. 다시 시도해주세요.")
+                    
+                case .pathErr, .serverErr, .networkErr:
+                    #if DEBUG
+                    print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId), 서버 또는 네트워크 오류")
+                    #endif
+                    self.showErrorAlert(message: "서버 연결에 문제가 있습니다. 잠시 후 다시 시도해주세요.")
+                    
+                case .requestErr(let data):
+                    #if DEBUG
+                    print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId), 요청 오류: \(data)")
+                    #endif
+                    self.showErrorAlert(message: "채팅방 나가기에 실패했습니다. 다시 시도해주세요.")
+                }
+            }
+        }
+    }
+    
+    private func showErrorAlert(message: String) {
+        let alert = UIAlertController(title: "오류", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .default)
+        alert.addAction(okAction)
+        present(alert, animated: true)
+    }
+}
+
+// MARK: - ChatListCollectionViewCellDelegate 구현
+extension ChatListViewController: ChatListCollectionViewCellDelegate {
+    func chatListCellDidRequestLeave(_ cell: ChatListCollectionViewCell, chatRoomId: Int) {
+        guard let indexPath = chatListView.chatListCollectionView.indexPath(for: cell) else { return }
+        let chatRoom = chatRoomListData[indexPath.row]
+        // 기존과 동일하게 나가기 처리
+        showLeaveChatRoomConfirmation(for: chatRoom, at: indexPath)
     }
 }

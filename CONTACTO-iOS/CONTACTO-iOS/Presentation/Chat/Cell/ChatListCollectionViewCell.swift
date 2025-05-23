@@ -12,15 +12,43 @@ import Then
 
 final class ChatListCollectionViewCell: UICollectionViewCell {
     
+    weak var delegate: ChatListCollectionViewCellDelegate?
+    var chatRoomId: Int?
+    
     let profileImageView = UIImageView()
     let nameLabel = UILabel()
     let messageLabel = UILabel()
     let newLabel = UILabel()
     let divideLine = UIView()
     
+    // 나가기 배경 뷰 및 아이콘/텍스트
+    private let leaveBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 254/255, green: 56/255, blue: 67/255, alpha: 1) // #FE3843
+        view.isHidden = true  // 기본적으로 숨김 상태
+        return view
+    }()
+    private let leaveLabel: UILabel = {
+        let label = UILabel()
+        label.text = "LEAVE"
+        label.textColor = .white
+        label.font = .boldSystemFont(ofSize: 18)
+        label.textAlignment = .center
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOpacity = 0.3
+        label.layer.shadowOffset = CGSize(width: 0, height: 2)
+        label.layer.shadowRadius = 4
+        return label
+    }()
+    private let leaveWidth: CGFloat = 80 // 붉은 영역 고정 너비
+    
+    private var isShowingLeave: Bool = false  // 현재 LEAVE 버튼 표시 상태
+    private let swipeThreshold: CGFloat = 0.4  // LEAVE 표시 임계값 (40%)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
+        setupSwipeGesture()
     }
     
     required init?(coder: NSCoder) {
@@ -30,6 +58,7 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
     private func setUI() {
         setStyle()
         setLayout()
+        setupLeaveButtonAction()
     }
     
     private func setStyle() {
@@ -66,14 +95,25 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
     }
     
     private func setLayout() {
-        self.addSubviews(profileImageView,
-                         nameLabel,
-                         messageLabel,
-                         newLabel,
-                         divideLine)
+        // contentView에 요소 추가
+        self.contentView.addSubviews(profileImageView,
+                                    nameLabel,
+                                    messageLabel,
+                                    newLabel,
+                                    divideLine)
         
+        // leaveBackgroundView 추가
+        self.addSubview(leaveBackgroundView)
+        leaveBackgroundView.addSubview(leaveLabel)
+        
+        // 전체 셀 크기 고정
         self.snp.makeConstraints {
             $0.width.equalTo(SizeLiterals.Screen.screenWidth)
+        }
+        
+        // contentView 크기 고정 - 전체 화면 너비로 고정
+        self.contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
         profileImageView.snp.makeConstraints {
@@ -107,12 +147,140 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
             $0.leading.trailing.equalToSuperview().inset(13)
             $0.bottom.equalToSuperview()
         }
+        
+        leaveBackgroundView.snp.makeConstraints {
+            $0.top.bottom.trailing.equalToSuperview()
+            $0.width.equalTo(leaveWidth)
+        }
+        
+        leaveLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.centerX.equalToSuperview()
+        }
+    }
+    
+    private func setupSwipeGesture() {
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        self.addGestureRecognizer(pan)
+    }
+    
+    private func setupLeaveButtonAction() {
+        // LEAVE 버튼에 탭 제스처 추가
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleLeaveTap))
+        leaveBackgroundView.addGestureRecognizer(tapGesture)
+        leaveBackgroundView.isUserInteractionEnabled = true
+    }
+    
+    @objc private func handleLeaveTap() {
+        if isShowingLeave, let id = self.chatRoomId {
+            delegate?.chatListCellDidRequestLeave(self, chatRoomId: id)
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+    
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: self)
+        
+        switch gesture.state {
+        case .began:
+            // 스와이프 시작할 때 배경 준비
+            self.bringSubviewToFront(leaveBackgroundView)
+            leaveBackgroundView.bringSubviewToFront(leaveLabel)
+            if translation.x < 0 {
+                leaveBackgroundView.isHidden = false
+            }
+        case .changed:
+            if translation.x < 0 {
+                // 왼쪽으로 스와이프 - LEAVE 표시
+                // 최대 LEAVE 너비만큼만 드래그 허용
+                let limitedDragX = max(translation.x, -leaveWidth)
+                contentView.transform = CGAffineTransform(translationX: limitedDragX, y: 0)
+                
+                // 스와이프 중에는 항상 LEAVE 버튼 표시
+                leaveBackgroundView.isHidden = false
+                
+                // 스와이프 비율 계산
+                let swipeRatio = min(abs(translation.x) / leaveWidth, 1.0)
+                
+                // 너비에 따라 투명도 조절
+                leaveBackgroundView.alpha = swipeRatio
+            } else if translation.x > 0 && isShowingLeave {
+                // 오른쪽으로 스와이프 - LEAVE가 표시된 상태에서만 처리
+                // LEAVE 영역에서 원래 위치로 돌아가는 중
+                let currentOffset = -leaveWidth + translation.x
+                let limitedDragX = min(currentOffset, 0)
+                contentView.transform = CGAffineTransform(translationX: limitedDragX, y: 0)
+                
+                // 스와이프 비율에 따라 투명도 조절 (반대 방향)
+                let swipeBackRatio = 1.0 - min(translation.x / leaveWidth, 1.0)
+                leaveBackgroundView.alpha = swipeBackRatio
+            }
+        case .ended, .cancelled:
+            if translation.x < 0 {
+                // 왼쪽으로 스와이프한 경우
+                // 임계값을 넘었는지 확인 (leaveWidth의 40% 이상 스와이프)
+                let swipeDistance = abs(translation.x)
+                let threshold = leaveWidth * swipeThreshold
+                
+                if swipeDistance > threshold {
+                    // 임계값 이상으로 스와이프했을 때 LEAVE 영역 표시
+                    UIView.animate(withDuration: 0.2) {
+                        self.contentView.transform = CGAffineTransform(translationX: -self.leaveWidth, y: 0)
+                        self.leaveBackgroundView.alpha = 1.0
+                    } completion: { _ in
+                        self.isShowingLeave = true
+                    }
+                } else {
+                    // 임계값보다 적게 스와이프했을 때 복귀
+                    UIView.animate(withDuration: 0.2) {
+                        self.contentView.transform = .identity
+                        self.leaveBackgroundView.alpha = 0.0
+                    } completion: { _ in
+                        self.isShowingLeave = false
+                        self.leaveBackgroundView.isHidden = true
+                    }
+                }
+            } else if translation.x > 0 && isShowingLeave {
+                // 오른쪽으로 스와이프한 경우 (LEAVE 상태에서만)
+                // 임계값을 넘었는지 확인 (leaveWidth의 40% 이상 스와이프)
+                let swipeDistance = translation.x
+                let threshold = leaveWidth * swipeThreshold
+                
+                if swipeDistance > threshold {
+                    // 임계값 이상으로 스와이프했을 때 원래 상태로 복귀
+                    UIView.animate(withDuration: 0.2) {
+                        self.contentView.transform = .identity
+                        self.leaveBackgroundView.alpha = 0.0
+                    } completion: { _ in
+                        self.isShowingLeave = false
+                        self.leaveBackgroundView.isHidden = true
+                    }
+                } else {
+                    // 임계값보다 적게 스와이프했을 때 LEAVE 상태 유지
+                    UIView.animate(withDuration: 0.2) {
+                        self.contentView.transform = CGAffineTransform(translationX: -self.leaveWidth, y: 0)
+                        self.leaveBackgroundView.alpha = 1.0
+                    } completion: { _ in
+                        self.isShowingLeave = true
+                    }
+                }
+            }
+        default:
+            break
+        }
     }
     
     func configCell(data: ChatListResponseDTO) {
         nameLabel.text = data.title
         messageLabel.text = data.latestMessageContent
         profileImageView.kfSetImage(url: data.chatRoomThumbnail, width: 150)
+        chatRoomId = data.id // id 저장
+        
+        // 셀이 재사용될 때 LEAVE 상태 초기화
+        resetLeaveState()
         
         switch data.unreadMessageCount {
         case 0:
@@ -125,4 +293,48 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
             newLabel.text = "+99"
         }
     }
+    
+    private func resetLeaveState() {
+        isShowingLeave = false
+        contentView.transform = .identity
+        leaveBackgroundView.isHidden = true
+        leaveBackgroundView.alpha = 0
+    }
+    
+    private func showLeaveState() {
+        isShowingLeave = true
+        contentView.transform = CGAffineTransform(translationX: -leaveWidth, y: 0)
+        self.bringSubviewToFront(leaveBackgroundView)
+        leaveBackgroundView.isHidden = false
+        leaveBackgroundView.alpha = 1
+        leaveBackgroundView.bringSubviewToFront(leaveLabel)
+    }
+    
+    // 외부에서 leave 아이콘 탭 감지용 메서드
+    func setLeaveAction(target: Any?, action: Selector) {
+        leaveLabel.isUserInteractionEnabled = true
+        leaveLabel.addGestureRecognizer(UITapGestureRecognizer(target: target, action: action))
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        // 참조 프로퍼티 초기화
+        delegate = nil
+        chatRoomId = nil
+        
+        // UI 요소 초기화
+        profileImageView.image = nil
+        nameLabel.text = nil
+        messageLabel.text = nil
+        newLabel.isHidden = true
+        
+        // LEAVE 상태 초기화
+        resetLeaveState()
+    }
+}
+
+// MARK: - Delegate 프로토콜 정의
+protocol ChatListCollectionViewCellDelegate: AnyObject {
+    func chatListCellDidRequestLeave(_ cell: ChatListCollectionViewCell, chatRoomId: Int)
 }
