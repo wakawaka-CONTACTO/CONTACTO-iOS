@@ -32,7 +32,6 @@
 		ACFE3D222D9FDB0900F14592 /* AlarmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFE3D1F2D9FDB0900F14592 /* AlarmService.swift */; };
 		ACFE3D232D9FDB0900F14592 /* AlarmTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFE3D1D2D9FDB0900F14592 /* AlarmTarget.swift */; };
 		ACFE3D242D9FDB0900F14592 /* DeviceTokenRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFE3D1A2D9FDB0900F14592 /* DeviceTokenRequestDTO.swift */; };
-		BAB76D7A2DD2F6B400BEF2B5 /* ChatLeaveResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB76D792DD2F6B400BEF2B5 /* ChatLeaveResponseDTO.swift */; };
 		C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */; };
 		C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */; };
 		C30C2E462CF2F79600FAE056 /* SignUpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */; };
@@ -200,7 +199,6 @@
 		ACFE3D1A2D9FDB0900F14592 /* DeviceTokenRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTokenRequestDTO.swift; sourceTree = "<group>"; };
 		ACFE3D1D2D9FDB0900F14592 /* AlarmTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTarget.swift; sourceTree = "<group>"; };
 		ACFE3D1F2D9FDB0900F14592 /* AlarmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmService.swift; sourceTree = "<group>"; };
-		BAB76D792DD2F6B400BEF2B5 /* ChatLeaveResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLeaveResponseDTO.swift; sourceTree = "<group>"; };
 		C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpResponseDTO.swift; sourceTree = "<group>"; };
 		C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRequestBodyDTO.swift; sourceTree = "<group>"; };
@@ -680,7 +678,6 @@
 			isa = PBXGroup;
 			children = (
 				C33D740F2CDEF21900889B1B /* ChatListResponseDTO.swift */,
-				BAB76D792DD2F6B400BEF2B5 /* ChatLeaveResponseDTO.swift */,
 				C3C7ECF32CF1D2C300509CD4 /* ChatRoomResponseDTO.swift */,
 				C384B6DC2CFC785000F38ADB /* ChatResponseDTO.swift */,
 			);
@@ -1506,7 +1503,6 @@
 				330688D52D82D98F00BD34EA /* ReportResponseDTO.swift in Sources */,
 				C393A61E2C9427F500ECF1B5 /* String+.swift in Sources */,
 				C33D74132CDEF23900889B1B /* ChatTarget.swift in Sources */,
-				BAB76D7A2DD2F6B400BEF2B5 /* ChatLeaveResponseDTO.swift in Sources */,
 				C33DCF8A2CFDF483009072C4 /* ResetPasswordResponseDTO.swift in Sources */,
 				C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */,
 				C3C7ECF42CF1D2C300509CD4 /* ChatRoomResponseDTO.swift in Sources */,

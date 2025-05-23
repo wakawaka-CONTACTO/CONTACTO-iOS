@@ -14,7 +14,7 @@ protocol ChatServiceProtocol {
     
     func chatMessages(roomId: Int, page: Int, size: Int, completion: @escaping (NetworkResult<PageableResponse<[Message]>>) -> Void)
     
-    func leaveChatRoom(roomId: Int, completion: @escaping (NetworkResult<ChatLeaveResponseDTO>) -> Void)
+    func leaveChatRoom(roomId: Int, completion: @escaping (NetworkResult<EmptyResponse>) -> Void)
 }
 
 final class ChatService: APIRequestLoader<ChatTarget>, ChatServiceProtocol {
@@ -76,12 +76,12 @@ final class ChatService: APIRequestLoader<ChatTarget>, ChatServiceProtocol {
         fetchData(target: .chatMessage(roomId, page, size), responseData: PageableResponse<[Message]>.self, completion: completion)
     }
     
-    func leaveChatRoom(roomId: Int, completion: @escaping (NetworkResult<ChatLeaveResponseDTO>) -> Void) {
+    func leaveChatRoom(roomId: Int, completion: @escaping (NetworkResult<EmptyResponse>) -> Void) {
         #if DEBUG
         print("🔄 [Chat] 채팅방 나가기 요청 시작 - roomId: \(roomId)")
         #endif
         
-        fetchData(target: .leaveChatRoom(roomId), responseData: ChatLeaveResponseDTO.self) { result in
+        fetchData(target: .leaveChatRoom(roomId), responseData: EmptyResponse.self) { result in
             switch result {
             case .success(let data):
                 #if DEBUG

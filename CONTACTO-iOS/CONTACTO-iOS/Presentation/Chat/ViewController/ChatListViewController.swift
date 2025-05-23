@@ -236,13 +236,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
             case .failure(let error):
                 self.isFetching = false
                 completion(false)
-            case .pathErr:
-                self.isFetching = false
-                completion(false)
-            case .serverErr:
-                self.isFetching = false
-                completion(false)
-            case .networkErr:
+            case .pathErr, .serverErr, .networkErr:
                 self.isFetching = false
                 completion(false)
             case .requestErr(let data):
@@ -368,40 +362,23 @@ extension ChatListViewController {
             // 로딩 얼럿 닫기
             self.dismiss(animated: true) {
                 switch result {
-                case .success(let response):
-                    if response.success {
+                    case .success(_):
                         #if DEBUG
                         print("ChatList: 채팅방 나가기 성공 - roomId: \(roomId)")
                         #endif
                         
-                        // 성공 시 UI 업데이트
-                        DispatchQueue.main.async {
-                            // 데이터에서 해당 채팅방 제거
+                        // 채팅방 나가기 성공 시 데이터에서 해당 채팅방 제거
+                        if indexPath.row < self.chatRoomListData.count {
                             self.chatRoomListData.remove(at: indexPath.row)
-                            
-                            // 컬렉션뷰 업데이트
                             self.chatListView.chatListCollectionView.deleteItems(at: [indexPath])
-                            
-                            // 빈 상태 처리
-                            self.chatListView.isHidden = self.chatRoomListData.isEmpty
-                            self.chatEmptyView.isHidden = !self.chatRoomListData.isEmpty
-                            
-                            // 탭바 아이콘 업데이트
-                            self.updateTabBarIcon()
-                            
-                            // 채팅방 목록 갱신을 위한 노티피케이션 전송
-                            NotificationCenter.default.post(name: NSNotification.Name("RefreshChatList"), object: nil)
-                            
-                            // 성공 토스트 메시지 표시
-                            self.showToast(message: "채팅방에서 나갔습니다.")
                         }
-                    } else {
-                        #if DEBUG
-                        print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId)")
-                        #endif
-                        self.showErrorAlert(message: "채팅방 나가기에 실패했습니다. 다시 시도해주세요.")
-                    }
-                    return // 추가: 성공 또는 실패 처리 후 여기서 종료
+                        
+                        // 빈 데이터일 경우 처리
+                        if self.chatRoomListData.isEmpty {
+                            self.chatListView.isHidden = true
+                            self.chatEmptyView.isHidden = false
+                        }
+                    
                 case .failure(let error):
                     #if DEBUG
                     print("ChatList: 채팅방 나가기 실패 - roomId: \(roomId), 오류: \(error)")
