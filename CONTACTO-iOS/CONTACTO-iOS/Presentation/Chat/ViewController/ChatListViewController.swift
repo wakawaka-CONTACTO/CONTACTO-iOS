@@ -19,7 +19,8 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     private let scrollLogInterval: TimeInterval = 3.0
     
     private var hasNext = true
-    private var currentPage = 0
+    private var currentCursorId: Int?
+    private var currentCursorCreatedAt: String?
     private let pageSize = 10
     private var isFetching = false
     private var isInitializing = true
@@ -39,7 +40,8 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // 화면에 진입할 때마다 데이터 초기화
-        currentPage = 0
+        currentCursorId = nil
+        currentCursorCreatedAt = nil
         chatRoomListData = []
         hasNext = true
         isInitializing = true
@@ -94,7 +96,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         }
         
         // 데이터 초기화
-        if currentPage == 0 {
+        if currentCursorId == nil {
             chatRoomListData = []
             
             // 캐시된 데이터가 있으면 먼저 표시
@@ -133,7 +135,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         }
     }
     
-    private func getCachedChatRoomList() -> PageableResponse<[ChatListResponseDTO]>? {
+    private func getCachedChatRoomList() -> ChatListCursorResponse<[ChatListResponseDTO]>? {
         let startTime = Date()
         
         guard let url = URL(string: "https://api.contacto.site/v1/users/me/chatroom") else {
@@ -145,7 +147,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         if let cachedResponse = URLCache.shared.cachedResponse(for: request) {
             do {
                 let decoder = JSONDecoder()
-                let data = try decoder.decode(PageableResponse<[ChatListResponseDTO]>.self, from: cachedResponse.data)
+                let data = try decoder.decode(ChatListCursorResponse<[ChatListResponseDTO]>.self, from: cachedResponse.data)
                 let endTime = Date()
                 return data
             } catch {
@@ -188,7 +190,8 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
     }
     
     @objc private func refreshChatList() {
-        currentPage = 0
+        currentCursorId = nil
+        currentCursorCreatedAt = nil
         chatRoomListData = []
         hasNext = true
         isInitializing = true
@@ -203,7 +206,7 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         isFetching = true
 
         let startTime = Date()
-        NetworkService.shared.chatService.chatRoomList(page: currentPage, size: pageSize) { [weak self] response in
+        NetworkService.shared.chatService.chatRoomList(cursorId: currentCursorId, cursorCreatedAt: currentCursorCreatedAt, size: pageSize) { [weak self] response in
             guard let self = self else { return }
             
             let endTime = Date()
@@ -213,8 +216,16 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
             case .success(let data):
                 let dataProcessingStartTime = Date()
                 
-                // page가 0일 때는 기존 데이터를 완전히 교체
-                if self.currentPage == 0 {
+                #if DEBUG
+                print("✅ [Chat] 서버 응답 데이터:")
+                print("   - content count: \(data.content.count)")
+                print("   - hasNext: \(data.hasNext)")
+                print("   - nextCursorId: \(data.nextCursorId?.description ?? "nil")")
+                print("   - nextCursorCreatedAt: \(data.nextCursorCreatedAt ?? "nil")")
+                #endif
+                
+                // 첫 번째 요청일 때는 기존 데이터를 완전히 교체
+                if self.currentCursorId == nil {
                     self.chatRoomListData = data.content
                 } else {
                     // 중복 데이터 체크 후 추가
@@ -228,6 +239,28 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
 
                 self.hasNext = data.hasNext
                 
+                // 서버에서 nextCursor 정보를 제대로 보내주지 않는 경우 대비
+                if data.hasNext && data.nextCursorId == nil && data.nextCursorCreatedAt == nil {
+                    // 마지막 아이템의 정보를 사용해서 다음 커서 생성
+                    if let lastItem = data.content.last {
+                        self.currentCursorId = lastItem.id
+                        // createdAt이 없으므로 현재 시간을 사용 (임시 방편)
+                        let formatter = ISO8601DateFormatter()
+                        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                        formatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+                        self.currentCursorCreatedAt = formatter.string(from: Date())
+                        
+                        #if DEBUG
+                        print("⚠️ [Chat] 서버에서 nextCursor 정보 누락, 마지막 아이템으로 생성:")
+                        print("   - currentCursorId: \(self.currentCursorId?.description ?? "nil")")
+                        print("   - currentCursorCreatedAt: \(self.currentCursorCreatedAt ?? "nil")")
+                        #endif
+                    }
+                } else {
+                    self.currentCursorId = data.nextCursorId
+                    self.currentCursorCreatedAt = data.nextCursorCreatedAt
+                }
+                
                 let dataProcessingEndTime = Date()
                 let dataProcessingTime = dataProcessingEndTime.timeIntervalSince(dataProcessingStartTime)
                 
@@ -237,6 +270,9 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
                 self.isFetching = false
                 completion(false)
             case .pathErr, .serverErr, .networkErr:
+                self.isFetching = false
+                completion(false)
+            case .networkErr:
                 self.isFetching = false
                 completion(false)
             case .requestErr(let data):
@@ -262,16 +298,8 @@ extension ChatListViewController: UICollectionViewDelegate {
         if offsetY > contentHeight - scrollViewHeight - 30 {
             guard !isFetching && hasNext else { return }
             
-            // 다음 페이지 요청 전에 currentPage 증가
-            let previousPage = currentPage
-            currentPage += 1
-            
             chatRoomList { [weak self] success in
                 guard let self = self else { return }
-                if !success {
-                    // 실패 시 페이지 롤백
-                    self.currentPage = previousPage
-                }
                 if success {
                     DispatchQueue.main.async {
                         self.chatListView.chatListCollectionView.reloadData()
