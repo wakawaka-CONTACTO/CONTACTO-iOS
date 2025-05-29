@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 
 enum ChatTarget {
-    case chatRoomList(_ page: Int, _ size: Int)
+    case chatRoomList(_ cursorId: Int?, _ cursorCreatedAt: String?, _ size: Int)
     case chatRoomMessage(_ roomId: Int)
     case chatMessage(_ roomId: Int, _ page: Int, _ size: Int)
     case leaveChatRoom(_ roomId: Int)
@@ -20,7 +20,7 @@ enum ChatTarget {
 extension ChatTarget: TargetType {
     var authorization: Authorization {
         switch self {
-        case .chatRoomList(_, _):
+        case .chatRoomList(_, _, _):
             return .authorization
         case .chatRoomMessage(_):
             return .authorization
@@ -33,7 +33,7 @@ extension ChatTarget: TargetType {
     
     var headerType: HTTPHeaderType {
         switch self {
-        case .chatRoomList(_, _):
+        case .chatRoomList(_, _, _):
             return .hasToken
         case .chatRoomMessage(_):
             return .hasToken
@@ -46,7 +46,7 @@ extension ChatTarget: TargetType {
     
     var method: HTTPMethod {
         switch self {
-        case .chatRoomList(_, _):
+        case .chatRoomList(_, _, _):
             return .get
         case .chatRoomMessage(_):
             return .get
@@ -59,7 +59,7 @@ extension ChatTarget: TargetType {
     
     var path: String {
         switch self {
-        case .chatRoomList(_, _):
+        case .chatRoomList(_, _, _):
             return "/v1/users/me/chatroom"
         case .chatRoomMessage(let roomId):
             return "/v1/users/me/chatroom/\(roomId)"
@@ -72,8 +72,9 @@ extension ChatTarget: TargetType {
     
     var parameters: RequestParams {
         switch self {
-        case .chatRoomList(let page, let size):
-            return .requestQuery(["page": page, "size": size])
+        case .chatRoomList(let cursorId, let cursorCreatedAt, let size):
+            let request = ChatListCursorRequest.of(cursorId: cursorId, cursorCreatedAt: cursorCreatedAt, size: size)
+            return .requestQuery(request)
         case.chatRoomMessage(_):
             return .requestPlain
         case .chatMessage(_, let page, let size):

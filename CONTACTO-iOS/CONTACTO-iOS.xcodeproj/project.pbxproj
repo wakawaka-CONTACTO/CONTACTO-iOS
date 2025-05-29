@@ -25,6 +25,8 @@
 		333AB70D2D82B0E100F59FC5 /* BlockResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */; };
 		333BD1662DC0807B00A9C2E9 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333BD1652DC0807B00A9C2E9 /* ImageManager.swift */; };
 		335900B02D74704D0088E78B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335900AF2D74704D0088E78B /* Match.swift */; };
+		3375608D2DE6E59D00EE1283 /* ChatListCursorRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3375608C2DE6E59D00EE1283 /* ChatListCursorRequest.swift */; };
+		3375608F2DE6E5AB00EE1283 /* ChatListCursorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3375608E2DE6E5AB00EE1283 /* ChatListCursorResponse.swift */; };
 		338F7E742DA3815300442048 /* AppVersionCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338F7E732DA3815300442048 /* AppVersionCheck.swift */; };
 		AC2F4F812DBA3B98000EB807 /* PromotionPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2F4F7F2DBA3B98000EB807 /* PromotionPopupView.swift */; };
 		AC991A1F2DA4E9FB00BDFF4F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AC991A1E2DA4E9FB00BDFF4F /* GoogleService-Info.plist */; };
@@ -196,6 +198,8 @@
 		333AB70C2D82B0E100F59FC5 /* BlockResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockResponseDTO.swift; sourceTree = "<group>"; };
 		333BD1652DC0807B00A9C2E9 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		335900AF2D74704D0088E78B /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		3375608C2DE6E59D00EE1283 /* ChatListCursorRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCursorRequest.swift; sourceTree = "<group>"; };
+		3375608E2DE6E5AB00EE1283 /* ChatListCursorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListCursorResponse.swift; sourceTree = "<group>"; };
 		338F7E732DA3815300442048 /* AppVersionCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionCheck.swift; sourceTree = "<group>"; };
 		AC0EAA8E2D68451C00757EBD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AC2F4F7F2DBA3B98000EB807 /* PromotionPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotionPopupView.swift; sourceTree = "<group>"; };
@@ -674,6 +678,7 @@
 			isa = PBXGroup;
 			children = (
 				C33D740C2CDEF20D00889B1B /* ChatRequestBodyDTO.swift */,
+				3375608C2DE6E59D00EE1283 /* ChatListCursorRequest.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -684,6 +689,7 @@
 				C33D740F2CDEF21900889B1B /* ChatListResponseDTO.swift */,
 				C3C7ECF32CF1D2C300509CD4 /* ChatRoomResponseDTO.swift */,
 				C384B6DC2CFC785000F38ADB /* ChatResponseDTO.swift */,
+				3375608E2DE6E5AB00EE1283 /* ChatListCursorResponse.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -1432,6 +1438,7 @@
 				C35E265A2C9D733500B197CB /* ChatListCollectionViewCell.swift in Sources */,
 				C33D73F72CDEF19000889B1B /* PortfoliosResponseDTO.swift in Sources */,
 				C35E26542C9D6F6900B197CB /* ChatListView.swift in Sources */,
+				3375608D2DE6E59D00EE1283 /* ChatListCursorRequest.swift in Sources */,
 				C3E6D9162CFADE1400D6ABDC /* PasswordConditionView.swift in Sources */,
 				C3FD90392C9139D40021D2BA /* AppDelegate.swift in Sources */,
 				C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */,
@@ -1451,6 +1458,7 @@
 				C3F21FF02CE9CA39005C4CA2 /* HapticService.swift in Sources */,
 				C35E26432C9D10B800B197CB /* ProfileImageCollectionViewCell.swift in Sources */,
 				C3B95CEE2C9BE020002A4681 /* DetailProfileView.swift in Sources */,
+				3375608F2DE6E5AB00EE1283 /* ChatListCursorResponse.swift in Sources */,
 				C33D73F02CDEF16100889B1B /* InfoService.swift in Sources */,
 				C3B95CF02C9C03D8002A4681 /* Talent.swift in Sources */,
 				C393A6082C93CB2C00ECF1B5 /* PortfolioCollectionViewCell.swift in Sources */,
