@@ -30,10 +30,20 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         
         // 채팅방에서 돌아올 때 업데이트를 위한 옵저버 등록
         NotificationCenter.default.addObserver(self, selector: #selector(refreshChatList), name: NSNotification.Name("RefreshChatList"), object: nil)
+        
+        // 웹소켓 연결 확인 및 연결
+        if !WebSocketManager.shared.isConnected && !KeychainHandler.shared.accessToken.isEmpty {
+            WebSocketManager.shared.connect()
+        }
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        
+        // 모든 delegate 등록 해제
+        for chatRoom in chatRoomListData {
+            WebSocketManager.shared.removeDelegate(self, forRoomId: chatRoom.id)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -130,6 +140,16 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
             
             // 초기화 완료 표시
             self.isInitializing = false
+            
+            // 모든 채팅방에 WebSocketManager 델리게이트 등록
+            self.registerDelegatesForAllChatRooms()
+        }
+    }
+    
+    // 모든 채팅방에 델리게이트 등록
+    private func registerDelegatesForAllChatRooms() {
+        for chatRoom in chatRoomListData {
+            WebSocketManager.shared.addDelegate(self, forRoomId: chatRoom.id)
         }
     }
     
@@ -244,6 +264,57 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
                 completion(false)
             }
         }
+    }
+    
+    // 특정 채팅방의 셀 업데이트
+    private func updateChatRoomCell(forRoomId roomId: Int, newUnreadCount: Int? = nil) {
+        // 해당 채팅방 ID를 가진 셀의 인덱스 찾기
+        if let index = chatRoomListData.firstIndex(where: { $0.id == roomId }) {
+            // 읽지 않은 메시지 수 업데이트
+            if let unreadCount = newUnreadCount {
+                var updatedChatRoom = chatRoomListData[index]
+                
+                // 구조체이므로 새 인스턴스 생성
+                let newChatRoom = ChatListResponseDTO(
+                    id: updatedChatRoom.id,
+                    title: updatedChatRoom.title,
+                    participants: updatedChatRoom.participants,
+                    chatRoomThumbnail: updatedChatRoom.chatRoomThumbnail,
+                    unreadMessageCount: unreadCount,
+                    latestMessageContent: updatedChatRoom.latestMessageContent
+                )
+                
+                chatRoomListData[index] = newChatRoom
+            }
+            
+            // UI 업데이트는 메인 스레드에서
+            DispatchQueue.main.async {
+                let indexPath = IndexPath(row: index, section: 0)
+                self.chatListView.chatListCollectionView.reloadItems(at: [indexPath])
+                
+                // 탭바 아이콘도 업데이트
+                self.updateTabBarIcon()
+            }
+        }
+    }
+}
+
+// MARK: - WebSocketManagerDelegate
+extension ChatListViewController: WebSocketManagerDelegate {
+    func didReceiveMessage(_ message: Message, forRoomId: Int) {
+        // 해당 채팅방의 읽지 않은 메시지 수 증가
+        if let index = chatRoomListData.firstIndex(where: { $0.id == forRoomId }) {
+            let unreadCount = chatRoomListData[index].unreadMessageCount + 1
+            // 셀 업데이트
+            updateChatRoomCell(forRoomId: forRoomId, newUnreadCount: unreadCount)
+        }
+    }
+    
+    func didChangeConnectionStatus(isConnected: Bool) {
+        // 연결 상태가 변경되었을 때 처리 (필요한 경우)
+        #if DEBUG
+        print("ChatListViewController: WebSocket 연결 상태 변경 - \(isConnected ? "연결됨" : "연결 끊김")")
+        #endif
     }
 }
 
@@ -366,6 +437,9 @@ extension ChatListViewController {
                         #if DEBUG
                         print("ChatList: 채팅방 나가기 성공 - roomId: \(roomId)")
                         #endif
+                        
+                        // WebSocketManager에서 델리게이트 제거
+                        WebSocketManager.shared.removeDelegate(self, forRoomId: roomId)
                         
                         // 채팅방 나가기 성공 시 데이터에서 해당 채팅방 제거
                         if indexPath.row < self.chatRoomListData.count {

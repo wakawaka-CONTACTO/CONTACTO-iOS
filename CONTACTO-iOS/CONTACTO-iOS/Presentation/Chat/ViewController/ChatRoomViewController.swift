@@ -51,24 +51,18 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
         self.setData()
         self.sendAmpliLog(eventName: EventName.VIEW_CHATROOM)
         self.isInitializing = false
+        
+        // WebSocketManager 델리게이트 등록 및 채팅방 활성화
+        WebSocketManager.shared.addDelegate(self, forRoomId: chatRoomId)
+        WebSocketManager.shared.setActiveRoom(chatRoomId)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
                 
-        // 정상적인 종료를 위한 과정 추가
-        if isConnected {
-            // 먼저 구독 해제
-            socketClient.unsubscribe(destination: "/topic/\(chatRoomId)")
-            print("ChatRoom: 소켓 구독 해제 - roomId: \(chatRoomId)")
-            
-            // 약간의 지연 후 연결 종료
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                guard let self = self else { return }
-                self.socketClient.disconnect()
-                print("ChatRoom: 소켓 연결 종료")
-            }
-        }
+        // WebSocketManager에서 현재 채팅방 해제
+        WebSocketManager.shared.removeDelegate(self, forRoomId: chatRoomId)
+        WebSocketManager.shared.setActiveRoom(nil)
         
         // 채팅 목록 업데이트를 위한 알림 전송
         NotificationCenter.default.post(name: NSNotification.Name("RefreshChatList"), object: nil)
@@ -79,12 +73,6 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
     
     deinit {
         print("ChatRoomViewController deinit called")
-        // 소켓 연결 상태 확인 및 정리
-        if isConnected {
-            // 연결이 아직 남아있는 경우 정리 작업
-            socketClient.disconnect()
-            isConnected = false
-        }
         
         // 메모리에서 해제되기 전에 참조 정리
         chatList.removeAll()
@@ -164,11 +152,6 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
             }
             
             self.chatRoomView.setChatRoomAvailability(isAvailable: isAvailable)
-            
-            // isAvailable이 false인 경우 소켓 구독하지 않음
-            if isAvailable {
-                self.registerSocket()
-            }
         }
     }
     
@@ -224,21 +207,6 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
             }
         }
     }
-    
-    func registerSocket() {
-        // 이미 연결된 상태라면 연결 시도하지 않음
-        if isConnected {
-            return
-        }
-        
-        guard let url = URL(string: "\(Config.chatBaseURL)?userId=\(KeychainHandler.shared.userID)&accessToken=\(KeychainHandler.shared.accessToken)") else { return }
-        let request = NSMutableURLRequest(url: url)
-        request.setValue(KeychainHandler.shared.accessToken, forHTTPHeaderField: "Authorization")
-        socketClient.openSocketWithURLRequest(
-            request: NSURLRequest(url: url),
-            delegate: self
-        )
-    }
 
     private func sendMessage(_ messageText: String) {
         self.content = messageText
@@ -259,25 +227,45 @@ final class ChatRoomViewController: BaseViewController, ChatAmplitudeSender {
             sendedId: Int(participants.first ?? 0),
             createdAt: createdAt,
             readStatus: false)
+        
+        // 로컬 UI 업데이트
         chatList.append(newMessage)
-          
-        if let messageData = try? JSONEncoder().encode(newMessage) {
-            var headers = ["Authorization": KeychainHandler.shared.accessToken]
-            headers["content-type"] = "application/json"
-            socketClient.sendMessage(
-                message: String(data: messageData, encoding: .utf8) ?? "",
-                toDestination: "/app/chat.send/\(chatRoomId)",
-                withHeaders: headers,
-                withReceipt: nil
-            )
-        }
         chatRoomView.chatRoomCollectionView.reloadData()
         chatRoomView.messageTextView.text = ""
         scrollToBottom()
+          
+        // WebSocketManager를 통해 메시지 전송
+        WebSocketManager.shared.sendMessage(newMessage, to: chatRoomId)
     }
 }
 
-extension ChatRoomViewController: StompClientLibDelegate {
+// MARK: - WebSocketManagerDelegate
+extension ChatRoomViewController: WebSocketManagerDelegate {
+    func didReceiveMessage(_ message: Message, forRoomId: Int) {
+        // forRoomId가 현재 채팅방 ID와 일치하는지 확인
+        guard forRoomId == self.chatRoomId else { return }
+        
+        // 현재 사용자가 보낸 메시지는 건너뜀 (에코 방지)
+        if message.senderId == Int(KeychainHandler.shared.userID) {
+            return
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.chatList.append(message)
+            self.chatRoomView.chatRoomCollectionView.reloadData()
+            self.scrollToBottom()
+        }
+    }
+    
+    func didChangeConnectionStatus(isConnected: Bool) {
+        // 연결 상태가 변경되었을 때 UI 업데이트
+        self.isConnected = isConnected
+    }
+}
+
+extension ChatRoomViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
 
@@ -287,96 +275,6 @@ extension ChatRoomViewController: StompClientLibDelegate {
             chatMessages { _ in }
         }
     }
-    
-    func serverDidSendReceipt(client: StompClientLib, withReceiptId receiptId: String) {
-        #if DEBUG
-        print("Receipt : \(receiptId)")
-        #endif
-    }
-    
-    func serverDidSendPing() {
-        #if DEBUG
-        print("Server ping")
-        #endif
-    }
-    
-    
-    func stompClient(client: StompClientLib,
-                     didReceiveMessageWithJSONBody jsonBody: AnyObject?,
-                     akaStringBody stringBody: String?,
-                     withHeader header: [String : String]?,
-                     withDestination destination: String) {
-        #if DEBUG
-        print("Destination : \(destination)")
-        print("JSON Body : \(String(describing: jsonBody))")
-        #endif
-        
-        guard let messageString = stringBody,
-              let data = messageString.data(using: .utf8),
-              let message = try? JSONDecoder().decode(Message.self, from: data) else {
-            #if DEBUG
-            print("No valid message string or data received.")
-            #endif
-            return
-        }
-        
-        if message.senderId == Int(KeychainHandler.shared.userID) {
-            #if DEBUG
-            print("Received echo message from self, ignoring.")
-            #endif
-            return
-        }
-        
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self, self.isConnected else { return }
-            
-            self.chatList.append(message)
-            self.chatRoomView.chatRoomCollectionView.reloadData()
-            self.scrollToBottom()
-        }
-    }
-    
-    func stompClientDidDisconnect(client: StompClientLib) {
-        #if DEBUG
-        print("STOMP 연결 종료됨")
-        #endif
-        isConnected = false
-    }
-    
-    func stompClientDidConnect(client: StompClientLib) {
-        #if DEBUG
-        print("STOMP 연결 성공: 채팅방 ID \(chatRoomId)")
-        #endif
-        
-        isConnected = true
-        
-        // 연결 성공 시 구독 설정
-        var headers = ["Authorization": KeychainHandler.shared.accessToken]
-        headers["id"] = "sub-\(chatRoomId)"
-        socketClient.subscribeWithHeader(destination: "/topic/\(chatRoomId)", withHeader: headers)
-        
-        // 매치 직후 메시지 전송
-        if self.isFirstMatch {
-            self.sendMessage(self.content)
-            self.isFirstMatch = false
-        }
-    }
-    
-    func serverDidSendError(client: StompClientLib, withErrorMessage description: String, detailedErrorMessage message: String?) {
-        #if DEBUG
-        print("WebSocket 에러: \(description), 상세: \(message ?? "없음")")
-        #endif
-        
-        // 다른 실제 에러의 경우에만 알림 표시
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Error Send", message: "\(String(describing: message))", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "확인", style: .default))
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
-}
-
-extension ChatRoomViewController {
     
     /// 노티피케이션 추가
     func addKeyboardNotifications(){
@@ -468,45 +366,10 @@ extension ChatRoomViewController {
     
     @objc private func sendButtonTapped() {
         guard let messageText = chatRoomView.messageTextView.text, !messageText.isEmpty else { return }
-        guard isConnected else { return }  // 연결 상태 확인
-        
-        self.content = messageText
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        formatter.timeZone = TimeZone(identifier: "Asia/Seoul") // KST 설정
-        
-        let currentDate = Date()
-        self.createdAt = formatter.string(from: currentDate)
-        
-        if let plusRange = createdAt.range(of: "+09:00") { // "+09:00" 오프셋 제거
-            self.createdAt.removeSubrange(plusRange)
-        }
-        
-        let newMessage = Message(
-            content: content,
-            senderId: Int(senderId) ?? 0,
-            sendedId: Int(participants.first ?? 0),  // 안전하게 접근
-            createdAt: createdAt,
-            readStatus: false)
+        guard WebSocketManager.shared.isConnected else { return }  // 연결 상태 확인
         
         self.sendAmpliLog(eventName: EventName.CLICK_CHATROOM_SEND)
-        // 로컬 UI 업데이트
-        chatList.append(newMessage)
-        chatRoomView.chatRoomCollectionView.reloadData()
-        chatRoomView.messageTextView.text = ""
-        scrollToBottom()
-          
-        // 메시지 전송
-        if let messageData = try? JSONEncoder().encode(newMessage) {
-            var headers = ["Authorization": KeychainHandler.shared.accessToken]
-            headers["content-type"] = "application/json"
-            socketClient.sendMessage(
-                message: String(data: messageData, encoding: .utf8) ?? "",
-                toDestination: "/app/chat.send/\(chatRoomId)",
-                withHeaders: headers,
-                withReceipt: nil
-            )
-        }
+        sendMessage(messageText)
     }
     
     private func scrollToBottom() {
