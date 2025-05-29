@@ -45,6 +45,11 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
     private var isShowingLeave: Bool = false  // 현재 LEAVE 버튼 표시 상태
     private let swipeThreshold: CGFloat = 0.4  // LEAVE 표시 임계값 (40%)
     
+    // 제스처 방향 감지용 변수들
+    private var initialTouchPoint: CGPoint = .zero
+    private var isHorizontalSwipe: Bool = false
+    private var gestureStarted: Bool = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUI()
@@ -161,6 +166,7 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
     
     private func setupSwipeGesture() {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        pan.delegate = self
         self.addGestureRecognizer(pan)
     }
     
@@ -183,42 +189,69 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
     
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self)
+        let velocity = gesture.velocity(in: self)
         
         switch gesture.state {
         case .began:
-            // 스와이프 시작할 때 배경 준비
-            self.bringSubviewToFront(leaveBackgroundView)
-            leaveBackgroundView.bringSubviewToFront(leaveLabel)
-            if translation.x < 0 {
-                leaveBackgroundView.isHidden = false
-            }
+            initialTouchPoint = gesture.location(in: self)
+            gestureStarted = false
+            isHorizontalSwipe = false
+            
         case .changed:
-            if translation.x < 0 {
-                // 왼쪽으로 스와이프 - LEAVE 표시
-                // 최대 LEAVE 너비만큼만 드래그 허용
-                let limitedDragX = max(translation.x, -leaveWidth)
-                contentView.transform = CGAffineTransform(translationX: limitedDragX, y: 0)
+            // 제스처가 시작되지 않았다면 방향 감지
+            if !gestureStarted {
+                let deltaX = abs(translation.x)
+                let deltaY = abs(translation.y)
                 
-                // 스와이프 중에는 항상 LEAVE 버튼 표시
-                leaveBackgroundView.isHidden = false
-                
-                // 스와이프 비율 계산
-                let swipeRatio = min(abs(translation.x) / leaveWidth, 1.0)
-                
-                // 너비에 따라 투명도 조절
-                leaveBackgroundView.alpha = swipeRatio
-            } else if translation.x > 0 && isShowingLeave {
-                // 오른쪽으로 스와이프 - LEAVE가 표시된 상태에서만 처리
-                // LEAVE 영역에서 원래 위치로 돌아가는 중
-                let currentOffset = -leaveWidth + translation.x
-                let limitedDragX = min(currentOffset, 0)
-                contentView.transform = CGAffineTransform(translationX: limitedDragX, y: 0)
-                
-                // 스와이프 비율에 따라 투명도 조절 (반대 방향)
-                let swipeBackRatio = 1.0 - min(translation.x / leaveWidth, 1.0)
-                leaveBackgroundView.alpha = swipeBackRatio
+                // 최소 이동 거리 체크 (너무 작은 움직임은 무시)
+                if deltaX > 15 || deltaY > 15 {
+                    gestureStarted = true
+                    // 수평 스와이프인지 확인 (x축 이동이 y축 이동보다 1.5배 이상 클 때)
+                    isHorizontalSwipe = deltaX > deltaY * 1.5
+                    
+                    // 수직 스와이프라면 제스처 무시하고 처리 중단
+                    if !isHorizontalSwipe {
+                        return
+                    }
+                }
             }
+            
+            // 수평 스와이프가 확인된 경우에만 처리
+            if gestureStarted && isHorizontalSwipe {
+                if translation.x < 0 {
+                    // 왼쪽으로 스와이프 - LEAVE 표시
+                    self.bringSubviewToFront(leaveBackgroundView)
+                    leaveBackgroundView.bringSubviewToFront(leaveLabel)
+                    
+                    // 최대 LEAVE 너비만큼만 드래그 허용
+                    let limitedDragX = max(translation.x, -leaveWidth)
+                    contentView.transform = CGAffineTransform(translationX: limitedDragX, y: 0)
+                    
+                    // 스와이프 중에는 항상 LEAVE 버튼 표시
+                    leaveBackgroundView.isHidden = false
+                    
+                    // 스와이프 비율 계산
+                    let swipeRatio = min(abs(translation.x) / leaveWidth, 1.0)
+                    
+                    // 너비에 따라 투명도 조절
+                    leaveBackgroundView.alpha = swipeRatio
+                } else if translation.x > 0 && isShowingLeave {
+                    // 오른쪽으로 스와이프 - LEAVE가 표시된 상태에서만 처리
+                    // LEAVE 영역에서 원래 위치로 돌아가는 중
+                    let currentOffset = -leaveWidth + translation.x
+                    let limitedDragX = min(currentOffset, 0)
+                    contentView.transform = CGAffineTransform(translationX: limitedDragX, y: 0)
+                    
+                    // 스와이프 비율에 따라 투명도 조절 (반대 방향)
+                    let swipeBackRatio = 1.0 - min(translation.x / leaveWidth, 1.0)
+                    leaveBackgroundView.alpha = swipeBackRatio
+                }
+            }
+            
         case .ended, .cancelled:
+            // 수평 스와이프가 아니었다면 아무것도 하지 않음
+            guard gestureStarted && isHorizontalSwipe else { return }
+            
             if translation.x < 0 {
                 // 왼쪽으로 스와이프한 경우
                 // 임계값을 넘었는지 확인 (leaveWidth의 40% 이상 스와이프)
@@ -331,6 +364,36 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
         
         // LEAVE 상태 초기화
         resetLeaveState()
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension ChatListCollectionViewCell: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        // 다른 제스처와 동시에 인식 허용 (컬렉션 뷰의 스크롤 제스처와 함께 동작)
+        return true
+    }
+    
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        // Pan gesture인 경우에만 추가 검사
+        if let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
+            let velocity = panGesture.velocity(in: self)
+            
+            // 수직 속도가 수평 속도보다 큰 경우 제스처 시작 안 함
+            if abs(velocity.y) > abs(velocity.x) {
+                return false
+            }
+            
+            // 이미 LEAVE 상태이고 오른쪽으로 스와이프하는 경우는 허용
+            if isShowingLeave && velocity.x > 0 {
+                return true
+            }
+            
+            // 왼쪽 스와이프인 경우만 허용
+            return velocity.x < 0
+        }
+        
+        return true
     }
 }
 
