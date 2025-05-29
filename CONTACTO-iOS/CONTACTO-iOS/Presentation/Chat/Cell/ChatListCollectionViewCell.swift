@@ -204,14 +204,13 @@ final class ChatListCollectionViewCell: UICollectionViewCell {
                 let deltaY = abs(translation.y)
                 
                 // 최소 이동 거리 체크 (너무 작은 움직임은 무시)
-                if deltaX > 10 || deltaY > 10 {
+                if deltaX > 15 || deltaY > 15 {
                     gestureStarted = true
-                    // 수평 스와이프인지 확인 (x축 이동이 y축 이동보다 2배 이상 클 때)
-                    isHorizontalSwipe = deltaX > deltaY * 2.0
+                    // 수평 스와이프인지 확인 (x축 이동이 y축 이동보다 1.5배 이상 클 때)
+                    isHorizontalSwipe = deltaX > deltaY * 1.5
                     
-                    // 수직 스와이프라면 제스처 실패 처리
+                    // 수직 스와이프라면 제스처 무시하고 처리 중단
                     if !isHorizontalSwipe {
-                        gesture.state = .failed
                         return
                     }
                 }
