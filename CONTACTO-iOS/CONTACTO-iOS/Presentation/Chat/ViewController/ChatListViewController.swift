@@ -205,12 +205,8 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
         }
         isFetching = true
 
-        let startTime = Date()
         NetworkService.shared.chatService.chatRoomList(cursorId: currentCursorId, cursorCreatedAt: currentCursorCreatedAt, size: pageSize) { [weak self] response in
             guard let self = self else { return }
-            
-            let endTime = Date()
-            let timeInterval = endTime.timeIntervalSince(startTime)
 
             switch response {
             case .success(let data):
@@ -260,22 +256,12 @@ final class ChatListViewController: BaseViewController, ChatAmplitudeSender {
                     self.currentCursorId = data.nextCursorId
                     self.currentCursorCreatedAt = data.nextCursorCreatedAt
                 }
-                
-                let dataProcessingEndTime = Date()
-                let dataProcessingTime = dataProcessingEndTime.timeIntervalSince(dataProcessingStartTime)
-                
                 self.isFetching = false
                 completion(true)
-            case .failure(let error):
+            case .failure(_):
                 self.isFetching = false
                 completion(false)
-            case .pathErr, .serverErr, .networkErr:
-                self.isFetching = false
-                completion(false)
-            case .networkErr:
-                self.isFetching = false
-                completion(false)
-            case .requestErr(let data):
+            case .pathErr, .serverErr, .networkErr, .requestErr:
                 self.isFetching = false
                 completion(false)
             }
