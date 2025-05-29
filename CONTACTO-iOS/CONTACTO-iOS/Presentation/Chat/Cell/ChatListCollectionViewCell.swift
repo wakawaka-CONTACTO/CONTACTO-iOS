@@ -379,7 +379,6 @@ extension ChatListCollectionViewCell: UIGestureRecognizerDelegate {
         // Pan gesture인 경우에만 추가 검사
         if let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = panGesture.velocity(in: self)
-            let translation = panGesture.translation(in: self)
             
             // 수직 속도가 수평 속도보다 큰 경우 제스처 시작 안 함
             if abs(velocity.y) > abs(velocity.x) {
@@ -387,12 +386,12 @@ extension ChatListCollectionViewCell: UIGestureRecognizerDelegate {
             }
             
             // 이미 LEAVE 상태이고 오른쪽으로 스와이프하는 경우는 허용
-            if isShowingLeave && translation.x > 0 {
+            if isShowingLeave && velocity.x > 0 {
                 return true
             }
             
             // 왼쪽 스와이프인 경우만 허용
-            return translation.x < 0
+            return velocity.x < 0
         }
         
         return true
