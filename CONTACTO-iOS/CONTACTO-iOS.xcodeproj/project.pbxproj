@@ -34,6 +34,8 @@
 		ACFE3D222D9FDB0900F14592 /* AlarmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFE3D1F2D9FDB0900F14592 /* AlarmService.swift */; };
 		ACFE3D232D9FDB0900F14592 /* AlarmTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFE3D1D2D9FDB0900F14592 /* AlarmTarget.swift */; };
 		ACFE3D242D9FDB0900F14592 /* DeviceTokenRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFE3D1A2D9FDB0900F14592 /* DeviceTokenRequestDTO.swift */; };
+		BA8361F22DE05490001BAEB4 /* MessageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8361F02DE05490001BAEB4 /* MessageRouter.swift */; };
+		BA8361F32DE05490001BAEB4 /* WebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8361F12DE05490001BAEB4 /* WebSocketManager.swift */; };
 		C30C2E422CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */; };
 		C30C2E442CF2F71000FAE056 /* SignInHelpResponseDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */; };
 		C30C2E462CF2F79600FAE056 /* SignUpRequestBodyDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */; };
@@ -203,6 +205,8 @@
 		ACFE3D1A2D9FDB0900F14592 /* DeviceTokenRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTokenRequestDTO.swift; sourceTree = "<group>"; };
 		ACFE3D1D2D9FDB0900F14592 /* AlarmTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTarget.swift; sourceTree = "<group>"; };
 		ACFE3D1F2D9FDB0900F14592 /* AlarmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmService.swift; sourceTree = "<group>"; };
+		BA8361F02DE05490001BAEB4 /* MessageRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRouter.swift; sourceTree = "<group>"; };
+		BA8361F12DE05490001BAEB4 /* WebSocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
 		C30C2E412CF2F6F300FAE056 /* SignInHelpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpRequestBodyDTO.swift; sourceTree = "<group>"; };
 		C30C2E432CF2F71000FAE056 /* SignInHelpResponseDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInHelpResponseDTO.swift; sourceTree = "<group>"; };
 		C30C2E452CF2F79600FAE056 /* SignUpRequestBodyDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRequestBodyDTO.swift; sourceTree = "<group>"; };
@@ -700,6 +704,8 @@
 			isa = PBXGroup;
 			children = (
 				C33D73ED2CDEF15800889B1B /* ChatService.swift */,
+				BA8361F02DE05490001BAEB4 /* MessageRouter.swift */,
+				BA8361F12DE05490001BAEB4 /* WebSocketManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -1492,6 +1498,8 @@
 				C33D73D32CDEEEA300889B1B /* APIRequestLoader.swift in Sources */,
 				C33D74102CDEF21900889B1B /* ChatListResponseDTO.swift in Sources */,
 				333BD1662DC0807B00A9C2E9 /* ImageManager.swift in Sources */,
+				BA8361F22DE05490001BAEB4 /* MessageRouter.swift in Sources */,
+				BA8361F32DE05490001BAEB4 /* WebSocketManager.swift in Sources */,
 				C3E6D90E2CFAC7B500D6ABDC /* SignUpView.swift in Sources */,
 				C33D73D72CDEEEBE00889B1B /* ContactoRequestInterceptor.swift in Sources */,
 				C3B95CF32C9C08B7002A4681 /* ProfileTalentCollectionViewCell.swift in Sources */,

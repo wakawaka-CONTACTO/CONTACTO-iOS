@@ -41,6 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         _ = AmplitudeManager.amplitude
         
+        // 앱 시작 시 웹소켓 연결 초기화
+        initializeWebSocket()
+        
         return true
     }
 
@@ -64,6 +67,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
             print("Failed to register for remote notifications: \(error.localizedDescription)")
+    }
+    
+    // 웹소켓 연결 초기화
+    private func initializeWebSocket() {
+        // 로그인 상태일 때만 웹소켓 연결
+        if !KeychainHandler.shared.accessToken.isEmpty {
+            #if DEBUG
+            print("AppDelegate: 웹소켓 연결 초기화")
+            #endif
+            
+            // 웹소켓 연결
+            WebSocketManager.shared.connect()
+        }
+    }
+    
+    // 앱이 백그라운드로 이동할 때
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        #if DEBUG
+        print("AppDelegate: 앱이 백그라운드로 이동")
+        #endif
+        
+        // 웹소켓 연결 유지 (백그라운드에서도 메시지 수신)
+    }
+    
+    // 앱이 포그라운드로 돌아올 때
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        #if DEBUG
+        print("AppDelegate: 앱이 포그라운드로 돌아옴")
+        #endif
+        
+        // 웹소켓 연결 확인 및 재연결
+        if !WebSocketManager.shared.isConnected && !KeychainHandler.shared.accessToken.isEmpty {
+            WebSocketManager.shared.connect()
+        }
+    }
+    
+    // 앱이 종료될 때
+    func applicationWillTerminate(_ application: UIApplication) {
+        #if DEBUG
+        print("AppDelegate: 앱 종료")
+        #endif
+        
+        // 웹소켓 연결 해제
+        WebSocketManager.shared.disconnect()
     }
 }
 

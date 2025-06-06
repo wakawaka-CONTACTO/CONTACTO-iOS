@@ -32,6 +32,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        
+        // 앱이 활성화될 때 웹소켓 연결 확인
+        if !KeychainHandler.shared.accessToken.isEmpty && !WebSocketManager.shared.isConnected {
+            WebSocketManager.shared.connect()
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -42,6 +47,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
+        
+        // 앱이 포그라운드로 돌아올 때 웹소켓 연결 확인
+        if !KeychainHandler.shared.accessToken.isEmpty && !WebSocketManager.shared.isConnected {
+            WebSocketManager.shared.connect()
+        }
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
