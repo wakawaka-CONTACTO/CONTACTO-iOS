@@ -266,6 +266,10 @@ final class DetailProfileViewController: BaseViewController, DetailAmplitudeSend
             $0.leading.trailing.equalToSuperview().inset(13)
             $0.height.equalTo(self.detailProfileView.purposeCollectionView.contentSize.height)
         }
+        
+        self.detailProfileView.nameLabel.text = self.portfolioData.username
+        self.detailProfileView.nationalityLabel.text = self.portfolioData.nationality.displayName
+        self.detailProfileView.descriptionLabel.text = self.portfolioData.description
     }
     
     @objc private func instaButtonTapped() {
